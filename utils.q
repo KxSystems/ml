@@ -9,7 +9,7 @@ i.bool:.p.import[`builtins]`:bool
 i.fastSum:{[it;d]sum$[it;.z.s it-1;sum]each(ceiling sqrt count d)cut d}2
 
 // Replace empty dicts with (,`)!,0f 
-i.fillEmptyDocs:{[docs]@[docs;i;:;count[i:where not count each docs]#enlist(1#`)!1#0f]}
+i.fillEmptyDocs:{[docs]$[98=type docs;0^docs;@[docs;i;:;count[i:where not count each docs]#enlist(1#`)!1#0f]]}
 
 // Given monotonic increasing int list, return runs of consecutive numbers
 i.findRuns:{(where x<>1+prev x)_ x@:where r|:next r:x=1+prev x}

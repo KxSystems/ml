@@ -19,7 +19,7 @@ email.i.getToFrom:{[msg]
 
 // Init python and q functions for reading mbox files
 email.i.parseMail:{email.i.parseMbox1 email.i.msgFromString[x]`.}
-email.i.parseMbox:{email.i.parseMbox1 each .p.list[<].p.import[`mailbox;`:mbox]x}
+email.i.parseMbox:{email.i.parseMbox1 each .p.list .p.import[`mailbox;`:mbox]x}
 email.i.parseMbox1:{k!email.get[k:`sender`to`date`subject`contentType`payload]@\:.p.wrap x}
 
 email.i.bs:.p.import[`bs4]`:BeautifulSoup
