@@ -22,3 +22,8 @@ The following python packages are required:
   2. beautifulsoup4: ```pip install beautifulsoup4```
   3. spacy: ```pip install -U spacy```
   4. Download the English model using ```python -m space download en```
+  
+  ## Status
+  
+The embedPy library is still in development and is available here as a beta release.  
+If you have any issues, questions or suggestions, please write to ai@kx.com.
