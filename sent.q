@@ -20,7 +20,7 @@ sent.findSequence:{[list;seq]neg[count seq]+{[list;i;x]1+i where x=list i}[list]
 sent.amplifyEP:{.292*4&sum"!"=x}
 
 // Inc mean sentiment intensity rating from '?' (up to 4)
-sent.amplifyQM:{(0 0 .36 .54 .96)4&sum"!"=x}
+sent.amplifyQM:{(0 0 .36 .54 .96)4&sum"?"=x}
 
 // Increase valences (weights) for booster words e.g. "really", "very"
 sent.posBoosters:`$(
