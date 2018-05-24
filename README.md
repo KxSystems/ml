@@ -18,10 +18,13 @@ q)\l nlp/init.q
 ## Requirements
 
 The following python packages are required:
-  1. numpy: ```pip install numpy```
-  2. beautifulsoup4: ```pip install beautifulsoup4```
-  3. spacy: ```pip install -U spacy```
-  4. Download the English model using ```python -m space download en```
+  1. numpy
+  2. beautifulsoup4
+  3. spacy
+
+To install these packages,run ```$pip install -r requirements.txt```
+
+* Download the English model using ```python -m space download en```
   
   ## Status
   
