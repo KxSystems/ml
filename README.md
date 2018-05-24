@@ -26,7 +26,8 @@ To install these packages,run ```$pip install -r requirements.txt```
 
 * Download the English model using ```python -m space download en```
   
-  ## Status
+
+## Status
   
 The embedPy library is still in development and is available here as a beta release.  
 If you have any issues, questions or suggestions, please write to ai@kx.com.
