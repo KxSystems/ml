@@ -24,7 +24,7 @@ The following python packages are required:
 
 To install these packages,run ```$pip install -r requirements.txt```
 
-* Download the English model using ```python -m space download en```
+* Download the English model using ```python -m spacy download en```
   
 
 ## Status
