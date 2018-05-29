@@ -66,6 +66,5 @@ i.stopPennPOS:asc`CC`CD`DT`EX`IN`LS`MD`PDT`POS`PRP`SYM`TO`WDT`WP`WRB,`$("PRP$";"
 // Parse urls
 p)from urllib.parse import urlparse
 p)import re
-p)hsReg=re.compile('^https://(www\\.)?')
-p)hpReg=re.compile('^(http://(www\\.)?|www\\.)')
-i.parseURLs:.p.eval["lambda url: urlparse(hsReg.sub('https://',hpReg.sub('http://',url)))";<]
+p)seReg=re.compile('([a-z0-9]+:)?//')
+i.parseURLs:.p.eval["lambda url: urlparse(url if seReg.match(url) else 'http://' + url)";<]
