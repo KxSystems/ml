@@ -47,12 +47,8 @@ explainSimilarity:{[doc1;doc2]
 // Find runs containing term where each word has above average co-ocurrance with term
 extractPhrases:{[corpus;term]
   relevant:term,sublist[150]where 0<findRelatedTerms[corpus]term:lower term;
-  tokens:corpus[`tokens]@'validWords:where each not corpus`isStop;
-  runs:{x[0]+til 1+last[x]-x 0}@/:/:validWords@'(i.findRuns where@)each tokens in\:relevant;
-  termIndices:where each term=corpus`tokens;
-  matches:{(first x;last x)}@/:/:runs@'(where any each)each runs in\:'termIndices;
-  ranges:(corpus[`starts]@'matches)+0,''count@/:/:string corpus[`tokens]@'last@/:/:matches;
-  desc{k!x k:where x>1}count each group raze sublist\:'[;corpus`text]deltas@/:/:ranges}
+  runs:(i.findRuns where@)each(tokens:corpus`tokens)in\:relevant;
+  desc(where r>1)#r:count each group r where term in/:r:raze tokens@'runs}
 
 // Find all dates : list of 5-tuples (startDate; endDate; dateText; startIndex; 1+endIndex)
 findDates:tm.findDates
