@@ -17,9 +17,11 @@ sent.tokenize:{`$regex.matchAll[sent.tokenPattern;x][;0]}
 sent.findSequence:{[list;seq]neg[count seq]+{[list;i;x]1+i where x=list i}[list]/[til count list;seq]}
 
 // Inc mean sentiment intensity rating from '!' (up to 4)
+// Empirically derived mean sentiment intensity rating increase for exclamation points
 sent.amplifyEP:{.292*4&sum"!"=x}
 
 // Inc mean sentiment intensity rating from '?' (up to 4)
+// Empirically derived mean sentiment intensity rating increases for question marks
 sent.amplifyQM:{(0 0 .36 .54 .96)4&sum"?"=x}
 
 // Increase valences (weights) for booster words e.g. "really", "very"

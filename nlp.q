@@ -7,6 +7,9 @@ TFIDF:{[corpus]
   df*0|idf key each df:1+log(count each group@)each tokens}
 
 // On a conceptually single doc (e.g. novel), gives better results than TF-IDF
+// This algorithm is explained in the paper
+// Carpena, P., et al. "Level statistics of words: Finding keywords in literary texts and symbolic sequences."
+// Physical Review E 79.3 (2009): 035102.
 keywordsContinuous:{[docs]
   n:count each gt:group text:raze docs[`tokens]@'where each not docs`isStop;
   words:where n>=4|.00002*count text;
@@ -16,7 +19,9 @@ keywordsContinuous:{[docs]
   chev_sigma:((2*n)-1)%2*n+1;
   desc(sigma-chev_sigma)%std_sigma}
 
-// Give 2 dicts of each term's affinity to each corpus 
+// Give 2 dicts of each term's affinity to each corpus
+// Algorithm from Rayson, Paul, and Roger Garside. "Comparing corpora using frequency profiling."
+// Proceedings of the workshop on Comparing Corpora. Association for Computational Linguistics, 2000 
 compareCorpora:{[corp1;corp2]
   if[(not count corp1)|(not count corp2);:((`$())!();(`$())!())];
   getTermCount:{[corp]

@@ -82,6 +82,7 @@ cluster.MCL:{[docs;mn;sample]
 cluster.i.columnNormalize:{[mat]0f^mat%\:sum mat}
 cluster.similarityMatrix:{[mat]
   matrix:"f"$mat;
+  // SM Van Dongen's MCL clustering algorithm
   MCL:{[mat]
     // Expand matrix by raising to the nth power (currently set to 2)
     do[2-1;mat:{i.np[`:matmul;x;x]`}mat];
