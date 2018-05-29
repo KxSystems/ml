@@ -11,7 +11,7 @@ email.i.extractText:{
 
 // Graph of who emailed whom, inc number of mails
 email.getGraph:{[msgs]
-  0!select volume:count i by sender,to from flip`sender`to!flip`$raze email.i.getToFrom each msgs}
+  0!`volume xdesc select volume:count i by sender,to from flip`sender`to!flip`$raze email.i.getToFrom each msgs}
 
 // Get to/from pairs from an email
 email.i.getToFrom:{[msg]
