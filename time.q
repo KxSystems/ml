@@ -7,4 +7,4 @@ tm.parseTime:{
   tm+$[ampm[0]&12=`hh$tm;-1;ampm[1]&12>`hh$tm;1;0]*12:00}
 
 // Find all times : list of 4-tuples (time; timeText; startIndex; 1+endIndex)
-tm.findTimes:{(tm.parseTime each tmtxt[;0]),'tmtxt:regex.matchAll[regex.objects.time;x]}
+tm.findTimes:{time:(tm.parseTime each tmtxt[;0]),'tmtxt:regex.matchAll[regex.objects.time;x]; time where time[;0]<24:01}
