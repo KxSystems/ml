@@ -1,4 +1,4 @@
-.nlp.loadfile:{-1"Loading ",x;system"l nlp/",x;}
+.nlp.loadfile:{$[.z.q;;-1]"Loading ",x;system"l nlp/",x;}
 .nlp.loadfile"utils.q"
 .nlp.loadfile"regex.q"
 .nlp.loadfile"sent.q"
