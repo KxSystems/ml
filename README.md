@@ -33,7 +33,16 @@ If you have [Docker installed](https://www.docker.com/community-edition) you can
     Please provide your email (requires validation): bob@example.com
     KDB+ 3.5 2018.04.25 Copyright (C) 1993-2018 Kx Systems
     l64/ 4()core 7905MB kx 0123456789ab 172.17.0.2 EXPIRE 2018.12.04 bob@example.com KOD #0000000
-    
+
+    Loading utils.q
+    Loading regex.q
+    Loading sent.q
+    Loading parser.q
+    Loading time.q
+    Loading date.q
+    Loading email.q
+    Loading cluster.q
+    Loading nlp.q
     q).nlp.findTimes"I went to work at 9:00am and had a coffee at 10:20"
     09:00:00.000 "9:00am" 18 24
     10:20:00.000 "10:20"  45 50

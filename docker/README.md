@@ -14,7 +14,7 @@ To build the project locally you run:
 
     docker build -t nlp -f docker/Dockerfile .
 
-Once built, you should have a local `jupyterq` image, you can run the following to use it:
+Once built, you should have a local `nlp` image, you can run the following to use it:
 
     docker run -it nlp
 
