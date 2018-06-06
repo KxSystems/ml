@@ -8,7 +8,7 @@ Natural language processing (NLP) can be used to answer a variety of questions a
 
 The NLP allows users to parse dataset using the spacy model from python in which it runs tokenisation, Sentence Detection, Part of speech tagging and Lemmatization. In addition to parsing, users can cluster text documents together using different clustering algorithms like MCL, K-means and radix. You can also run sentiment analysis which indicates whether a word has a positive or negative sentiment.
 
-To find out the list of functions that are within the nlp library, go to [nlp](https://code.kx.com/q/ml/nlp/)
+For full documentation, go to [nlp](https://code.kx.com/q/ml/nlp/)
     
 ## Installation
 
