@@ -22,11 +22,13 @@ The following python packages are required:
 To install these packages with
 
 pip
-```$pip install -r requirements.txt```
-
+```bash
+pip install -r requirements.txt
+```
 or with conda
-
-```conda install --file requirements.txt```
+```bash
+conda install --file requirements.txt
+```
 
 * Download the English model using ```python -m spacy download en```
    
