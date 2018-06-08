@@ -8,13 +8,47 @@ Natural language processing (NLP) can be used to answer a variety of questions a
 
 The NLP allows users to parse dataset using the spacy model from python in which it runs tokenisation, Sentence Detection, Part of speech tagging and Lemmatization. In addition to parsing, users can cluster text documents together using different clustering algorithms like MCL, K-means and radix. You can also run sentiment analysis which indicates whether a word has a positive or negative sentiment.
 
-For full documentation, go to [nlp](https://code.kx.com/q/ml/nlp/)
-    
+## Requirements
+- kdb+>=? v3.5 64-bit
+- Anaconda Python 3.x
+- [embedPy](https://github.com/KxSystems/embedPy)
+
+#### Dependencies
+The following python packages are required:
+  1. numpy
+  2. beautifulsoup4
+  3. spacy
+
+To install these packages with
+
+pip
+```bash
+pip install -r requirements.txt
+```
+or with conda
+```bash
+conda install --file requirements.txt
+```
+
+* Download the English model using ```python -m spacy download en```
+   
 ## Installation
 
-Clone the NLP repo to `$QHOME` and load using
-```
+Place the library file in `$QHOME` and load `nlp/init.q`
+```q
 q)\l nlp/init.q
+Loading utils.q
+Loading regex.q
+Loading sent.q
+Loading parser.q
+Loading time.q
+Loading date.q
+Loading email.q
+Loading cluster.q
+Loading nlp.q
+q).nlp.findTimes"I went to work at 9:00am and had a coffee at 10:20"
+09:00:00.000 "9:00am" 18 24
+10:20:00.000 "10:20"  45 50
 ```
 
 ### Docker
@@ -52,16 +86,14 @@ If you have [Docker installed](https://www.docker.com/community-edition) you can
 
 **N.B.** [build instructions for the image are available](docker/README.md)
 
-## Requirements
 
-The following python packages are required:
-  1. numpy
-  2. beautifulsoup4
-  3. spacy
 
-To install these packages,run ```$pip install -r requirements.txt```
+## Documentation
 
-* Download the English model using ```python -m spacy download en```
+Documentation is available on the [nlp](https://code.kx.com/q/ml/nlp/) homepage.
+
+
+
   
 
 ## Status
