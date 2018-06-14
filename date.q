@@ -45,15 +45,10 @@ tm.dateFormats:(!). flip( / fmt given single known position
 
 // Find all dates : list of 5-tuples (startDate; endDate; dateText; startIndex; 1+endIndex)
 tm.findDates:{[text]
-  y  :regex.matchAll[regex.objects.yearfull;text];
-  ym :regex.matchAll[regex.objects.yearmonth;text];
+  rmInv:{x where not null x[;0]};
+  ym:regex.matchAll[regex.objects.yearmonth;text];
   ymd:regex.matchAll[regex.objects.yearmonthday;text];
-  if[count ym;
-     y@:where not any  y[;1]within/: ym[;1 2];
-  ];
-  if[count ymd;
-     y@:where not any  y[;1]within/:ymd[;1 2];
-    ym@:where not any ym[;1]within/:ymd[;1 2];
-  ];
-  dts:((tm.convY each y[;0]),'y),((tm.convYM each ym[;0]),'ym),((tm.convYMD each ymd[;0]),'ymd);
-  dts where not null(dts@:iasc dts[;3])[;0]}
+  dts:rmInv(tm.convYMD each ymd[;0]),'ymd;
+  if[count dts;ym@:where not any ym[;1] within/: dts[; 3 4]];
+  dts,:rmInv(tm.convYM each ym[;0]),'ym;
+  dts iasc dts[;3]}
