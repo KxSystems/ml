@@ -3,6 +3,32 @@ os:
 - linux
 git:
   depth: 1
+
+install:
+  # We do this conditionally because it saves us some downloading if the
+  # version is the same.
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+  - if [ $TRAVIS_OS_NAME = linux ]; then QLIBDIR=l64; elif [ $TRAVIS_OS_NAME = osx ]; then QLIBDIR=m64; else echo "unknown OS ('$TRAVIS_OS_NAME')" >&2; exit 1; fi; export QLIBDIR
+  - conda install -c kx kdb # grab kdb+ with conda
+  - cp -r $(conda info --base)/q q && export QHOME=$(pwd)/q && export PATH=$QHOME/$QLIBDIR:$PATH
+  # grab latest embedpy
+  - if [[ "x$QLIC_KC" != "x" ]]; then
+      echo -n $QLIC_KC |base64 --decode > q/kc.lic;
+      mkdir embedpy && cd embedpy && echo 'getembedpy"latest"' | q ../build/getembedpy.q -q && cd ..;
+      pip install -r requirements.txt;
+    fi
+
 jobs:
   include:
     - stage: docker
