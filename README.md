@@ -33,6 +33,11 @@ conda install --file requirements.txt
 * Download the English model using ```python -m spacy download en```
    
 ## Installation
+Run tests with
+
+```bash
+q test.q
+```
 
 Place the library file in `$QHOME` and load `nlp/init.q`
 ```q
