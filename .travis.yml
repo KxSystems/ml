@@ -28,6 +28,17 @@ install:
       mkdir embedpy && cd embedpy && echo 'getembedpy"latest"' | q ../build/getembedpy.q -q && cd ..;
       pip install -r requirements.txt;
     fi
+script:
+- echo "Preparing version $TRAVIS_BRANCH-$TRAVIS_COMMIT"
+- tar czf nlp_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz *.q requirements.txt  LICENSE README.md
+- echo "Packaged as nlp_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip"
+-  if [[ "x$QLIC_KC" != "x" ]]; then
+    echo -n $QLIC_KC |base64 --decode > q/kc.lic;
+    pip3 -q install -r requirements.txt;
+    q test.q -q;
+  else
+    echo No kdb+, no tests;
+  fi
 
 jobs:
   include:
