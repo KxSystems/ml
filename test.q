@@ -1,4 +1,4 @@
-\l nlp/init.q
+\l init.q
 \d .t
 n:ne:nf:0
 pt:{-2 $[first[x]~`..err;err;fail][x;y]}
@@ -10,3 +10,4 @@ fail:{nf+:1;"FAIL:\n test:\n",i[y 0]," result:\n",i[.Q.s x]," file:\n",i y 1}
 {file::x;system"l ",x}each $[count .z.x;.z.x;"tests/",/:string u@:where(u:til`:tests)like"*.t"];
 tn:{`$(0-x=1)_"tests"}
 if[ne+nf;-2" "sv string(`failed;nf;tn nf;`errored;ne;tn ne;n;`total;tn n);exit 1]
+\\
