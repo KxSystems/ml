@@ -23,8 +23,8 @@ email.i.parseMbox:{email.i.parseMbox1 each .p.list[<] .p.import[`mailbox;`:mbox]
 email.i.parseMbox1:{k!email.get[k:`sender`to`date`subject`contentType`payload]@\:.p.wrap x}
 
 email.i.bs:.p.import[`bs4]`:BeautifulSoup
-email.i.getaddr:.p.import[`email;`:utils.getaddresses;<]
-email.i.parsedate:.p.import[`email;`:utils.parsedate;<]
+email.i.getaddr:.p.import[`email.utils;`:getaddresses;<]
+email.i.parsedate:.p.import[`email.utils;`:parsedate;<]
 email.i.decodehdr:.p.import[`email.header;`:decode_header]
 email.i.makehdr:.p.import[`email.header;`:make_header]
 email.i.msgFromString:.p.import[`email]`:message_from_string
