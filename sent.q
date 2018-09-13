@@ -104,13 +104,21 @@ sent.lexicon,:(!). flip(
 
 // Calculate sentiment of a sentence of short message
 sent.score:{[text]
+  /s:.z.P;
   valences:sent.lexicon tokens:lower rawTokens:sent.tokenize text;
+  /-1 "finish ",string .z.P-s;
   isUpperCase:(rawTokens=upper rawTokens)& rawTokens<>tokens;
+  /-1 "finish cases ",string .z.P-s;
   upperIndices:where isUpperCase & not all isUpperCase;
+  /-1 "finish indices ",string .z.P-s;
   valences[upperIndices]+:sent.ALLCAPS_INCR*signum valences upperIndices;
+  /-1 "finish something ",string .z.P-s;
   valences:sent.applyBoosters[tokens;isUpperCase;valences];
+  /-1 "finish applyBost ",string .z.P-s;
   valences:sent.negationCheck[tokens;valences];
+  /-1 "finish negation ",string .z.P-s;
   valences:sent.butCheck[tokens;valences];
+  /-1 "finish butcheck ",string .z.P-s;
   sent.scoreValence[0f^valences;text]}
 
 // Calculate sentiment given individual valences

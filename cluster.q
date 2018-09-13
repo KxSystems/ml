@@ -34,7 +34,7 @@ cluster.i.mergeOverlappingClusters:{[clusters]
     similar:.5<=avg each clusters[idx]in/:clusters;
     notSmaller:(count clusters idx)>=count each clusters;
     where superset or(similar & notSmaller)
-  }[clusters;count each clusters]peach til count clusters;
+  }[clusters;count each clusters]each til count clusters;
   merge:1<count each similarClusters;
   similarClusters:distinct desc each similarClusters where merge;
   newClusters:(distinct raze@)each clusters similarClusters;
@@ -45,7 +45,7 @@ cluster.i.mergeOverlappingClusters:{[clusters]
 cluster.radix:{[docs;n]
   reduced:{distinct 4#key desc x}each docs:cluster.i.asKeywords docs;
   keywords:(where 5<=count each group raze reduced)except`;
-  clusters:{[reduced;keyword]where keyword in/:reduced}[reduced]peach keywords;
+  clusters:{[reduced;keyword]where keyword in/:reduced}[reduced]each keywords;
   cohesion:i.normalize cluster.MSE each docs clusters;
   size:i.normalize log count each clusters;
   score:i.harmonicMean each flip(cohesion;size);

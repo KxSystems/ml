@@ -1,13 +1,23 @@
 \d .nlp
+system"l ",.nlp.path,"/","extract_rtf.p";
+/.nlp.loadfile"extract_rtf.p"
+striprtf:.p.get[`striprtf;<]
 
 // Read mbox file, convert to table, parse metadata & content
 email.i.getMboxText:{[fp]update text:.nlp.email.i.extractText each payload from email.i.parseMbox fp}
 
+email.i.findmime:{all(99=type each y`payload;x~/:y`contentType;0b~'y[`payload]@'`attachment)}
+email.i.html2text:{email.i.bs[x;"html.parser"][`:get_text;"\\n"]`} / extract text from html
 email.i.extractText:{
-  $[10=type x;x;
-    count i:where"text/plain"~/:ct:x`contentType;.z.s x[i 0]`payload;
-    count i:where"text/html"~/:ct;.z.s x[i 0]`payload;
-    "\n\n"sv .z.s each x`payload]}
+ / string is actual text, bytes attachment or non text mime type like inline image, dict look at content element
+ $[10=type x;x;4=type x;"";99=type x;.z.s x`content;
+   count i:where email.i.findmime["text/plain"]x;"\n\n"sv{x[y][`payload]`content}[x]each i;
+   / use beautiful soup to extract text from html
+   count i:where email.i.findmime["text/html"]x ;"\n\n"sv{email.i.html2text x[y][`payload]`content}[x]each i;
+   / use python script to extract text from rtf
+   count i:where email.i.findmime["application/rtf"]x ;"\n\n"sv{striprtf x[y][`payload]`content}[x]each i;
+   "\n\n"sv .z.s each x`payload]}
+
 
 // Graph of who emailed whom, inc number of mails
 email.getGraph:{[msgs]
@@ -34,10 +44,15 @@ email.get.to:{email.i.getaddr e where not any(::;"")~/:\:e:raze x[`:get_all;<]ea
 email.get.date:{"P"$"D"sv".:"sv'3 cut{$[1=count x;"0";""],x}each string 6#email.i.parsedate x[@;`date]}
 email.get.subject:{$[(::)~(s:x[@;`subject])`;"";email.i.makehdr[email.i.decodehdr s][`:__str__][]`]}
 email.get.contentType:{x[`:get_content_type][]`}
+/ return a dict of `attachment`content or a table of payloads, content is byte[] for binary data, char[] for text
 email.get.payload:{
-  if[x[`:is_multipart][]`;:email.i.parseMbox1 each x[`:get_payload][]`];
-  if["attachment"~x[`:get_content_disposition][]`;:""];
-  if[not any(ct:x[`:get_content_type][]`)~/:("text/html";"text/plain";"message/rfc822");:""];
-  p:i.str[x[`:get_payload;`decode pykw 1b];$[(::)~s:x[`:get_content_charset][]`;"us-ascii";s];"ignore"]`;
-  if[ct~"text/html";:email.i.bs[p;"html.parser"][`:get_text;"\\n"]`];
-  p}
+ if[x[`:is_multipart][]`;:email.i.parseMbox1 each x[`:get_payload][]`];
+ raw:x[`:get_payload;`decode pykw 1]; / raw bytes decoded from base64 encoding, wrapped embedPy
+ if[all("application/rtf"~(x[`:get_content_type][]`);"attachment"~x[`:get_content_disposition][]`);:`attachment`content!(0b;raw`)];
+ if["attachment"~x[`:get_content_disposition][]`;:`attachment`content`filename!(1b;raw`;x[`:get_filename][]`)];
+ /if text is in rtf, mbox treats it as an attachment
+ /if[all("application/rtf"~(x[`:get_content_type][]`);"attachment"~x[`:get_content_dispositon][]`);:`attachment`content!(0b;raw`)];
+ / e.g. inline images, return raw bytes in payload
+ if[not any(ct:x[`:get_content_type][]`)~/:("text/html";"text/plain";"message/rfc822");:`attachment`content!(0b;raw`)];
+ :`attachment`content!(0b;i.str[raw;$[(::)~s:x[`:get_content_charset][]`;"us-ascii";s];"ignore"]`)
+ }

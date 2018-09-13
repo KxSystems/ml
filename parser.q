@@ -48,7 +48,8 @@ parser.i.newParser:{[lang;opts]
 
 // Operations that must be done in q, or give better performance in q
 parser.i.runParser:{[pyParser;colnames;opts;docs]
-  parsed:parser.i.unpack[pyParser;opts]each t:parser.i.cleanUTF8 each docs;
+  t:parser.i.cleanUTF8 each docs;
+  parsed:parser.i.unpack[pyParser;opts]each t;
   if[`keywords in opts;parsed[`keywords]:TFIDF parsed];
   colnames#@[parsed;`text;:;t]}
 
