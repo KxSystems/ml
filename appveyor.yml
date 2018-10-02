@@ -1,0 +1,14 @@
+version: 1.0.{build}
+image:
+- Visual Studio 2015
+clone_depth: 1
+
+skip_non_tags: false
+platform: x64
+
+build_script:
+- cmd: >-
+
+    build\buildscript.bat
+
+    build\test.bat
