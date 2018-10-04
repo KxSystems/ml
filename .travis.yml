@@ -34,11 +34,32 @@ script:
 - echo "Packaged as ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip"
 -  if [[ "x$QLIC_KC" != "x" ]]; then
     curl -fsSL -o test.q https://github.com/KxSystems/embedpy/raw/master/test.q;
-    q test.q fresh/tests/ utils/tests/ -q;
+    q test.q fresh/tests/ util/tests/ -q;
 
   else
     echo No kdb+, no tests;
   fi
+
+jobs:
+  include:
+    - stage: docker
+      sudo: required
+      services:
+        - docker
+      install: skip
+      script:
+        - docker build -t kxsys/ml:latest -f docker/Dockerfile .
+        - docker tag kxsys/ml:latest kxsys/ml:$TRAVIS_BRANCH
+      deploy:
+        provider: script
+        script:
+          - echo $DOCKER_PASSWORD|docker login --username $DOCKER_USERNAME --password-stdin && docker push kxsys/ml:latest && docker push kxsys/ml:$TRAVIS_BRANCH
+        skip_cleanup: true
+        on:
+          tags: true
+          condition: $TRAVIS_BRANCH =~ ^[0-9]+\.
+
+
 
 notifications:
   slack:
