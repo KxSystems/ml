@@ -52,6 +52,7 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+    all_branches: true
 jobs:
   include:
     - stage: docker
