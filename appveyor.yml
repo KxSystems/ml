@@ -14,6 +14,7 @@ build_script:
     build\buildscript.bat
 
     build\test.bat
+
 after_build:
 - cmd: >-
     build\package.bat
