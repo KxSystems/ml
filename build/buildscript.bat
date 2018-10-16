@@ -1,3 +1,4 @@
+set OP=%PATH%
 if "%APPVEYOR_REPO_TAG%"=="true" (
  set ML_VERSION=%APPVEYOR_REPO_TAG_NAME%
 ) else (
@@ -10,7 +11,7 @@ perl -p -i.bak -e s/TOOLKITVERSION/`\$\"%ML_VERSION%\"/g ml.q
 if not defined QLIC_KC (
  goto :nokdb
 )
-
+set PATH=%OP%
 call "build\getkdb.bat" || goto :error
 
 set PATH=C:\Miniconda3-x64;C:\Miniconda3-x64\Scripts;%PATH%
