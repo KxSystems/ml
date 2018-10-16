@@ -4,7 +4,7 @@ image:
 clone_depth: 1
 
 artifacts:
-- path: jupyterq_windows-$(appveyor_repo_tag_name).zip
+- path: ml_windows-$(appveyor_repo_tag_name).zip
 skip_non_tags: false
 platform: x64
 
