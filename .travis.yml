@@ -44,6 +44,14 @@ script:
     echo No kdb+, no tests;
   fi
 
+deploy:
+  provider: releases
+  api_key: "$GITHUB_APIKEY"
+  file_glob: true
+  file: ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz
+  skip_cleanup: true
+  on:
+    tags: true
 jobs:
   include:
     - stage: docker
