@@ -3,6 +3,8 @@ image:
 - Visual Studio 2015
 clone_depth: 1
 
+artifacts:
+- path: jupyterq_windows-$(appveyor_repo_tag_name).zip
 skip_non_tags: false
 platform: x64
 
@@ -12,3 +14,10 @@ build_script:
     build\buildscript.bat
 
     build\test.bat
+
+deploy:
+ release: $(appveyor_repo_tag_name)
+ provider: GitHub
+ auth_token: $(GITHUB_APIKEY)
+ on:
+  appveyor_repo_tag: true
