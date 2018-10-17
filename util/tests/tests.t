@@ -13,6 +13,7 @@ smalltab:([]1000?1000;1000?1000;1000?1000)
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 nulltab:([]til 5;@[5?10f;2;:;0n];5?100;@[5?10f;0 1;:;0n];5#0;5#0n)
 plainmat:value flip plaintab
+tab:([]sym:`a`a`a`b`b;time:`time$til 5;@[5#0n;2 4;:;1f];@["f"$til 5;4;:;0n])
 
 x:1000?40
 y:1000?40

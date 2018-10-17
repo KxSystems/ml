@@ -1,7 +1,9 @@
 /load in embedPy
 \l p.q
 /load in all the .q scripts within the ml library
+
 \d .ml
+version:@[{TOOLKITVERSION};0;`development]
 sstring:{$[10=type x;;string]x}
 loadfile:{$[.z.q;;-1]"Loading ",x:1_string hsym`$sstring x;system"l ",path,"/",x;}
 path:{$[count u:@[{1_string first` vs hsym`$u -3+count u:get .z.s};`;""];u;"ml"]}[]
@@ -61,3 +63,4 @@ auc:{sum 1_deltas[x]*y-.5*deltas y}
 roc:{[y;p]{x%last x}each value exec 1+i-y,y from(update sums y from`p xdesc([]y;p))where p<>next p}
 / area under the ROC curve. x is the actual class and p the probability of belonging to the positive class
 rocaucscore:{[y;p]auc . curvepts . roc[y;p]}
+

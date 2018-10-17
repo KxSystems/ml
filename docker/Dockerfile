@@ -10,7 +10,7 @@ FROM embedpy AS ml
 
 COPY requirements.txt *.q  README.md LICENSE /opt/kx/ml/
 COPY fresh /opt/kx/ml/fresh
-COPY utils /opt/kx/ml/utils
+COPY util /opt/kx/ml/util
 
 ARG VCS_REF=dev
 ARG BUILD_DATE=dev
@@ -22,7 +22,7 @@ LABEL	org.label-schema.schema-version="0.1" \
 	org.label-schema.license="Apache-2.0" \
 	org.label-schema.url="https://code.kx.com/q/ml/toolkit/" \
 	org.label-schema.version="${VERSION:-dev}" \
-	org.label-schema.vcs-url="https://github.com/KxSystems/ml-toolkit.git" \
+	org.label-schema.vcs-url="https://github.com/KxSystems/ml.git" \
 	org.label-schema.vcs-ref="$VCS_REF" \
 	org.label-schema.build-date="$BUILD_DATE" \
 	org.label-schema.docker.cmd="docker run kxsys/ml"
