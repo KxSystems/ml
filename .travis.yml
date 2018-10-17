@@ -29,16 +29,29 @@ install:
       pip -q install -r requirements.txt;
       python -m spacy download en;
     fi
+beforescript:
+  - IMPLEMENTATION=$(if [[ "x$TRAVIS_TAG" == "x" ]]; then echo $TRAVIS_BRANCH-$TRAVIS_COMMIT; else echo $TRAVIS_TAG; fi;)
+  - perl -p -i -e 's/NLPVERSION/`\$\"'${IMPLEMENTATION}'\"/g' nlp.q
+
+
 script:
 - echo "Preparing version $TRAVIS_BRANCH-$TRAVIS_COMMIT"
 - tar czf nlp_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz *.q requirements.txt  LICENSE README.md
-- echo "Packaged as nlp_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip"
+- echo "Packaged as nlp_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz"
 -  if [[ "x$QLIC_KC" != "x" ]]; then
     q test.q -q;
   else
     echo No kdb+, no tests;
   fi
 
+deploy:
+  provider: releases
+  api_key: "$GITHUB_APIKEY"
+  file_glob: true
+  file: nlp_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz
+  skip_cleanup: true
+  on:
+    tags: true
 jobs:
   include:
     - stage: docker

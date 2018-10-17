@@ -21,7 +21,8 @@ parser.i.depOpts:(!). flip(
   (`sentChars;  `sbd`sentIndices);
   (`sentIndices;`sbd);
   (`uniPOS;     `tagger);
-  (`pennPOS;    `tagger))
+  (`pennPOS;    `tagger);
+  (`lemmas;     `tagger)) /added lemmas as it depends on tagger
 
 // Map from q-style attribute names to spacy
 parser.i.q2spacy:(!). flip(
@@ -40,7 +41,7 @@ parser.i.q2spacy:(!). flip(
 parser.i.newParser:{[lang;opts]
   opts:distinct opts,raze parser.i.depOpts colnames:opts;
   disabled:`ner`tagger`parser except opts;
-  model:.p.import[`spacy;`:load][lang;`disable pykw disabled];
+  model:.p.import[`spacy;`:load][lang;`disable pykw disabled]; 
   if[(`sbd in opts)&`parser in disabled;model[`:add_pipe]model[`:create_pipe;`sbd]];
   tokenAttrs:parser.i.q2spacy key[parser.i.q2spacy]inter opts;
   pyParser:parser.i.parseText[model;tokenAttrs;opts;];
@@ -50,6 +51,7 @@ parser.i.newParser:{[lang;opts]
 parser.i.runParser:{[pyParser;colnames;opts;docs]
   t:parser.i.cleanUTF8 each docs;
   parsed:parser.i.unpack[pyParser;opts]each t;
+/  if[`lemmas in opts;parsed:parser.i.unpack[pyParser;opts]each lower t]; 
   if[`keywords in opts;parsed[`keywords]:TFIDF parsed];
   colnames#@[parsed;`text;:;t]}
 
@@ -69,6 +71,7 @@ parser.i.unpack:{[pyParser;opts;text]
     doc[`sentIndices]@:unique:value last each group doc`sentIndices;
     if[`sentChars in opts;doc[`sentChars]@:unique]
   ];
+/  if[`lemmas in opts;doc:lower doc];
   @[doc;`;:;::]}
 
 // Python indexes into strings by char instead of byte, so must be modified to index a q string
