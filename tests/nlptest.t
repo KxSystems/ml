@@ -88,6 +88,8 @@ all(.961~truncate[3] i.jaroWinkler["martha";"marhta"];.840~truncate[3] i.jaroWin
 all(0f~i.jaroWinkler["benjamin";enlist"z"];0f~i.jaroWinkler["benjamin";enlist"a"])
 all(0f~i.jaroWinkler["";enlist"a"];0f~i.jaroWinkler["ben";""])
 .75~i.jaroWinkler["abcd"; enlist "b"]
+/adding tests to check if jarowinkler works for 1/2/3 strings
+all(1f~i.jaroWinkler[enlist["h"];enlist"h"];1f~i.jaroWinkler["he";"he"];1f~i.jaroWinkler["she";"she"])
 p:newParser[`en; `tokens`isStop];
 corpus:p text;       
 (()!())~keywordsContinuous 0#corpus  

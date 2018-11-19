@@ -25,9 +25,9 @@ tm.convYM:{
 tm.convYMD:{
   matches:ungroup([fmt:"ymd"]txt:regex.matchAll[;x]each regex.objects`year`month`day);
   matches:value select fmt,last txt by s from matches,'flip`txt`s`e!flip matches`txt;
-  fmt:{@[x;where not xx;except[;raze x where xx:1=count each x]]}/[matches`fmt];
-  fmt:tm.resolveFormat raze@[fmt;i where 1<count each i:group fmt;:;" "];
-  2#"D"$"."sv tm[`parseYear`parseMonth`parseDay]@'matches[`txt] idesc fmt}
+  fmt:{@[x;i unq;:;"ymd" unq:where 1=count each i:where each "ymd" in/:\:x]}/[matches`fmt];
+  fmt:tm.resolveFormat raze@[fmt;where 1<count each fmt;:;" "];  
+  2#"D"$"."sv tm[`parseYear`parseMonth`parseDay]@'matches[`txt]idesc fmt}
 
 // Fill in blanks in date format string
 tm.resolveFormat:{$[0=n:sum" "=x;;1=n;ssr[;" ";first"ymd"except x];2=n;tm.dateFormats;{"dmy"}]x}
@@ -48,8 +48,8 @@ tm.findDates:{[text]
   rmInv:{x where not null x[;0]};
   ym:regex.matchAll[regex.objects.yearmonth;text];
   ymd:regex.matchAll[regex.objects.yearmonthday;text];
-  dts:rmInv(@[tm.convYMD;;"Error converting to ymd"]each ymd[;0]),'ymd; /added error trapping
+  dts:rmInv(tm.convYMD each ymd[;0]),'ymd;
   if[count dts;ym@:where not any ym[;1] within/: dts[; 3 4]];
-  dts,:rmInv(@[tm.convYM;;"Error converting to ym"]each ym[;0]),'ym;  /added error trapping 
+  dts,:rmInv(tm.convYM each ym[;0]),'ym;
   dts iasc dts[;3]}
 

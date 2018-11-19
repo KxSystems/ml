@@ -6,6 +6,7 @@ allQOptionsParser:newParser[`en; `keywords`sentChars`sentIndices];
 textPreservingParser:newParser[`en; `tokens`text];
 sentenceParser:newParser[`en; `tokens`sentChars`sentIndices];
 sentCharsParser:newParser[`en; `tokens`sentChars];
+lemmasParser:newParser[`en;enlist`lemmas];
 everythingParser:newParser[`en; `tokens`sentChars`sentIndices`likeEmail`likeURL`likeNumber`isStop`tokens`lemmas`uniPOS`pennPOS`starts];
 basicParser[enlist"This is my string"]~([]tokens:enlist`this`is`my`string)
 basicParser[("Those were the days that I could master"; "the pace was slower and I was faster")]~([]tokens: (`those`were`the`days`that`i`could`master; `the`pace`was`slower`and`i`was`faster))
@@ -21,4 +22,5 @@ result:allQOptionsParser[enlist"O, the year was 1778 how I wish I was in Sherbro
 all(cols[result]~`keywords`sentChars`sentIndices;result[`keywords]~ enlist `o`year`i`wish`sherbrooke`a`letter`marque`came`king!0 0 0 0 0 0 0 0 0 0f;result[`sentChars] ~ enlist (0 56; 57 95);result[`sentIndices] ~ enlist 0 13)
 result:first sentenceParser enlist" Hornpipe, jig, and reel. \nThis is a good song"
 all((cols result)~`tokens`sentChars`sentIndices;(result[`sentIndices] cut result[`tokens])~ (`hornpipe`jig`and`reel;`this`is`a`good`song))
+lemmasParser[enlist"Apples and oranges are similar. Boots and hippos aren't."]~([]lemmas:enlist`apple`and`orange`be`similar`boot`and`hippo`be`not)
 \d .

@@ -1,6 +1,6 @@
 \p 0W /set random port
 f:{system"q jworker.q ",x," > worker.log.",x," 2>&1 "}
-f each string 8#system"p" /start workers, change the number of workers here
+f each string 4#system"p" /start workers, change the number of workers here
 
 /tracking workers
 regt:(0#0)!0#.z.P

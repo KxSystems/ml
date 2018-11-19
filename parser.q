@@ -50,8 +50,7 @@ parser.i.newParser:{[lang;opts]
 // Operations that must be done in q, or give better performance in q
 parser.i.runParser:{[pyParser;colnames;opts;docs]
   t:parser.i.cleanUTF8 each docs;
-  parsed:parser.i.unpack[pyParser;opts]each t;
-/  if[`lemmas in opts;parsed:parser.i.unpack[pyParser;opts]each lower t]; 
+  parsed:parser.i.unpack[pyParser;opts]each t; 
   if[`keywords in opts;parsed[`keywords]:TFIDF parsed];
   colnames#@[parsed;`text;:;t]}
 
@@ -71,7 +70,6 @@ parser.i.unpack:{[pyParser;opts;text]
     doc[`sentIndices]@:unique:value last each group doc`sentIndices;
     if[`sentChars in opts;doc[`sentChars]@:unique]
   ];
-/  if[`lemmas in opts;doc:lower doc];
   @[doc;`;:;::]}
 
 // Python indexes into strings by char instead of byte, so must be modified to index a q string

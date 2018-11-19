@@ -38,9 +38,9 @@ i.takeTop:{[n;x]n sublist desc x}
 // Jaro distance of 2 strings
 i.jaro:{[s1;s2]
   if[0=l1:count s1;:0f];
-  d:-1+floor .5*l1|l2:count s2;
+  d:1|-1+floor .5*l1|l2:count s2;
   k:l[0]+where each s1='sublist\:[flip l:deltas 0|til[l1]+/:(-1 1)*d]s2;
-  m:count i:where not null j:k[0;0]{x,(y except x)0}/1_k;
+  m:count i:$[1=count j:k[0;0]{x,(y except x)0}/1_k;where not null j:enlist[j];where not null j];
   t:.5*sum s1[i]<>s2 asc j i;
   avg(m%l1;m%l2;(m-t)%m)}
 
