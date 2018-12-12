@@ -1,6 +1,7 @@
 \d .nlp
+
+//Loading python script to extract rtf text
 system"l ",.nlp.path,"/","extract_rtf.p";
-/.nlp.loadfile"extract_rtf.p"
 striprtf:.p.get[`striprtf;<]
 
 // Read mbox file, convert to table, parse metadata & content
