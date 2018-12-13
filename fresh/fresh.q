@@ -173,11 +173,11 @@ fresh.significantfeatures:{[table;targets]
  bintarget:bintest targets;
  bincols:where bintest each flip table;
  realcols:cols[table]except bincols;
- bintab:bincols#table;
- realtab:realcols#table;
+ bintab:table[bincols];
+ realtab:table[realcols];
  pvals:raze$[bintarget;
-         {y[x;]each flip z}[targets]'[fresh.ks2samp,fresh.fishertest;(realtab;bintab)];
-         {y[x;]each flip z}[targets]'[fresh.ktaupy,fresh.ks2samp;(realtab;bintab)]];
+ {y[x;]each z}[targets]'[fresh.ks2samp,fresh.fishertest;(realtab;bintab)];
+ {y[x;]each z}[targets]'[fresh.ktaupy,fresh.ks2samp;(realtab;bintab)]];
  insignificant:fresh.benjhochfind[pvals;0.05];
- cols[table]except insignificant
+ cols[table]except cols[table]insignificant
  }
