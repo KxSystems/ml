@@ -27,7 +27,7 @@ fresh.fishertest:{x0:first distinct x;x1:last distinct x;
  [fisherexact[tab;`alternative pykw `$"two-sided"]`][1]}
 
 fresh.benjhoch:{(y*1+til k)%(k*sums{1%1+til x}k:count x)}
-fresh.benjhochfind:{v:asc x;where v>=fresh.benjhoch[v;y]}
+fresh.benjhochfind:{v:asc x;where v<=fresh.benjhoch[v;y]}
 
 /utils
 fresh.searchsort:{1+x bin y}
