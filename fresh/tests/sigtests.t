@@ -49,9 +49,9 @@ pdmatrix:{asmatrix[benjamini_hochberg_test[dfptable;x]]}
 k:{pdmatrix[x]`}
 vec:{k[x][;2]}
 
-("i"$count .ml.fresh.benjhochfind[pdict;0.01]) ~ sum vec[0.01]<>1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.05]) ~ sum vec[0.05]<>1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.5]) ~ sum vec[0.5]<>1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.75]) ~ sum vec[0.75]<>1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.90]) ~ sum vec[0.90]<>1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.99]) ~ sum vec[0.99]<>1b
+("i"$count .ml.fresh.benjhochfind[pdict;0.01]) ~ sum vec[0.01]=1b
+("i"$count .ml.fresh.benjhochfind[pdict;0.05]) ~ sum vec[0.05]=1b
+("i"$count .ml.fresh.benjhochfind[pdict;0.5]) ~ sum vec[0.5]=1b
+("i"$count .ml.fresh.benjhochfind[pdict;0.75]) ~ sum vec[0.75]=1b
+("i"$count .ml.fresh.benjhochfind[pdict;0.90]) ~ sum vec[0.90]=1b
+("i"$count .ml.fresh.benjhochfind[pdict;0.99]) ~ sum vec[0.99]=1b
