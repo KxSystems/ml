@@ -42,16 +42,30 @@ p-value and the set FDR level.
 pddf:.p.import[`pandas]`:DataFrame
 asmatrix:pddf`:as_matrix
 tab2df:{r:.p.import[`pandas;`:DataFrame.from_dict;flip 0!x][@;cols x];$[count k:keys x;r[`:set_index]k;r]}
-pdict:(5000?`5)!asc 5000?1f
-ptable:([]label:key pdict;p_value:value pdict)
-dfptable:tab2df[ptable]
-pdmatrix:{asmatrix[benjamini_hochberg_test[dfptable;x]]}
-k:{pdmatrix[x]`}
-vec:{k[x][;2]}
+table1:([]100000?100f;asc 100000?100f;desc 100000?100f;100000?0b;100000?100f;asc 100000?100f)
+table2:([]asc 1000000?100f;asc 1000000?100f;desc 1000000?100f;1000000?0b;desc 1000000?100f;asc 1000000?100f)
+table3:([]desc 100000?1f;100000?10f;asc 100000?1f)
+table4:([]100000?0b;100000?1f;100000?1f)
+target1:asc 100000?100f;target2:desc 1000000?1f;target3:target4:target1
 
-("i"$count .ml.fresh.benjhochfind[pdict;0.01]) ~ sum vec[0.01]=1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.05]) ~ sum vec[0.05]=1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.5]) ~ sum vec[0.5]=1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.75]) ~ sum vec[0.75]=1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.90]) ~ sum vec[0.90]=1b
-("i"$count .ml.fresh.benjhochfind[pdict;0.99]) ~ sum vec[0.99]=1b
+bintest:{2=count distinct x}
+pdmatrix:{asmatrix[benjamini_hochberg_test[y;"FALSE";x]]}
+k:{pdmatrix[x;y]`}
+vec:{k[x;y][;2]}
+
+bhfn:{[table;target]
+	bincols:where bintest each flip table;realcols:cols[table]except bincols;
+	bintab:table[bincols];realtab:table[realcols];
+	bintarget:bintest target;
+	pvals:raze$[bintarget;
+			{y[x;]each z}[target]'[.ml.fresh.ks2samp,.ml.fresh.fishertest;(realtab;bintab)];
+			{y[x;]each z}[target]'[.ml.fresh.ktaupy,.ml.fresh.ks2samp;(realtab;bintab)]];
+	pdict:(realcols,bincols)!pvals;
+	ptable:([]label:key pdict;p_value:value pdict);
+	dfptable:tab2df[ptable];
+	("i"$count .ml.fresh.benjhochfind[pdict;0.05]) ~ sum vec[0.05;dfptable]=1b
+	}
+bhfn[table1;target1]
+bhfn[table2;target2]
+bhfn[table3;target3]
+bhfn[table4;target4]

@@ -30,20 +30,22 @@ p)def< target_real_feature_real_test(x, y):
     tau, p_value = stats.kendalltau(x, y)
     return p_value
 
-p)def< benjamini_hochberg_test(df_pvalues, fdr_level):
-    
+p)def< benjamini_hochberg_test(df_pvalues, hypotheses_independent, fdr_level):
+    df_pvalues = df_pvalues.sort_values(by="p_value")
     m = len(df_pvalues)
-    K = list(range(1, m + 1))
-    C = [sum([1.0 / i for i in range(1, k + 1)]) for k in K]
-
-    T = [fdr_level * k / m * 1.0 / c for k, c in zip(K, C)]
-
+    K = np.arange(1, m + 1)
+    if hypotheses_independent:
+        C = np.ones(m)
+    else:
+        C = np.cumsum(1.0 / K)
+    T = (fdr_level * K) / (m * C)
     try:
         k_max = list(df_pvalues.p_value <= T).index(False)
     except ValueError:
         k_max = m
-
-    # Add the column denoting if null hypothesis has been rejected
     df_pvalues["relevant"] = [True] * k_max + [False] * (m - k_max)
-
     return df_pvalues
+
+# The code presented here has been used in a modified form from:
+# Copyright 2016-2018, Maximilian Christ et al./ Blue Yonder GmbH Revision 2b6f57b3
+# The code is used to test q vs python implementations of these functions.
