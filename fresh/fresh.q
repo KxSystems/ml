@@ -178,6 +178,5 @@ fresh.significantfeatures:{[table;targets]
  pvals:raze$[bintarget;
  {y[x;]each z}[targets]'[fresh.ks2samp,fresh.fishertest;(realtab;bintab)];
  {y[x;]each z}[targets]'[fresh.ktaupy,fresh.ks2samp;(realtab;bintab)]];
- insignificant:fresh.benjhochfind[pvals;0.05];
- cols[table]except cols[table]insignificant
+ fresh.benjhochfind[(realcols,bincols)!pvals;0.05]
  }
