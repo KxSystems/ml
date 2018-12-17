@@ -6,7 +6,7 @@
 version:@[{TOOLKITVERSION};0;`development]
 sstring:{$[10=type x;;string]x}
 loadfile:{$[.z.q;;-1]"Loading ",x:1_string hsym`$sstring x;system"l ",path,"/",x;}
-path:{$[count u:@[{1_string first` vs hsym`$u -3+count u:get .z.s};`;""];u;"ml"]}[]
+path:{$[count u:@[{1_string first` vs hsym`$ssr[;"\\";"/"]u -3+count u:get .z.s};`;""];u;"ml"]}[]
 
 / evenly spaced values between x and y in steps of length z.
 arange:{x+z*til ceiling(y-x)%z}
