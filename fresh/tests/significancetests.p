@@ -46,3 +46,6 @@ p)def< benjamini_hochberg_test(df_pvalues, hypotheses_independent, fdr_level):
     df_pvalues["relevant"] = [True] * k_max + [False] * (m - k_max)
     return df_pvalues
 
+// The code presented here has been used in a modified form from:
+// Copyright 2016-2018, Maximilian Christ et al./ Blue Yonder GmbH Revision 2b6f57b3
+// The code is used to test q vs python implementations of these functions.
