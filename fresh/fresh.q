@@ -75,7 +75,7 @@ fresh.feat.lintrend:{
  k:1+til count x;df:(n:count k)-2; 
  rnum:cov[k;x];rden:sqrt cov[k;k]*cov[x;x];rval:$[rden=0;0f;rnum%rden];
  slope:rnum%cov[k;k];intercept:avg[x]-slope*avg k-1;
- $[n=2;$[x[0]=x[1];[p:1;stderr:0];[p:0;stderr:0n]];
+ $[n=2;$[x[0]=x[1];[p:1f;stderr:0f];[p:0f;stderr:0n]];
   [t:rval*sqrt df%(1f-rval+tiny)*1f+rval+tiny:1e-20;
 	stderr:sqrt(1-rval*rval)*cov[x;x]%cov[k;k]*df;p:2*fresh.tdistrib[abs t;df]`;]];
  `slope`intercept`rval`p`stderr!slope,intercept,rval,p,stderr
