@@ -1,4 +1,7 @@
-.nlp.loadfile:{$[.z.q;;-1]"Loading ",x;system"l nlp/",x;}
+.nlp.loadfile:{$[.z.q;;-1]"Loading ",x;system"l ",.nlp.path,"/",x;} /nlp/",x;}
+/ attempt to find the path of this file, default to nlp if any problem
+.nlp.path:{$[count u:@[{1_string first` vs hsym`$ssr[;"\\";"/"]u -3+count u:get .nlp.loadfile};`;""];u;"nlp"]}[]
+.nlp.hpath:hsym`$.nlp.path
 .nlp.loadfile"utils.q"
 .nlp.loadfile"regex.q"
 .nlp.loadfile"sent.q"

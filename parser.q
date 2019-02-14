@@ -21,7 +21,8 @@ parser.i.depOpts:(!). flip(
   (`sentChars;  `sbd`sentIndices);
   (`sentIndices;`sbd);
   (`uniPOS;     `tagger);
-  (`pennPOS;    `tagger))
+  (`pennPOS;    `tagger);
+  (`lemmas;     `tagger)) /added lemmas as it depends on tagger
 
 // Map from q-style attribute names to spacy
 parser.i.q2spacy:(!). flip(
@@ -40,7 +41,7 @@ parser.i.q2spacy:(!). flip(
 parser.i.newParser:{[lang;opts]
   opts:distinct opts,raze parser.i.depOpts colnames:opts;
   disabled:`ner`tagger`parser except opts;
-  model:.p.import[`spacy;`:load][lang;`disable pykw disabled];
+  model:.p.import[`spacy;`:load][lang;`disable pykw disabled]; 
   if[(`sbd in opts)&`parser in disabled;model[`:add_pipe]model[`:create_pipe;`sbd]];
   tokenAttrs:parser.i.q2spacy key[parser.i.q2spacy]inter opts;
   pyParser:parser.i.parseText[model;tokenAttrs;opts;];
@@ -48,7 +49,8 @@ parser.i.newParser:{[lang;opts]
 
 // Operations that must be done in q, or give better performance in q
 parser.i.runParser:{[pyParser;colnames;opts;docs]
-  parsed:parser.i.unpack[pyParser;opts]each t:parser.i.cleanUTF8 each docs;
+  t:parser.i.cleanUTF8 each docs;
+  parsed:parser.i.unpack[pyParser;opts]each t; 
   if[`keywords in opts;parsed[`keywords]:TFIDF parsed];
   colnames#@[parsed;`text;:;t]}
 

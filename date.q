@@ -25,8 +25,8 @@ tm.convYM:{
 tm.convYMD:{
   matches:ungroup([fmt:"ymd"]txt:regex.matchAll[;x]each regex.objects`year`month`day);
   matches:value select fmt,last txt by s from matches,'flip`txt`s`e!flip matches`txt;
-  fmt:{@[x;where not xx;except[;raze x where xx:1=count each x]]}/[matches`fmt];
-  fmt:tm.resolveFormat raze@[fmt;i where 1<count each i:group fmt;:;" "];
+  fmt:{@[x;i unq;:;"ymd" unq:where 1=count each i:where each "ymd" in/:\:x]}/[matches`fmt];
+  fmt:tm.resolveFormat raze@[fmt;where 1<count each fmt;:;" "];  
   2#"D"$"."sv tm[`parseYear`parseMonth`parseDay]@'matches[`txt]idesc fmt}
 
 // Fill in blanks in date format string
@@ -52,3 +52,4 @@ tm.findDates:{[text]
   if[count dts;ym@:where not any ym[;1] within/: dts[; 3 4]];
   dts,:rmInv(tm.convYM each ym[;0]),'ym;
   dts iasc dts[;3]}
+
