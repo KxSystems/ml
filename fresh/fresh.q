@@ -159,15 +159,36 @@ fresh.peakfind:{
 
 fresh.getsingleinputfeatures:{where[{1=count x y}[{$[100=type x;get[x]1;()]}]each .ml.fresh.feat]#.ml.fresh.feat}
 
-fresh.createfeatures:{[data;aggs;cnames;funcs]
- mkname:{`$"_"sv string x[0],x 2}; 
- r:?[data;();aggs!aggs:aggs,();mkname'[comb]!1_'comb:(flip(key;value)@\:funcs)cross cnames];
+/ This is a modified version of the feature creation procedure to allow for hyperparameter functions to be run
+/ in addition to the functions that take only the data as input
+/ if dict set to 0b then compute single input features
+/ else the 'safe' input are hyperparameter functions for dict=.ml.i.dict
+fresh.createfeatures:{[data;aggs;cnames;dict]
+        $[dict~0b;
+         fresh.createfeatures1[data;aggs;cnames];
+         fresh.createmulfeat[data;aggs;cnames;dict]]}
+fresh.createfeatures1:{[data;aggs;cnames]
+ mkname:{`$"_"sv string x[0],x 2};
+ r:?[data;();aggs!aggs:aggs,();mkname'[comb]!1_'comb:(flip(key;value)@\:.ml.fresh.getsingleinputfeatures[])cross cnames];
  / flatten multi output cols
  if[count mcols@:where 98=type each value[r]mcols:exec c from meta[r]where null t;
   r:key[r]!(mcols _ value r){x,'y}/{(`$"_"sv'string x,'cols y)xcol y}'[mcols;value[r]mcols]];
- r} 
-
-fresh.significantfeatures:{[table;targets]
+ r}
+fresh.createmulfeat:{[data;aggs;cnames;dict]
+ newDict:(!).(key dict;value each value dict)@\:til count dict;
+ fnc:{value` sv(`.ml.fresh.feat;x)}each key newDict;
+ colnames:raze raze{`$sv'["_";string y,'raze $[1=count z;raze[z];
+     1=count distinct count each z;
+     enlist[z];flip[z]],/:\:x]}[cnames]'[key newDict;vDict:value newDict];
+ tab:{[col;vD;fnc;feat] col!raze raze  {$[1=count z;
+     {{.[y;(x;z)]}[;y;z]each value x}[x;y]each raze z;
+     1=count distinct count each z;
+     {.[y;(x;z)]}[;y;z]each value x;
+     {{.[y;(x;z)]}[;y;z]each value x}[x;y]each flip z]}[feat]'[fnc;vD]}[colnames;vDict;fnc]each ?[data;();aggs;
+     $[1=count cnames;enlist[cnames]!enlist cnames;cnames!cnames]];
+ fresh.createfeatures1[data;aggs;cnames],'value tab  
+ }
+fresh.sigfeat:{[table;targets]
  table:(where 0=var each flip table)_table;
  bintest:{2=count distinct x};
  bintarget:bintest targets;
@@ -176,7 +197,17 @@ fresh.significantfeatures:{[table;targets]
  bintab:table[bincols];
  realtab:table[realcols];
  pvals:raze$[bintarget;
- {y[x;]each z}[targets]'[fresh.ks2samp,fresh.fishertest;(realtab;bintab)];
- {y[x;]each z}[targets]'[fresh.ktaupy,fresh.ks2samp;(realtab;bintab)]];
- fresh.benjhochfind[(realcols,bincols)!pvals;0.05]
- }
+  {y[x;]each z}[targets]'[fresh.ks2samp,fresh.fishertest;(realtab;bintab)];
+  {y[x;]each z}[targets]'[fresh.ktaupy,fresh.ks2samp;(realtab;bintab)]];
+ (realcols,bincols)!pvals}
+
+fresh.significantfeatures:fresh.benjhochfeat:{[table;targets]fresh.benjhochfind[fresh.sigfeat[table;targets];0.05]}
+
+/ alternate feature selections
+fresh.percentilesigfeat:{[table;targets;p]where percentile[k;p]>k:fresh.sigfeat[table;targets]}
+fresh.ksigfeat:{[table;targets;k]key k#asc fresh.sigfeat[table;targets]}
+
+/dictionary of features with hyper-parameters
+pdictvals:`binnedentropy`cidce`numcrossingm`ratiobeyondrsigma`largestdev`c3`autocorr`indexmassquantile`numcwtpeaks`symmetriclooking`treverseasymstat`quantile
+fndict:.ml.fresh.paramdict
+i.dict:pdictvals!fndict[pdictvals]

@@ -4,3 +4,4 @@ system"l ",{$[count u:@[{1_string first` vs hsym`$ssr[;"\\";"/"]u -3+count u:get
 /load in all the .q scripts within the ml library
 loadfile`:util/init.q
 loadfile`:fresh/init.q
+loadfile`:xval/init.q

@@ -37,7 +37,7 @@ freshpipeline:{[table;id;target]
  -1"\n------------------------------";
  -1 "Beginning feature extraction, this may take a while...";
  -1"------------------------------\n";
- tabraw:.ml.fresh.createfeatures[table;id;2_ cols table;singleinputfeatures];
+ tabraw:.ml.fresh.createfeatures[table;id;2_ cols table;0b];
  
  -1"------------------------------";
  -1 "Feature extraction is now complete, the new table is as follows";
@@ -62,7 +62,7 @@ freshpipeline:{[table;id;target]
  -1"\n------------------------------";
  -1"We now set a Random Forest Classifier with 200 estimators to create our predictions and fit the data to the model and make predictions given a defined random seed";
  -1"--------------------------------\n";
- clf:.p.import[`sklearn.ensemble][`:RandomForestClassifier][`n_estimators pykw 10;`random_state pykw 42];
+ clf:.p.import[`sklearn.ensemble][`:RandomForestClassifier][`n_estimators pykw 200;`random_state pykw 42];
  classreport:.p.import[`sklearn.metrics]`:classification_report;
 
  seed:"i"$.z.t;
