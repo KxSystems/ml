@@ -3,8 +3,10 @@ version:@[{NLPVERSION};0;`development]
 // Find TFIDF scores for all terms in all documents
 TFIDF:{[corpus]
   tokens:corpus[`tokens]@'where each not corpus[`isStop]|corpus[`tokens]like\:"[0-9]*";
-  idf:{(`u#key x)!value x}log -1+count[corpus]%count each group raze tokens;
-  df*0|idf key each df:1+log(count each group@)each tokens}
+  tab:words!flip{{sum[x in y]%count x}[y]each x}[words:distinct raze tokens]each tokens;
+  flip tab*idf:words!1+log count[tokens]%{sum{x in y}[y]each x}[tokens]each words}
+
+TFIDF_tot:{[corpus]desc sum t%'sum each t:TFIDF corpus}
 
 // On a conceptually single doc (e.g. novel), gives better results than TF-IDF
 // This algorithm is explained in the paper
