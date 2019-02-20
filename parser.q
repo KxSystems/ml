@@ -14,15 +14,22 @@ p)def get_doc_info(parser,tokenAttrs,opts,text):
   return res
 parser.i.parseText:.p.get[`get_doc_info;<];
 parser.i.cleanUTF8:.p.import[`builtins;`:bytes.decode;<][;`errors pykw`ignore]$["x"]@;
+p)def x_sbd(doc):
+  if len(doc):
+    doc[0].is_sent_start=True
+    for i,token in enumerate(doc[:-1]):
+      doc[i+1].is_sent_start=token.text in ['。','？','！']
+  return doc
 
 // Dependent options
 parser.i.depOpts:(!). flip(
   (`keywords;   `tokens`isStop);
-  (`sentChars;  `sbd`sentIndices);
+  (`sentChars;  `sentIndices);
   (`sentIndices;`sbd);
   (`uniPOS;     `tagger);
   (`pennPOS;    `tagger);
-  (`lemmas;     `tagger)) /added lemmas as it depends on tagger
+  (`lemmas;     `tagger);
+  (`isStop;     `lemmas))
 
 // Map from q-style attribute names to spacy
 parser.i.q2spacy:(!). flip(
@@ -36,34 +43,47 @@ parser.i.q2spacy:(!). flip(
   (`pennPOS;    `tag_);
   (`starts;     `idx))
 
+// Model inputs for spacy 'alpha' models
+parser.i.alphalang:(!). flip(
+  (`ja;`Japanese);
+  (`zh;`Chinese))
+
 // Create new parser
 // Valid opts : text keywords likeEmail likeNumber likeURL isStop tokens lemmas uniPOS pennPOS starts sentChars sentIndices
 parser.i.newParser:{[lang;opts]
-  opts:distinct opts,raze parser.i.depOpts colnames:opts;
+  opts:{distinct x,raze parser.i.depOpts x}/[colnames:opts];
   disabled:`ner`tagger`parser except opts;
-  model:.p.import[`spacy;`:load][lang;`disable pykw disabled]; 
-  if[(`sbd in opts)&`parser in disabled;model[`:add_pipe]model[`:create_pipe;`sbd]];
+  model:parser.i.newSubParser[lang;opts;disabled];
   tokenAttrs:parser.i.q2spacy key[parser.i.q2spacy]inter opts;
   pyParser:parser.i.parseText[model;tokenAttrs;opts;];
-  parser.i.runParser[pyParser;colnames;opts]}
+  stopwords:(`$.p.list[model`:Defaults.stop_words]`),`$"-PRON-";
+  parser.i.runParser[pyParser;colnames;opts;stopwords]}
+
+// Returns a parser for the given language
+parser.i.newSubParser:{[lang;opts;disabled] 
+ chklng:parser.i.alphalang lang;
+ model:.p.import[$[`~chklng;`spacy;sv[`]`spacy.lang,lang]][hsym$[`~chklng;`load;chklng]
+   ]. raze[$[`~chklng;lang;()];`disable pykw disabled];
+  if[`sbd in opts;model[`:add_pipe]$[`~chklng;model[`:create_pipe;`sbd];.p.pyget `x_sbd]];
+ model}
 
 // Operations that must be done in q, or give better performance in q
-parser.i.runParser:{[pyParser;colnames;opts;docs]
+parser.i.runParser:{[pyParser;colnames;opts;stopwords;docs]
   t:parser.i.cleanUTF8 each docs;
-  parsed:parser.i.unpack[pyParser;opts]each t; 
+  parsed:parser.i.unpack[pyParser;opts;stopwords]each t;
   if[`keywords in opts;parsed[`keywords]:TFIDF parsed];
   colnames#@[parsed;`text;:;t]}
 
 // Operations that must be done in q, or give better performance in q
-parser.i.unpack:{[pyParser;opts;text]
+parser.i.unpack:{[pyParser;opts;stopwords;text]
   names:inter[key[parser.i.q2spacy],`sentChars`sentIndices;opts],`isPunct;
   doc:names!pyParser text;
   doc:@[doc;names inter`tokens`lemmas`uniPOS`pennPOS;`$];
   if[`entities in names;doc:.[doc;(`entities;::;0 1);`$]]
   if[`isStop in names;
-    if[`tokens  in names;doc[`isStop]|:doc[`tokens ]in i.stopwords  ];
     if[`uniPOS  in names;doc[`isStop]|:doc[`uniPOS ]in i.stopUniPOS ];
     if[`pennPOS in names;doc[`isStop]|:doc[`pennPOS]in i.stopPennPOS];
+    if[`lemmas  in names;doc[`isStop]|:doc[`lemmas ]in stopwords];
   ];
   doc:parser.i.removePunct parser.i.adjustIndices[text]doc;
   if[`sentIndices in opts;
