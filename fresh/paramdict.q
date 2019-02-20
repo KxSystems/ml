@@ -15,10 +15,9 @@
   treverseasymstat:(select lag:1 2 3 from dd),
   quantile:(select quantile:.1*1+til 9 from dd),
   valcount:(select val:0 1 0n 0w -0w from dd),
-  spktwelch:(select coeff:2 5 8 from dd),
+  spktwelch:(select coeff:enlist (2 5 8) from dd),
   rangecount:(select minval:-1,maxval:1 from dd),
   partautocorrelation:(select lag:til 10 from dd),
-  changequant:(select ql:0 .2 .4 .6 .8,qh:.2 .4 .6 .8 1,isabs:01b from dd),
   fftcoeff:(select coeff:til 100 from dd),
   agglintrend:(select chunklen:5 10 50 from dd),
   eratiobychunk:(select numsegments:10,segmentfocus:til 10 from dd)

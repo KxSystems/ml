@@ -93,29 +93,30 @@ fresh.fftaggreg:{[x] getmoment:{[y;moment](("f"$y)$("f"$fresh.arange[0;count y;1
  `centroid`variance`skew`kurtosis!centroid,variance,skew,kurtosis}
 
 
-fresh.partautocorrelation:{[x;lag]
+fresh.feat.partautocorrelation:{[x;lag]
  maxreqlag:max lag;
  n:count x;
  $[n<=1;
  (1+maxreqlag)#0n;
  [$[n<=maxreqlag;maxlag:maxreqlag-1;maxlag:maxreqlag];
- paccoeff:pacf[x;`nlags pykw maxlag;`method pykw `ld]`;
+ paccoeff:fresh.pacf[x;`nlags pykw maxlag;`method pykw `ld]`;
  paccoeff:paccoeff[lag],(max 0,maxreqlag-maxlag)#0n]];
  r:({`$"lag_",string x}each lag)!paccoeff}
 
-fresh.spktwelch:{[x;coeff]
+fresh.feat.spktwelch:{[x;coeff]
  dict:`freq`pxx!fresh.welch[x]`;
-  $[n:count dict[`pxx]<=max coeff;
- [reducedcoeff:coeff where coeff<n;
- notreducedcoeff:coeff except reducedcoeff;
- pxx:dict[`pxx][reducedcoeff],((count notreducedcoeff)#0n)];
+  $[(n:count dict[`pxx])<=max coeff;
+  [reducedcoeff:coeff where m;notreducedcoeff:coeff except reducedcoeff;
+   pxx:dict[`pxx][reducedcoeff],((count notreducedcoeff)#0n)];
  pxx:dict[`pxx][coeff]];
- r:({`$"coeff_",string x}each coeff)!pxx}
+ $[1~count pxx;
+ (enlist {`$"coeff_",string x}each coeff)!enlist pxx
+  ;({`$"coeff_",string x}each coeff)!pxx]}
 
 fresh.fkey:`angle`real`imag`abs
-fresh.fftcoeff:{[x;y]
+fresh.feat.fftcoeff:{[x;y]
  fx:fresh.rfft x;$[y<count k:fresh.angle[fx;`deg pykw 1b]`;
-	fresh.fkey!(k y;[fresh.real[fx]`]y;[fresh.imag[fx]`]y;[fresh.abso[fx]`]y);fkey!4#0n]}
+	fresh.fkey!(k y;[fresh.real[fx]`]y;[fresh.imag[fx]`]y;[fresh.abso[fx]`]y);fresh.fkey!4#0n]}
  
 / This function currently needs median,variance,mean and standard deviation to be defined separate to the initial q implementation.
 fresh.aggautocorr:{
@@ -178,7 +179,7 @@ fresh.createmulfeat:{[data;aggs;cnames;dict]
  newDict:(!).(key dict;value each value dict)@\:til count dict;
  fnc:{value` sv(`.ml.fresh.feat;x)}each key newDict;
  colnames:raze raze{`$sv'["_";string y,'raze $[1=count z;raze[z];
-     1=count distinct count each z;
+     1=count distinct count each 0N!z;
      enlist[z];flip[z]],/:\:x]}[cnames]'[key newDict;vDict:value newDict];
  tab:{[col;vD;fnc;feat] col!raze raze  {$[1=count z;
      {{.[y;(x;z)]}[;y;z]each value x}[x;y]each raze z;
