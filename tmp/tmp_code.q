@@ -14,12 +14,10 @@
 cfs:{[t;tgt]
  t:$[99=type t;value t;t];
  fc:(flip t)cor\:tgt;
- pairs:cols[t] -1+util.combs[;n]each n:(1+til count cols t);
+ pairs:cols[t] -1+util.combs[;n]each n:(1+til count fc);
  k:raze{count each x}each pairs;
- rff:1^raze{avg each x}each
-     (({`$x} each string each p cross p:cols[l])!
-     raze flip l:value corrmat[t])@{{util.combs[2;x]}each x}each pairs;
- rcf:1^raze{avg each x}each {x@y}[fc]each pairs;
+ rff:1^raze{avg each x}each(({`$x} each string each p cross p:cols[l])!raze flip l:value corrmat[t])@{{util.combs[2;x]}each x}each pairs;
+ rcf:1^raze{avg each x}each{x@y}[fc]each pairs;
  (key 1#desc raze[pairs]!{(x*y)%sqrt x+x*(x-1)*z}[k;rcf;rff])0}
 
 
@@ -31,9 +29,8 @@ cfs:{[t;tgt]
 / Note that this works best on non deterministic models such as lin-regress/logistic-regress/SVM for example.
 /* data = entire dataset from which subsets are chosen
 /* targets = target vector
-/* pvals = p-values calculated using sigfeat
 /* py = python model being tested
-/* pertst = train-test split percentage
+/* sz = train-test split percentage
 xval.fswselect:{[data;target;py;sz]
  system"S 1";
  tts:util.traintestsplit[data;target;sz];
