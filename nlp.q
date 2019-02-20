@@ -3,8 +3,8 @@ version:@[{NLPVERSION};0;`development]
 // Find TFIDF scores for all terms in all documents
 TFIDF:{[corpus]
   tokens:corpus[`tokens]@'where each not corpus[`isStop]|corpus[`tokens]like\:"[0-9]*";
-  tab:words!flip{{sum[x in y]%count x}[y]each x}[words:distinct raze tokens]each tokens;
-  flip tab*idf:words!1+log count[tokens]%{sum{x in y}[y]each x}[tokens]each words}
+  tab:{x!{sum[x in y]%count x}[y]each x}'[words:distinct each tokens;tokens];
+  tab*idf:1+log count[tokens]%{sum{x in y}[y]each x}[tokens]each words}
 
 TFIDF_tot:{[corpus]desc sum t%'sum each t:TFIDF corpus}
 
@@ -98,6 +98,9 @@ loadEmails:email.i.getMboxText
 
 // Create a new parser using a spaCy model (must already be installed)
 newParser:parser.i.newParser
+
+// Detect language from text
+detectLang:{[text]`$.p.import[`langid][`:classify;<][raze text]0}
 
 // Parse urls to dictionaries
 parseURLs:{`scheme`domainName`path`parameters`query`fragment!i.parseURLs x}
