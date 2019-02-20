@@ -59,7 +59,6 @@ i.compareDocToCorpus:{[keywords;idx]compareDocs[keywords idx]each(idx+1)_ keywor
 i.matrixFromRaggedList:{m+flip m:((til count x)#'0.),'.5,'x}
 
 // Parts-of-speech not useful as keywords
-i.stopwords:asc`$("n’t";"’s";"’ll";"’ve";"’re";"’d";"n't";"'s";"'ll";"'ve";"'re";"'d")
 i.stopUniPOS:asc`ADP`PART`AUX`CONJ`DET`SYM`NUM`PRON`SCONJ
 i.stopPennPOS:asc`CC`CD`DT`EX`IN`LS`MD`PDT`POS`PRP`SYM`TO`WDT`WP`WRB,`$("PRP$";"WP$";"$")
 
