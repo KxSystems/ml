@@ -2,6 +2,8 @@
 \l p.q
 /load in all the .q scripts within the ml library
 
+/test of ci tests
+
 \d .ml
 version:@[{TOOLKITVERSION};0;`development]
 sstring:{$[10=type x;;string]x}
