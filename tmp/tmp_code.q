@@ -2,8 +2,6 @@
 
 \d .ml
 
-/ this is a test
-
 / Correlation based Feature Selection:
 / This function is limited in scope, issues arise in horizontally large datasets
 / this is due to the need to produce all combinations of features possible on 2 separate
