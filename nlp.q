@@ -8,6 +8,7 @@ TFIDF:{[corpus]
 
 TFIDF_tot:{[corpus]desc sum t%'sum each t:TFIDF corpus}
 
+
 // On a conceptually single doc (e.g. novel), gives better results than TF-IDF
 // This algorithm is explained in the paper
 // Carpena, P., et al. "Level statistics of words: Finding keywords in literary texts and symbolic sequences."
