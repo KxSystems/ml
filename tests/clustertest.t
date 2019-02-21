@@ -11,7 +11,7 @@ cluster50:cluster.MCL[corpus;0.5;0b]
 cluster75:cluster.MCL[corpus;0.75;0b]
 cluster95:cluster.MCL[corpus;0.95;0b]
 clusterlist:(cluster04;cluster25;cluster50;cluster75;cluster95)
-()~cluster.MCL[emptyDoc;0.5;0b]
+(qwe)~cluster.MCL[emptyDoc;0.5;0b]
 ()~cluster.MCL[1#emptyDoc;0.5;0b]
 ()~cluster.MCL[1#corpus;0.5;0b]
 all (til 5) in raze cluster.MCL[5#corpus; .5; 0b]
