@@ -10,25 +10,22 @@ if not defined QLIC_KC (
  goto :nokdb
 )
 
-@echo OFF
-call build\getkdb.bat                                || goto :error
+call "build\getkdb.bat" || goto :error
+
 set PATH=C:\Miniconda3-x64;C:\Miniconda3-x64\Scripts;%PATH%
-conda init cmd.exe
 mkdir embedpy
 cd embedpy
 echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
+echo"here"
 cd ..
-pip install -r requirements.txt                      || goto :error
-call install.bat                                     || goto :error
+echo p)print('embedpy runs') | q -q || goto :error
 exit /b 0
 
 :error
-echo failed with error %errorLevel%
-set PATH=%OP%
-exit /b %errorLevel%
+echo failed with error 
+exit /b
 
 :nokdb
 echo no kdb
-set PATH=%OP%
 exit /b 0
 
