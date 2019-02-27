@@ -17,7 +17,6 @@ mkdir embedpy
 cd embedpy
 echo getembedpy"latest"  
 q ..\build\getembedpy.q -q || goto :error
-echo "here"
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
 exit /b 0
