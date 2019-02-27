@@ -53,21 +53,20 @@ repfnmain:{[x;y;n;k;algo]
  algo:$[1<count .z.W;pickledump[algo];algo];
  i:();do[n;i,:enlist k];
  avg kfoldpd[x;y;;algo]peach i} 
-
 gridsearchmain:{[x;y;i;algo;dict]
  alg:$[1<count .z.W;pickledump[algo];mkalg[dict;algo]];
  data:distrib[x;i],'distrib[y;i];
  vals:$[4h=type alg;gengsearch[alg;dict];fitscore[alg]]peach data;
  aver:$[1=count shape vals;avg vals;avg each (,'/)vals];
  (aver;$[1=count key dict;(value dict)0;((cross/)value dict)] where aver=max aver)}
+
 / utils
 distrib:{{(raze x _ y;x y)}[x y;]each til count y}
 shuffle:{neg[n]?n:count x}
 pickledump:{.p.import[`pickle][`:dumps;<][x]}
 fitscore:{{x[`:fit][y 0;y 2][`:score][y 1;y 3]`}[;y]each x}
 
-/ these functions are called in the worker file -> worker processes but must be defined here currently
-
+/ these functions are called in the worker file or here depending on context
 mkalg:{[dict;algo]$[1=count kd:key[dict];
  {x[(y 0) pykw z]}[algo;kd]each (value dict)0;
  algo@'{pykwargs x}each {key[x]!y}[dict;]each (cross/)value dict]}
