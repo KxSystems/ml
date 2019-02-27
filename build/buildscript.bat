@@ -16,9 +16,9 @@ set PATH=C:\Miniconda3-x64;C:\Miniconda3-x64\Scripts;%PATH%
 mkdir embedpy
 cd embedpy
 echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
-echo "here"
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
+echo"here2"
 exit /b 0
 
 :error
