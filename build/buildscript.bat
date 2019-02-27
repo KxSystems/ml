@@ -18,7 +18,7 @@ cd embedpy
 echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
-echo"here2"
+echo "hi"
 exit /b 0
 
 :error
