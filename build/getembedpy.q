@@ -7,6 +7,7 @@ download:{
  dl[1b]relurl;last ` vs hsym`$relurl}
 extract:{system$[x like"*.tgz";"tar -zxf";x like"*.zip";$[.z.o~`w64;"7z x -y";"unzip"];'"not zip or tgz"]," ",string x}
 install:{{(` sv qhome,x)1:read1 x}each`p.k`p.q,`${$[x~"w64";x,"/p.dll";x,"/p.so"]}string .z.o}
-0N!getembedpy:{@[x;y;{-2"ERROR: ",x;exit 1}]}{install extract download x}"getembedpylatest"
+getembedpy:{@[x;y;{-2"ERROR: ",x;exit 1}]}{install extract download x}
+getembedpy["getembedpylatest"]
 \\
 
