@@ -15,7 +15,7 @@ call "build\getkdb.bat" || goto :error
 set PATH=C:\Miniconda3-x64;C:\Miniconda3-x64\Scripts;%PATH%
 mkdir embedpy
 cd embedpy
-q ..\build\getembedpy.q -q || goto :error
+q ..\build\getembedpy.q -q | echo getembedpy"latest" || goto :error
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
 exit /b 0
