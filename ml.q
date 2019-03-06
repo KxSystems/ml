@@ -36,7 +36,7 @@ mse:{avg d*d:x-y}
 sse:{sum d*d:x-y}
 r2score:{1-sse[x;y]%sse[x;count[x]#avg x]}
 rmse:{sqrt mse[x;y]}
-mae:{avg sum abs x-y}
+mae:{avg abs x-y}
 mape:{100*mae[x;y]%x}
 smape:{(2%count x)*sum(abs x-y)%(x+y)}								/ symmetric-mean abs percentage error
 rmsle:{sqrt(sum k*k:((exp 1)xlog(y+1))-(exp 1)xlog x+1)%count x}
