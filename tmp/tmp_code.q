@@ -103,8 +103,55 @@ util.dupcols:{[tab]
 	 }[;flip value flip tab;tab]each til count flip tab;
  $[0=count m;tab;![tab;();0b;m]]}
 
+/adaboost is used to improve the scores of weak learners
+/ xtrain,ytrain - the x and y training data
+/ xtest - the data that you want to predict
+/ clf - the weak model used
+/ iter - the amount of iterations used
+fresh.adaboost:{[xtrain;ytrain;xtest;clf;iter]
+ ada:{x>last y}[iter]{[clf;xtrain;ytrain;xtest;X]
+  clf[`:fit][xtrain;ytrain;`sample_weight pykw w:X[2]];
+  predtrain:clf[`:predict][xtrain]`;
+  predtest:clf[`:predict][xtest]`;
+  miss:`long$predtrain<>ytrain;
+  miss2:@[miss;where miss=0;-;1];
+  w*:exp miss2*alpham:0.5*log (1-errm)%errm:sum w*miss%sum w;
+  ptrain:sum each (ptrain:X[0]),'alpham*predtrain;
+  ptest:sum each (ptest:X[1]),'alpham*predtest;
+  (ptrain;ptest;w;1+l:X[3])
+  }[clf;xtrain;ytrain;xtest]/(ptrain:(nt)#0;ptest:ptest:(count xtest)#0;w:w:((nt)#1)%nt:count xtrain;0);
+ {$[x>0;1;x=0;0;-1]}each ada[1]
+ }
+
+//if lists are of different length,pad a number of the beginning of the shorter sequences
+// x is a list of uneven lengths
+//y~ number that you want the sequence to be padded with, 0b if 0 to be used
+padding:{{$[x=n:count z;z;((x-n)#y),z]}[max count each x;$[y~0b;0;y]]each x}
+
+//converts a table to a matrix of values
+tab2mat:{flip value flip x}
 
 
+//deletes rows from a table that has all null values
+nullrow:{x where not all flip null x}
+
+//deletes rows from a table if contains any null values
+anynullrow:{x where not any flip null x}
+
+
+/x: table
+/y: axis (`row, `col)
+/z: `any or `all
+dropna:{$[y~`row;x where not(get string z)null flip x;flip(cols x)!x where not(get string z)null x]}
+
+
+// equivalent to pivoting a table in pandas
+pivot:{[t;idx;sym;val]?[t;();enlist[idx]!enlist idx;(!;sym;val)]}
+
+
+//Used as a metric score for clusters 
+//x=pred value,y=true value
+homogeneityscore:{(value group x)~value group y}
 
 
 
