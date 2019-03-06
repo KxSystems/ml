@@ -1,7 +1,6 @@
 system "S ",21_-4_string[.z.p];
 \d .ml
 
-\l ml/init.q
 
 fresh.peachcreatefeatures:{
  .z.pd:`u#hopen each .i.prt;
