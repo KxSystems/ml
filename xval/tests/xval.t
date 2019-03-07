@@ -30,8 +30,8 @@ split:.ml.xval.kfsplit[yexample;3];
 (rnd .ml.xval.kfoldx[xexample;yexample;split;regr2])~rnd avg kfold[xexample;yexample]
 
 
-.ml.xval.kfsplit[xexample;2]~last each (.p.list kfsplit[xexample;2])`
-0N!"HERE2";
+(rnd .ml.xval.kfsplit[xexample;2])~rnd last each (.p.list kfsplit[xexample;2])`
+
 (floor 10*rnd .ml.xval.rollxval[xexample;yexample;m;py])~floor 10*rnd avg crossval[xexample;yexample;first each i;last each i;m]
 0N!HERE3";
 
