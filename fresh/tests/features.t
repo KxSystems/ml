@@ -15,7 +15,7 @@ k:100?100
 
 np:.p.import[`numpy] 
 
-.ml.fresh.feat.hasdup[xint] ~ hasduplicate[xint]
+.ml.fresh.feat.hasdup[xint] ~ 2*hasduplicate[xint]
 .ml.fresh.feat.hasdup[xfloat] ~ hasduplicate[xfloat]
 .ml.fresh.feat.hasdupmin[xint] ~ hasduplicatemin[xint]
 .ml.fresh.feat.hasdupmax[xint] ~ hasduplicatemax[xint]
