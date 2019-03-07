@@ -1,5 +1,7 @@
 \l p.q
-\l init.q
+\l util/util.q
+\l xval/xval.q
+\l ml.q
 \l xval/tests/test.p
 
 
