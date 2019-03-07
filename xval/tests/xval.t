@@ -1,35 +1,35 @@
 \l p.q
-\l xval/init.q
-\l xval/test/xval/p
-
-n:10000
-py:.p.import[`sklearn.linear_model][`:LinearRegression][]
-regr:.p.import[`sklearn.linear_model][`:ElasticNet]
-regr2:.p.import[`sklearn.linear_model][`:ElasticNet][]
-clf:.p.import[`sklearn.tree][`:DecisionTreeClassifier][]
-xg:flip value flip([]n?100f;asc n?100f)
-yg:asc n?100f
-dict:`max_iter`alpha!(100 200 1000;0.1 0.2)
-split:.ml.xval.kfsplit[yg;3]
-sz:0.2
-rnd:{0.001*"j"$100*x}
-m:10
-o:o:{((,/)neg[1]_x;last x)}each 1_(,\)enlist each (m,0N)#til count yg
-i:1_(1 xprev k),'k:enlist each(m+1,0N)#til count yg
+\l init.q
+\l xval/tests/test.p
 
 
+py:.p.import[`sklearn.linear_model][`:LinearRegression][];
+regr:.p.import[`sklearn.linear_model][`:ElasticNet];
+regr2:.p.import[`sklearn.linear_model][`:ElasticNet][];
+clf:.p.import[`sklearn.tree][`:DecisionTreeClassifier][];
+dict:`max_iter`alpha!(100 200 1000;0.1 0.2);
+sz:.2;
+rnd:{.001*"j"$100*x};
+m:10;
+xexample:flip value flip([]10000?100f;asc 10000?100f);
+yexample:asc 10000?100f;
 
-(rnd .ml.xval.chainxval[xg;yg;m;py])~rnd avg crossval[xg;yg;first each o;last each o;m]
-
-(rnd first .ml.xval.gridsearch[xg;yg;split;regr;dict])~rnd gridsearch[xg;yg]
-
-
-(rnd .ml.xval.kfoldx[xg;yg;split;regr2])~rnd avg kfold[xg;yg]
+o:o:{((,/)neg[1]_x;last x)}each 1_(,\)enlist each (m,0N)#til count yexample;
+i:1_(1 xprev k),'k:enlist each(m+1,0N)#til count yexample;
+split:.ml.xval.kfsplit[yexample;3];
 
 
-.ml.xval.kfsplit[xg;2]~last each (.p.list kfsplit[xg;2])`
+(rnd first .ml.xval.gridsearch[xexample;yexample;split;regr;dict])~rnd gridsearch[xexample;yexample]
 
-(rnd .ml.xval.rollxval[xg;yg;m;py])~rnd avg crossval[xg;yg;first each i;last each i;m]
+(rnd .ml.xval.chainxval[xexample;yexample;m;py])~rnd avg crossval[xexample;yexample;first each o;last each o;m]
+
+
+(rnd .ml.xval.kfoldx[xexample;yexample;split;regr2])~rnd avg kfold[xexample;yexample]
+
+
+.ml.xval.kfsplit[xexample;2]~last each (.p.list kfsplit[xexample;2])`
+
+(rnd .ml.xval.rollxval[xexample;yexample;m;py])~rnd avg crossval[xexample;yexample;first each i;last each i;m]
 
 
 
