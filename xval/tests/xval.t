@@ -9,7 +9,7 @@ regr2:.p.import[`sklearn.linear_model][`:ElasticNet][];
 clf:.p.import[`sklearn.tree][`:DecisionTreeClassifier][];
 dict:`max_iter`alpha!(100 200 1000;0.1 0.2);
 sz:.2;
-rnd:{.001*"j"$100*x};
+rnd:{.01*"j"$100*x};
 m:10;
 xexample:flip value flip([]10000?100f;asc 10000?100f);
 yexample:asc 10000?100f;
@@ -29,7 +29,7 @@ split:.ml.xval.kfsplit[yexample;3];
 
 .ml.xval.kfsplit[xexample;2]~last each (.p.list kfsplit[xexample;2])`
 
-(rnd .ml.xval.rollxval[xexample;yexample;m;py])~rnd avg crossval[xexample;yexample;first each i;last each i;m]
+(floor 10*rnd .ml.xval.rollxval[xexample;yexample;m;py])~floor 10*rnd avg crossval[xexample;yexample;first each i;last each i;m]
 
 
 
