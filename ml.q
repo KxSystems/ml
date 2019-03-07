@@ -30,15 +30,15 @@ sensitivity:{sum[(x=z)&x=y]%sum y=z}
 specificity:{sum[u&x=y]%sum u:y<>z}
 / f1&fbeta scores
 f1score:{2*l*k%((l:precision[x;y;z])+k:sensitivity[x;y;z])}
-fbscore:{[x;y;z;b]((1+b*b)*v*l)%(v:sensitivity[x;y;z])+b*b*l:precision[x;y;z]}                  / if binary and z=0b --> python
+fbscore:{[x;y;z;b]((1+b*b)*v*l)%(v:precision[x;y;z])+b*b*l:sensitivity[x;y;z]}                  / if binary and z=0b --> python
 / sum squared and mean squared error
 mse:{avg d*d:x-y} 
 sse:{sum d*d:x-y}
 r2score:{1-sse[x;y]%sse[x;count[x]#avg x]}
 rmse:{sqrt mse[x;y]}
 mae:{avg abs x-y}
-mape:{100*mae[x;y]%x}
-smape:{(2%count x)*sum(abs x-y)%(x+y)}								/ symmetric-mean abs percentage error
+mape:{100*avg abs ((x-y)%x)}
+smape:{100*(2%count x)*sum(abs x-y)%(x+y)}								/ symmetric-mean abs percentage error
 rmsle:{sqrt(sum k*k:((exp 1)xlog(y+1))-(exp 1)xlog x+1)%count x}
 / matthews-correlation coefficient
 matcorr:{(-1*last deltas prd each flip(k 0;rotate[1;k 1]))%sqrt prd(sum each k:flip l),(sum each l:value confmat[x;y])}
