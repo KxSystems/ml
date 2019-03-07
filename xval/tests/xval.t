@@ -20,20 +20,17 @@ o:o:{((,/)neg[1]_x;last x)}each 1_(,\)enlist each (m,0N)#til count yexample;
 i:1_(1 xprev k),'k:enlist each(m+1,0N)#til count yexample;
 split:.ml.xval.kfsplit[yexample;3];
 
-0N!"HERE";
 
 (rnd first .ml.xval.gridsearch[xexample;yexample;split;regr;dict])~rnd gridsearch[xexample;yexample]
 
 (rnd .ml.xval.chainxval[xexample;yexample;m;py])~rnd avg crossval[xexample;yexample;first each o;last each o;m]
-0N!"HERE2";
 
 (rnd .ml.xval.kfoldx[xexample;yexample;split;regr2])~rnd avg kfold[xexample;yexample]
 
-0N!"HERE3";
 (rnd .ml.xval.kfsplit[xexample;2])~rnd last each (.p.list kfsplit[xexample;2])`
-0N!"HERE4";
+
 (floor 10*rnd .ml.xval.rollxval[xexample;yexample;m;py])~floor 10*rnd avg crossval[xexample;yexample;first each i;last each i;m]
-0N!"HERE5";
+
 
 
 
