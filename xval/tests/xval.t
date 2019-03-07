@@ -1,4 +1,3 @@
-0N!"HERE";
 \l p.q
 \l util/util.q
 \l xval/xval.q
@@ -21,6 +20,7 @@ o:o:{((,/)neg[1]_x;last x)}each 1_(,\)enlist each (m,0N)#til count yexample;
 i:1_(1 xprev k),'k:enlist each(m+1,0N)#til count yexample;
 split:.ml.xval.kfsplit[yexample;3];
 
+0N!"HERE";
 
 (rnd first .ml.xval.gridsearch[xexample;yexample;split;regr;dict])~rnd gridsearch[xexample;yexample]
 
@@ -29,7 +29,7 @@ split:.ml.xval.kfsplit[yexample;3];
 
 (rnd .ml.xval.kfoldx[xexample;yexample;split;regr2])~rnd avg kfold[xexample;yexample]
 
-
+0N!"HERE2";
 .ml.xval.kfsplit[xexample;2]~last each (.p.list kfsplit[xexample;2])`
 
 (floor 10*rnd .ml.xval.rollxval[xexample;yexample;m;py])~floor 10*rnd avg crossval[xexample;yexample;first each i;last each i;m]
