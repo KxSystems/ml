@@ -86,6 +86,30 @@ xval.krandint:{[x;y;p;algo]
  pred:algo[`:predict][xval]`;
  .ml.accuracy[pred;yval]}
 
+/ At a fundamental level a genetic algorithms is an more complex random search algorithm.
+/ In this case the number of 'draws' required to be above y% of the optimum is
+/ fn = 1-(1-0.05)^n > y, as such 60 random draws will have a 5% chance of finding
+/ a value near the optimum for that grid. 
+/ It is unlikely to find local optima in general unlike fw-stepwise etc.
+rand_gridsearch:{[x;y;sz;n;algo;dict]
+                tts:.ml.util.traintestsplit[x;y;sz];
+                vals:();rdict:();
+                dvals:(cross/)value dict;
+                do[n;rdict,:enlist rand dvals];
+                hyp:{key[y]!$[1=count x;enlist;]x}[;dict]each rdict;
+                alg:algo@'{pykwargs x}each hyp;
+                l:{y[`:fit][x`xtrain;x`ytrain][`:score][x`xtest;x`ytest]`}[tts]each alg;
+                (max l;hyp first where l=max l)}
+// q)N:10000
+// q)x:flip value flip([]asc N?100f;N?1000;desc N?100f;asc N?1000f)
+// q)y:asc N?100f
+// q)algo:.p.import[`sklearn.linear_model][`:ElasticNet]
+// q)dict:`alpha`l1_ratio`max_iter!(0.1*1+til 10;1%1+til 5;"j"$10 xexp til 5)
+// q)sz:0.2
+// q)n:60
+// q)rand_gridsearch[x;y;sz;n;algo;dict]
+// 0.99978
+// `alpha`l1_ratio`max_iter!(0.1;0.3333333;10000)
 
 
 / The following are metrics derived from the confusion matrices however if they are
@@ -94,6 +118,7 @@ PPV:{d:confdict[x;y];l%d[`fp]+l:d`tp}                                           
 NPV:{d:confdict[x;y];d[`tn]%d[`tp]+d`fn}                                                        / Negative predictive value
 FDR:{1-PPV[x;y]}                                                                                / False Discovery Rate
 FOR:{1-NPV[x;y]}                                                                                / False Omission Rate
+
 
 / Removal of duplicate columns from a table
 / here duplicate means the same exact values at all rows of the table
@@ -123,21 +148,16 @@ fresh.adaboost:{[xtrain;ytrain;xtest;clf;iter]
  {$[x>0;1;x=0;0;-1]}each ada[1]
  }
 
-
-
 //converts a table to a matrix of values
 tab2mat:{flip value flip x}
-
 
 /x: table
 /y: axis (`row, `col)
 /z: any or all
 dropna:{$[y~`row;x where not z null flip x;flip l!x l:where not z null x]}
 
-
 // equivalent to pivoting a table in pandas
 pivot:{[t;idx;sym;val]?[t;();enlist[idx]!enlist idx;(!;sym;val)]}
-
 
 //Used as a metric score for clusters 
 //x=pred value,y=true value
