@@ -86,10 +86,11 @@ xval.krandint:{[x;y;p;algo]
  pred:algo[`:predict][xval]`;
  .ml.accuracy[pred;yval]}
 
-/ At a fundamental level a genetic algorithms is an more complex random search algorithm.
+/ The following is an implementation of a random search algorithm.
 / In this case the number of 'draws' required to be above y% of the optimum is
 / fn = 1-(1-0.05)^n > y, as such 60 random draws will have a 5% chance of finding
 / a value near the optimum for that grid. 
+/ https://stats.stackexchange.com/questions/160479/practical-hyperparameter-optimization-random-vs-grid-search
 / It is unlikely to find local optima in general unlike fw-stepwise etc.
 rand_gridsearch:{[x;y;sz;n;algo;dict]
                 tts:.ml.util.traintestsplit[x;y;sz];
