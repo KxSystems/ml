@@ -4,7 +4,7 @@
 /embedPy is required
 
 \d .ml 
-
+\l fresh/paramdict.q
 / features from raw data, single outputs
 fresh.feat.absenergy:{x wsum x}                                                           / absolute energy = sum of squares
 fresh.feat.abssumchange:{sum abs 1_deltas x}                                              / sum of absolute values of deltas
@@ -105,7 +105,7 @@ fresh.feat.partautocorrelation:{[x;lag]
   ;({`$"lag_",string x}each lag)!paccoeff]}
 
 fresh.feat.spktwelch:{[x;coeff]
- dict:`freq`pxx!fresh.welch[x;`nperseg pykw 10]`;
+ dict:`freq`pxx!fresh.welch[x]`;
  $[((n:count dict[`pxx])<=max coeff)&(1>count coeff);			 
    [reducedcoeff:coeff where coeff>n;
    notreducedcoeff:coeff except reducedcoeff;

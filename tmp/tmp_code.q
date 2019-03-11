@@ -123,26 +123,16 @@ fresh.adaboost:{[xtrain;ytrain;xtest;clf;iter]
  {$[x>0;1;x=0;0;-1]}each ada[1]
  }
 
-//if lists are of different length,pad a number of the beginning of the shorter sequences
-// x is a list of uneven lengths
-//y~ number that you want the sequence to be padded with, 0b if 0 to be used
-padding:{{$[x=n:count z;z;((x-n)#y),z]}[max count each x;$[y~0b;0;y]]each x}
+
 
 //converts a table to a matrix of values
 tab2mat:{flip value flip x}
 
 
-//deletes rows from a table that has all null values
-nullrow:{x where not all flip null x}
-
-//deletes rows from a table if contains any null values
-anynullrow:{x where not any flip null x}
-
-
 /x: table
 /y: axis (`row, `col)
-/z: `any or `all
-dropna:{$[y~`row;x where not(get string z)null flip x;flip(cols x)!x where not(get string z)null x]}
+/z: any or all
+dropna:{$[y~`row;x where not z null flip x;flip l!x l:where not z null x]}
 
 
 // equivalent to pivoting a table in pandas
