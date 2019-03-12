@@ -1,7 +1,7 @@
 \l init.q
 \d .nlp
 sent.amplifyEP[""]~0f
-sent.amplifyEP[enlist "!"]~5.292
+sent.amplifyEP[enlist "!"]~.292
 0 .292 .584 .876 1.168 1.168 ~sent.amplifyEP each ("ok"; "bad!"; "no!worse!"; "terrible!!!"; "ghastly!!!! eew"; "!!!!!!!!!!")
 sent.amplifyQM[""]~0f
 sent.amplifyQM[enlist "?"]~0f
