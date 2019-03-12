@@ -39,6 +39,7 @@ script:
 - tar czf nlp_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz *.q requirements.txt  LICENSE README.md
 - echo "Packaged as nlp_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz"
 -  if [[ "x$QLIC_KC" != "x" ]]; then
+    curl -fsSL -o test.q https://github.com/KxSystems/embedpy/raw/master/test.q;
     q test.q -q;
   else
     echo No kdb+, no tests;
