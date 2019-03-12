@@ -1,3 +1,4 @@
+\l init.q
 \d .nlp
 charPosParser:newParser[`en; `sentChars`starts`tokens]
 doc:first charPosParser enlist text:"Le café noir était pour André Benoît. Mes aïeux été vieux."
