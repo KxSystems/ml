@@ -1,3 +1,4 @@
+\l init.q
 \d .nlp
 basicParser:newParser[`en;enlist `tokens];
 keywordParser:newParser[`en; enlist `keywords]

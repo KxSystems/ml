@@ -1,3 +1,4 @@
+\l init.q
 \d .nlp
 text: first (enlist "*";",";1) 0: `:./data/miniJeff.txt
 p:newParser[`en; enlist`keywords]
