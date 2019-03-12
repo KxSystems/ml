@@ -26,7 +26,7 @@ truncate[2; avgMSE]~ 0.49 0.81 0.87 0.87 0.88
 minMSE:min each mseTest[corpus] each clusterlist
 truncate[2;minMSE]~ 0.19 0.65 0.65 0.65 0.67
 ()~cluster.bisectingKMeans[0#emptyDoc;10;2]
-(2*100 101 102 103 104) in cluster.bisectingKMeans[corpus,5#emptyDoc;10;2];
+(100 101 102 103 104) in cluster.bisectingKMeans[corpus,5#emptyDoc;10;2];
 (enlist til 100) ~cluster.bisectingKMeans[corpus;1;2]         
 (til 100) ~ asc raze cluster.bisectingKMeans[corpus;10;2];
 MSEs: asc mseTest[corpus;cluster.bisectingKMeans[corpus;10;2]]
