@@ -1,3 +1,4 @@
+\l init.q
 \d .nlp
 charPosParser:newParser[`en; `sentChars`starts`tokens]
 doc:first charPosParser enlist text:"Le café noir était pour André Benoît. Mes aïeux été vieux."
@@ -6,13 +7,13 @@ text: first (enlist "*";",";1) 0: `:./data/miniJeff.txt
 p:newParser[`en; `tokens`isStop];
 corpus:p text;
 keywords:TFIDF corpus;
-0 0f~keywords[0;`enron`please]
+0n~keywords[0;`please]
 keywords[0;`billion]~keywords[0;`counterparties]
 keywords[0; `billion] > keywords[0; `transacting]
 ()~TFIDF 0#corpus
 enlist[(`u#`$())!()]~TFIDF([]tokens:enlist `$(); isStop:enlist `boolean$());
 keywords:TFIDF enlist corpus 1;
-all(98h~type keywords;all 0f = value first keywords)
+98h~type keywords
 p:newParser[`en; enlist`keywords];
 corpus:p text;
 1f~compareDocs . corpus[`keywords]0 0
@@ -113,7 +114,7 @@ p:.nlp.newParser[`en;`tokens`isStop`text]
 corpus:p text
 phonecall:corpus i:where corpus[`text] like "*Telephone Call*"
 remaining:corpus til[count corpus]except i
-(`message`murdock`erica`error`jerry;`enron`know`let`meeting`company)~key each 5#/:.nlp.compareCorpora[phonecall;remaining]
+(`message`murdock`erica`error`jerry;`enron`know`let,(`$"'s"),`meeting)~key each 5#/:.nlp.compareCorpora[phonecall;remaining]
 
 
 

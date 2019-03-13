@@ -1,3 +1,4 @@
+\l init.q
 \d .nlp
 lines: read0 `:./data/test.mbox;
 emails:email.i.parseMail each "\n" sv/:  (where lines like "From *") cut lines;

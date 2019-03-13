@@ -9,6 +9,7 @@ perl -p -i.bak -e s/NLPVERSION/`\$\"%NLP_VERSION%\"/g nlp.q
 if not defined QLIC_KC (
  goto :nokdb
 )
+
 call "build\getkdb.bat" || goto :error
 
 set PATH=C:\Miniconda3-x64;C:\Miniconda3-x64\Scripts;%PATH%
@@ -21,8 +22,9 @@ exit /b 0
 
 :error
 echo failed with error 
-exit /b 
+exit /b
 
 :nokdb
 echo no kdb
 exit /b 0
+

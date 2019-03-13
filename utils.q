@@ -60,7 +60,7 @@ i.matrixFromRaggedList:{m+flip m:((til count x)#'0.),'.5,'x}
 
 // Parts-of-speech not useful as keywords
 i.stopUniPOS:asc`ADP`PART`AUX`CONJ`DET`SYM`NUM`PRON`SCONJ
-i.stopPennPOS:asc`CC`CD`DT`EX`IN`LS`MD`PDT`POS`PRP`SYM`TO`WDT`WP`WRB,`$("PRP$";"WP$";"$")
+i.stopPennPOS:asc`CC`CD`DT`EX`IN`LS`MD`PDT`POS`PRP`SYM`TO`WDT`WP`WRB`,`$("PRP$";"WP$";"$") /add in ` for symbols
 
 // Parse urls
 p)from urllib.parse import urlparse
