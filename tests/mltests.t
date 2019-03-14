@@ -27,7 +27,7 @@ ym:100 10#1000?100f
 xmb:100 10#1000?0b
 ymb:100 10#1000?0b
 
-.ml.arange[2;100;2] ~ np[`:arange][2;100;2]`
+.ml.arange[2;20;2] ~ np[`:arange][2;20;2]`
 .ml.arange[2;100;2.5] ~ np[`:arange][2;100;2.5]`
 .ml.arange[2.5;50.2;0.2] ~ np[`:arange][2.5;50.2;0.2]`
 
@@ -94,11 +94,9 @@ first[.ml.eye[1]] ~ enlist 1f
 .ml.rmsle[x;y]~sqrt msle[x;y]`
 .ml.rmsle[x;x]~sqrt msle[x;x]`
 .ml.mape[xf;yf]~mean_absolute_percentage_error[xf;yf]
-.ml.mape[x;y]~mean_absolute_percentage_error[x;y]
 .ml.mape[xm;ym]~{mean_absolute_percentage_error[x;y]}'[flip xm;flip ym]
 .ml.smape[xf;yf]~smape[xf;yf]
 .ml.smape[xf;yf]~smape[xf;yf]
-.ml.smape[x;y]~smape[x;y]
 .ml.smape[xm;ym]~{smape[x;y]}'[flip xm;flip ym]
 .ml.matcorr[xb;yb]~mcoeff[xb;yb]`
 .ml.matcorr[110010b;111111b]~0n
