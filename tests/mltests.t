@@ -48,7 +48,7 @@ first[.ml.eye[1]] ~ enlist 1f
 
 ("f"$flip value .ml.describe[plaintab])~flip value .ml.util.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.util.tab2df[plaintab]]
 
-.ml.percentile[x;0.5]~np[`:percentile][x;50]`
+.ml.percentile[x;0.75]~np[`:percentile][x;75]`
 .ml.percentile[x;0.02]~np[`:percentile][x;2]`
 .ml.percentile[xf;0.5]~np[`:percentile][xf;50]`
 
