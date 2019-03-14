@@ -16,8 +16,8 @@ msle:.p.import[`sklearn.metrics]`:mean_squared_log_error
 mse:.p.import[`sklearn.metrics]`:mean_squared_error
 
 
-x:1000?40
-y:1000?40
+x:1000?1000
+y:1000?1000
 xf:1000?100f
 yf:1000?100f
 xb:010010101011111010110111b
@@ -94,9 +94,10 @@ first[.ml.eye[1]] ~ enlist 1f
 .ml.rmsle[xm;ym]~{sqrt msle[x;y]`}'[flip xm;flip ym]
 .ml.rmsle[x;y]~sqrt msle[x;y]`
 .ml.rmsle[x;x]~sqrt msle[x;x]`
+(.ml.mape[x;y])~mean_absolute_percentage_error[x;y]
 .ml.mape[xf;yf]~mean_absolute_percentage_error[xf;yf]
 .ml.mape[xm;ym]~{mean_absolute_percentage_error[x;y]}'[flip xm;flip ym]
-.ml.smape[xf;yf]~smape[xf;yf]
+(.ml.smape[x;y])~smape[x;y]
 .ml.smape[xf;yf]~smape[xf;yf]
 .ml.smape[xm;ym]~{smape[x;y]}'[flip xm;flip ym]
 .ml.matcorr[xb;yb]~mcoeff[xb;yb]`
