@@ -17,7 +17,7 @@ xexample:flip value flip([]10000?100f;asc 10000?100f);
 yexample:asc 10000?100f;
 
 o:o:{((,/)neg[1]_x;last x)}each 1_(,\)enlist each (m,0N)#til count yexample;
-i:1_(1 xprev k),'k:enlist each(m+1,0N)#til count yexample;
+ii:1_(1 xprev k),'k:enlist each(m+1,0N)#til count yexample;
 split:.ml.xval.kfsplit[yexample;3];
 
 
@@ -29,7 +29,7 @@ split:.ml.xval.kfsplit[yexample;3];
 
 (rnd .ml.xval.kfsplit[xexample;2])~rnd last each (.p.list kfsplit[xexample;2])`
 
-(floor 10*rnd .ml.xval.rollxval[xexample;yexample;m;py])~floor 10*rnd avg crossval[xexample;yexample;first each i;last each i;m]
+(floor 10*rnd .ml.xval.rollxval[xexample;yexample;m;py])~floor 10*rnd avg crossval[xexample;yexample;first each ii;last each ii;m]
 
 
 
