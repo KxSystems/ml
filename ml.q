@@ -30,7 +30,7 @@ sensitivity:{sum[(x=z)&x=y]%sum y=z}
 specificity:{sum[u&x=y]%sum u:y<>z}
 / f1&fbeta scores
 f1score:{2*l*k%((l:precision[x;y;z])+k:sensitivity[x;y;z])}
-fbscore:{[x;y;z;b]((1+b*b)*v*l)%(v:precision[x;y;z])+b*b*l:sensitivity[x;y;z]}                  / if binary and z=0b --> python
+fbscore:{[x;y;z;b]((1+b*b)*v*l)%(v:sensitivity[x;y;z])+b*b*l:precision[x;y;z]}                  / if binary and z=0b --> python
 / sum squared and mean squared error
 mse:{avg d*d:x-y} 
 sse:{sum d*d:x-y}
@@ -61,7 +61,7 @@ crm:{cvm[x]%u*/:u:dev each x}
 / correlation matrix, in dictionary format if input is a table
 corrmat:{$[t;{x!x!/:y}cols x;]crm$[t:98=type x;value flip@;]x}
 / confusion matrix, x predicted class, y actual class
-confmat:{cs:asc distinct y;exec 0^(count each group pred)cs by label from([]pred:x;label:y)}
+confmat:{cs:asc distinct x,y;nn:cs!count[cs]#enlist count[cs]#0;nn,exec 0^(count each group pred)cs by label from([]pred:x;label:y)}
 / dictionary of tp/tn/fp/fn from confusion matrix
 confdict:{`tp`fn`fp`tn!raze value confmat[x;y]}
 
