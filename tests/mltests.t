@@ -27,7 +27,8 @@ ym:100 10#1000?100f
 xmb:100 10#1000?0b
 ymb:100 10#1000?0b
 
-.ml.arange[2;20;2] ~ np[`:arange][2;20;2]`
+(0N!.ml.arange[2;20;2]) ~ 0N!np[`:arange][2;20;2]`
+
 .ml.arange[2;100;2.5] ~ np[`:arange][2;100;2.5]`
 .ml.arange[2.5;50.2;0.2] ~ np[`:arange][2.5;50.2;0.2]`
 
