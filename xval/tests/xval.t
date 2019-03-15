@@ -25,7 +25,7 @@ split:.ml.xval.kfsplit[yf;3]
 
 
 (rnd first .ml.xval.gridsearch[xf;yf;split;regr;dict])~rnd gridsearch[xf;yf]
-(rnd first .ml.xval.gridsearch[xi;yi;split;regr;dict])~0.87
+((rnd first .ml.xval.gridsearch[xi;yi;split;regr;dict])-rnd gridsearch[xi;yi])<0.05
 (rnd first .ml.xval.gridsearch[xb;yb;split;regr;dict])~rnd gridsearch[xb;yb]
 
 (cols first .ml.xval.gridsearchfit[xf;yf;0.5;regr;dict])~`max_iter`alpha
@@ -37,7 +37,7 @@ split:.ml.xval.kfsplit[yf;3]
 (rnd .ml.xval.chainxval[xb;yb;m;py])~rnd avg crossval[xb;yb;first each o;last each o;m]
 
 (rnd .ml.xval.kfoldx[xf;yf;split;regr2])~rnd avg kfold[xf;yf]
-(rnd .ml.xval.kfoldx[xi;yi;split;regr2])~0.87
+((rnd .ml.xval.kfoldx[xi;yi;split;regr2])-rnd avg kfold[xi;yi])<0.05
 (rnd .ml.xval.kfoldx[xb;yb;split;regr2])~rnd avg kfold[xb;yb]
 
 
