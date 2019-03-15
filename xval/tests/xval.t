@@ -48,9 +48,3 @@ split:.ml.xval.kfsplit[yf;3]
 (floor rnd .ml.xval.rollxval[xf;yf;m;py])~floor rnd avg crossval[xf;yf;first each ii;last each ii;m]
 (floor rnd .ml.xval.rollxval[xi;yi;m;py])~floor rnd avg crossval[xi;yi;first each ii;last each ii;m]
 (floor rnd .ml.xval.rollxval[xb;yb;m;py])~floor rnd avg crossval[xb;yb;first each ii;last each ii;m]
-
-
-
-
-
-
