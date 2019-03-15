@@ -28,13 +28,14 @@ xmb:100 10#1000?0b
 ymb:100 10#1000?0b
 
 (`int$.ml.arange[2;20;2]) ~ `int$np[`:arange][2;20;2]`
-
 .ml.arange[2;100;2.5] ~ np[`:arange][2;100;2.5]`
 .ml.arange[2.5;50.2;0.2] ~ np[`:arange][2.5;50.2;0.2]`
 
 .ml.shape[1 2 3*/:til 10] ~ np[`:shape][1 2 3*/:til 10]`
 .ml.shape[enlist 1] ~ np[`:shape][enlist 1]`
 .ml.shape[1 2] ~ np[`:shape][1 2]`
+.ml.shape[plaintab]~3 4
+.ml.shape[xm]~100 10
 
 .ml.linspace[1;10;9] ~ np[`:linspace][1;10;9]`
 .ml.linspace[-0.2;109;62] ~ np[`:linspace][-0.2;109;62]`
