@@ -4,6 +4,7 @@ that are present in the tsfresh documentation. It should be noted that for large
 \
 
 \l p.q
+\l fresh/paramdict.q
 \l fresh/fresh.q
 \l fresh/tests/test.p
 

@@ -4,7 +4,7 @@
 /embedPy is required
 
 \d .ml 
-\l fresh/paramdict.q
+
 / features from raw data, single outputs
 fresh.feat.absenergy:{x wsum x}                                                           / absolute energy = sum of squares
 fresh.feat.abssumchange:{sum abs 1_deltas x}                                              / sum of absolute values of deltas
