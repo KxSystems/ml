@@ -30,9 +30,8 @@ f1score:fbscore[;;;1]
 / matthews correlation coefficient
 matcorr:{.[-;prd raze[m](0 1;3 2)]%sqrt prd sum[m],sum each m:value confmat[x;y]}
 / confusion matrix
-confmat:{value each 0^k#(k:asc distinct x,y)#/:{count each group x}each x group y}
 confmat:{n:count k:asc distinct x,y;(k!(n;n)#0),0^({count each group x}each x group y)@\:k}
-/ confusion dictionary (tp/fn/fp/tn)
+/ confusion dictionary
 confdict:{`tn`fp`fn`tp!raze value confmat .(x;y)=z}
 
 / regression scores (x predictions, y values)
