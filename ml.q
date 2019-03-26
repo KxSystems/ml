@@ -1,77 +1,70 @@
-/load in embedPy
-\l p.q
-/load in all the .q scripts within the ml library
+\l p.q / embedPy
 
 \d .ml
-version:@[{TOOLKITVERSION};0;`development]
-sstring:{$[10=type x;;string]x}
-loadfile:{$[.z.q;;-1]"Loading ",x:1_string hsym`$sstring x;system"l ",path,"/",x;}
-path:{$[count u:@[{1_string first` vs hsym`$ssr[;"\\";"/"]u -3+count u:get .z.s};`;""];u;"ml"]}[]
+version:@[{TOOLKITVERSION};`;`development]
+path:{string`ml^`$@[{"/"sv -1_"/"vs ssr[;"\\";"/"](-3#get .z.s)0};`;""]}`
+loadfile:{$[.z.q;;-1]"Loading ",x:_[":"=x 0]x:$[10=type x;;string]x;system"l ",path,"/",x;}
 
-/ evenly spaced values between x and y in steps of length z.
+/ descriptive statistics
+shape:{-1_count each first scan x}
+range:{max[x]-min x}
+/ percentile y of list x
+percentile:{r[0]+(p-i 0)*last r:0^deltas asc[x]i:0 1+\:floor p:y*-1+count x}
+describe:{`count`mean`std`min`q1`q2`q3`max!flip(count;avg;sdev;min;percentile[;.25];percentile[;.5];percentile[;.75];max)@\:/:flip(exec c from meta[x]where t in"hijefpmdznuvt")#x}
+
+/ values between x and y in steps of length z
 arange:{x+z*til ceiling(y-x)%z}
 / z evenly spaced values between x and y
 linspace:{x+til[z]*(y-x)%z-1}
 / identity matrix
 eye:{@[x#0.;;:;1.]each til x}
-/ shape of a list
-shape:{-1_count each first scan x}
-range:{max[x]-min x}
 
-/ descriptive statistics of the table columns
-describe:{`count`mean`std`min`q1`q2`q3`max!flip(count;avg;sdev;min;percentile[;.25];percentile[;.5];percentile[;.75];max)@\:/:flip(exec c from meta[x]where t in"hijefpmdznuvt")#x}
-/ percentile y of list x
-percentile:{r[0]+(p-i 0)*last r:0^deltas x iasc[x]i:0 1+\:floor p:y*-1+count x}
-
-/ x predictions, y labels, z positive predicted label precision,sensitivity(recall), specificity
+/ classification scores (x predictions, y labels, z positive label)
 accuracy:{avg x=y}
-precision:{sum[u&x=y]%sum u:x=z}
-sensitivity:{sum[(x=z)&x=y]%sum y=z}
-specificity:{sum[u&x=y]%sum u:y<>z}
+precision:  {sum[u&y =z]%sum u:x =z}
+sensitivity:{sum[u&x =z]%sum u:y =z}
+specificity:{sum[u&x<>z]%sum u:y<>z}
 / f1&fbeta scores
-f1score:{2*l*k%((l:precision[x;y;z])+k:sensitivity[x;y;z])}
-fbscore:{[x;y;z;b]((1+b*b)*v*l)%(v:sensitivity[x;y;z])+b*b*l:precision[x;y;z]}                  / if binary and z=0b --> python
-/ sum squared and mean squared error
+fbscore:{[x;y;z;b](sum[ap&pp]*1+b*b)%sum[pp:x=z]+b*b*sum ap:y=z}
+f1score:fbscore[;;;1]
+/ matthews correlation coefficient
+matcorr:{.[-;prd raze[m](0 1;3 2)]%sqrt prd sum[m],sum each m:value confmat[x;y]}
+/ confusion matrix
+confmat:{value each 0^k#(k:asc distinct x,y)#/:{count each group x}each x group y}
+confmat:{n:count k:asc distinct x,y;(k!(n;n)#0),0^({count each group x}each x group y)@\:k}
+/ confusion dictionary (tp/fn/fp/tn)
+confdict:{`tn`fp`fn`tp!raze value confmat .(x;y)=z}
+
+/ regression scores (x predictions, y values)
 mse:{avg d*d:x-y} 
 sse:{sum d*d:x-y}
-r2score:{1-sse[x;y]%sse[x;count[x]#avg x]}
 rmse:{sqrt mse[x;y]}
+rmsle:{rmse . log(x;y)+1}
 mae:{avg abs x-y}
-mape:{100*avg abs ((x-y)%x)}
-smape:{100*(2%count x)*sum(abs x-y)%(x+y)}								/ symmetric-mean abs percentage error
-rmsle:{sqrt(sum k*k:((exp 1)xlog(y+1))-(exp 1)xlog x+1)%count x}
-/ matthews-correlation coefficient
-matcorr:{(-1*last deltas prd each flip(k 0;rotate[1;k 1]))%sqrt prd(sum each k:flip l),(sum each l:value confmat[x;y])}
+mape:{100*avg abs 1-x%y}
+smape:{100*avg abs[y-x]%abs[x]+abs y}
+r2score:{1-sse[x;y]%sse[x]avg x}
 
+/ x list of class labels (0,1,...,n-1), y list of lists of (n) probabilities (one per class)
 EPS:1e-15
-/x is the actual class should be 0 or 1; y should be the probability of belonging to class 0 or 1 for each instance
-logloss:{neg avg log EPS|y@'x}
-/ x is alist of unique class labels (0 = class 1, 1 = class 2 ... ); y is the probability of belonging to a class
-crossentropy:logloss
+crossentropy:logloss:{neg avg log EPS|y@'x}
 
-/ t-score for a t test (one sample)
+/ t-score for a test (one sample)
 tscore:{[x;mu](avg[x]-mu)%sdev[x]%sqrt count x}
-/ t-score for t-test (two independent samples, not equal varainces)
+/ t-score for t-test (two independent samples, not equal variances)
 tscoreeq:{abs[avg[x]-avg y]%sqrt(svar[x]%count x)+svar[y]%count y}
-
 
 / covariance/correlation calculate upper triangle only
 cvm:{(x+flip(not n=\:n)*x:(n#'0.0),'(x$/:'(n:til count x)_\:x)%count first x)-a*\:a:avg each x:"f"$x}
 crm:{cvm[x]%u*/:u:dev each x}
 / correlation matrix, in dictionary format if input is a table
 corrmat:{$[t;{x!x!/:y}cols x;]crm$[t:98=type x;value flip@;]x}
-/ confusion matrix, x predicted class, y actual class
-confmat:{cs:asc distinct x,y;nn:cs!count[cs]#enlist count[cs]#0;nn,exec 0^(count each group pred)cs by label from([]pred:x;label:y)}
-/ dictionary of tp/tn/fp/fn from confusion matrix
-confdict:{`tp`fn`fp`tn!raze value confmat[x;y]}
 
-
-/ points in curve represented by (x,y), excluding colinear points
-curvepts:{(x;y)@\:where(1_differ deltas[y]%deltas x),1b}
-/ area under the curve with points of coordinates (x,y)
+/ exclude colinear point 
+curvepts:{(x;y)@\:where(1b,2_differ deltas[y]%deltas x),1b}
+/ area under curve (x,y)
 auc:{sum 1_deltas[x]*y-.5*deltas y}
-/ increasing false positive rates and true negatives rates to get the ROC curve
-roc:{[y;p]{x%last x}each value exec 1+i-y,y from(update sums y from`p xdesc([]y;p))where p<>next p}
-/ area under the ROC curve. x is the actual class and p the probability of belonging to the positive class
+/ ROC curve: y the actual class, p the positive probability
+roc:{[y;p]{0.,x%last x}each value exec 1+i-y,y from(update sums y from`p xdesc([]y;p))where p<>next p}
+/ area under ROC curve
 rocaucscore:{[y;p]auc . curvepts . roc[y;p]}
-

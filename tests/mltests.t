@@ -95,9 +95,9 @@ first[.ml.eye[1]] ~ enlist 1f
 .ml.rmsle[xm;ym]~{sqrt msle[x;y]`}'[flip xm;flip ym]
 .ml.rmsle[x;y]~sqrt msle[x;y]`
 .ml.rmsle[x;x]~sqrt msle[x;x]`
-(.ml.mape[x;y])~mean_absolute_percentage_error[x;y]
-.ml.mape[xf;yf]~mean_absolute_percentage_error[xf;yf]
-.ml.mape[xm;ym]~{mean_absolute_percentage_error[x;y]}'[flip xm;flip ym]
+(.ml.mape[x;y])~mean_absolute_percentage_error[y;x]
+.ml.mape[xf;yf]~mean_absolute_percentage_error[yf;xf]
+.ml.mape[xm;ym]~{mean_absolute_percentage_error[x;y]}'[flip ym;flip xm]
 (.ml.smape[x;y])~smape[x;y]
 .ml.smape[xf;yf]~smape[xf;yf]
 .ml.smape[xm;ym]~{smape[x;y]}'[flip xm;flip ym]
@@ -113,7 +113,7 @@ rocau:.p.import[`sklearn.metrics]`:roc_auc_score
 {.ml.crossentropy[x;y]~logloss[x;y]`}[(first idesc@)each p;p%:sum each p:1000 5#5000?1f]
 
 {.ml.rocaucscore[x;y]~rocau[x;y]`}[10?0b;10?1f]
-.ml.rocaucscore[10?0b;10#1f]~0f
+.ml.rocaucscore[10#01b;10#1f]~0.5
 .ml.rocaucscore[10#0b;10?1f]~0f
 .ml.rocaucscore[10#1b;10#0f]~0f
 
