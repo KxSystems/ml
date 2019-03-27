@@ -2,7 +2,7 @@
 / data preprocessing
 / these functions all work on unkeyed numeric tables
 /drop columns with zero variance (1 value)
-util.dropconstant:{(where 0=0^var each flip x)_x}
+util.dropconstant:{k:$[tp:99h~type x;;flip]x;$[tp;;flip](where 0=0^var each k)_k}
 / TODO, these should work on the same type of data
 
 util.i.ap:{$[0=type y;x each y;98=type y;flip x each flip y;99<>type y;x y;98=type key y;key[y]!.z.s value y;x each y]}
@@ -92,7 +92,7 @@ util.nullencode:{[x;y]vals:l k:where 0<sum each l:null each flip x;nms:`$"null_"
 util.freqencode:{n:util.i.fndcols[x;"s"];;$[0=count n;x;n _ (^/){ind:?[x;();enlist[y]!enlist y;enlist[`$"freq_",string y]!enlist(%;(count;`i);(count;x))];x lj ind}[x]each n]}
 
 / label categorical features based on their lexigraphical order (alpha-numeric)
-util.lexiencode:{n:util.i.fndcols[x;"s"];nms:`$"lexi_label_",/:string n;vals:{(l!til count l:asc distinct k) k:x y}[x]each n;n _ x^flip nms!vals}
+util.lexiencode:{n:util.i.fndcols[x;"s"];$[0=count n;x;{nms:`$"lexi_label_",/:string y;vals:{(l!til count l:asc distinct k) k:x y}[x]each y;y _ x^flip nms!vals}[x;n]]}
 
 / util
 util.i.fndcols:{?[meta[x];enlist(in;`t;y);();`c]}

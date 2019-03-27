@@ -88,9 +88,9 @@ infdict:`x`x1`x2!(0 1 2 0w;0 1 2 -0w;1 2 3 0w)
 .ml.util.timespantransform[symtb]~symtb
 
 
-.ml.util.classreport[110b;101b]~flip `class`precision`recall`f1_score`support!((`$string each 0 1),`$"avg/total";0 0.5 0.25; 0 0.5 0.25;0n 0.5 0.5;1 2 3i)
-.ml.util.classreport[3 3 5 2 5 1;3 5 2 3 5 1]~ flip `class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0n 0.5 0.5f, 2%3;1 1 2 2 6i)
-.ml.util.classreport[3 3 5 2 5 1f;3 5 2 3 5 1f]~ flip `class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0n 0.5 0.5f, 2%3;1 1 2 2 6i)
+.ml.util.classreport[110b;101b]~flip `class`precision`recall`f1_score`support!((`$string each 0 1),`$"avg/total";0 0.5 0.25; 0 0.5 0.25;0.0 0.5 0.25;1 2 3i)
+.ml.util.classreport[3 3 5 2 5 1;3 5 2 3 5 1]~ flip `class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 1 2 2 6i)
+.ml.util.classreport[3 3 5 2 5 1f;3 5 2 3 5 1f]~ flip `class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 1 2 2 6i)
 
 
 nt2:delete x5 from nulltab
