@@ -46,7 +46,7 @@ ymb:100 10#1000?0b
 .ml.eye[3] ~ "f"$(1 0 0;0 1 0;0 0 1)
 first[.ml.eye[1]] ~ enlist 1f
 
-("f"$flip value .ml.describe[plaintab])~flip value .ml.util.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.util.tab2df[plaintab]]
+("f"$flip value .ml.describe[plaintab])~flip value .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
 
 .ml.percentile[x;0.75]~np[`:percentile][x;75]`
 .ml.percentile[x;0.02]~np[`:percentile][x;2]`
@@ -119,7 +119,6 @@ rocau:.p.import[`sklearn.metrics]`:roc_auc_score
 .ml.tscoreeq[x;y]~abs first stats[`:ttest_ind][x;y]`
 .ml.tscoreeq[xf;yf]~abs first stats[`:ttest_ind][xf;yf]`
 .ml.tscoreeq[xb;yb]~abs first stats[`:ttest_ind][xb;yb]`
-
 
 .ml.cvm[flip value flip plaintab]~np[`:cov][flip value flip  plaintab;`bias pykw 1b]`
 .ml.cvm[(10110b;01110b)]~(0.24 0.04;0.04 0.24)
