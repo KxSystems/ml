@@ -1,5 +1,5 @@
 \l ml.q
-\l util/init.q
+.ml.loadfile`:util/init.q
 
 np:.p.import[`numpy]
 skmetric:.p.import[`sklearn.metrics]

@@ -1,7 +1,6 @@
-\l p.q
 \l ml.q
-\l util/util.q
-\l tests/mlpy.p
+.ml.loadfile`:util/init.q
+.ml.loadfile`:util/tests/mlpy.p
 
 np:.p.import[`numpy]
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
