@@ -114,7 +114,7 @@ p:.nlp.newParser[`en;`tokens`isStop`text]
 corpus:p text
 phonecall:corpus i:where corpus[`text] like "*Telephone Call*"
 remaining:corpus til[count corpus]except i
-(`message`murdock`erica`error`jerry;`enron`know`let,(`$"'s"),`meeting)~key each 5#/:.nlp.compareCorpora[phonecall;remaining]
+(`message`murdock`erica`error`jerry;`enron`know`let,`meeting`company)~key each 5#/:.nlp.compareCorpora[phonecall;remaining]
 
 
 
