@@ -21,13 +21,13 @@ confmat:{n:count k:asc distinct x,y;(k!(n;n)#0),0^({count each group x}each x gr
 / confusion dictionary
 confdict:{`tn`fp`fn`tp!raze value confmat .(x;y)=z}
 / class report
-util.classreport:{[x;y]k:asc distinct y;
+classreport:{[x;y]k:asc distinct y;
  t:`precision`recall`f1_score`support!((precision;sensitivity;f1score;{sum y=z}).\:(x;y))@/:\:k;
  ([]class:`$string[k],enlist"avg/total")!flip[t],(avg;avg;avg;sum)@'t}
 
 / x list of class labels (0,1,...,n-1), y list of lists of (n) probabilities (one per class)
-EPS:1e-15
-crossentropy:logloss:{neg avg log EPS|y@'x}
+i.EPS:1e-15
+crossentropy:logloss:{neg avg log i.EPS|y@'x}
 
 / regression scores (x predictions, y values)
 mse:{avg d*d:x-y} 
@@ -51,10 +51,10 @@ crm:{cvm[x]%u*/:u:dev each x}
 corrmat:{$[t;{x!x!/:y}cols x;]crm$[t:98=type x;value flip@;]x}
 
 / exclude colinear point 
-curvepts:{(x;y)@\:where(1b,2_differ deltas[y]%deltas x),1b}
+i.curvepts:{(x;y)@\:where(1b,2_differ deltas[y]%deltas x),1b}
 / area under curve (x,y)
-auc:{sum 1_deltas[x]*y-.5*deltas y}
+i.auc:{sum 1_deltas[x]*y-.5*deltas y}
 / ROC curve: y the actual class, p the positive probability
 roc:{[y;p]{0.,x%last x}each value exec 1+i-y,y from(update sums y from`p xdesc([]y;p))where p<>next p}
 / area under ROC curve
-rocaucscore:{[y;p]auc . curvepts . roc[y;p]}
+rocaucscore:{[y;p]i.auc . i.curvepts . roc[y;p]}
