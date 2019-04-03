@@ -41,8 +41,11 @@ tb:([]1000?0b;1000#1b;1000?0b;1000?0b)
 .ml.traintestsplit[1010110011b;1001100011b;0.33]~`xtrain`ytrain`xtest`ytest!(110100b;111100b;1011b;0001b)
 
 .ml.onehot[symtf;`x] ~"f"$([] x1:til 5;x_a:1 0 0 1 1;x_b: 0 1 1 0 0) 
+.ml.onehot[symtf;::] ~"f"$([] x1:til 5;x_a:1 0 0 1 1;x_b: 0 1 1 0 0)
 .ml.onehot[symti;`x] ~([] x1:til 5;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
+.ml.onehot[symti;::] ~([] x1:til 5;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
 .ml.onehot[symtb;`x]~([] x1:11001b;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
+.ml.onehot[symtb;::]~([] x1:11001b;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
 
 MinMaxScaler[`:fit][flip plainmat];
 StdScaler[`:fit][flip plainmat];
@@ -73,20 +76,28 @@ infdict:`x`x1`x2!(0 1 2 0w;0 1 2 -0w;1 2 3 0w)
 .ml.infreplace[flip infdict]~flip `x`x1`x2!"f"$(0 1 2 2;0 1 2 0;1 2 3 3)
 .ml.infreplace[infdict`x]~0 1 2 2f
 
-.ml.filltab[delete sym from tab;0#();`time;`x1`x!`linear`mean]~flip`time`x`x1`x1_null`x_null!(00:00:00.000 00:00:00.001 00:00:00.002 00:00:00.003 00:00:00.004;1 1 1 1 1f;0 1 2 3 4f;00001b;11010b)
+.ml.filltab[tab;0#();`time;`x1`x!`linear`mean]~flip`sym`time`x`x1`x1_null`x_null!(`a`a`a`b`b;00:00:00.000 00:00:00.001 00:00:00.002 00:00:00.003 00:00:00.004;1 1 1 1 1f;0 1 2 3 4f;00001b;11010b)
 .ml.filltab[tab;`sym;`time;()!()]~tab
+.ml.filltab[tab;`sym;`time;::]~flip`sym`time`x`x1`x_null`x1_null!(`a`a`a`b`b;00:00:00.000 00:00:00.001 00:00:00.002 00:00:00.003 00:00:00.004;1 1 1 1 1f;0 1 2 3 3f;11010b;00001b)
 
 .ml.freqencode[symtf;`x]~(delete x from symtf),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
+.ml.freqencode[symtf;::]~(delete x from symtf),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
 .ml.freqencode[symti;`x]~(delete x from symti),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
+.ml.freqencode[symti;::]~(delete x from symti),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
 .ml.freqencode[symtb;`x]~(delete x from symtb),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
+.ml.freqencode[symtb;::]~(delete x from symtb),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
 .ml.lexiencode[symtf;`x]~(delete x from symtf),'([]x_lexi:0 1 1 0 0)
+.ml.lexiencode[symtf;::]~(delete x from symtf),'([]x_lexi:0 1 1 0 0)
 .ml.lexiencode[symti;`x]~(delete x from symti),'([]x_lexi:0 1 1 0 0)
+.ml.lexiencode[symti;::]~(delete x from symti),'([]x_lexi:0 1 1 0 0)
 .ml.lexiencode[symtb;`x]~(delete x from symtb),'([]x_lexi:0 1 1 0 0)
+.ml.lexiencode[symtb;::]~(delete x from symtb),'([]x_lexi:0 1 1 0 0)
 
-.ml.timesplit[timetab;()]~(delete x from timetab),'flip`x_dow`x_year`x_mm`x_dd`x_qtr`x_wd`x_hh`x_uu`x_ss!(0 1 2i;2000 2000 2000i;1 1 1i;1 2 3i;1 1 1j;001b;0 0 0i;0 0 0i;0 0 0i)
-.ml.timesplit[symtf;()]~symtf
-.ml.timesplit[symti;()]~symti
-.ml.timesplit[symtb;()]~symtb
+.ml.timesplit[timetab;::]~(delete x from timetab),'flip`x_dow`x_year`x_mm`x_dd`x_qtr`x_wd`x_hh`x_uu`x_ss!(0 1 2i;2000 2000 2000i;1 1 1i;1 2 3i;1 1 1j;001b;0 0 0i;0 0 0i;0 0 0i)
+.ml.timesplit[timetab;`x]~(delete x from timetab),'flip`x_dow`x_year`x_mm`x_dd`x_qtr`x_wd`x_hh`x_uu`x_ss!(0 1 2i;2000 2000 2000i;1 1 1i;1 2 3i;1 1 1j;001b;0 0 0i;0 0 0i;0 0 0i)
+.ml.timesplit[symtf;::]~symtf
+.ml.timesplit[symti;::]~symti
+.ml.timesplit[symtb;::]~symtb
 
 .ml.classreport[110b;101b]~1!flip`class`precision`recall`f1_score`support!((`$string each 0 1),`$"avg/total";0 0.5 0.25; 0 0.5 0.25;0.0 0.5 0.25;1 2 3i)
 .ml.classreport[3 3 5 2 5 1;3 5 2 3 5 1]~1!flip`class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 1 2 2 6i)
