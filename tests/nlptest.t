@@ -39,7 +39,7 @@ all `report in/: key extractPhrases[corpus;`report]
 all 1<value extractPhrases[corpus;`enron]
 phrases:(!) . flip ((`notre`dame`executive`education;7);(`chief`executive`reuters;7);(`sandy`leitch`chief`executive`zurich;7));
 phrases~(key phrases)#extractPhrases[corpus;`executive]
-all(extractPhrases[p enlist "hydrogren"; `helium] ~ ()!();extractPhrases[p enlist "helium"; `helium] ~()!())
+all(extractPhrases[p enlist "hydrogren."; `helium] ~ ()!();extractPhrases[p enlist "helium."; `helium] ~()!())
 all(()~findDates"";()~findDates"not a date";()~findDates"Oct 33rd 2001";()~findDates"Feb 29st 2001")
 /checks ranges- are changed now ()~findDates "2291"
 ()~findDates"1700"
@@ -80,7 +80,7 @@ findTimes["At 06:00AM, or 4:30 P.M."]~((06:00:00.000;"06:00AM";3;10);(16:30:00.0
 all(findTimes["12:05 a.m., 1:05 a.m., 2:05 a.m., 3:05 a.m., 4:05 a.m., 5:05 a.m., 6:05 a.m., 7:05 a.m., 8:05 a.m., 9:05 a.m., 10:05 a.m., 11:05 a.m."][;0]~ 00:05:00.000 01:05:00.000 02:05:00.000 03:05:00.000 04:05:00.000 05:05:00.000 06:05:00.000 07:05:00.000 08:05:00.000 09:05:00.000 10:05:00.000 11:05:00.000;findTimes["12:05 pm, 1:05 p.m., 2:05 p.m., 3:05 p.m., 4:05 p.m., 5:05 p.m., 6:05 p.m., 7:05 p.m., 8:05 p.m., 9:05 p.m., 10:05 p.m., 11:05 p.m."][;0] ~ 12:05:00.000 13:05:00.000 14:05:00.000 15:05:00.000 16:05:00.000 17:05:00.000 18:05:00.000 19:05:00.000 20:05:00.000 21:05:00.000 22:05:00.000 23:05:00.000)
 sentenceParser:newParser[`en;`text`sentChars]
 getSentences[first sentenceParser enlist""]~()
-all(getSentences[first sentenceParser enlist "a"]~enlist enlist "a";getSentences[first sentenceParser enlist " "]~enlist enlist " ";getSentences[first sentenceParser enlist "."]~enlist enlist ".")
+all(getSentences[first sentenceParser enlist "aa."]~enlist "aa.";getSentences[first sentenceParser enlist " ."]~enlist " .")
 getSentences[first sentenceParser enlist"This is my sentence"]~enlist "This is my sentence"
 (getSentences first sentenceParser enlist "There's no train to Guysborough. Though I know there'll be one in time")~("There's no train to Guysborough."; "Though I know there'll be one in time")
 truncate:{[precision; x]coefficient: 10 xexp precision;reciprocal[coefficient]*`long$coefficient*x}
@@ -114,8 +114,7 @@ p:.nlp.newParser[`en;`tokens`isStop`text]
 corpus:p text
 phonecall:corpus i:where corpus[`text] like "*Telephone Call*"
 remaining:corpus til[count corpus]except i
-(`message`murdock`erica`error`jerry;`enron`know`let,(`$"'s"),`meeting)~key each 5#/:.nlp.compareCorpora[phonecall;remaining]
-
+(`message`murdock`erica`error`jerry;`enron`know`let,`meeting`company)~key each 5#/:.nlp.compareCorpora[phonecall;remaining]
 
 
 
