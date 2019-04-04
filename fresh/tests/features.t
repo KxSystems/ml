@@ -4,6 +4,7 @@ that are present in the tsfresh documentation. It should be noted that for large
 \
 
 \l p.q
+\l fresh/paramdict.q
 \l fresh/fresh.q
 \l fresh/tests/test.p
 
@@ -160,19 +161,19 @@ np:.p.import[`numpy]
 (value .ml.fresh.augfuller[xint]) ~ augmented_dickey_fuller[xint][0 1 2]
 (value .ml.fresh.augfuller[xfloat]) ~ augmented_dickey_fuller[xfloat][0 1 2]
 
-(value .ml.fresh.spktwelch[xint;til 100]) ~ spkt_welch_density[xint;til 100]
-(value .ml.fresh.spktwelch[xint;k]) ~ spkt_welch_density[xint;k]
-(value .ml.fresh.spktwelch[xfloat;til 100]) ~ spkt_welch_density[xfloat;til 100]
-(value .ml.fresh.spktwelch[xfloat;k]) ~ spkt_welch_density[xfloat;k]
+(value .ml.fresh.feat.spktwelch[xint;til 100]) ~ spkt_welch_density[xint;til 100]
+(value .ml.fresh.feat.spktwelch[xint;k]) ~ spkt_welch_density[xint;k]
+(value .ml.fresh.feat.spktwelch[xfloat;til 100]) ~ spkt_welch_density[xfloat;til 100]
+(value .ml.fresh.feat.spktwelch[xfloat;k]) ~ spkt_welch_density[xfloat;k]
 
-((.ml.fresh.fftcoeff[xint;]each til 30)`real)~fft_coefficient[xint;`real;til 30]
-((.ml.fresh.fftcoeff[xint;]each til 30)`imag)~fft_coefficient[xint;`imag;til 30]
-((.ml.fresh.fftcoeff[xint;]each til 30)`angle)~fft_coefficient[xint;`angle;til 30]
-((.ml.fresh.fftcoeff[xint;]each til 30)`abs)~fft_coefficient[xint;`abs;til 30]
-((.ml.fresh.fftcoeff[xfloat;]each til 30)`real)~fft_coefficient[xfloat;`real;til 30]
-((.ml.fresh.fftcoeff[xfloat;]each til 30)`imag)~fft_coefficient[xfloat;`imag;til 30]
-((.ml.fresh.fftcoeff[xfloat;]each til 30)`angle)~fft_coefficient[xfloat;`angle;til 30]
-((.ml.fresh.fftcoeff[xfloat;]each til 30)`abs)~fft_coefficient[xfloat;`abs;til 30]
+((.ml.fresh.feat.fftcoeff[xint;]each til 30)`real)~fft_coefficient[xint;`real;til 30]
+((.ml.fresh.feat.fftcoeff[xint;]each til 30)`imag)~fft_coefficient[xint;`imag;til 30]
+((.ml.fresh.feat.fftcoeff[xint;]each til 30)`angle)~fft_coefficient[xint;`angle;til 30]
+((.ml.fresh.feat.fftcoeff[xint;]each til 30)`abs)~fft_coefficient[xint;`abs;til 30]
+((.ml.fresh.feat.fftcoeff[xfloat;]each til 30)`real)~fft_coefficient[xfloat;`real;til 30]
+((.ml.fresh.feat.fftcoeff[xfloat;]each til 30)`imag)~fft_coefficient[xfloat;`imag;til 30]
+((.ml.fresh.feat.fftcoeff[xfloat;]each til 30)`angle)~fft_coefficient[xfloat;`angle;til 30]
+((.ml.fresh.feat.fftcoeff[xfloat;]each til 30)`abs)~fft_coefficient[xfloat;`abs;til 30]
 
 
 /

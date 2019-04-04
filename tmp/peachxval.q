@@ -1,6 +1,6 @@
 / The purpose of this script is to act as a initial test of the use of peach
 / in the context of a cross validation functions
-
+\d .ml
 \l p.q
 \l ml/init.q
 
@@ -63,11 +63,11 @@ mcxvalpd:{[x;y;sz;algo;n]
 repkfvalpd:{[x;y;n;k;algo]
  alg:picklealg[algo];
  i:();do[n;i,:enlist .ml.xval.kfshuff[y;k]];
- avg kfoldx2[x;y;;alg]peach i}
+ avg kfoldpd[x;y;;alg]peach i}
 repkfstratpd:{[x;y;n;k;algo]
  alg:picklealg[algo];
  i:();do[n;i,:enlist .ml.xval.kfstrat[y;k]];
- avg kfoldx2[x;y;;alg]peach i}
+ avg kfoldpd[x;y;;alg]peach i}
 
 / utils
 distrib:{{(raze x _ y;x y)}[x y;]each til count y}
@@ -82,11 +82,12 @@ kffitscore:{[x;data]
   mdl:.p.import[`pickle][`:loads][x];
   {x[`:fit][y 0;y 2][`:score][y 1;y 3]`}[mdl;data]}
 shuffle:{neg[n]?n:count x}
-kfoldx2:{[x;y;i;fn]
- alg:.p.import[`pickle][`:loads][fn];
- data:distrib[x;i],'distrib[y;i];
- vals:{x[`:fit][y 0;y 2][`:score][y 1;y 3]`}[alg]each data;
- $[1=count shape vals;avg vals;avg each (,'/)vals]}
+kfoldpd:{[x;y;i;fn]
+        data:distrib[x;i],'distrib[y;i];
+        mdl:$[4h=type fn;.p.import[`pickle][`:loads][fn];fn];
+        vals:{x[`:fit][y 0;y 2][`:score][y 1;y 3]`}[mdl]each data;
+        $[1=count shape vals;avg vals;avg each ('/)vals]}
+
 
 n:rand 3000+til 10000                                       / set random port to start opening
 prt:n+til slvs:abs system"s"	                            / get correct number of ports

@@ -18,6 +18,7 @@ equivalent significance tests implemented previously in python.
 \l fresh/ts_feature_significance.q
 \l fresh/tests/significancetests.p
 
+
 xreal:5000?1000f
 xbin:rand each 5000#0b
 yreal:5000?1000f
@@ -42,11 +43,11 @@ p-value and the set FDR level.
 pddf:.p.import[`pandas]`:DataFrame
 asmatrix:pddf`:as_matrix
 tab2df:{r:.p.import[`pandas;`:DataFrame.from_dict;flip 0!x][@;cols x];$[count k:keys x;r[`:set_index]k;r]}
-table1:([]100000?100f;asc 100000?100f;desc 100000?100f;100000?0b;100000?100f;asc 100000?100f)
+table1:([]1000000?100f;asc 1000000?100f;desc 1000000?100f;1000000?100f;1000000?100f;asc 1000000?100f)
 table2:([]asc 1000000?100f;asc 1000000?100f;desc 1000000?100f;1000000?0b;desc 1000000?100f;asc 1000000?100f)
-table3:([]desc 100000?1f;100000?10f;asc 100000?1f)
-table4:([]100000?0b;100000?1f;100000?1f)
-target1:asc 100000?100f;target2:desc 1000000?1f;target3:target4:target1
+table3:([]desc 1000000?1f;1000000?10f;asc 1000000?1f)
+table4:([]1000000?0b;1000000?1f;1000000?1f)
+target1:asc 1000000?100f;target2:desc 1000000?1f;target3:target4:target1
 
 bintest:{2=count distinct x}
 pdmatrix:{asmatrix[benjamini_hochberg_test[y;"FALSE";x]]}

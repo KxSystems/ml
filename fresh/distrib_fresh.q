@@ -1,10 +1,11 @@
 system "S ",21_-4_string[.z.p];
 \d .ml
 
+
 fresh.peachcreatefeatures:{
  .z.pd:`u#hopen each .i.prt;
  data:fresh.util.chunktab[x;"j"$.i.slvs];
- cfunc:{fresh.createfeatures[x;y;z _ cols x;fresh.getsingleinputfeatures[]]};
+ cfunc:{fresh.createfeatures1[x;y;z _ cols x]};
  pdata:cfunc[;y;z] peach data;
  {x uj y}/[();pdata]}
 
