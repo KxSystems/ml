@@ -1,4 +1,4 @@
-# Machine-learning toolkit
+# Machine learning toolkit
 ## Introduction
 This repository contains at present two distinct sections. First is an implementation of the FRESH (FeatuRe Extraction and Scalable Hypothesis testing) algorithm for use in the extraction of features from time series data and the reduction in the number of features through statistical testing. The second section contains functions relating to areas including statistical analysis, data preprocessing and array manipulation.
 
@@ -8,7 +8,7 @@ The contents of both sections are explained in greater depth within the [FRESH](
 
 - embedPy
 
-The python packages required to allow successful exectution of all functions within the Machine-learning toolkit can be installed via:
+The python packages required to allow successful exectution of all functions within the machine learning toolkit can be installed via:
 
 pip:
 ```bash
@@ -34,9 +34,8 @@ q).ml.loadfile`:fresh/init.q
 
 ## Documentation
 
-Documentation for all sections of the Machine-learning toolkit are available [here](https://code.kx.com/q/ml/toolkit/).
+Documentation for all sections of the Machine-learning toolkit are available [here](https://code.kx.com/v2/ml/toolkit/).
 
 ## Status
 
-The Machine-learning toolkit is still in development and is available here as a beta release, further functionality and improvements will be made to the library in the coming months.
-
+The machine learning toolkit is still in development and is available here as a beta release, further functionality and improvements will be made to the library in the coming months.
