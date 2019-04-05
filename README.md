@@ -1,8 +1,8 @@
 # Machine-learning toolkit
 ## Introduction
-This repository contains two distinct sections. First is an implementation of the FRESH (FeatuRe Extraction and Scalable Hypothesis testing) algorithm for use in the extraction of features from time series data and the reduction in the number of features through statistical testing. The second section is a number of scipts containing functions which are relevant for use in a variety of machine learning applications.
+This repository contains at present two distinct sections. First is an implementation of the FRESH (FeatuRe Extraction and Scalable Hypothesis testing) algorithm for use in the extraction of features from time series data and the reduction in the number of features through statistical testing. The second section contains functions relating to areas including statistical analysis, data preprocessing and array manipulation.
 
-The contents of both sections are explained in greater depth within the [FRESH](https://code.kx.com/q/ml/toolkit/fresh) and [Utilities](https://code.kx.com/q/ml/toolkit/utils) documentation.
+The contents of both sections are explained in greater depth within the [FRESH](https://code.kx.com/v2/ml/toolkit/fresh/) and [Utilities](https://code.kx.com/v2/ml/toolkit/utilities/metric) documentation.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ or via conda:
 conda install --file requirements.txt
 ```
 
-*Running of the notebook examples contained within the FRESH and util sections of this library will require the installation of JupyterQ however this is not a dependancy for the running of functions at an individual level
+*Running of the notebook examples contained within the FRESH section of this library will require the installation of JupyterQ however this is not a dependancy for the running of functions at an individual level*
 
 ## Installation
 
