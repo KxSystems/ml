@@ -14,8 +14,8 @@ quantile|quantile=0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
 valcount|val=0 1 0n 0w -0w
 spktwelch|coeff=2 5 7
 rangecount|minval=-1;maxval=1
-partautocorrelation|lag=0 1 2 3 4 5 6
-fftcoeff|coeff=0 1 2 3 4 5 6 7 8 9
+partautocorrelation|maxlag=6
+fftcoeff|maxcoeff=10
 agglintrend|chunklen=5 10 50
 eratiobychunk|numsegments=3
 changequant|ql=0.1 0.2;qh=0.9 0.8;isabs=01b
