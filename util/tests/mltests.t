@@ -1,7 +1,6 @@
-\l p.q
 \l ml.q
-\l util/util.q
-\l tests/mlpy.p
+.ml.loadfile`:util/init.q
+.ml.loadfile`:util/tests/mlpy.p
 
 np:.p.import[`numpy]
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
@@ -47,7 +46,7 @@ ymb:100 10#1000?0b
 .ml.eye[3] ~ "f"$(1 0 0;0 1 0;0 0 1)
 first[.ml.eye[1]] ~ enlist 1f
 
-("f"$flip value .ml.describe[plaintab])~flip value .ml.util.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.util.tab2df[plaintab]]
+("f"$flip value .ml.describe[plaintab])~flip value .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
 
 .ml.percentile[x;0.75]~np[`:percentile][x;75]`
 .ml.percentile[x;0.02]~np[`:percentile][x;2]`
@@ -95,9 +94,9 @@ first[.ml.eye[1]] ~ enlist 1f
 .ml.rmsle[xm;ym]~{sqrt msle[x;y]`}'[flip xm;flip ym]
 .ml.rmsle[x;y]~sqrt msle[x;y]`
 .ml.rmsle[x;x]~sqrt msle[x;x]`
-(.ml.mape[x;y])~mean_absolute_percentage_error[x;y]
-.ml.mape[xf;yf]~mean_absolute_percentage_error[xf;yf]
-.ml.mape[xm;ym]~{mean_absolute_percentage_error[x;y]}'[flip xm;flip ym]
+(.ml.mape[x;y])~mean_absolute_percentage_error[y;x]
+.ml.mape[xf;yf]~mean_absolute_percentage_error[yf;xf]
+.ml.mape[xm;ym]~{mean_absolute_percentage_error[x;y]}'[flip ym;flip xm]
 (.ml.smape[x;y])~smape[x;y]
 .ml.smape[xf;yf]~smape[xf;yf]
 .ml.smape[xm;ym]~{smape[x;y]}'[flip xm;flip ym]
@@ -113,14 +112,13 @@ rocau:.p.import[`sklearn.metrics]`:roc_auc_score
 {.ml.crossentropy[x;y]~logloss[x;y]`}[(first idesc@)each p;p%:sum each p:1000 5#5000?1f]
 
 {.ml.rocaucscore[x;y]~rocau[x;y]`}[10?0b;10?1f]
-.ml.rocaucscore[10?0b;10#1f]~0f
+.ml.rocaucscore[10#01b;10#1f]~0.5
 .ml.rocaucscore[10#0b;10?1f]~0f
 .ml.rocaucscore[10#1b;10#0f]~0f
 
 .ml.tscoreeq[x;y]~abs first stats[`:ttest_ind][x;y]`
 .ml.tscoreeq[xf;yf]~abs first stats[`:ttest_ind][xf;yf]`
 .ml.tscoreeq[xb;yb]~abs first stats[`:ttest_ind][xb;yb]`
-
 
 .ml.cvm[flip value flip plaintab]~np[`:cov][flip value flip  plaintab;`bias pykw 1b]`
 .ml.cvm[(10110b;01110b)]~(0.24 0.04;0.04 0.24)
