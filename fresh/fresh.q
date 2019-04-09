@@ -65,7 +65,7 @@ fresh.feat.partautocorrelation:{
 fresh.feat.fftcoeff:{
  r:(fresh.i.angle[fx;`deg pykw 1b]`;fresh.i.real[fx]`;fresh.i.imag[fx]`;fresh.i.abso[fx:fresh.i.rfft x]`);
  (`$"_"sv'string raze(`coeff,/:til y),\:/:`angle`real`imag`abs)!raze y#'r,\:y#0n}
-fresh.feat.augfuller:{`teststat`pvalue`usedlag!3#@[{fresh.i.adfuller[x]`};x;0n]} / expensive
+fresh.feat.augfuller:{`teststat`pvalue`usedlag!"f"$3#@[{fresh.i.adfuller[x]`};x;0n]} / expensive
 fresh.feat.spktwelch:{fresh.i.welch[x][@;1][@;y]`}
 / Currently needs median,variance,mean,stddev defined separate to initial q implementation
 fresh.feat.aggautocorr:{
@@ -147,5 +147,5 @@ fresh.sigfeatvals:{[t;sigfeat;id]
   (flip (enlist id)!enlist idcol)!raze vals}
 
 / alternate feature selections
-fresh.percentilesigfeat:{[table;targets;p]where percentile[k;p]>k:fresh.sigfeat[table;targets]}
+fresh.percentilesigfeat:{[table;targets;p] cols[table] where percentile[k;p]>k:value fresh.sigfeat[table;targets]}
 fresh.ksigfeat:{[table;targets;k]key k#asc fresh.sigfeat[table;targets]}
