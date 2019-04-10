@@ -11,8 +11,8 @@ In each case significance tests implemented within freshq are compared to
 equivalent significance tests implemented previously in python.
 \
 \l p.q
-\l fresh/fresh.q
-\l fresh/ts_feature_significance.q
+\l fresh/extract.q
+\l fresh/select.q
 \l fresh/tests/significancetests.p
 xreal:5000?1000f
 xbin:rand each 5000#0b
@@ -55,7 +55,7 @@ bhfn:{[table;target]
 	pdict:(realcols,bincols)!pvals;
 	ptable:([]label:key pdict;p_value:value pdict);
 	dfptable:tab2df[ptable];
-	("i"$count .ml.fresh.benjhochfind[pdict;0.05]) ~ sum vec[0.05;dfptable]=1b
+	("i"$count .ml.fresh.benjhoch[pdict;0.05]) ~ sum vec[0.05;dfptable]=1b
 	}
 bhfn[table1;target1]
 bhfn[table2;target2]
