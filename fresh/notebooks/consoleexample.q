@@ -47,7 +47,7 @@ freshpipeline:{[table;id;target]
  -1"\n------------------------------";
  -1 "Feature selection is now beginning...";
  -1"--------------------------------\n";
- show tabreduced:key[tabraw]!(.ml.fresh.significantfeatures[p;targets])#p:value tabraw;
+ show tabreduced:key[tabraw]!(.ml.fresh.significantfeatures[p;targets;.ml.fresh.benjhoch 0.05])#p:value tabraw;
 
  -1"--------------------------------";
  -1 "Feature selection is now complete, the following are the columnal modifications to the input table";
