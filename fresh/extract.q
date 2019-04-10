@@ -63,14 +63,13 @@ fresh.feat.partautocorrelation:{
 fresh.feat.fftcoeff:{
  r:(fresh.i.angle[fx;`deg pykw 1b]`;fresh.i.real[fx]`;fresh.i.imag[fx]`;fresh.i.abso[fx:fresh.i.rfft x]`);
  (`$"_"sv'string raze(`coeff,/:til y),\:/:`angle`real`imag`abs)!raze y#'r,\:y#0n}
-fresh.feat.augfuller:{`teststat`pvalue`usedlag!3#"f"$@[{fresh.i.adfuller[x]`};x;0n]} / expensive
-fresh.feat.spktwelch:{fresh.i.welch[x][@;1][@;y]`}
-/ Currently needs median,variance,mean,stddev defined separate to initial q implementation
+fresh.feat.augfuller:{`teststat`pvalue`usedlag!3#"f"$@[{fresh.i.adfuller[x]`};x;0n]}
+fresh.feat.spktwelch:{fresh.i.welch[x;`nperseg pykw 256&count x][@;1][`]y}
 fresh.feat.aggautocorr:{
  a:$[(abs[var x]<1e-10)|1=n:count x;0;1_fresh.i.acf[x;`unbiased pykw 1b;`fft pykw n>1250]`];
  `mean`variance`median`dev!(avg;var;med;dev)@\:a}
 fresh.feat.fftaggreg:{
- m:1.,(sum each a*/:3(l*)\l:til count a)%sum a:fresh.i.abso[fresh.i.rfft x]`;
+ m:1.,(sum each a*/:3(l*)\l:"f"$til count a)%sum a:fresh.i.abso[fresh.i.rfft x]`;
  v:m[2]-m[1]*m[1];
  s:$[v<.5;0n;((m[3]-3*m[1]*v)-m[1]*m[1]*m 1)%v xexp 1.5];
  k:$[v<.5;0n;((m[4]-4*m[1]*m[3]-3*m 1)+6*m[2]*m[1]*m 1)%v*v];
