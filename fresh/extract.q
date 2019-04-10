@@ -63,11 +63,7 @@ fresh.feat.partautocorrelation:{
 fresh.feat.fftcoeff:{
  r:(fresh.i.angle[fx;`deg pykw 1b]`;fresh.i.real[fx]`;fresh.i.imag[fx]`;fresh.i.abso[fx:fresh.i.rfft x]`);
  (`$"_"sv'string raze(`coeff,/:til y),\:/:`angle`real`imag`abs)!raze y#'r,\:y#0n}
-<<<<<<< HEAD
-fresh.feat.augfuller:{`teststat`pvalue`usedlag!"f"$3#@[{fresh.i.adfuller[x]`};x;0n]} / expensive
-=======
 fresh.feat.augfuller:{`teststat`pvalue`usedlag!3#"f"$@[{fresh.i.adfuller[x]`};x;0n]} / expensive
->>>>>>> 0889cd5c79e87997129e3a5dd782f4f9ebcfbfa4
 fresh.feat.spktwelch:{fresh.i.welch[x][@;1][@;y]`}
 / Currently needs median,variance,mean,stddev defined separate to initial q implementation
 fresh.feat.aggautocorr:{
