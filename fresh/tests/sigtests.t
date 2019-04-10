@@ -19,12 +19,12 @@ xbin:rand each 5000#0b
 yreal:5000?1000f
 ybin:rand each 5000#0b
 / 1a.
-.ml.fresh.fishertest[xbin;ybin] ~ binary_feature_binary_test[xbin;ybin]
+.ml.fresh.i.fisher[xbin;ybin] ~ binary_feature_binary_test[xbin;ybin]
 
 / 1b.
-.ml.fresh.ks2samp[ybin;xreal] ~ target_binary_feature_real_test[ybin;xreal]
+.ml.fresh.i.ks[ybin;xreal] ~ target_binary_feature_real_test[ybin;xreal]
 / 1c.
-.ml.fresh.ktaupy[xreal;yreal] ~ target_real_feature_real_test[xreal;yreal]
+.ml.fresh.i.ktau[xreal;yreal] ~ target_real_feature_real_test[xreal;yreal]
 
 /
 2.
@@ -40,22 +40,16 @@ table1:([]1000000?100f;asc 1000000?100f;desc 1000000?100f;1000000?100f;1000000?1
 table2:([]asc 1000000?100f;asc 1000000?100f;desc 1000000?100f;1000000?0b;desc 1000000?100f;asc 1000000?100f)
 table3:([]desc 1000000?1f;1000000?10f;asc 1000000?1f)
 table4:([]1000000?0b;1000000?1f;1000000?1f)
-target1:asc 1000000?100f;target2:desc 1000000?1f;target3:target4:target1
+target1:asc 1000000?100f;target2:desc 1000000?1f;target3:target4:1000000?0b
 bintest:{2=count distinct x}
 pdmatrix:{asmatrix[benjamini_hochberg_test[y;"FALSE";x]]}
 k:{pdmatrix[x;y]`}
 vec:{k[x;y][;2]}
 bhfn:{[table;target]
-	bincols:where bintest each flip table;realcols:cols[table]except bincols;
-	bintab:table[bincols];realtab:table[realcols];
-	bintarget:bintest target;
-	pvals:raze$[bintarget;
-			{y[x;]each z}[target]'[.ml.fresh.ks2samp,.ml.fresh.fishertest;(realtab;bintab)];
-			{y[x;]each z}[target]'[.ml.fresh.ktaupy,.ml.fresh.ks2samp;(realtab;bintab)]];
-	pdict:(realcols,bincols)!pvals;
+	pdict:.ml.fresh.sigfeat[table;target];
 	ptable:([]label:key pdict;p_value:value pdict);
 	dfptable:tab2df[ptable];
-	("i"$count .ml.fresh.benjhoch[pdict;0.05]) ~ sum vec[0.05;dfptable]=1b
+	("i"$count .ml.fresh.benjhoch[0.05;pdict]) ~ sum vec[0.05;dfptable]=1b
 	}
 bhfn[table1;target1]
 bhfn[table2;target2]
