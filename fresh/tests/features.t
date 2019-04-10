@@ -470,10 +470,10 @@ abs[.ml.fresh.feat.binnedentropy[xnull;50]] ~ 0f
 (.ml.fresh.feat.fftaggreg[xnull]`centroid) ~ 0n
 (.ml.fresh.feat.fftaggreg[xnull]`variance) ~ 0n
 
-(value .ml.fresh.feat.augfuller[xj]) ~ augmented_dickey_fuller[xj][0 1 2]
-(value .ml.fresh.feat.augfuller[xf]) ~ augmented_dickey_fuller[xf][0 1 2]
-(value .ml.fresh.feat.augfuller[xi]) ~ augmented_dickey_fuller[xi][0 1 2]
-(value .ml.fresh.feat.augfuller[xb]) ~ augmented_dickey_fuller[xb][0 1 2]
+(value .ml.fresh.feat.augfuller[xj]) ~ "f"$augmented_dickey_fuller[xj][0 1 2]
+(value .ml.fresh.feat.augfuller[xf]) ~ "f"$augmented_dickey_fuller[xf][0 1 2]
+(value .ml.fresh.feat.augfuller[xi]) ~ "f"$augmented_dickey_fuller[xi][0 1 2]
+(value .ml.fresh.feat.augfuller[xb]) ~ "f"$augmented_dickey_fuller[xb][0 1 2]
 (value .ml.fresh.feat.augfuller[x0]) ~ 3#0n
 (value .ml.fresh.feat.augfuller[x1]) ~ 3#0n
 (value .ml.fresh.feat.augfuller[x2]) ~ 3#0n
