@@ -29,12 +29,4 @@ displayCM:{[cm;classes;title;cmap]
 
  }
 
-/utils
-
-/ this is a specific implementation of a confusion matrix for use with the .displaCM function
-cfm:{[preds;labels]
- classes:asc distinct labels;
- :exec 0^(count each group pred)classes by label
-  from([]pred:preds;label:labels);
- }
 
