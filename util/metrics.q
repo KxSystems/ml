@@ -17,7 +17,7 @@ f1score:fbscore[;;;1]
 / matthews correlation coefficient
 matcorr:{.[-;prd raze[m](0 1;3 2)]%sqrt prd sum[m],sum each m:value confmat[x;y]}
 / confusion matrix
-confmat:{n:count k:asc distinct x,y;(k!(n;n)#0),0^({count each group x}each x group y)@\:k}
+confmat:{(k!(2#count k)#0),0^((count each group@)each x group y)@\:k:$[1=type k:asc distinct x,y;01b;k]}
 / confusion dictionary
 confdict:{`tn`fp`fn`tp!raze value confmat .(x;y)=z}
 / class report
