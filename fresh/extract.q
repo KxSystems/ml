@@ -1,5 +1,3 @@
-/ fresh algorithm implementation
-/ https://arxiv.org/pdf/1610.07717v3.pdf 
 \d .ml 
 
 / feature functions
@@ -107,6 +105,7 @@ fresh.loadparams hsym`$.ml.path,"/fresh/hyperparam.txt"; / default params
 
 / feature extraction
 fresh.createfeatures:{[data;aggs;cnames;conf]
+<<<<<<< HEAD:fresh/fresh.q
   p1:select from(p:0!select from conf where valid)where pnum>0;
   calcs:cnames cross(exec f from p where pnum=0),raze p1[`f]cross'p1[`pnames],'/:'(cross/)each p1`pvals;
   colnames:`$ssr[;".";"o"]each"_"sv'string raze each calcs;
@@ -149,3 +148,10 @@ fresh.sigfeatvals:{[t;sigfeat;id]
 / alternate feature selections
 fresh.percentilesigfeat:{[table;targets;p] cols[table] where percentile[k;p]>k:value fresh.sigfeat[table;targets]}
 fresh.ksigfeat:{[table;targets;k]key k#asc fresh.sigfeat[table;targets]}
+=======
+ p1:select from(p:0!select from conf where valid)where pnum>0;
+ calcs:cnames cross(exec f from p where pnum=0),raze p1[`f]cross'p1[`pnames],'/:'(cross/)each p1`pvals;
+ colnames:`$ssr[;".";"o"]each"_"sv'string raze each calcs;
+ r:?[data;();aggs!aggs:aggs,();colnames!flip[(.ml.fresh.feat calcs[;1];calcs[;0])],'(last each)each 2_'calcs];
+ 1!{[r;c]![r;();0b;enlist c],'(`$"_"sv'string c,'cols t)xcol t:r c}/[0!r;exec c from meta[r]where null t]}
+>>>>>>> 262d210355e0099002cdac679e105cbdfd0366ac:fresh/extract.q
