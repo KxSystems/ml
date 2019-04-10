@@ -105,53 +105,8 @@ fresh.loadparams hsym`$.ml.path,"/fresh/hyperparam.txt"; / default params
 
 / feature extraction
 fresh.createfeatures:{[data;aggs;cnames;conf]
-<<<<<<< HEAD:fresh/fresh.q
-  p1:select from(p:0!select from conf where valid)where pnum>0;
-  calcs:cnames cross(exec f from p where pnum=0),raze p1[`f]cross'p1[`pnames],'/:'(cross/)each p1`pvals;
-  colnames:`$ssr[;".";"o"]each"_"sv'string raze each calcs;
-  r:?[data;();aggs!aggs:aggs,();colnames!flip[(.ml.fresh.feat calcs[;1];calcs[;0])],'(last each)each 2_'calcs];
-  1!{[r;c]![r;();0b;enlist c],'(`$"_"sv'string c,'cols t)xcol t:r c}/[0!r;exec c from meta[r]where null t]}
-
-/ feature significance
-fresh.sigfeat:{[table;targets]
- table:(where 0=var each flip table)_table;
- bintest:{2=count distinct x};
- bintarget:bintest targets;
- bincols:where bintest each flip table;
- realcols:cols[table]except bincols;
- bintab:table[bincols];
- realtab:table[realcols];
- pvals:raze$[bintarget;
- {y[x;]each z}[targets]'[fresh.ks2samp,fresh.fishertest;(realtab;bintab)];
- {y[x;]each z}[targets]'[fresh.ktaupy,fresh.ks2samp;(realtab;bintab)]];
- (realcols,bincols)!pvals
- }
-
-fresh.significantfeatures:fresh.benjhochfeat:{[table;targets]fresh.benjhochfind[fresh.sigfeat[table;targets];0.05]}
-
-//applies the significant features(sigfeats) to a table t filtering by the id column
-fresh.sigfeatvals:{[t;sigfeat;id]
-  split:{vs["_";string x]}each sigfeat;
-  featidx:{where x like"feat*"}each split;
-  feat:raze`${x y}'[split;featidx];
-  func:{x _ first y}'[split;featidx];
-  extFunc:{x[0]:".ml.fresh.feat.",x 0;x}each func;
-  featDict:(!).(feat;extFunc);
-
-  vals:{[sig;x;y;z] flip sig!enlist each{[x;y;z]base:(first y;x z);
-   $[1>=count y;value base;
-    $[-11h~type y[1]:{@[value;x;`$x]}y[1];[r:value base;r y 1];value base,y 1]]
-   }[z]'[x;y]}[sigfeat;value featDict;key featDict]each {?[x;enlist(=;y;enlist z);0b;()]}[t;id]each idcol:distinct idcol:t id;
-
-  (flip (enlist id)!enlist idcol)!raze vals}
-
-/ alternate feature selections
-fresh.percentilesigfeat:{[table;targets;p] cols[table] where percentile[k;p]>k:value fresh.sigfeat[table;targets]}
-fresh.ksigfeat:{[table;targets;k]key k#asc fresh.sigfeat[table;targets]}
-=======
  p1:select from(p:0!select from conf where valid)where pnum>0;
  calcs:cnames cross(exec f from p where pnum=0),raze p1[`f]cross'p1[`pnames],'/:'(cross/)each p1`pvals;
  colnames:`$ssr[;".";"o"]each"_"sv'string raze each calcs;
  r:?[data;();aggs!aggs:aggs,();colnames!flip[(.ml.fresh.feat calcs[;1];calcs[;0])],'(last each)each 2_'calcs];
  1!{[r;c]![r;();0b;enlist c],'(`$"_"sv'string c,'cols t)xcol t:r c}/[0!r;exec c from meta[r]where null t]}
->>>>>>> 262d210355e0099002cdac679e105cbdfd0366ac:fresh/extract.q
