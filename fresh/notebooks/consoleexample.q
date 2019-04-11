@@ -32,8 +32,9 @@ freshpipeline:{[table;id;target]
  -1"\n------------------------------";
  -1 "In this example we are only extracting on features which take the data alone as an input, these are as follows:";
  -1"------------------------------\n";
- show ptab:.ml.fresh.params;
- 
+ ptab:.ml.fresh.params;
+ ptab:update valid:0b from ptab where pnum>0;
+ show ptab:update valid:0b from ptab where f in `fftaggreg`augfuller
  -1"\n------------------------------";
  -1 "Beginning feature extraction, this may take a while...";
  -1"------------------------------\n";
@@ -47,7 +48,7 @@ freshpipeline:{[table;id;target]
  -1"\n------------------------------";
  -1 "Feature selection is now beginning...";
  -1"--------------------------------\n";
- show tabreduced:key[tabraw]!(.ml.fresh.significantfeatures[p;targets;.ml.fresh.benjhoch 0.05])#p:value tabraw;
+ show tabreduced:key[tabraw]!(.ml.fresh.significantfeatures[p;targets;.ml.fresh.ksigfeat 150])#p:value tabraw;
 
  -1"--------------------------------";
  -1 "Feature selection is now complete, the following are the columnal modifications to the input table";
@@ -62,10 +63,11 @@ freshpipeline:{[table;id;target]
  -1"\n------------------------------";
  -1"We now set a Random Forest Classifier with 200 estimators to create our predictions and fit the data to the model and make predictions given a defined random seed";
  -1"--------------------------------\n";
- clf:.p.import[`sklearn.ensemble][`:RandomForestClassifier][`n_estimators pykw 200;`random_state pykw 42];
+ clf:.p.import[`sklearn.ensemble][`:RandomForestClassifier][`n_estimators pykw 500;`random_state pykw 15];
 
- 
- dict1:.mltraintestsplit[fitvalsfilter;targets;0.25];
+ system "S 42";
+ dict1:.ml.traintestsplit[fitvalsfilter;targets;0.25];
+ system "S 42";
  dict2:.ml.traintestsplit[fitunfilter;targets;0.25];
  clf[`:fit][dict1[`xtrain];dict1[`ytrain]]`;
  pred1:clf[`:predict][dict1[`xtest]]`;
@@ -75,15 +77,15 @@ freshpipeline:{[table;id;target]
  -1"------------------------------";
  -1"The results from this analysis are as follows";
  -1"------------------------------\n";
- print .ml.classreport[dict1[`ytest];pred1]`;
- -1"The number of misclassifications in the filtered dataset is: ",string sum dict1[`ytest]<>pred1;
+ show .ml.classreport[dict1[`ytest];pred1];
+ -1"\n The number of misclassifications in the filtered dataset is: ",string sum dict1[`ytest]<>pred1;
  -1"The accuracy in the filtered dataset is: ",string .ml.accuracy[dict1[`ytest];pred1];
- -1"_______________________________________________________________";
+ -1"_______________________________________________________________\n";
 
- print .ml.classreport[dict2[`ytest];pred2]`;
- -1"The number of misclassifications in the unfiltered dataset is: ",string sum dict2[`ytest]<>pred2;
+ show .ml.classreport[dict2[`ytest];pred2];
+ -1"\n The number of misclassifications in the unfiltered dataset is: ",string sum dict2[`ytest]<>pred2;
  -1"The accuracy in the unfiltered dataset is: ",string .ml.accuracy[dict2[`ytest];pred2];
- -1"_______________________________________________________________";
+ -1"_______________________________________________________________\n";
  
  show cnfM:.ml.confmat[dict1[`ytest];pred1];
  }
