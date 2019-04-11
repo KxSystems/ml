@@ -90,7 +90,6 @@ fresh.i.findpeak:.p.import[`scipy.signal]`:find_peaks_cwt
 / q utils
 fresh.i.getlenseqwhere:{(1_deltas i,count x)where x i:where differ x}
 fresh.i.peakfind:{neg[y]_y _min x>/:xprev\:[-1 1*z]x}
-fresh.i.getmoment:{[x;m](("f"$x)$("f"$til count x)xexp m)%sum x}
 
 / params
 fresh.params:update pnum:{count 1_get[.ml.fresh.feat x]1}each f,pnames:count[i]#(),pvals:count[i]#()from([]f:1_key fresh.feat) 
