@@ -92,19 +92,19 @@ fresh.i.getlenseqwhere:{(1_deltas i,count x)where x i:where differ x}
 fresh.i.peakfind:{neg[y]_y _min x>/:xprev\:[-1 1*z]x}
 
 / params
-fresh.params:update pnum:{count 1_get[.ml.fresh.feat x]1}each f,pnames:count[i]#(),pvals:count[i]#()from([]f:1_key fresh.feat) 
+fresh.params:update pnum:{count 1_get[fresh.feat x]1}each f,pnames:count[i]#(),pvals:count[i]#()from([]f:1_key fresh.feat) 
 fresh.params:1!`pnum xasc update valid:pnum=count each pnames from fresh.params
 fresh.loadparams:{
  pp:{(raze value@)each(!).("S=;")0:x}each(!).("S*";"|")0:x;
  fresh.params[([]f:key pp);`pvals]:value each value pp:inter[key pp;exec f from fresh.params]#pp;
  fresh.params[([]f:key pp);`pnames]:key each value pp;
  fresh.params:update valid:pnum=count each pnames from fresh.params where f in key pp;}
-fresh.loadparams hsym`$.ml.path,"/fresh/hyperparam.txt"; / default params
+fresh.loadparams hsym`$path,"/fresh/hyperparam.txt"; / default params
 
 / feature extraction
 fresh.createfeatures:{[data;aggs;cnames;conf]
  p1:select from(p:0!select from conf where valid)where pnum>0;
  calcs:cnames cross(exec f from p where pnum=0),raze p1[`f]cross'p1[`pnames],'/:'(cross/)each p1`pvals;
  colnames:`$ssr[;".";"o"]each"_"sv'string raze each calcs;
- r:?[data;();aggs!aggs:aggs,();colnames!flip[(.ml.fresh.feat calcs[;1];calcs[;0])],'(last each)each 2_'calcs];
+ r:?[data;();aggs!aggs:aggs,();colnames!flip[(fresh.feat calcs[;1];calcs[;0])],'(last each)each 2_'calcs];
  1!{[r;c]![r;();0b;enlist c],'(`$"_"sv'string c,'cols t)xcol t:r c}/[0!r;exec c from meta[r]where null t]}
