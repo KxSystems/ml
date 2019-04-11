@@ -39,3 +39,5 @@ Documentation for all sections of the machine learning toolkit are available [he
 ## Status
 
 The machine learning toolkit is still in development and is available here as a beta release, further functionality and improvements will be made to the library in the coming months.
+
+If you have any issues, questions or suggestions, please write to ai@kx.com.
