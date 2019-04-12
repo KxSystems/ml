@@ -26,7 +26,7 @@ conda install --file requirements.txt
 
 Place the library file in `$QHOME` and load into a q instance using `ml/ml.q`
 
-This will load all the functions contained within the `.ml` namespace the  
+This will load all the functions contained within the `.ml` namespace  
 ```q
 q)\l ml/ml.q
 q).ml.loadfile`:init.q
