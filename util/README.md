@@ -6,7 +6,7 @@ Functions are divided into 3 scripts, dealing with different aspects of machine 
 
 1. Statistical functions for testing the performance of machine learning models, including confusion matrices, t-scores, logloss, specificity and accuracy.
 
-2. Preprocessing functions for the manipulation of data prior to the application of machine learning algotithms. These include, tailored filling of data (linear/mean/median/zero and forward filling), one-hot encoding, removal of zero variance features from data, creation of polynomial features and the production of rolled windowed (forecasting frame) tables.
+2. Preprocessing functions for the manipulation of data prior to the application of machine learning algorithms. These include, tailored filling of data (linear/mean/median/zero and forward filling), one-hot encoding, removal of zero variance features from data and the creation of polynomial features.
 
 3. Utilities found to be commonly used in machine learning applications, such as exploring the shape of data, conversion of q tables to Pandas dataframes (and vice-versa), and train-test splitting.
   
