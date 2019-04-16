@@ -108,3 +108,7 @@ fresh.createfeatures:{[data;aggs;cnames;conf]
  colnames:`$ssr[;".";"o"]each"_"sv'string raze each calcs;
  r:?[data;();aggs!aggs:aggs,();colnames!flip[(fresh.feat calcs[;1];calcs[;0])],'(last each)each 2_'calcs];
  1!{[r;c]![r;();0b;enlist c],'(`$"_"sv'string c,'cols t)xcol t:r c}/[0!r;exec c from meta[r]where null t]}
+
+/ allow multiprocess
+.ml.loadfile`:util/mproc.q
+if[0>system"s";.ml.mproc.init[abs system"s"]enlist".ml.loadfile`:fresh/init.q"];
