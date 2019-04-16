@@ -1,4 +1,4 @@
-# Cross Validation
+# Cross-Validation
 ## Introduction
 
 The functions contained in this folder surround the implementation of various cross-validation procedures both time-series and non time-series in nature. The goal of this is to make such procedures available using a q-like syntax.
@@ -31,6 +31,6 @@ Documentation is available on the [Cross-Validation](https://code.kx.com/q/ml/to
 
 ## Status
 
-The cross validation library is still in development and is available here as a beta release, further functionality and improvements will be made to the library in the coming months.
+The cross-validation library is still in development and is available here as a beta release, further functionality and improvements will be made to the library in the coming months.
 
 If you have any issues, questions or suggestions, please write to ai@kx.com.
