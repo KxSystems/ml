@@ -53,7 +53,7 @@ compareDocToCentroid:{[centroid;doc]
   cosineSimilarity[doc;centroid[alignedKeys]-doc]}
 
 // Calc cosine similarity between doc and entire corpus
-i.compareDocToCorpus:{[keywords;idx]compareDocs[keywords idx]each(idx+1)_ keywords}
+compareDocToCorpus:{[keywords;idx]compareDocs[keywords idx]each(idx+1)_ keywords}
 
 // Generating symmetric matrix from triangle (ragged list)
 i.matrixFromRaggedList:{m+flip m:((til count x)#'0.),'.5,'x}
