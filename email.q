@@ -26,7 +26,7 @@ email.getGraph:{[msgs]
 
 // Get to/from pairs from an email
 email.i.getToFrom:{[msg]
-  ((msg[`sender;0;1];)each msg[`to;;1]),$[99=type p:msg`payload;raze .z.s each p;()]}
+  ((msg[`sender;0;1];)each msg[`to;;1]),$[98=type p:msg`payload;raze .z.s each p;()]}
 
 // Init python and q functions for reading mbox files
 email.i.parseMail:{email.i.parseMbox1 email.i.msgFromString[x]`.}

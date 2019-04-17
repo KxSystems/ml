@@ -1,3 +1,4 @@
+\l init.q
 \d .nlp
 sent.amplifyEP[""]~0f
 sent.amplifyEP[enlist "!"]~.292
