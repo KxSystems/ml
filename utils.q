@@ -48,7 +48,7 @@ i.jaro:{[s1;s2]
 i.jaroWinkler:{$[0.7<w:i.jaro[x;y];w+(sum mins(4#x)~'4#y)*.1*1-w;w]}
 
 // Cosine similarity of doc and centroid
-i.compareDocToCentroid:{[centroid;doc]
+compareDocToCentroid:{[centroid;doc]
   doc@:alignedKeys:distinct key[centroid],key doc;
   cosineSimilarity[doc;centroid[alignedKeys]-doc]}
 
