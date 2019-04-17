@@ -2,10 +2,23 @@
 
 .p.import[`sys;:;`:argv;()]; / spacy expects python be the main process
 
+
+p)def spell(doc,model):
+    lst=[]
+    for s in doc:
+        if s._.hunspell_spell==False:
+           ([lst.append(n)for n in model((s._.hunspell_suggest)[0])]) 
+        
+        else:
+            lst.append(s)
+    return lst
+
 // Python functions for running spacy
 p)def get_doc_info(parser,tokenAttrs,opts,text):
-  doc=parser(text)
-  res=[[getattr(w,a)for w in doc]for a in tokenAttrs]
+  doc=doc1=parser(text)
+  if('spell' in opts):
+    doc1=spell(doc,parser)
+  res=[[getattr(w,a)for w in doc1]for a in tokenAttrs]
   if('sentChars' in opts): # indices of first+last char per sentence
     res.append([(s.start_char,s.end_char)for s in doc.sents])
   if('sentIndices' in opts): # index of first token per sentence
@@ -65,6 +78,7 @@ parser.i.newSubParser:{[lang;opts;disabled]
  model:.p.import[$[`~chklng;`spacy;sv[`]`spacy.lang,lang]][hsym$[`~chklng;`load;chklng]
    ]. raze[$[`~chklng;lang;()];`disable pykw disabled];
   if[`sbd in opts;model[`:add_pipe]$[`~chklng;model[`:create_pipe;`sentencizer];.p.pyget `x_sbd]];
+  if[`spell in opts;sphun:.p.import[`spacy_hunspell]`:spaCyHunSpell;hunspell:sphun[model;`linux];model[`:add_pipe]hunspell];  
  model}
 
 // Operations that must be done in q, or give better performance in q
@@ -72,7 +86,7 @@ parser.i.runParser:{[pyParser;colnames;opts;stopwords;docs]
   t:parser.i.cleanUTF8 each docs;
   parsed:parser.i.unpack[pyParser;opts;stopwords]each t;
   if[`keywords in opts;parsed[`keywords]:TFIDF parsed];
-  colnames#@[parsed;`text;:;t]}
+  (colnames except `spell)#@[parsed;`text;:;t]}
 
 // Operations that must be done in q, or give better performance in q
 parser.i.unpack:{[pyParser;opts;stopwords;text]
