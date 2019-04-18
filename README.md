@@ -95,7 +95,7 @@ If you have [Docker installed](https://www.docker.com/community-edition) you can
 
 ## Documentation
 
-Documentation is available on the [nlp](https://code.kx.com/q/ml/nlp/) homepage.
+Documentation is available on the [nlp](https://code.kx.com/v2/ml/nlp/) homepage.
 
 
 
