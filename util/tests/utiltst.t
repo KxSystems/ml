@@ -10,6 +10,14 @@ t2:.p.eval"pd.DataFrame({'fcol':[None,None,None,None,None],'jcol':[True,False,Tr
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 xm:100 10#1000?100f
 
+df :.ml.tab2df tt:([]fcol:12?1.;jcol:12?100;scol:12?`aaa`bbb`ccc)
+dfj:.ml.tab2df tj:select by jcol from tt
+dfs:.ml.tab2df ts:select by scol from tt
+dfsj:.ml.tab2df tx:select by scol,jcol from tt
+(dfsx:.ml.tab2df tx)[`:index][:;`:names;(`scol;::)]
+(dfxj:.ml.tab2df tx)[`:index][:;`:names;(::;`jcol)]
+(dfxx:.ml.tab2df tx)[`:index][:;`:names;(::;::)]
+
 .ml.shape[1 2 3*/:til 10] ~ np[`:shape][1 2 3*/:til 10]`
 .ml.shape[enlist 1] ~ np[`:shape][enlist 1]`
 .ml.shape[1 2] ~ np[`:shape][1 2]`
@@ -35,6 +43,14 @@ first[.ml.eye[1]] ~ enlist 1f
 
 .ml.df2tab[t]~([]fcol:0.1*1+til 5;jcol:10*1+til 5)
 .ml.df2tab[t2]~([]fcol:5#(::);jcol:10101b)
+
+tt~update`$scol from .ml.df2tab df
+tj~update`$scol from .ml.df2tab dfj
+ts~update`$scol from .ml.df2tab dfs
+tx~update`$scol from .ml.df2tab dfsj
+tx~update`$scol from`scol`jcol xcol .ml.df2tab dfsx
+tx~update`$scol from`scol`jcol xcol .ml.df2tab dfxj
+tx~update`$scol from`scol`jcol xcol .ml.df2tab dfxx
 
 \S 43
 .ml.traintestsplit[til 10;1+til 10;0.2]~`xtrain`ytrain`xtest`ytest!(2 3 7 1 6 4 9 5;3 4 8 2 7 5 10 6;0 8;1 9)
