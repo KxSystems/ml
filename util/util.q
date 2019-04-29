@@ -18,8 +18,8 @@ tab2df:{
  $[count k:keys x;r[`:set_index]k;r]}
 / pandas dataframe to q tab
 df2tab:{
- n:$[.p.isinstance[x`:index;.p.import[`pandas]`:RangeIndex]`;0;x[`:index.nlevels]`];
- n!flip $[n;x[`:reset_index][];x][`:to_dict;`list]`}
+ n:$[enlist[::]~x[`:index.names]`;0;x[`:index.nlevels]`];
+ n!flip$[n;x[`:reset_index][];x][`:to_dict;`list]`}
 
 / split into train/test sets with sz% in test
 traintestsplit:{[x;y;sz]`xtrain`ytrain`xtest`ytest!raze(x;y)@\:/:(0,floor n*1-sz)_neg[n]?n:count x}

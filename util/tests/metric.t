@@ -34,8 +34,8 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.percentile[x;0.02]~np[`:percentile][x;2]`
 .ml.percentile[xf;0.5]~np[`:percentile][xf;50]`
 .ml.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~3.5
-("f"$flip value .ml.describe[plaintab])~flip value .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
-("f"$flip value .ml.describe[plaintabn])~flip (value .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
+("f"$flip value .ml.describe[plaintab])~flip .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
+("f"$flip value .ml.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
 
 .ml.accuracy[x;y] ~ skmetric[`:accuracy_score][x;y]`
 .ml.accuracy[xb;yb] ~ 0.4583333333333
