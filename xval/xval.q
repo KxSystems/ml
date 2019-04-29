@@ -25,10 +25,10 @@ xval.gridsearch:{[x;y;i;algo;dict]
  pos:$[l;(value dict)0;((cross/)value dict)] where aver=max aver;
  (max aver;$[l;$[1<count pos;(kd)0;kd];kd]!$[l;pos;flip pos])}
 
-xval.gridsearchfit:{[x;y;sz;algo;dict]
+xval.gridsearchfit:{[x;y;sz;n;algo;dict]
  t:util.traintestsplit[x;y;sz];
  alg:mkalg[dict;algo];
- i:xval.kfshuff[t`ytrain;5];
+ i:xval.kfshuff[t`ytrain;n];
  trdata:distrib[t`xtrain;i],'distrib[t`ytrain;i];
  vals:{fitscore[;y]each x}[alg]each trdata;
  aver:$[1=count shape vals;avg vals;avg each (,'/)vals];
