@@ -24,3 +24,11 @@ xval.gridsearchfit:{[f;x;y;algo;pd;pc]
   (pr;algo[pykwargs pr](x;y)@\:/:i)}
 
 xval.fitscore:{[algo;p;d].[.[algo[p]`:fit;d 0]`:score;d 1]`}
+
+/ allow multiprocess
+loadfile`:util/mproc.q
+loadfile`:util/pickle.q
+if[0>system"s";mproc.init[abs system"s"]enlist".ml.loadfile`:util/pickle.q"];
+
+xval.pickledump:{$[0<=system"s";;.p.i.isw x;.ml.pickledump;]x}
+xval.pickleload:{$[4=type x;.ml.pickleload;]x}
