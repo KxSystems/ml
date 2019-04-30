@@ -30,4 +30,3 @@ if[0>system"s";mproc.init[abs system"s"]enlist".ml.loadfile`:util/pickle.q"];
 
 xval.pickledump:{$[0<=system"s";;.p.i.isw x;.ml.pickledump;]x}
 xval.pickleload:{$[4=type x;.ml.pickleload;]x}
->>>>>>> 6a63a0fc9905e7fd9f46953165b39c1ccd5a0e23
