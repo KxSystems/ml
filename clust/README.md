@@ -12,9 +12,7 @@ A k-dimensional tree (k-d tree) is used by the single and centroid hierarchical 
 
 - embedPy
 - Matplotlib 2.1.1
-- Matplot3d
 - Scikit learn
-- PyClustering (data samples)
 
 ## Status
 
