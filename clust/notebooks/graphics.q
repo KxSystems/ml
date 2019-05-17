@@ -5,35 +5,35 @@ plt:.p.import`matplotlib.pyplot
 /* y = data
 /* z = inputs for the cluster functions
 
-plot:{$[x in`ward`dbscan;plotwdb[x;y;z];plothcc[y;z]]}
+plot:{$[x~`ward;plotw[x;y;z];plotcl[x;y;z]]}
 
 /plot ward or dbscan
-plotwdb:{
+plotw:{
  s:.z.t;
  r:$[b:x~`ward;.ml.clust.hc;.ml.clust.dbscan][y;]. z;
  t:.z.t-s;
  $[2<count first y;[fig:plt[`:figure][];ax::fig[`:add_subplot][111;`projection pykw"3d"]];ax::plt];
  {ax[`:scatter]. flip x}each exec pts by clt from r;
- plt[`:title]"df/lf: e2dist/,",string[x]," - ",string t;
+ plt[`:title]"df/lf: e2dist/",string[x]," - ",string t;
  plt[`:show][];}
 
-/plot hierarchical (`single`complete`average`centroid) or cure
-plothcc:{
- c:y[;0]0;
- d:1_ 'y;
- is3d::2<count first x;
- ishc::2~count first d;
- $[is3d;fig::plt[`:figure][];[subplots::plt[`:subplots]. $[ishc;3 4;1 3]; fig::subplots[@;0];axarr::subplots[@;1]]];
+/plot hierarchical, kmeans or cure
+plotcl:{
+ $[b::2<count first y;fig::plt[`:figure][];
+  [subplots::plt[`:subplots]. ud[x;0];fig::subplots[@;0];axarr::subplots[@;1]]];
  fig[`:set_size_inches;18.5;8.5];
  fig[`:subplots_adjust][`hspace pykw .5];
- {[d;c;f;i]
-  if[is3d;ax:fig[`:add_subplot][;;i+1;`projection pykw"3d"]. $[ishc;3 4;1 3]];
-  s:.z.t;
-  r:$[ishc;.ml.clust.hc;.ml.clust.ccure][d;c]. f;
-  t:.z.t-s;
-  j:cross[til 3;til 4]i;
-  if[not is3d;ax:$[ishc;axarr[@;j 0][@;j 1];axarr[@;i]]];
+ {[a;d;f;i]
+  if[b;ax:fig[`:add_subplot][;;i+1;`projection pykw"3d"]. ud[a]0];
+  s:.z.t;r:ud[a;1][d]. f;t:.z.t-s;
+  j:@[;i]cross[;]. til each ud[a]0;
+  if[not b;ax:$[a in`kmeans`dbscan;axarr[@;i];axarr[@;j 0][@;j 1]]];
   {x[`:scatter]. flip y}[ax]each exec pts by clt from r;
-  ax[`:set_title]"df/",$[ishc;["lf: ",string[f 0],"/",string f 1];["C: ",string[f 0],"/",string[f 3],"b"]]," - ",string t;
-  }[x;c]'[d;til count d];
+  ax[`:set_title]ud[a;2;f]," - ",string t;
+  }[x;y]'[z;til count z];
  plt[`:show][];}
+
+/utils dictionary for plothkc
+ud:`hc`cure`kmeans`dbscan!(enlist each(3 4;2 3;1 4;1 3)),'
+ (.ml.clust.hc;.ml.clust.ccure;.ml.clust.kmeans;.ml.clust.dbscan),'
+ ({"df/lf: ",string[x 1],"/",string x 2};{"df/C: ",string[x 1],"/",string[x 4],"b"};{"df: ",string x 3};{"df: ",string x 0})

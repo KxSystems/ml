@@ -14,7 +14,7 @@ clust.i.cn2:{x<count distinct exec cltidx from y where valid}
 clust.i.cl2tab:{`idx xasc flip`idx`clt!raze each(x;(count each x)#'min each x:exec distinct cltidx from x where valid)}
 clust.i.rtab:  {update pts:x from @[clust.i.cl2tab;y;{[x;y]`idx`clt`pts#y}[;y]]}
 clust.i.rtabdb:{update pts:x from select idx,clt from y 0}
-clust.i.rtabkm:{([]idx:til count x;pts:x;clt:y)}
+clust.i.rtabkm:{([]idx:til count x;clt:y;pts:x)}
 
 /2 closest clusters in a kd-tree
 clust.i.closclust:{ 
@@ -28,7 +28,7 @@ clust.i.nnidx:{[t;cl]exec initi except cl`initi from t where nni in cl`idx}
 /distance calulation (x) between clusters
 clust.i.distc:{[lf;df;x;y]clust.kd.i.ld[lf]each clust.kd.i.dd[df]@'/:raze each x-/:\:/:y`pts}
 clust.i.distcw:{[lf;df;x;y]clust.kd.i.ld[lf][x`n]'[y`n;clust.kd.i.dd[df]each x[`pts]-/:y`pts]}
-clust.i.epdistmat:{[e;x;y;n]where e>=@[;n;:;0w]sum x*x-:y}
+clust.i.epdistmat:{[df;e;x;y;n]where e>=@[;n;:;0w]clust.kd.i.dd[df]x-y}
 clust.i.mindist:{{k:@[x;where x=0;:;0n];k?min k}each(,'/)clust.kd.i.dd[z]each x-/:y}
 
 /representative points for a cluster using CURE - get most spread out and apply compression
@@ -89,7 +89,6 @@ clust.i.randinit:{x@\:neg[y]?til count x 0}
 
 /cast table/dictionary to matrix
 clust.i.typecast:{$[98=type x;value flip x;99=type x;value x;0=type x;x;'`type]}
-
 
 /clustering algos
 /CURE/centroid - merge two closest clusters and update distances/indices
