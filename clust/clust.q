@@ -8,7 +8,7 @@
 
 clust.hc:{[d;k;df;lf]
  t:$[b:lf in`complete`average`ward;clust.i.buildtab[d;df];clust.kd.buildtree[d;til count d;sd:clust.i.dim d;df]];
- clust.i.rtab[d]$[lf~`ward;clust.i.cn1[k]clust.i.algow[df;lf]/@[t;`nnd;%;2];b;clust.i.cn1[k]clust.i.algoca[df;lf]/t;
+ clust.i.rtab[d]$[lf~`ward;$[df<>`e2dist;'`$"ward must be used with e2dist";clust.i.cn1[k]clust.i.algow[df;lf]/@[t;`nnd;%;2]];b;clust.i.cn1[k]clust.i.algoca[df;lf]/t;
   lf~`single;clust.i.cn2[k]clust.i.algos[d;df;lf;sd]/t;clust.i.cn2[k]clust.i.algocc[d;df;df;lf;sd;0b]/t]}
 
 /CURE algorithm
@@ -25,8 +25,8 @@ clust.ccure:{[d;k;df;r;c;b;s]
 /* p = minimum number of points per cluster
 /* e = epsilon value
 
-clust.dbscan:{[d;p;e]
- dm:clust.i.epdistmat[e;flip d]'[d;k:til count d];
+clust.dbscan:{[d;df;p;e]
+ dm:clust.i.epdistmat[df;e;flip d]'[d;k:til count d];
  t:([]idx:k;dist:dm;clt:0N;valid:1b);
  clust.i.rtabdb[d]{0N<>x 1}clust.i.algodb[p]/(t;0;0)}
 
@@ -45,12 +45,3 @@ clust.clustnew:{
  cl:$[z;raze clust.i.whichcl[x;exec idx from x where dir=2]each y;
   x[`clt]{clust.kd.i.imin sum each k*k:y-/:x}[x`pts]each y];
  ([]pts:y;clt:cl)}
-
-/
-/k-means in batches
-/* p = percentage of data in each batch
-clust.kmeanminibatch:{[d;n;k;i;df;p]
- dm:clust.i.typecast dm:flip d;
- init:$[i;clust.i.kpp[dm;n];clust.i.randinitf[dm;n]];
- centers:k{[x;y;z;k]{avg each x@\:y}[x]each value group clust.i.mindist[clust.i.randinit[x;floor k*count x 0];y;z]}[dm;;df;p]/init;
- clust.i.rtabkm[d]clust.i.mindist[dm;centers;df]}

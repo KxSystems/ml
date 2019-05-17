@@ -50,3 +50,27 @@ clust.kd.i.splitdim:{[t;bd;p;df;nn]
  nsd:$[(qdim:p d)<rdim:first[a`pts]d:first a`dim;0;1];
  $[bd[0]>=clust.kd.i.dd[df]rdim-qdim;exec idx from t where par=nn,valid;
   exec idx from t where par=nn,dir=nsd,valid],a`par}
+
+/returns list of best distance, points to search, closest index, searched indices
+/* p  = index of cluster in the kd-tree
+/* bd = current best distance from p to the closest cluster
+
+clust.kd.i.bestdist:{[t;p;cl;df;bd]
+ nn:bd 2;
+ newn:select pts,idx from t where idx in nn,valid,clt<>cl;
+ newd:imins,newn[`idx]ii?imins:min ii:{clust.kd.i.dd[x] z-y}[df;p]each newn`pts;
+ if[(newd[0]<bd 0)&count[newn]<>0;bd[0]:newd 0;bd[1]:newd 1];
+ axis:raze[clust.kd.i.splitdim[t;bd;p;df]each nn]except bd[3]:bd[3],nn;
+ (bd 0;bd 1;distinct axis;bd 3)}
+
+/updated kd-tree and next point to be deleted
+clust.kd.i.delnode:{
+ t:x 0;X:x 1;
+ nsd:$[ii:0=count ll:exec idx from t where dir=1,par=X,valid;
+  first exec idx from t where par=X,dir=0,valid;first ll];
+ if[ii;t:update dir:1 from t where idx=nsd];
+ child:raze{[t;x]0<>count exec idx from t where par=first x,valid}[t]
+  clust.kd.i.branches[t]\nsd;
+ newNode:clust.kd.i.mindim[t;X;child];
+ tree:clust.kd.i.updatet[t;newNode;X];
+ (update nni:X from tree where nni=first newNode`idx,valid;first newNode`idx)}
