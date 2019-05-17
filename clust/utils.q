@@ -16,6 +16,7 @@ clust.i.rtab:  {update pts:x from @[clust.i.cl2tab;y;{[x;y]`idx`clt`pts#y}[;y]]}
 clust.i.rtabdb:{update pts:x from select idx,clt from y 0}
 clust.i.rtabkm:{([]idx:til count x;clt:y;pts:x)}
 
+
 /2 closest clusters in a kd-tree
 clust.i.closclust:{ 
  a:first select from x where nnd=min nnd;
@@ -89,6 +90,7 @@ clust.i.randinit:{x@\:neg[y]?til count x 0}
 
 /cast table/dictionary to matrix
 clust.i.typecast:{$[98=type x;value flip x;99=type x;value x;0=type x;x;'`type]}
+
 
 /clustering algos
 /CURE/centroid - merge two closest clusters and update distances/indices

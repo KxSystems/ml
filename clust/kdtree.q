@@ -27,6 +27,7 @@ clust.kd.distcalc:{[df;t;pt]
   (0W;pt;raze[idpts[`par],raze exec idx from t where par=pt,valid]except pt;pt);
  update nnd:dist 0,nni:dist 1 from t where idx=pt}
 
+
 /updated kd-tree with point X removed by moving points up the tree until X has no children
 clust.kd.deletecl:{[df;t;X]
  pt:first exec idx from t where initi=X,valid;
