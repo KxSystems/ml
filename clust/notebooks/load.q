@@ -8,7 +8,7 @@ genpts:{
  d@neg[x]?count d}
 
 /classify new points
-.z.ts:{h(`classify;genpts 1+rand 100;0b)}
+.z.ts:{h(`classify;genpts 1+rand 100)}
 
 /open connection and set timer
 h:hopen 5001;

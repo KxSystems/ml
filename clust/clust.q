@@ -12,7 +12,9 @@ clust.hc:{[d;k;df;lf]
 /CURE algorithm
 /* r = number of representative points
 /* c = compression
-clust.ccure:{[d;k;df;r;c]clust.i.algoscc[flip d;k;df;r;c;1b]}
+clust.ccure:{[d;k;df;r;c;b]
+ $[b;[cst:clust.cure.cure[r;c;k;flip d];([]idx:til count d;clt:{where y in'x}[cst]each til count d;pts:d)];
+   clust.i.algoscc[flip d;k;df;r;c;1b]]}
 
 /DBSCAN algorithm
 /* p = minimum number of points per cluster
@@ -27,12 +29,16 @@ clust.dbscan:{[d;df;p;e]
 /* i = initialisation type - 1b use points in dataset or 0b random initialisation
 clust.kmeans:{[d;k;n;i;df]
  dm:clust.i.typecast dm:flip d;
- init:$[i;clust.i.kpp[dm;k];clust.i.randinitf[dm;k]];
+ init:$[i;clust.i.kpp[dm;k];clust.i.randinit[dm;k]];
  centers:n{{avg each x@\:y}[x]each value group clust.i.mindist[x;y;z]}[dm;;df]/init;
  clust.i.rtabkm[d]clust.i.mindist[dm;centers;df]}
 
+/--streaming---
 /cluster new points
+/
 clust.clustnew:{
  cl:$[z;raze clust.i.whichcl[x;exec idx from x where dir=2]each y;
-  x[`clt]{clust.kd.i.imin sum each k*k:y-/:x}[x`pts]each y];
+  x[`clt]{clust.i.imin sum each k*k:y-/:x}[x`pts]each y];
  ([]pts:y;clt:cl)}
+\
+clust.clustnew:{cl:x[`clt]{clust.i.imin sum each k*k:y-/:x}[x`pts]each y;([]pts:y;clt:cl)}

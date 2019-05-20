@@ -12,14 +12,14 @@
 /* rp = rep points
 clust.i.axdist:{[t;bd;os;df;ns;p;rp]
  raze{[t;bd;os;df;ns;p;rp]
-  $[t[2]p;p;bd>=clust.i.dd[df]rp[ns][t[5]p]-t[4]p;t[3]p;(raze clust.i.findl[rp ns;t;p])except os]
+  $[t[2]p;p;bd>=clust.i.dd[df]rp[ns;t[5]p]-t[4]p;t[3]p;(raze clust.i.findl[rp ns;t;p])except os]
   }[t;bd;os;df;ns;;rp]each p}
 
 /initial cluster table for complete/average linkage
 /* x = data
 /* y = distance function/metric
 clust.i.buildtab:{
- d:{(d i;i:first 1_iasc d:clust.kd.i.dd[z]each x-/:y)}[;x;y]each x;
+ d:{(d i;i:first 1_iasc d:clust.i.dd[z]each x-/:y)}[;x;y]each x;
  flip`idx`pts`clt`nni`nnd!(i;x;i:til count x;d[;1];d[;0])}
 
 /find minimum distance and index
@@ -65,9 +65,9 @@ clust.i.dbclust:{[c;p;l]
  (t;ncl)}
 
 /distance calulation between clusters
-clust.i.distc:{[lf;df;x;y]clust.kd.i.ld[lf]each clust.kd.i.dd[df]@'/:raze each x-/:\:/:y`pts}
-clust.i.distcw:{[lf;df;x;y]clust.kd.i.ld[lf][x`n]'[y`n;clust.kd.i.dd[df]each x[`pts]-/:y`pts]}
-clust.i.distmat:{[df;e;x;y;n]where e>=@[;n;:;0w]clust.kd.i.dd[df]x-y}
+clust.i.distca: {[lf;df;x;y]clust.i.ld[lf]each clust.i.dd[df]@'/:raze each x-/:\:/:y`pts}
+clust.i.distcw: {[lf;df;x;y]clust.i.ld[lf][x`n]'[y`n;clust.i.dd[df]each x[`pts]-/:y`pts]}
+clust.i.distmat:{[df;e;x;y;n]where e>=@[;n;:;0w]clust.i.dd[df]x-y}
 
 /get left or right child depending on direction 
 /* x = rep pts
@@ -81,8 +81,8 @@ clust.i.hcrep:{enlist avg x y}
 /find new nearest cluster for ward,complete and average
 clust.i.hcupd:{[df;lf;t;cl]
  dm:$[lf=`ward;clust.i.distcw[lf;df;cl;t:select clt,n,pts from t where clt<>cl`clt];
-      clust.i.distc[lf;df;cl`pts;t:0!select pts by clt from t where clt<>cl`clt]];
- (cl`clt;(dm;t`clt)@\:clust.kd.i.imin dm)}
+      clust.i.distca[lf;df;cl`pts;t:0!select pts by clt from t where clt<>cl`clt]];
+ (cl`clt;(dm;t`clt)@\:clust.i.imin dm)}
 
 /min/max indices
 clust.i.imax:{x?max x}
@@ -91,8 +91,11 @@ clust.i.imin:{x?min x}
 /random indicies
 clust.i.iwrand:{[n;w]s binr n?last s:sums w}
 
+/linkage dictionary
+clust.i.ld:`single`complete`average`centroid`ward!(min;max;avg;raze;{z%(1%y)+1%x})
+
 /return min distance between points and cluster centres
-clust.i.mindist:{{k:@[x;where x=0;:;0n];k?min k}each(,'/)clust.kd.i.dd[z]each x-/:y}
+clust.i.mindist:{{k:@[x;where x=0;:;0n];k?min k}each(,'/)clust.i.dd[z]each x-/:y}
 
 /calculating distances in the tree to get nearest neighbour
 /* s  = index of node being searched
@@ -118,8 +121,7 @@ clust.i.nns:{[s;rp;t;cl;rl;nv;df]
  ({0<=first x 0}clust.i.nn[t;df;s;rp;clt]/(par;lmin;rl[s],par:t[0]rl s))[1]}
 
 /kmeans random initialisation
-clust.i.randinitf:{flip x@\:neg[y]?til count x 0}
-clust.i.randinit:{x@\:neg[y]?til count x 0}
+clust.i.randinit:{flip x@\:neg[y]?til count x 0}
 
 /return tables for all algos in the same format
 clust.i.rtab:  {update pts:x from @[clust.i.cl2tab;y;{[x;y]`idx`clt`pts#y}[;y]]}
@@ -129,17 +131,17 @@ clust.i.rtabkm:{([]idx:til count x;clt:y;pts:x)}
 /cast table/dictionary to matrix
 clust.i.typecast:{$[98=type x;value flip x;99=type x;value x;0=type x;x;'`type]}
 
-/cluster new points
-clust.i.whichcl:{ind:@[;2]{0<count x 1}clust.kd.bestdist[x;z;0n;`e2dist]/(0w;y;y;y);exec clt from x where idx=ind}
-
 /----Streaming Notebook----
+
 /update rep pts
 clust.i.repupd:{[t;newp;df;r;c]
   nd:newp,select pts,clt from t where valid;
   rp:clust.i.curerep[nd`pts;;r;c]each exec i by clt from nd;
   cl:raze value[cn]#'key cn:count each rp;
-  clust.kd.buildtree[raze value rp;cl;clust.i.dim rp;df]
- }
+  clust.kd.buildtree[raze value rp;cl;clust.i.dim rp;df]}
+
+/cluster new points
+clust.i.whichcl:{ind:@[;2]{0<count x 1}clust.kd.bestdist[x;z;0n;`e2dist]/(0w;y;y;y);exec clt from x where idx=ind}
 
 /----Algorithms----
 
@@ -152,7 +154,7 @@ clust.i.algodb:{[p;l]
 /Hierarchical - complete/average
 /* lf = linkage function
 clust.i.algoca:{[df;lf;t]
- cd:c,(t c:clust.kd.i.imin t`nnd)`nni;
+ cd:c,(t c:clust.i.imin t`nnd)`nni;
  t:update clt:min cd from t where clt=max cd;
  nn:0!select pts by clt from t where nni in cd;
  du:clust.i.hcupd[df;lf;t]each nn;
@@ -160,7 +162,7 @@ clust.i.algoca:{[df;lf;t]
  
 /Hierarchical - ward
 clust.i.algow:{[df;lf;t]
- cd:c,d:(t c:clust.kd.i.imin t`nnd)`nni;
+ cd:c,d:(t c:clust.i.imin t`nnd)`nni;
  t:update clt:min cd from t where clt=max cd;
  p:sum exec count[i]*first pts by pts from t where clt=min cd;
  t:update pts:count[i]#enlist[p%count[i]]by clt from t where clt=min cd;
@@ -180,23 +182,23 @@ clust.i.algoscc:{[d;k;df;r;c;b]
  r2c:til pc;                                                               / rep to cluster
  gone:pc#0b;                                                               / clust no longer valid
  c2r:c2p:enlist each r2c;                                                  / clust to reps
- ndists:flip clust.i.nns[;reps;tree;r2c;r2l;::;df]each r2c;                        / nn and d to each for each initial reps
+ ndists:flip clust.i.nns[;reps;tree;r2c;r2l;::;df]each r2c;                / nn and d to each for each initial reps
  i:0;N:pc-k;                                                               / loop count and num iterations required
  while[i<N;
-  mci:u,ndists[0;u:clust.i.imin ndists 1];                                         / clusts to merge
+  mci:u,ndists[0;u:clust.i.imin ndists 1];                                 / clusts to merge
   orl:r2l ori:raze c2r mci;                                                / old reps and leaf nodes they belong to
   npi:raze c2p mci;
   $[c~`single;nri:ori;
-    [nreps:$[b;clust.i.curerep[oreps;df;npi;r;c];clust.i.hcrep[oreps;npi]];                     / reps of new clust
+    [nreps:$[b;clust.i.curerep[oreps;df;npi;r;c];clust.i.hcrep[oreps;npi]]; / reps of new clust
   reps[nri:count[nreps]#ori]:nreps;                                        / overwrite any old reps w/ new ones
-  r2l[nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[tree]each reps nri;            / leaf nodes for new reps, update tree
+  r2l[nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[tree]each reps nri;    / leaf nodes for new reps, update tree
   tree:.[tree;(3;distinct orl);{y except x}ori];                           / update tree w/ new reps, delete old reps
   tree:tree{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                        / add new reps
   r2c[nri]:r2c ori 0;                                                      / new clust is 1st of old clusts
   c2p[mci]:(npi;0#0);c2r[mci]:(nri;0#0);                                   / update clust -> points and reps
   gone[mci 1]:1b;                                                          / mark 2nd of merged clusts as removed
-  cnc1:clust.i.nnc[;reps;tree;r2c;r2l;wg:where gone;df]each nri;                   / update all for clust d and closest clust
-  cnc:raze cnc1 clust.i.imin cnc1[;1];                                             / nearest clust and dist to new clust
+  cnc1:clust.i.nnc[;reps;tree;r2c;r2l;wg:where gone;df]each nri;           / update all for clust d and closest clust
+  cnc:raze cnc1 clust.i.imin cnc1[;1];                                     / nearest clust and dist to new clust
   $[c~`single;ndists[0;(where ndists[0] in mci 1)except wg]:mci 0;
     [invalid:(where ndists[0] in mci)except wg;
     ndists[0 1;invalid]:$[count invalid;flip{[x;y;z;r;g;d;pi]raze c1 clust.i.imin(c1:clust.i.nnc[;x;y;z;r;g;d]each pi)[;1]
