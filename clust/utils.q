@@ -15,12 +15,17 @@ clust.i.axdist:{[t;bd;os;df;ns;p;rp]
   $[t[2]p;p;bd>=clust.i.dd[df]rp[ns;t[5]p]-t[4]p;t[3]p;(raze clust.i.findl[rp ns;t;p])except os]
   }[t;bd;os;df;ns;;rp]each p}
 
-/initial cluster table for complete/average linkage
+/initial cluster table for complete/average/ward linkage
 /* x = data
 /* y = distance function/metric
 clust.i.buildtab:{
  d:{(d i;i:first 1_iasc d:clust.i.dd[z]each x-/:y)}[;x;y]each x;
  flip`idx`pts`clt`nni`nnd!(i;x;i:til count x;d[;1];d[;0])}
+
+/update table distances
+/* x = data
+/* y = index and distance of the new NN
+clust.i.updtab:{[t;x]![t;enlist(=;`clt;x 0);0b;`nnd`nni!x 1]}/
 
 /find minimum distance and index
 /* pts = points (multiple)
@@ -28,8 +33,8 @@ clust.i.buildtab:{
 /* rp  = rep points
 clust.i.calc:{[df;pts;p;rp]im:min mm:clust.i.dc[df;rp;p;pts];ir:p mm?im;(first ir;im)}
 
-/convert clusters in tree (x) to table for final output
-clust.i.cl2tab:{`idx xasc flip`idx`clt!raze each(x;(count each x)#'min each x:exec distinct cltidx from x where valid)}
+/convert clusters in table (x) to table for final output
+clust.i.cln:{{![x;enlist(=;`clt;z);0b;enlist[`clt]!enlist y]}/[x;til count cl;cl:exec distinct clt from x]}
 
 /true if number of clusters in a kd-tree (y) > desired number of clusters (x)
 clust.i.cn:{x<exec count distinct clt from y}
@@ -124,12 +129,36 @@ clust.i.nns:{[s;rp;t;cl;rl;nv;df]
 clust.i.randinit:{flip x@\:neg[y]?til count x 0}
 
 /return tables for all algos in the same format
-clust.i.rtab:  {update pts:x from @[clust.i.cl2tab;y;{[x;y]`idx`clt`pts#y}[;y]]}
+clust.i.rtab:  {update pts:x from @[clust.i.cln;`idx`clt`pts#y;y]}
 clust.i.rtabdb:{update pts:x from select idx,clt from y 0}
 clust.i.rtabkm:{([]idx:til count x;clt:y;pts:x)}
 
 /cast table/dictionary to matrix
 clust.i.typecast:{$[98=type x;value flip x;99=type x;value x;0=type x;x;'`type]}
+
+/find distances to update for complete/average linkage
+/* df = distance metric
+/* lf = distance linkage
+/* t = table with distances
+/* cd = clusters to merge
+clust.i.nmca:{[df;lf;t;cd]
+ t:update clt:(1+exec max clt from t)from t where clt in cd;
+ nn:0!select pts by clt from t where nni in cd;
+ du:clust.i.hcupd[df;lf;t]peach nn;
+ (t;du)}
+
+/find distances to update for ward linkage
+clust.i.nmw:{[df;lf;t;cd]
+ t:update clt:(1+exec max clt from t)from t where clt in cd;
+ p:sum exec count[i]*first pts by pts from t where clt=max clt;
+ t:update pts:count[i]#enlist[p%count[i]]by clt from t where clt=max clt;
+ ct:0!select n:count i,first pts,nn:any nni in cd by clt from t;
+ du:clust.i.hcupd[df;lf;ct]each select from ct where nn;
+ (t;du)}
+
+/dictionary of functions to find distances
+clust.i.newmin:`average`complete`ward!(2#clust.i.nmca),clust.i.nmw
+
 
 /----Streaming Notebook----
 
@@ -145,30 +174,23 @@ clust.i.whichcl:{ind:@[;2]{0<count x 1}clust.kd.bestdist[x;z;0n;`e2dist]/(0w;y;y
 
 /----Algorithms----
 
+/linkage matrix
+clust.i.algolkg:{[df;lf;x]
+ t:x 0;m:x 1;
+ cd:value first select nnd,clt,nni from t where nnd=min nnd;
+ m,:(cd 1;cd 2;cd 0;count select from t where clt in 1_cd);
+ (.[clust.i.updtab;clust.i.newmin[lf;df;lf;t;1_cd];(::)];m)}
+
 /DBSCAN
 clust.i.algodb:{[p;l]
  cl:{0<>sum type each x 1}clust.i.dbclust[c:l 2;p]/(l 0;l 1); 
  nc:first exec idx from t:cl 0 where valid;
  (t;nc;1+c)}
 
-/Hierarchical - complete/average
-/* lf = linkage function
-clust.i.algoca:{[df;lf;t]
- cd:c,(t c:clust.i.imin t`nnd)`nni;
- t:update clt:min cd from t where clt=max cd;
- nn:0!select pts by clt from t where nni in cd;
- du:clust.i.hcupd[df;lf;t]each nn;
- {[t;x]![t;enlist(=;`clt;x 0);0b;`nnd`nni!x 1]}/[t;du]}
- 
-/Hierarchical - ward
-clust.i.algow:{[df;lf;t]
- cd:c,d:(t c:clust.i.imin t`nnd)`nni;
- t:update clt:min cd from t where clt=max cd;
- p:sum exec count[i]*first pts by pts from t where clt=min cd;
- t:update pts:count[i]#enlist[p%count[i]]by clt from t where clt=min cd;
- ct:0!select n:count i,first pts,nn:any nni in cd by clt from t;
- du:clust.i.hcupd[df;lf;ct]each select from ct where nn;
- {[t;x]![t;enlist(=;`clt;x 0);0b;`nnd`nni!x 1]}/[t;du]}
+/Hierarchical - complete/average/ward
+clust.i.algocaw:{[df;lf;t]
+ cd:value first select i,clt,nni from t where nnd=min nnd;
+ clust.i.updtab . clust.i.newmin[lf;df;lf;t;cd]}
 
 /k-means
 clust.i.kpp:{clust.i.kpp2[flip x;y]}
