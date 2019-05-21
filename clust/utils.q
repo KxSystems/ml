@@ -89,9 +89,6 @@ clust.i.distmat:{[df;e;x;y;n]where e>=@[;n;:;0w]clust.i.dd[df]x-y}
 /* z = index in tree
 clust.i.findl:{y[3;z]first`int$y[4;z]<=x y[5;z]}
 
-/take average of points in cluster for centroid linkage
-clust.i.hcrep:{enlist avg x y}
-
 /find new nearest cluster for ward,complete and average
 clust.i.hcupd:{[df;lf;t;cl]
  dm:$[lf=`ward;clust.i.distcw[lf;df;cl;t:select clt,n,pts from t where clt<>cl`clt];
@@ -110,6 +107,28 @@ clust.i.ld:`single`complete`average`centroid`ward!(min;max;avg;raze;{z%(1%y)+1%x
 
 /return min distance between points and cluster centres
 clust.i.mindist:{{k:@[x;where x=0;:;0n];k?min k}each(,'/)clust.i.dd[z]each x-/:y}
+
+/find distances to update for complete/average linkage
+/* lf = distance linkage
+/* t  = table with distances
+/* cd = clusters to merge
+clust.i.nmca:{[df;lf;t;cd]
+ t:update clt:(1+exec max clt from t)from t where clt in cd;
+ nn:0!select pts by clt from t where nni in cd;
+ du:clust.i.hcupd[df;lf;t]peach nn;
+ (t;du)}
+
+/find distances to update for ward linkage
+clust.i.nmw:{[df;lf;t;cd]
+ t:update clt:(1+exec max clt from t)from t where clt in cd;
+ p:sum exec count[i]*first pts by pts from t where clt=max clt;
+ t:update pts:count[i]#enlist[p%count[i]]by clt from t where clt=max clt;
+ ct:0!select n:count i,first pts,nn:any nni in cd by clt from t;
+ du:clust.i.hcupd[df;lf;ct]each select from ct where nn;
+ (t;du)}
+
+/dictionary of functions to find distances
+clust.i.newmin:`average`complete`ward!(2#clust.i.nmca),clust.i.nmw
 
 /calculating distances in the tree to get nearest neighbour
 /* s  = index of node being searched
@@ -143,32 +162,8 @@ clust.i.rtabc: {([]idx:til count x;clt:{where y in'x}[y]each til count x;pts:x)}
 clust.i.rtabdb:{update pts:x from select idx,clt from y 0}
 clust.i.rtabkm:{([]idx:til count x;clt:y;pts:x)}
 
-
 /cast table/dictionary to matrix
 clust.i.typecast:{$[98=type x;value flip x;99=type x;value x;0=type x;x;'`type]}
-
-/find distances to update for complete/average linkage
-/* df = distance metric
-/* lf = distance linkage
-/* t = table with distances
-/* cd = clusters to merge
-clust.i.nmca:{[df;lf;t;cd]
- t:update clt:(1+exec max clt from t)from t where clt in cd;
- nn:0!select pts by clt from t where nni in cd;
- du:clust.i.hcupd[df;lf;t]peach nn;
- (t;du)}
-
-/find distances to update for ward linkage
-clust.i.nmw:{[df;lf;t;cd]
- t:update clt:(1+exec max clt from t)from t where clt in cd;
- p:sum exec count[i]*first pts by pts from t where clt=max clt;
- t:update pts:count[i]#enlist[p%count[i]]by clt from t where clt=max clt;
- ct:0!select n:count i,first pts,nn:any nni in cd by clt from t;
- du:clust.i.hcupd[df;lf;ct]each select from ct where nn;
- (t;du)}
-
-/dictionary of functions to find distances
-clust.i.newmin:`average`complete`ward!(2#clust.i.nmca),clust.i.nmw
 
 /----Streaming Notebook----
 
@@ -208,23 +203,21 @@ clust.i.kpp2:{[m;n](n-1){y,x clust.i.iwrand[1]{x x?min x}each flip{sqrt sum x*x-
 
 /Single,Centroid & Cure - WIP
 clust.i.algoscc:{[d;k;df;r;c;b;t]
- v:clust.i.clvars[d;k;df;r;t];                                                  / loop variables
- i:0;N:v[`pc]-k;                                                                / loop counter and num of iterations required
+ v:clust.i.clvars[d;k;df;r;t]; / variables
+ i:0;N:v[`pc]-k;               / counter and n iterations
  while[i<N;
-  mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1];                                / clusts to merge
-  orl:v[`r2l]ori:raze v[`c2r]mci;                                               / old reps and leaf nodes they belong to
+  mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1]; / clusts to merge
+  orl:v[`r2l]ori:raze v[`c2r]mci;                / old reps and their leaf nodes
   npi:raze v[`c2p]mci;
   $[c~`single;nri:ori;
-    [nreps:$[b;clust.i.curerep[v`oreps;df;npi;r;c];clust.i.hcrep[v`oreps;npi]]; / reps of new clust
-  d[nri:(count nreps)#ori]:nreps;                                               / overwrite any old reps w/ new ones
-  v[`r2l;nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[t]each d nri;            / leaf nodes for new reps, update tree
-  t:.[t;(3;distinct orl);{y except x}ori];                                      / update tree w/ new reps, delete old reps
-  t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                                   / add new reps
-  v[`r2c;nri]:v[`r2c]ori 0;                                                     / new clust is 1st of old clusts
-  v[`c2p;mci]:(npi;0#0);v[`c2r;mci]:(nri;0#0);                                  / update clust -> points and reps
-  v[`gone;mci 1]:1b;                                                            / mark 2nd of merged clusts as removed
-  cnc1:clust.i.nnc[;d;t;v`r2c;v`r2l;wg:where v`gone;df]each nri;                / update all for clust d and closest clust
-  cnc:raze cnc1 clust.i.imin cnc1[;1];                                          / nearest clust and dist to new clust
+    [nreps:$[b;clust.i.curerep[v`oreps;df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
+  d[nri:(count nreps)#ori]:nreps;                                            / overwrite any old reps w/ new ones
+  v[`r2l;nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[t]each d nri;         / leaf nodes for new reps, update tree
+  t:.[t;(3;distinct orl);{y except x}ori];                                   / update tree w/ new reps, delete old reps
+  t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                                / add new reps
+  v:{.[x;y;:;z]}/[v;flip(`r2c`c2p`c2r`gone;(nri;mci;mci;mci 1));(v[`r2c]ori 0;(npi;0#0);(nri;0#0);1b)];
+  cnc1:clust.i.nnc[;d;t;v`r2c;v`r2l;wg:where v`gone;df]each nri;             / update all for clust d and closest clust
+  cnc:raze cnc1 clust.i.imin cnc1[;1];                                       / nearest clust and dist to new clust
   $[c~`single;v[`ndists;0;(where v[`ndists;0]in mci 1)except wg]:mci 0;
     [invalid:(where v[`ndists;0]in mci)except wg;
     v[`ndists;0 1;invalid]:$[count invalid;flip{[x;y;z;r;g;d;pi]raze c1 clust.i.imin(c1:clust.i.nnc[;x;y;z;r;g;d]each pi)[;1]
