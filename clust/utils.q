@@ -202,7 +202,6 @@ clust.i.kpp:{clust.i.kpp2[flip x;y]}
 clust.i.kpp2:{[m;n](n-1){y,x clust.i.iwrand[1]{x x?min x}each flip{sqrt sum x*x-:y}[flip x]'[y]}[m]/1?m}
 
 /Single,Centroid & Cure - WIP
-<<<<<<< HEAD
 clust.i.algoscc:{[d;k;df;r;c;b;t;m]
  v:clust.i.clvars[d;k;df;r;t];                                               / variables
  if[l:98h=type m;v[`ilm]:v`r2c];                                             / add variable for linkage matrix
