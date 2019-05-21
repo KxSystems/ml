@@ -139,8 +139,10 @@ clust.i.randinit:{flip x@\:neg[y]?til count x 0}
 
 /return tables for all algos in the same format
 clust.i.rtab:  {update pts:x from @[clust.i.cln;`idx`clt`pts#y;y]}
+clust.i.rtabc: {([]idx:til count x;clt:{where y in'x}[y]each til count x;pts:x)}
 clust.i.rtabdb:{update pts:x from select idx,clt from y 0}
 clust.i.rtabkm:{([]idx:til count x;clt:y;pts:x)}
+
 
 /cast table/dictionary to matrix
 clust.i.typecast:{$[98=type x;value flip x;99=type x;value x;0=type x;x;'`type]}
@@ -167,7 +169,6 @@ clust.i.nmw:{[df;lf;t;cd]
 
 /dictionary of functions to find distances
 clust.i.newmin:`average`complete`ward!(2#clust.i.nmca),clust.i.nmw
-
 
 /----Streaming Notebook----
 

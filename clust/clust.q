@@ -6,9 +6,10 @@
 /* df = distance function/metric   
 /* lf = linkage function
 clust.hc:{[d;k;df;lf]
+ werr:`$"ward must be used with e2dist";
  t:$[b:lf in`complete`average`ward;clust.i.buildtab[d;df];clust.kd.buildtree[flip d;r:ceiling count[d]%100]]; 
- clust.i.rtab[d]$[lf~`ward;$[df<>`e2dist;'`$"ward must be used with e2dist";clust.i.cn[k]clust.i.algow[df;lf]/@[t;`nnd;%;2]];
-                  b;clust.i.cn[k]clust.i.algoca[df;lf]/t;clust.i.algoscc[d;k;df;r;lf;0b;t]]}
+ clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'werr;@[t;`nnd;%;2]];t];
+                  clust.i.algoscc[d;k;df;r;lf;0b;t]]}
 
 /linkage matrix
 clust.lkg:{[d;df;lf]
@@ -20,8 +21,8 @@ clust.lkg:{[d;df;lf]
 /* r = number of representative points
 /* c = compression
 clust.ccure:{[d;k;df;r;c;b]
- $[b;[cst:clust.cure.cure[r;c;k;flip d];([]idx:til count d;clt:{where y in'x}[cst]each til count d;pts:d)];
-   clust.i.algoscc[d;k;df;r;c;1b;clust.kd.buildtree[flip d;r]]]}
+ t:clust.kd.buildtree[flip d;r];
+ $[b;clust.i.rtabc[d]clust.cure.cure[r;c;k;flip d];clust.i.algoscc[d;k;df;r;c;1b;t]]}
 
 /DBSCAN algorithm
 /* p = minimum number of points per cluster
