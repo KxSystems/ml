@@ -206,12 +206,14 @@ clust.i.kpp:{clust.i.kpp2[flip x;y]}
 clust.i.kpp2:{[m;n](n-1){y,x clust.i.iwrand[1]{x x?min x}each flip{sqrt sum x*x-:y}[flip x]'[y]}[m]/1?m}
 
 /Single,Centroid & Cure - WIP
-clust.i.algoscc:{[d;k;df;r;c;b;t]
+clust.i.algoscc:{[d;k;df;r;c;b;t;m]
  v:clust.i.clvars[d;k;df;r;t];                                                  / loop variables
+ if[l:98h=type m;v[`ilm]:v`r2c];                                                / add variable for linkage matrix   
  i:0;N:v[`pc]-k;                                                                / loop counter and num of iterations required
  while[i<N;
   mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1];                                / clusts to merge
   orl:v[`r2l]ori:raze v[`c2r]mci;                                               / old reps and leaf nodes they belong to
+  m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                              / update linkage matrix  
   npi:raze v[`c2p]mci;
   $[c~`single;nri:ori;
     [nreps:$[b;clust.i.curerep[v`oreps;df;npi;r;c];clust.i.hcrep[v`oreps;npi]]; / reps of new clust
@@ -220,6 +222,7 @@ clust.i.algoscc:{[d;k;df;r;c;b;t]
   t:.[t;(3;distinct orl);{y except x}ori];                                      / update tree w/ new reps, delete old reps
   t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                                   / add new reps
   v[`r2c;nri]:v[`r2c]ori 0;                                                     / new clust is 1st of old clusts
+  if[l;v[`ilm;nri]:1+max v`ilm];                                                / update indeces for linkage matrix
   v[`c2p;mci]:(npi;0#0);v[`c2r;mci]:(nri;0#0);                                  / update clust -> points and reps
   v[`gone;mci 1]:1b;                                                            / mark 2nd of merged clusts as removed
   cnc1:clust.i.nnc[;d;t;v`r2c;v`r2l;wg:where v`gone;df]each nri;                / update all for clust d and closest clust
@@ -231,4 +234,4 @@ clust.i.algoscc:{[d;k;df;r;c;b;t]
   v[`ndists;;mci 0]:cnc;
   v[`ndists;;mci 1]:(0N;0w);
   i+:1];
- ([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)}
+  $[l;m;([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]}
