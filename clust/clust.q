@@ -9,20 +9,20 @@ clust.hc:{[d;k;df;lf]
  werr:`$"ward must be used with e2dist";
  t:$[b:lf in`complete`average`ward;clust.i.buildtab[d;df];clust.kd.buildtree[flip d;r:ceiling count[d]%100]]; 
  clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'werr;@[t;`nnd;%;2]];t];
-                  clust.i.algoscc[d;k;df;r;lf;0b;t]]}
+                  clust.i.algoscc[d;k;df;r;lf;0b;t;()]]}
 
 /linkage matrix
 clust.lkg:{[d;df;lf]
- t:clust.i.buildtab[d;df];
  m:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
- ({98h=type x 0}clust.i.algolkg[df;lf]/(t;m))1}
+ t:$[b:lf in`centroid`single;clust.kd.buildtree[flip d;r:ceiling count[d]%100];clust.i.buildtab[d;df]];
+ $[b;clust.i.algoscc[d;1;df;r;lf;0b;t;m];({98h=type x 0}clust.i.algolkg[df;lf]/(t;m))1]}
 
 /CURE algorithm
 /* r = number of representative points
 /* c = compression
 clust.ccure:{[d;k;df;r;c;b]
  t:clust.kd.buildtree[flip d;r];
- $[b;clust.i.rtabc[d]clust.cure.cure[r;c;k;flip d];clust.i.algoscc[d;k;df;r;c;1b;t]]}
+ $[b;clust.i.rtabc[d]clust.cure.cure[r;c;k;flip d];clust.i.algoscc[d;k;df;r;c;1b;t;()]]}
 
 /DBSCAN algorithm
 /* p = minimum number of points per cluster
