@@ -7,7 +7,14 @@
 /* lf = linkage function
 clust.hc:{[d;k;df;lf]
  t:$[b:lf in`complete`average`ward;clust.i.buildtab[d;df];clust.kd.buildtree[flip d;r:ceiling count[d]%100]]; 
- clust.i.rtab[d]$[lf~`ward;$[df<>`e2dist;'`$"ward must be used with e2dist";clust.i.cn[k]clust.i.algow[df;lf]/@[t;`nnd;%;2]];                       b;clust.i.cn[k]clust.i.algoca[df;lf]/t;clust.i.algoscc[d;k;df;r;lf;0b;t]]}
+ clust.i.rtab[d]$[lf~`ward;$[df<>`e2dist;'`$"ward must be used with e2dist";clust.i.cn[k]clust.i.algow[df;lf]/@[t;`nnd;%;2]];
+                  b;clust.i.cn[k]clust.i.algoca[df;lf]/t;clust.i.algoscc[d;k;df;r;lf;0b;t]]}
+
+/linkage matrix
+clust.lkg:{[d;df;lf]
+ t:clust.i.buildtab[d;df];
+ m:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
+ ({98h=type x 0}clust.i.algolkg[df;lf]/(t;m))1}
 
 /CURE algorithm
 /* r = number of representative points
