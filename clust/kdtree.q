@@ -20,7 +20,7 @@ clust.kd.create:{[f;p;o;left;idx]
 / return 1b if at a leaf, or ((leftinds;rightinds);(pivot value;pivot axis)) if we can split further
 clust.kd.pivot:{[d;r;idx]                                                
  if[count[idx]<=2*r;:1b];
- axis:u?max u:var each d[;idx];                    / choose axis with max variance
+ axis:clust.i.imax var each d[;idx];                    / choose axis with max variance
  pivi:usi bin piv:avg(usi:u si:iasc u)floor .5*-1 0+count u:d[axis;idx]; / index in sort indices to split data
  if[pivi in -1+0,count usi;:1b];                   / don't create leaf nodes with zero elements
  u:(0,pivi+1)cut idx si;                           / split idx for the left and right subtrees

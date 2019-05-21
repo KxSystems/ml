@@ -31,11 +31,20 @@ clust.i.calc:{[df;pts;p;rp]im:min mm:clust.i.dc[df;rp;p;pts];ir:p mm?im;(first i
 /convert clusters in tree (x) to table for final output
 clust.i.cl2tab:{`idx xasc flip`idx`clt!raze each(x;(count each x)#'min each x:exec distinct cltidx from x where valid)}
 
+/variables for while loop
+/* d  = data points
+/* k = number of clusters
+/* r = number of representative points
+clust.i.clvars:{[d;k;df;r;t]
+ r2l:((pc:count d)#0N){[t;x;y]@[x;t[3]y;:;y]}[t]/where t 2;
+ c2p:enlist each r2c:til pc;
+ ndists:flip clust.i.nns[;d;t;r2c;r2l;::;df]each r2c;
+ `oreps`r2l`r2c`gone`c2r`c2p`ndists`pc!(d;r2l;r2c;pc#0b;c2p;c2p;ndists;pc)}
+
 /true if number of clusters in a kd-tree (y) > desired number of clusters (x)
 clust.i.cn:{x<exec count distinct clt from y}
 
 /representative points for a cluster using CURE - get most spread out and apply compression
-/* d  = data points
 /* x  = point indices
 /* r  = number of representative points
 /* c  = compression
@@ -175,37 +184,29 @@ clust.i.kpp:{clust.i.kpp2[flip x;y]}
 clust.i.kpp2:{[m;n](n-1){y,x clust.i.iwrand[1]{x x?min x}each flip{sqrt sum x*x-:y}[flip x]'[y]}[m]/1?m}
 
 /Single,Centroid & Cure - WIP
-clust.i.algoscc:{[d;k;df;r;c;b]
- oreps:reps:flip d;
- otree:tree:clust.kd.buildtree[d;r];
- r2l:((pc:count reps)#0N){[tree;x;y]@[x;tree[3]y;:;y]}[tree]/where tree 2; / rep to leaf node
- r2c:til pc;                                                               / rep to cluster
- gone:pc#0b;                                                               / clust no longer valid
- c2r:c2p:enlist each r2c;                                                  / clust to reps
- ndists:flip clust.i.nns[;reps;tree;r2c;r2l;::;df]each r2c;                / nn and d to each for each initial reps
- i:0;N:pc-k;                                                               / loop count and num iterations required
+clust.i.algoscc:{[d;k;df;r;c;b;t]
+ v:clust.i.clvars[d;k;df;r;t];                                                  / loop variables
+ i:0;N:v[`pc]-k;                                                                / loop counter and num of iterations required
  while[i<N;
-  mci:u,ndists[0;u:clust.i.imin ndists 1];                                 / clusts to merge
-  orl:r2l ori:raze c2r mci;                                                / old reps and leaf nodes they belong to
-  npi:raze c2p mci;
+  mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1];                                / clusts to merge
+  orl:v[`r2l]ori:raze v[`c2r]mci;                                               / old reps and leaf nodes they belong to
+  npi:raze v[`c2p]mci;
   $[c~`single;nri:ori;
-    [nreps:$[b;clust.i.curerep[oreps;df;npi;r;c];clust.i.hcrep[oreps;npi]]; / reps of new clust
-  reps[nri:count[nreps]#ori]:nreps;                                        / overwrite any old reps w/ new ones
-  r2l[nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[tree]each reps nri;    / leaf nodes for new reps, update tree
-  tree:.[tree;(3;distinct orl);{y except x}ori];                           / update tree w/ new reps, delete old reps
-  tree:tree{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                        / add new reps
-  r2c[nri]:r2c ori 0;                                                      / new clust is 1st of old clusts
-  c2p[mci]:(npi;0#0);c2r[mci]:(nri;0#0);                                   / update clust -> points and reps
-  gone[mci 1]:1b;                                                          / mark 2nd of merged clusts as removed
-  cnc1:clust.i.nnc[;reps;tree;r2c;r2l;wg:where gone;df]each nri;           / update all for clust d and closest clust
-  cnc:raze cnc1 clust.i.imin cnc1[;1];                                     / nearest clust and dist to new clust
-  $[c~`single;ndists[0;(where ndists[0] in mci 1)except wg]:mci 0;
-    [invalid:(where ndists[0] in mci)except wg;
-    ndists[0 1;invalid]:$[count invalid;flip{[x;y;z;r;g;d;pi]raze c1 clust.i.imin(c1:clust.i.nnc[;x;y;z;r;g;d]each pi)[;1]
-    }[reps;tree;r2c;r2l;wg;df]each c2r invalid;(0#0;0#0f)]]];
-  ndists[;mci 0]:cnc;
-  ndists[;mci 1]:(0N;0w);
-  i+:1;
-  ];
- :([]idx:til count oreps;clt:{where y in'x}[c2p u:where not gone]each til count oreps;pts:oreps);
- }
+    [nreps:$[b;clust.i.curerep[v`oreps;df;npi;r;c];clust.i.hcrep[v`oreps;npi]]; / reps of new clust
+  d[nri:(count nreps)#ori]:nreps;                                               / overwrite any old reps w/ new ones
+  v[`r2l;nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[t]each d nri;            / leaf nodes for new reps, update tree
+  t:.[t;(3;distinct orl);{y except x}ori];                                      / update tree w/ new reps, delete old reps
+  t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                                   / add new reps
+  v[`r2c;nri]:v[`r2c]ori 0;                                                     / new clust is 1st of old clusts
+  v[`c2p;mci]:(npi;0#0);v[`c2r;mci]:(nri;0#0);                                  / update clust -> points and reps
+  v[`gone;mci 1]:1b;                                                            / mark 2nd of merged clusts as removed
+  cnc1:clust.i.nnc[;d;t;v`r2c;v`r2l;wg:where v`gone;df]each nri;                / update all for clust d and closest clust
+  cnc:raze cnc1 clust.i.imin cnc1[;1];                                          / nearest clust and dist to new clust
+  $[c~`single;v[`ndists;0;(where v[`ndists;0]in mci 1)except wg]:mci 0;
+    [invalid:(where v[`ndists;0]in mci)except wg;
+    v[`ndists;0 1;invalid]:$[count invalid;flip{[x;y;z;r;g;d;pi]raze c1 clust.i.imin(c1:clust.i.nnc[;x;y;z;r;g;d]each pi)[;1]
+    }[d;t;v`r2c;v`r2l;wg;df]each v[`c2r]invalid;(0#0;0#0f)]]];
+  v[`ndists;;mci 0]:cnc;
+  v[`ndists;;mci 1]:(0N;0w);
+  i+:1];
+ ([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)}

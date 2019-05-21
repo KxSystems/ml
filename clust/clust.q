@@ -3,18 +3,18 @@
 /hierarchical clustering
 /* d  = data
 /* k  = number of clusters
-/* df = distance function/metric
+/* df = distance function/metric   
 /* lf = linkage function
 clust.hc:{[d;k;df;lf]
- if[b:lf in`complete`average`ward;t:clust.i.buildtab[d;df]]; 
- clust.i.rtab[d]$[lf~`ward;$[df<>`e2dist;'`$"ward must be used with e2dist";clust.i.cn[k]clust.i.algow[df;lf]/@[t;`nnd;%;2]];                       b;clust.i.cn[k]clust.i.algoca[df;lf]/t;clust.i.algoscc[flip d;k;df;ceiling count[d]%100;lf;0b]]}
+ t:$[b:lf in`complete`average`ward;clust.i.buildtab[d;df];clust.kd.buildtree[flip d;r:ceiling count[d]%100]]; 
+ clust.i.rtab[d]$[lf~`ward;$[df<>`e2dist;'`$"ward must be used with e2dist";clust.i.cn[k]clust.i.algow[df;lf]/@[t;`nnd;%;2]];                       b;clust.i.cn[k]clust.i.algoca[df;lf]/t;clust.i.algoscc[d;k;df;r;lf;0b;t]]}
 
 /CURE algorithm
 /* r = number of representative points
 /* c = compression
 clust.ccure:{[d;k;df;r;c;b]
  $[b;[cst:clust.cure.cure[r;c;k;flip d];([]idx:til count d;clt:{where y in'x}[cst]each til count d;pts:d)];
-   clust.i.algoscc[flip d;k;df;r;c;1b]]}
+   clust.i.algoscc[d;k;df;r;c;1b;clust.kd.buildtree[flip d;r]]]}
 
 /DBSCAN algorithm
 /* p = minimum number of points per cluster
