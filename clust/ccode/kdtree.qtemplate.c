@@ -1,4 +1,9 @@
 #include "kdtree.h"
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+
 qtemplate({
   "names":["kdtree_searchfrom_i","kdtree_rdist"],
   "types":["QT1"],
@@ -15,11 +20,17 @@ J kdtree_searchfrom_i(K tree,K point,J i){
   R i;
 }
 // min distance between point and (parent nodes) i.e. the distance from the pivot point along the pivot axis
-QT1 kdtree_rdist(K point,K tree,J parent){
+QT1 kdtree_rdist(K point,K tree,J parent,J df){
+  QT1 dist;
   F pv=kQT1(kK(tree)[4])[parent]; // pivot value
   J pa=kJ(kK(tree)[5])[parent];   // pivot axis
   QT1 u=pv-kQT1(point)[pa];       // distance along axis
-  R u*u;
+  if(df==1){
+      dist=u*u;
+  }else if(df==2){
+      dist=sqrt(u*u);
+  }else{dist=fabs(u);}
+  R dist;
 }
 )
 
