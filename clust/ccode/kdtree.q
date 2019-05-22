@@ -16,14 +16,9 @@ clust.kdtree.i.buildtree:{[f;p;o;left;x]
  l:.z.s[f;p+o;1;1b;u[0;0]];                    / left subtree
  r:.z.s[f;p+o;1+count l 0;0b;u[0;1]];          / right subtree
  (p;left;0b;enlist p+o+1+0,count l 0;u[1;0];u[1;1]),'l,'r}
-clust.kdtree.i.searchfrom:(`$path,"/clust/ccode/./kdtree") 2:`kdtree_searchfrom,3
-clust.kdtree.searchfrom:{$[not type[y]~type x 4;'`type;clust.kdtree.i.searchfrom[x;y;z]]}
+clust.kdtree.i.searchfrom:(`$path,"/clust/ccode/./kdtree") 2:`kdtree_searchfrom,4
+clust.kdtree.searchfrom:{[x;y;z;df]$[not type[y]~type x 4;'`type;i.searchfrom[x;y;z;df]]}
 
 clust.kdtree.create:{[leafsize;x]clust.kdtree.i.buildtree[clust.kdtree.i.pivot[x;leafsize];-1;1;0b;til count x 0]}
-\
-ancestors:{{$[-1=p:x[0;y];y;p]}[x]\[y]}
-descendents:{[tree;node]1_tree{[tree;x]$[tree[2;x];x;x,raze .z.s[tree]each tree[3]x]}/node}
-d1:{{$[count y 1;(raze[y],c;c where not x[2;c:x[3;y 1]]);y 0]}[x]\[(y;$[x[2;y];0#0;x[3;y]])]}
-
 
 

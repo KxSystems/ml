@@ -1,4 +1,9 @@
 #include "kdtree.h"
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+
 
 // tree is (parent;isleft;isleaf;children;pivval;pivaxis) count[tree[0]]~num nodes
 J kdtree_searchfrom_i_F(K tree,K point,J i){
@@ -12,11 +17,17 @@ J kdtree_searchfrom_i_F(K tree,K point,J i){
   R i;
 }
 // min distance between point and (parent nodes) i.e. the distance from the pivot point along the pivot axis
-F kdtree_rdist_F(K point,K tree,J parent){
+F kdtree_rdist_F(K point,K tree,J parent,J df){
+  F dist;
   F pv=kF(kK(tree)[4])[parent]; // pivot value
   J pa=kJ(kK(tree)[5])[parent];   // pivot axis
   F u=pv-kF(point)[pa];       // distance along axis
-  R u*u;
+  if(df==1){
+      dist=u*u;
+  }else if(df==2){
+      dist=sqrt(u*u);
+  }else{dist=fabs(u);}
+  R dist;
 }
 
 // tree is (parent;isleft;isleaf;children;pivval;pivaxis) count[tree[0]]~num nodes
@@ -31,11 +42,17 @@ J kdtree_searchfrom_i_E(K tree,K point,J i){
   R i;
 }
 // min distance between point and (parent nodes) i.e. the distance from the pivot point along the pivot axis
-E kdtree_rdist_E(K point,K tree,J parent){
+E kdtree_rdist_E(K point,K tree,J parent,J df){
+  E dist;
   F pv=kE(kK(tree)[4])[parent]; // pivot value
   J pa=kJ(kK(tree)[5])[parent];   // pivot axis
   E u=pv-kE(point)[pa];       // distance along axis
-  R u*u;
+  if(df==1){
+      dist=u*u;
+  }else if(df==2){
+      dist=sqrt(u*u);
+  }else{dist=fabs(u);}
+  R dist;
 }
 
 
