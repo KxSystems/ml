@@ -4,7 +4,6 @@ plt:.p.import`matplotlib.pyplot
 /* x = algo e.g.`hc`ward`cure`dbscan
 /* y = data
 /* z = inputs for the cluster functions
-
 plot:{$[x~`ward;plotw[x;y;z];plotcl[x;y;z]]}
 
 /plot ward or dbscan
@@ -35,5 +34,5 @@ plotcl:{
 
 /utils dictionary for plothkc
 ud:`hc`cure`kmeans`dbscan!(enlist each(3 4;2 3;1 4;1 3)),'
- (.ml.clust.hc;.ml.clust.ccure;.ml.clust.kmeans;.ml.clust.dbscan),'
+ (.ml.clust.hc;.ml.clust.cure;.ml.clust.kmeans;.ml.clust.dbscan),'
  ({"df/lf: ",string[x 1],"/",string x 2};{"df/C: ",string[x 1],"/",string[x 4],"b"};{"df: ",string x 3};{"df: ",string x 0})
