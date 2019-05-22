@@ -157,7 +157,7 @@ clust.i.whichcl:{ind:@[;2]{0<count x 1}clust.kd.bestdist[x;z;0n;`e2dist]/(0w;y;y
 /----Algorithms----
 
 /linkage matrix
-clust.i.algolkg:{[df;lf;x]
+clust.i.algodgram:{[df;lf;x]
  t:x 0;m:x 1;
  cd:value first select nnd,clt,nni from t where nnd=min nnd;
  m,:(cd 1;cd 2;cd 0;count select from t where clt in 1_cd);
