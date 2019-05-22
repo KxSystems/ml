@@ -17,7 +17,7 @@ clust.kdtree.i.buildtree:{[f;p;o;left;x]
  r:.z.s[f;p+o;1+count l 0;0b;u[0;1]];          / right subtree
  (p;left;0b;enlist p+o+1+0,count l 0;u[1;0];u[1;1]),'l,'r}
 clust.kdtree.i.searchfrom:(`$path,"/clust/ccode/./kdtree") 2:`kdtree_searchfrom,4
-clust.kdtree.searchfrom:{[x;y;z;df]$[not type[y]~type x 4;'`type;i.searchfrom[x;y;z;df]]}
+clust.kdtree.searchfrom:{[x;y;z;df]$[not type[y]~type x 4;'`type;clust.kdtree.i.searchfrom[x;y;z;df]]}
 
 clust.kdtree.create:{[leafsize;x]clust.kdtree.i.buildtree[clust.kdtree.i.pivot[x;leafsize];-1;1;0b;til count x 0]}
 

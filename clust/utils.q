@@ -224,7 +224,7 @@ clust.i.algoscc:{[d;k;df;r;c;b;t;m]
   if[l;v[`ilm;nri]:1+max v`ilm];                                             / update indeces for linkage matrix
   v:{.[x;y;:;z]}/[v;flip(`c2p`c2r`gone;(mci;mci;mci 1));((npi;0#0);(nri;0#0);1b)];
   cnc:clust.i.ennc[nri;d;t;v`r2c;v`r2l;wg:where v`gone;df];
-  w:(where v[`ndists;0]in mci 1)except wg;
+  w:(where v[`ndists;0]in mci)except wg;
   $[c~`single;v[`ndists;0;w]:mci 0;[v[`ndists;0 1;w]:$[count w;
     flip{[x;y;z;r;g;d;pi]clust.i.ennc[pi;x;y;z;r;g;d]}[d;t;v`r2c;v`r2l;wg;df]each v[`c2r]w;(0#0;0#0f)]]];
   v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
