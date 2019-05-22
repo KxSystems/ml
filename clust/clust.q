@@ -22,7 +22,7 @@ clust.lkg:{[d;df;lf]
 /* c = compression
 clust.ccure:{[d;k;df;r;c;b]
  t:clust.kd.buildtree[flip d;r];
- $[b;clust.i.rtabc[d]clust.cure.cure[r;c;k;flip d];clust.i.algoscc[d;k;df;r;c;1b;t;()]]}
+ $[b;clust.i.rtabc[d]clust.cure.cure[r;c;k;flip d;df];clust.i.algoscc[d;k;df;r;c;1b;t;()]]}
 
 /DBSCAN algorithm
 /* p = minimum number of points per cluster

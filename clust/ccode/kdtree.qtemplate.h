@@ -6,7 +6,7 @@ qtemplate({
   "types":["QT1"],
   "ptypes":{"QT1":["F","E"]}}|
 J kdtree_searchfrom_i(K tree,K point,J i);
-QT1 kdtree_rdist(K point,K tree,J parent);
+QT1 kdtree_rdist(K point,K tree,J parent,J df);
 )
 
 K kdtree_searchfrom(K tree,K point,K start);
