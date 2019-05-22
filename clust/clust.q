@@ -11,11 +11,11 @@ clust.hc:{[d;k;df;lf]
  clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'werr;@[t;`nnd;%;2]];t];
                   clust.i.algoscc[d;k;df;r;lf;0b;t;()]]}
 
-/linkage matrix
-clust.lkg:{[d;df;lf]
+/dendrogram
+clust.dgram:{[d;df;lf]
  m:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
  t:$[b:lf in`centroid`single;clust.kd.buildtree[flip d;r:ceiling count[d]%100];clust.i.buildtab[d;df]];
- $[b;clust.i.algoscc[d;1;df;r;lf;0b;t;m];({98h=type x 0}clust.i.algolkg[df;lf]/(t;m))1]}
+ $[b;clust.i.algoscc[d;1;df;r;lf;0b;t;m];({98h=type x 0}clust.i.algodgram[df;lf]/(t;m))1]}
 
 /CURE algorithm
 /* r = number of representative points
@@ -41,12 +41,8 @@ clust.kmeans:{[d;k;n;i;df]
  centers:n{{avg each x@\:y}[x]each value group clust.i.mindist[x;y;z]}[dm;;df]/init;
  clust.i.rtabkm[d]clust.i.mindist[dm;centers;df]}
 
-/--streaming---
+/----streaming----\
 /cluster new points
-/
-clust.clustnew:{
- cl:$[z;raze clust.i.whichcl[x;exec idx from x where dir=2]each y;
-  x[`clt]{clust.i.imin sum each k*k:y-/:x}[x`pts]each y];
- ([]pts:y;clt:cl)}
-\
+/* x = current table with `idx`pts`clt
+/* y = new points to be clustered
 clust.clustnew:{cl:x[`clt]{clust.i.imin sum each k*k:y-/:x}[x`pts]each y;([]pts:y;clt:cl)}
