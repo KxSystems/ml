@@ -10,7 +10,6 @@ clust.hc:{[d;k;df;lf]
  t:$[b:lf in`complete`average`ward;clust.i.buildtab[d;df];clust.kd.buildtree[flip d;r:ceiling count[d]%100]]; 
  clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'werr;@[t;`nnd;%;2]];t];
                   clust.i.algoscc[d;k;df;r;lf;0b;t;()]]}
-
 /linkage matrix
 clust.lkg:{[d;df;lf]
  m:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
@@ -20,10 +19,9 @@ clust.lkg:{[d;df;lf]
 /CURE algorithm
 /* r = number of representative points
 /* c = compression
-/* b = boolean flag indicating whether to use C (1b) or q (0b) implementation
-clust.ccure:{[d;k;df;r;c;b]
+clust.cure:{[d;k;df;r;c;b]
  t:clust.kd.buildtree[flip d;r];
- $[b;clust.i.rtabc[d]clust.cure.cure[r;c;k;flip d;df];clust.i.algoscc[d;k;df;r;c;1b;t;()]]}
+ $[b;clust.i.rtabc[d]clust.ccure.cure[r;c;k;t;flip d;df];clust.i.algoscc[d;k;df;r;c;1b;t;()]]}
 
 /DBSCAN algorithm
 /* p = minimum number of points per cluster
