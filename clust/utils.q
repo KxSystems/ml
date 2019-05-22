@@ -43,7 +43,7 @@ clust.i.cln:{{![x;enlist(=;`clt;z);0b;enlist[`clt]!enlist y]}/[x;til count cl;cl
 clust.i.clvars:{[d;k;df;r;t]
  r2l:((pc:count d)#0N){[t;x;y]@[x;t[3]y;:;y]}[t]/where t 2;
  c2p:enlist each r2c:til pc;
- ndists:flip clust.i.nns[;d;t;r2c;r2l;::;df]each r2c;
+ ndists:flip clust.kd.i.nns[;d;t;r2c;r2l;::;df]each r2c;
  `oreps`r2l`r2c`gone`c2r`c2p`ndists`pc!(d;r2l;r2c;pc#0b;c2p;c2p;ndists;pc)}
 
 /true if number of clusters in a kd-tree (y) > desired number of clusters (x)
@@ -130,32 +130,6 @@ clust.i.nmw:{[df;lf;t;cd]
 /dictionary of functions to find distances
 clust.i.newmin:`average`complete`ward!(2#clust.i.nmca),clust.i.nmw
 
-/use nnc for each nearest neighbour
-clust.i.ennc:{[x;y;z;cl;rl;g;d]raze u clust.i.imin(u:clust.i.nnc[;y;z;cl;rl;g;d]each x)[;1]}
-
-/returns cluster closest point belongs to
-clust.i.nnc:{[x;y;z;cl;rl;g;d]a:clust.i.nns[x;y;z;cl;rl;g;d];(cl[a 0];a 1)}
-
-/search nearest neighbours
-/* cl = list linking points to its clusters it belongs in
-/* rl = list linkage points to its leaf in the tree
-/* nv = points that are not valid
-clust.i.nns:{[s;rp;t;cl;rl;nv;df]
- clt:where cl=cl s;
- leaves:(where rl=rl s)except clt,nv;
- lmin:$[count leaves;clust.i.calc[df;s;leaves;rp];(s;0w)];
- ({0<=first x 0}clust.i.nn[t;df;s;rp;clt]/(par;lmin;rl[s],par:t[0]rl s))[1]}
-
-/calculating distances in the tree to get nearest neighbour
-/* s  = index of node being searched
-/* cp = points in the same cluster as s
-/* l  = list with (next node to be search;closest point and distance;points already searched)
-clust.i.nn:{[t;df;s;rp;cp;l]
- dist:{not min x[2;y]}[t]clust.i.axdist[t;l[1;1];raze l 2;df;s;;rp]/first l 0;
- bdist:$[0=min(count nn:raze[t[3;dist]]except cp;count dist);l 1;
-         first[l[1;1]]>m:min mm:raze clust.i.dc[df;rp;nn;s];(nn mm?m;m);l 1];
- (t[0]l 0;bdist;l[2],l 0)}
-
 /kmeans random initialisation
 clust.i.randinit:{flip x@\:neg[y]?til count x 0}
 
@@ -204,29 +178,30 @@ clust.i.algocaw:{[df;lf;t]
 clust.i.kpp:{clust.i.kpp2[flip x;y]}
 clust.i.kpp2:{[m;n](n-1){y,x clust.i.iwrand[1]{x x?min x}each flip{sqrt sum x*x-:y}[flip x]'[y]}[m]/1?m}
 
-/Single,Centroid & Cure - WIP   cnc  / update all for clust d and closest clust        / nearest clust and dist to new clust
+/Single,Centroid & Cure
 clust.i.algoscc:{[d;k;df;r;c;b;t;m]
- v:clust.i.clvars[d;k;df;r;t];                                               / variables
- if[l:98h=type m;v[`ilm]:v`r2c];                                             / add variable for linkage matrix
- i:0;N:v[`pc]-k;                                                             / counter and n iterations
+ v:clust.i.clvars[d;k;df;r;t];                                              / variables
+ if[l:98h=type m;v[`ilm]:v`r2c];                                            / add variable for linkage matrix
+ i:0;N:v[`pc]-k;                                                            / counter and n iterations
  while[i<N;
-  mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1];                             / clusts to merge
-  orl:v[`r2l]ori:raze v[`c2r]mci;                                            / old reps and their leaf nodes
-  m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                   / update linkage matrix
+  mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1];                            / clusts to merge
+  orl:v[`r2l]ori:raze v[`c2r]mci;                                           / old reps and their leaf nodes
+  m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                  / update linkage matrix
   npi:raze v[`c2p]mci;
   $[c~`single;nri:ori;
    [nreps:$[b;clust.i.curerep[v`oreps;df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
-  d[nri:(count nreps)#ori]:nreps;                                            / overwrite any old reps w/ new ones
-  v[`r2l;nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[t]each d nri;         / leaf nodes for new reps, update tree
-  t:.[t;(3;distinct orl);{y except x}ori];                                   / update tree w/ new reps, delete old reps
-  t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                                / add new reps
-  v[`r2c;nri]:v[`r2c]ori 0;                                                  / new clust is 1st of old clusts
-  if[l;v[`ilm;nri]:1+max v`ilm];                                             / update indeces for linkage matrix
+  d[nri:(count nreps)#ori]:nreps;                                           / overwrite any old reps w/ new ones
+  v[`r2l;nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[t]each d nri;        / leaf nodes for new reps, update tree
+  t:.[t;(3;distinct orl);{y except x}ori];                                  / update tree w/ new reps, delete old reps
+  t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                               / add new reps
+  v[`r2c;nri]:v[`r2c]ori 0;                                                 / new clust is 1st of old clusts
+  if[l;v[`ilm;nri]:1+max v`ilm];                                            / update indeces for linkage matrix
   v:{.[x;y;:;z]}/[v;flip(`c2p`c2r`gone;(mci;mci;mci 1));((npi;0#0);(nri;0#0);1b)];
-  cnc:clust.i.ennc[nri;d;t;v`r2c;v`r2l;wg:where v`gone;df];
+  cnc:clust.kd.nnc[nri;d;t;v`r2c;v`r2l;wg:where v`gone;df];
   w:(where v[`ndists;0]in mci 1)except wg;
   $[c~`single;v[`ndists;0;w]:mci 0;[v[`ndists;0 1;w]:$[count w;
-    flip{[x;y;z;r;g;d;pi]clust.i.ennc[pi;x;y;z;r;g;d]}[d;t;v`r2c;v`r2l;wg;df]each v[`c2r]w;(0#0;0#0f)]]];
+    flip{[x;y;z;r;g;df;pi]clust.kd.nnc[pi;x;y;z;r;g;df]}[d;t;v`r2c;v`r2l;wg;df]each v[`c2r]w;(0#0;0#0f)]]];
+  / update all for clust d and closest clust, nearest clust and dist to new clust
   v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
   i+:1];
   $[l;m;([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]}

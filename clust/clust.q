@@ -20,6 +20,7 @@ clust.lkg:{[d;df;lf]
 /CURE algorithm
 /* r = number of representative points
 /* c = compression
+/* b = boolean flag indicating whether to use C (1b) or q (0b) implementation
 clust.ccure:{[d;k;df;r;c;b]
  t:clust.kd.buildtree[flip d;r];
  $[b;clust.i.rtabc[d]clust.cure.cure[r;c;k;flip d];clust.i.algoscc[d;k;df;r;c;1b;t;()]]}
@@ -41,12 +42,8 @@ clust.kmeans:{[d;k;n;i;df]
  centers:n{{avg each x@\:y}[x]each value group clust.i.mindist[x;y;z]}[dm;;df]/init;
  clust.i.rtabkm[d]clust.i.mindist[dm;centers;df]}
 
-/--streaming---
+/----streaming----\
 /cluster new points
-/
-clust.clustnew:{
- cl:$[z;raze clust.i.whichcl[x;exec idx from x where dir=2]each y;
-  x[`clt]{clust.i.imin sum each k*k:y-/:x}[x`pts]each y];
- ([]pts:y;clt:cl)}
-\
+/* x = current table with `idx`pts`clt
+/* y = new points to be clustered
 clust.clustnew:{cl:x[`clt]{clust.i.imin sum each k*k:y-/:x}[x`pts]each y;([]pts:y;clt:cl)}
