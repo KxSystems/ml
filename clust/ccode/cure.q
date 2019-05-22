@@ -1,7 +1,6 @@
 / for tree nearest neighbors searches
 
 \d .ml
-clust.ccure.:(::)
 clust.ccure.i.:(::)
 clib:2:[`$path,"/clust/ccode/./cure"]
 impf:{clust.ccure.i[u]:clib(u:`$"_"sv string(x;y)),z}
@@ -27,7 +26,6 @@ clust.ccure.dfd:`e2dist`edist`mdist!1 2 3;
 
 clust.ccure.i.cure:{[r;c;n;tree;d;df]
  oreps:reps:flip d;
- /tree:clust.kdtree.create[r;d];
  r2l:((pc:count d 0)#0N){[tree;x;y]@[x;tree[3]y;:;y]}[tree]/where tree 2; / rep to leaf node it's in
  r2c:til pc; / rep to cluster it's in
  gone:pc#0b; / cluster is no longer valid
@@ -51,18 +49,13 @@ clust.ccure.i.cure:{[r;c;n;tree;d;df]
   tree:tree{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri);                / add new representatives 
   / now update cluster distances and closest cluster for everything
   cnc:clust.ccure.ccnn[nri;tree;r2c;reps;dd];                                   / nearest cluster to the newly merged cluster and the distance to it
-  u:where not[gone]and(ndists[1]>cnc 1)and not ndists[0]in mci;  / clusters which could be nearer to the new cluster than their current closest
-  cdists:@[(pc#0w);u;:;clust.ccure.ccdists[nri;;reps;dd]c2r u];                 / calculate cluster distance for each cluster which could be closer
-  tab:([]cdist:cdists;ndist:ndists 1;nc:ndists 0);        
-  nearer:exec i from tab where ndist>cdist;
-  invalid:exec i from tab where nc in mci,not i in nearer,not gone i;
-  ndists[0 1;nearer]:(count[nearer]#mci 0;cdists nearer);
+  invalid:(where ndists[0] in mci) except where gone;
   ndists[0 1;invalid]:$[count invalid;flip clust.ccure.ccnn[;tree;r2c;reps;dd]each c2r invalid;(0#0;0#0f)];  
   ndists[;mci 0]:cnc;
   ndists[;mci 1]:(0N;0w);
   i+:1;
  ];
- :`clusters`clusterpts`clusterepi`clusterreps!(c2p u;oreps c2p u;c2r u;reps c2r u:where not gone);
+ :c2p where not gone;
  }
-clust.ccure.cure:{[r;c;n;t;d;df]clust.ccure.i.cure[r;c;n;t;d;df]`clusters}
+clust.ccure.cure:{[r;c;n;t;d;df]clust.ccure.i.cure[r;c;n;t;d;df]}
 
