@@ -10,7 +10,8 @@ clust.hc:{[d;k;df;lf]
  t:$[b:lf in`complete`average`ward;clust.i.buildtab[d;df];clust.kd.buildtree[flip d;r:ceiling count[d]%100]]; 
  clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'werr;@[t;`nnd;%;2]];t];
                   clust.i.algoscc[d;k;df;r;lf;0b;t;()]]}
-/linkage matrix
+
+/dendrogram
 clust.dgram:{[d;df;lf]
  m:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
  t:$[b:lf in`centroid`single;clust.kd.buildtree[flip d;r:ceiling count[d]%100];clust.i.buildtab[d;df]];
