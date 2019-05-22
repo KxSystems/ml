@@ -4,7 +4,6 @@ plt:.p.import`matplotlib.pyplot
 /* x = algo e.g.`hc`ward`cure`dbscan
 /* y = data
 /* z = inputs for the cluster functions
-
 plot:{$[x~`ward;plotw[x;y;z];plotcl[x;y;z]]}
 
 /plot ward or dbscan

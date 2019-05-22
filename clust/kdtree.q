@@ -1,11 +1,27 @@
 \d .ml
 
-/ build a k-d tree
+/----Tree functions----\
+
+/Build a k-d tree
 /* d = data points
 /* r = number of rep pts
 clust.kd.buildtree:{[d;r]clust.kd.create[clust.kd.pivot[d;r];-1;1;0b;til count d 0]}
 
-/ tree is (parent;isleft;isleaf;children|datainds;pivotvalue;pivotaxis)
+/Each nearest neighbouring cluster
+/* s   = point to search
+/* rp  = representative points
+/* t   = k-d tree
+/* cl  = list linking points to their clusters
+/* rl  = list linking points to their leaf nodes in the tree
+/* nv  = points that are no longer valid
+/* df  = distance function/metric
+clust.kd.nnc:{[s;rp;t;cl;rl;nv;df]
+ u:{(x[y 0];y 1)}[cl]each clust.kd.i.nns[;rp;t;cl;rl;nv;df]each s;
+ raze u clust.i.imin u[;1]}
+
+/----Utilities----\
+
+/Return kd-tree:(parent;isleft;isleaf;children|datainds;pivotvalue;pivotaxis)
 /* f    = function -> clust.kd.pivot[d;r;] used above
 /* p    = parent node
 /* o    = 1, added to parent index, loop counter
@@ -17,12 +33,29 @@ clust.kd.create:{[f;p;o;left;idx]
  r:.z.s[f;p+o;1+count l 0;0b;u[0;1]];              / right subtree
  (p;left;0b;enlist p+o+1+0,count l 0;u[1;0];u[1;1]),'l,'r}
 
-/ return 1b if at a leaf, or ((leftinds;rightinds);(pivot value;pivot axis)) if we can split further
+/Return 1b if at a leaf, or ((leftinds;rightinds);(pivot value;pivot axis)) if we can split further
 clust.kd.pivot:{[d;r;idx]                                                
  if[count[idx]<=2*r;:1b];
- axis:clust.i.imax var each d[;idx];                    / choose axis with max variance
- pivi:usi bin piv:avg(usi:u si:iasc u)floor .5*-1 0+count u:d[axis;idx]; / index in sort indices to split data
- if[pivi in -1+0,count usi;:1b];                   / don't create leaf nodes with zero elements
- u:(0,pivi+1)cut idx si;                           / split idx for the left and right subtrees
- piv:min d[axis;u 1];                              / adjust pivot val to min val along axis in points in the right subtree
+ axis:clust.i.imax var each d[;idx];
+ pivi:usi bin piv:avg(usi:u si:iasc u)floor .5*-1 0+count u:d[axis;idx];
+ if[pivi in -1+0,count usi;:1b];
+ u:(0,pivi+1)cut idx si;
+ piv:min d[axis;u 1];
  (u;piv,axis)}
+
+/nearest neighbours search
+clust.kd.i.nns:{[s;rp;t;cl;rl;nv;df]
+ clt:where cl=cl s;
+ leaves:(where rl=rl s)except clt,nv;
+ lmin:$[count leaves;clust.i.calc[df;s;leaves;rp];(s;0w)];
+ ({0<=first x 0}clust.kd.i.nn[t;df;s;rp;clt]/(par;lmin;rl[s],par:t[0]rl s))[1]}
+
+/calculating distances in the tree to get nearest neighbour
+/* s  = index of node being searched
+/* cp = points in the same cluster as s
+/* l  = list with (next node to be search;closest point and distance;points already searched)
+clust.kd.i.nn:{[t;df;s;rp;cp;l]
+ dist:{not min x[2;y]}[t]clust.i.axdist[t;l[1;1];raze l 2;df;s;;rp]/first l 0;
+ bdist:$[0=min(count nn:raze[t[3;dist]]except cp;count dist);l 1;
+         first[l[1;1]]>m:min mm:raze clust.i.dc[df;rp;nn;s];(nn mm?m;m);l 1];
+ (t[0]l 0;bdist;l[2],l 0)}
