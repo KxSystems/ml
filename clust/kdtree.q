@@ -8,15 +8,15 @@
 clust.kd.buildtree:{[d;r]clust.kd.create[clust.kd.pivot[d;r];-1;1;0b;til count d 0]}
 
 /Each nearest neighbouring cluster
-/* s   = point to search
-/* rp  = representative points
-/* t   = k-d tree
-/* cl  = list linking points to their clusters
-/* rl  = list linking points to their leaf nodes in the tree
-/* nv  = points that are no longer valid
-/* df  = distance function/metric
-clust.kd.nnc:{[s;rp;t;cl;rl;nv;df]
- u:{(x[y 0];y 1)}[cl]each clust.kd.i.nns[;rp;t;cl;rl;nv;df]each s;
+/* rp = representative points
+/* d  = data points
+/* t  = k-d tree
+/* cl = list linking points to their clusters
+/* rl = list linking points to their leaf nodes in the tree
+/* nv = points that are no longer valid
+/* df = distance function/metric
+clust.kd.nnc:{[rp;d;t;cl;rl;nv;df]
+ u:{(x[y 0];y 1)}[cl]each clust.kd.i.nns[;d;t;cl;rl;nv;df]each rp;
  raze u clust.i.imin u[;1]}
 
 /----Utilities----\
@@ -44,18 +44,18 @@ clust.kd.pivot:{[d;r;idx]
  (u;piv,axis)}
 
 /nearest neighbours search
-clust.kd.i.nns:{[s;rp;t;cl;rl;nv;df]
- clt:where cl=cl s;
- leaves:(where rl=rl s)except clt,nv;
- lmin:$[count leaves;clust.i.calc[df;s;leaves;rp];(s;0w)];
- ({0<=first x 0}clust.kd.i.nn[t;df;s;rp;clt]/(par;lmin;rl[s],par:t[0]rl s))[1]}
+clust.kd.i.nns:{[rp;d;t;cl;rl;nv;df]
+ clt:where cl=cl rp;
+ leaves:(where rl=rl rp)except clt,nv;
+ lmin:$[count leaves;clust.i.calc[df;rp;leaves;d];(rp;0w)];
+ ({0<=first x 0}clust.kd.i.nn[t;df;rp;d;clt]/(par;lmin;rl[rp],par:t[0]rl rp))[1]}
 
 /calculating distances in the tree to get nearest neighbour
 /* s  = index of node being searched
 /* cp = points in the same cluster as s
 /* l  = list with (next node to be search;closest point and distance;points already searched)
-clust.kd.i.nn:{[t;df;s;rp;cp;l]
- dist:{not min x[2;y]}[t]clust.i.axdist[t;l[1;1];raze l 2;df;s;;rp]/first l 0;
+clust.kd.i.nn:{[t;df;d;d;cp;l]
+ dist:{not min x[2;y]}[t]clust.i.axdist[t;l[1;1];raze l 2;df;d;;d]/first l 0;
  bdist:$[0=min(count nn:raze[t[3;dist]]except cp;count dist);l 1;
-         first[l[1;1]]>m:min mm:raze clust.i.dc[df;rp;nn;s];(nn mm?m;m);l 1];
+         first[l[1;1]]>m:min mm:raze clust.i.dc[df;d;nn;d];(nn mm?m;m);l 1];
  (t[0]l 0;bdist;l[2],l 0)}

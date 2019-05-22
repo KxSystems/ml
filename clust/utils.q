@@ -197,7 +197,7 @@ clust.i.algoscc:{[d;k;df;r;c;b;t;m]
   v[`r2c;nri]:v[`r2c]ori 0;                                                 / new clust is 1st of old clusts
   if[l;v[`ilm;nri]:1+max v`ilm];                                            / update indeces for linkage matrix
   v:{.[x;y;:;z]}/[v;flip(`c2p`c2r`gone;(mci;mci;mci 1));((npi;0#0);(nri;0#0);1b)];
-  cnc:clust.kd.nnc[nri;d;t;v`r2c;v`r2l;wg:where v`gone;df];
+  e;cnc:clust.kd.nnc[nri;d;t;v`r2c;v`r2l;wg:where v`gone;df];
   w:(where v[`ndists;0]in mci 1)except wg;
   $[c~`single;v[`ndists;0;w]:mci 0;[v[`ndists;0 1;w]:$[count w;
     flip{[x;y;z;r;g;df;pi]clust.kd.nnc[pi;x;y;z;r;g;df]}[d;t;v`r2c;v`r2l;wg;df]each v[`c2r]w;(0#0;0#0f)]]];
