@@ -22,7 +22,7 @@ clust.dgram:{[d;df;lf]
 /* c = compression
 clust.cure:{[d;k;df;r;c;b;s]
  t:clust.kd.buildtree[flip d;r];
- $[b;clust.i.rtabc[d]clust.ccure.cure[r;c;k;t;flip d;df];clust.i.algoscc[d;k;df;r;c;s,1b;t;()]]}
+ $[b;$[s;(::);clust.i.rtabc[d]]clust.ccure.cure[r;c;k;t;flip d;df;s];clust.i.algoscc[d;k;df;r;c;s,1b;t;()]]}
 
 /DBSCAN algorithm
 /* p = minimum number of points per cluster
