@@ -189,7 +189,7 @@ clust.i.algoscc:{[d;k;df;r;c;b;t;m]
   m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                  / update linkage matrix
   npi:raze v[`c2p]mci;
   $[c~`single;nri:ori;
-   [nreps:$[b;clust.i.curerep[v`oreps;df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
+   [nreps:$[b 1;clust.i.curerep[v`oreps;df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
   d[nri:(count nreps)#ori]:nreps;                                           / overwrite any old reps w/ new ones
   v[`r2l;nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[t]each d nri;        / leaf nodes for new reps, update tree
   t:.[t;(3;distinct orl);{y except x}ori];                                  / update tree w/ new reps, delete old reps
@@ -204,4 +204,5 @@ clust.i.algoscc:{[d;k;df;r;c;b;t;m]
   / update all for clust d and closest clust, nearest clust and dist to new clust
   v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
   i+:1];
-  $[l;m;([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]}
+  $[b 0;`reps`tree`r2c`r2l!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;v[`r2l]ii:raze v`c2r);
+    $[l;m;([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]]}

@@ -9,7 +9,7 @@ clust.hc:{[d;k;df;lf]
  werr:`$"ward must be used with e2dist";
  t:$[b:lf in`complete`average`ward;clust.i.buildtab[d;df];clust.kd.buildtree[flip d;r:ceiling count[d]%100]]; 
  clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'werr;@[t;`nnd;%;2]];t];
-                  clust.i.algoscc[d;k;df;r;lf;0b;t;()]]}
+                  clust.i.algoscc[d;k;df;r;lf;00b;t;()]]}
 
 /dendrogram
 clust.dgram:{[d;df;lf]
@@ -20,9 +20,9 @@ clust.dgram:{[d;df;lf]
 /CURE algorithm
 /* r = number of representative points
 /* c = compression
-clust.cure:{[d;k;df;r;c;b]
+clust.cure:{[d;k;df;r;c;b;s]
  t:clust.kd.buildtree[flip d;r];
- $[b;clust.i.rtabc[d]clust.ccure.cure[r;c;k;t;flip d;df];clust.i.algoscc[d;k;df;r;c;1b;t;()]]}
+ $[b;clust.i.rtabc[d]clust.ccure.cure[r;c;k;t;flip d;df];clust.i.algoscc[d;k;df;r;c;s,1b;t;()]]}
 
 /DBSCAN algorithm
 /* p = minimum number of points per cluster
@@ -43,6 +43,9 @@ clust.kmeans:{[d;k;n;i;df]
 
 /----streaming----\
 /cluster new points
-/* x = current table with `idx`pts`clt
-/* y = new points to be clustered
-clust.clustnew:{cl:x[`clt]{clust.i.imin sum each k*k:y-/:x}[x`pts]each y;([]pts:y;clt:cl)}
+/* t  = dictionary with the information of the tree
+/* df = distance function
+/* p  = new point to be classified
+clust.clustnew:{[t;df;p]
+ l:{{not x y}[x 2]clust.i.findl[y;x]/0}[t`tree]raze p;
+ clust.kd.nnc[enlist n;t[`reps],p;t`tree;t[`r2c],n:count t`reps;t[`r2l],l;(::);df]0}
