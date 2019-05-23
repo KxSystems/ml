@@ -43,7 +43,7 @@ clust.i.cln:{{![x;enlist(=;`clt;z);0b;enlist[`clt]!enlist y]}/[x;til count cl;cl
 clust.i.clvars:{[d;k;df;r;t]
  r2l:((pc:count d)#0N){[t;x;y]@[x;t[3]y;:;y]}[t]/where t 2;
  c2p:enlist each r2c:til pc;
- ndists:flip clust.kd.i.nns[;d;t;r2c;r2l;::;df]each r2c;
+ ndists:flip clust.kd.i.nns[;d;t;r2c;df]each r2c;
  `oreps`r2l`r2c`gone`c2r`c2p`ndists`pc!(d;r2l;r2c;pc#0b;c2p;c2p;ndists;pc)}
 
 /true if number of clusters in a kd-tree (y) > desired number of clusters (x)
@@ -197,10 +197,10 @@ clust.i.algoscc:{[d;k;df;r;c;b;t;m]
   v[`r2c;nri]:v[`r2c]ori 0;                                                 / new clust is 1st of old clusts
   if[l;v[`ilm;nri]:1+max v`ilm];                                            / update indeces for linkage matrix
   v:{.[x;y;:;z]}/[v;flip(`c2p`c2r`gone;(mci;mci;mci 1));((npi;0#0);(nri;0#0);1b)];
-  cnc:clust.kd.nnc[nri;d;t;v`r2c;v`r2l;wg:where v`gone;df];
-  w:(where v[`ndists;0]in mci)except wg;
+  cnc:clust.kd.nnc[nri;d;t;v`r2c;df];
+  w:(where v[`ndists;0]in mci)except wg:where v[`gone];
   $[c~`single;v[`ndists;0;w]:mci 0;[v[`ndists;0 1;w]:$[count w;
-    flip{[x;y;z;r;g;df;pi]clust.kd.nnc[pi;x;y;z;r;g;df]}[d;t;v`r2c;v`r2l;wg;df]each v[`c2r]w;(0#0;0#0f)]]];
+    flip{[x;y;z;df;pi]clust.kd.nnc[pi;x;y;z;df]}[d;t;v`r2c;df]each v[`c2r]w;(0#0;0#0f)]]];
   / update all for clust d and closest clust, nearest clust and dist to new clust
   v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
   i+:1];

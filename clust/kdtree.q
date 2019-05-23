@@ -15,8 +15,12 @@ clust.kd.buildtree:{[d;r]clust.kd.create[clust.kd.pivot[d;r];-1;1;0b;til count d
 /* rl  = list linking points to their leaf nodes in the tree
 /* nv  = points that are no longer valid
 /* df  = distance function/metric
-clust.kd.nnc:{[s;rp;t;cl;rl;nv;df]
- u:{(x[y 0];y 1)}[cl]each clust.kd.i.nns[;rp;t;cl;rl;nv;df]each s;
+/ clust.kd.nnc:{[s;rp;t;cl;rl;nv;df]
+/ u:{(x[y 0];y 1)}[cl]each clust.kd.i.nns[;rp;t;cl;rl;nv;df]each s;
+/ raze u clust.i.imin u[;1]}
+
+clust.kd.nnc:{[s;rp;t;cl;df]
+ u:{(x[y 0];y 1)}[cl]each clust.kd.i.nns[;rp;t;cl;df]each s;
  raze u clust.i.imin u[;1]}
 
 /----Utilities----\
@@ -44,11 +48,18 @@ clust.kd.pivot:{[d;r;idx]
  (u;piv,axis)}
 
 /nearest neighbours search
-clust.kd.i.nns:{[s;rp;t;cl;rl;nv;df]
+/clust.kd.i.nns:{[s;rp;t;cl;rl;nv;df]
+/ clt:where cl=cl s;
+/ leaves:(where rl=rl s)except clt,nv;
+/ lmin:$[count leaves;clust.i.calc[df;s;leaves;rp];(s;0w)];
+/ ({0<=first x 0}clust.kd.i.nn[t;df;s;rp;clt]/(par;lmin;rl[s],par:t[0]rl s))[1]}
+
+/nearest neighbours search
+clust.kd.i.nns:{[s;rp;t;cl;df]
  clt:where cl=cl s;
- leaves:(where rl=rl s)except clt,nv;
+ leaves:(raze lst wi:where s in'lst:(t 3)v:where t 2)except clt;
  lmin:$[count leaves;clust.i.calc[df;s;leaves;rp];(s;0w)];
- ({0<=first x 0}clust.kd.i.nn[t;df;s;rp;clt]/(par;lmin;rl[s],par:t[0]rl s))[1]}
+ ({0<=first x 0}clust.kd.i.nn[t;df;s;rp;clt]/(par;lmin;(v wi),par:t[0]v wi))[1]}
 
 /calculating distances in the tree to get nearest neighbour
 /* s  = index of node being searched
