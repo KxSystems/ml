@@ -109,7 +109,7 @@ clust.i.ld:`single`complete`average`centroid`ward!(min;max;avg;raze;{z%(1%y)+1%x
 clust.i.mindist:{{k:@[x;where x=0;:;0n];k?min k}each(,'/)clust.i.dd[z]each x-/:y}
 
 /find distances to update for complete/average linkage
-/* lf = distance linkage
+/* lf = linkage function
 /* t  = table with distances
 /* cd = clusters to merge
 clust.i.nmca:{[df;lf;t;cd]
@@ -156,7 +156,8 @@ clust.i.whichcl:{ind:@[;2]{0<count x 1}clust.kd.bestdist[x;z;0n;`e2dist]/(0w;y;y
 
 /----Algorithms----
 
-/linkage matrix
+/dendrogram
+/* x = list with (tree;dgram/linkage matrix)
 clust.i.algodgram:{[df;lf;x]
  t:x 0;m:x 1;
  cd:value first select nnd,clt,nni from t where nnd=min nnd;
@@ -164,6 +165,8 @@ clust.i.algodgram:{[df;lf;x]
  (.[clust.i.updtab;clust.i.newmin[lf;df;lf;t;1_cd];(::)];m)}
 
 /DBSCAN
+/* p = minimum number of points per cluster
+/* l = list with (table;next cluster idx;counter)
 clust.i.algodb:{[p;l]
  cl:{0<>sum type each x 1}clust.i.dbclust[c:l 2;p]/(l 0;l 1); 
  nc:first exec idx from t:cl 0 where valid;
@@ -175,10 +178,14 @@ clust.i.algocaw:{[df;lf;t]
  clust.i.updtab . clust.i.newmin[lf;df;lf;t;cd]}
 
 /k-means
+/* x = distance matrix
+/* y = number of clusters
 clust.i.kpp:{clust.i.kpp2[flip x;y]}
 clust.i.kpp2:{[m;n](n-1){y,x clust.i.iwrand[1]{x x?min x}each flip{sqrt sum x*x-:y}[flip x]'[y]}[m]/1?m}
 
 /Single,Centroid & Cure
+/* b = boolean, 1b for C, 0b for q
+/* m = dgram/linkage matrix
 clust.i.algoscc:{[d;k;df;r;c;b;t;m]
  v:clust.i.clvars[d;k;df;r;t];                                              / variables
  if[l:98h=type m;v[`ilm]:v`r2c];                                            / add variable for linkage matrix
@@ -201,8 +208,7 @@ clust.i.algoscc:{[d;k;df;r;c;b;t;m]
   w:(where v[`ndists;0]in mci)except wg;
   $[c~`single;v[`ndists;0;w]:mci 0;[v[`ndists;0 1;w]:$[count w;
     flip{[x;y;z;r;g;df;pi]clust.kd.nnc[pi;x;y;z;r;g;df]}[d;t;v`r2c;v`r2l;wg;df]each v[`c2r]w;(0#0;0#0f)]]];
-  / update all for clust d and closest clust, nearest clust and dist to new clust
-  v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
+  v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))]; / upd nearest clust/dist wrt new cluster
   i+:1];
   $[b 0;`reps`tree`r2c`r2l!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;v[`r2l]ii:raze v`c2r);
     $[l;m;([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]]}

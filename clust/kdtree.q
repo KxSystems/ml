@@ -8,8 +8,7 @@
 clust.kd.buildtree:{[d;r]clust.kd.create[clust.kd.pivot[d;r];-1;1;0b;til count d 0]}
 
 /Each nearest neighbouring cluster
-/* rp = representative points
-/* d  = data points  
+/* rp = representative points 
 /* t  = k-d tree
 /* cl = list linking points to their clusters
 /* rl = list linking points to their leaf nodes in the tree
@@ -51,8 +50,7 @@ clust.kd.i.nns:{[rp;d;t;cl;rl;nv;df]
  ({0<=first x 0}clust.kd.i.nn[t;df;rp;d;clt]/(par;lmin;rl[rp],par:t[0]rl rp))[1]}
 
 /calculating distances in the tree to get nearest neighbour
-/* s  = index of node being searched
-/* cp = points in the same cluster as s
+/* cp = points in the same cluster as rp
 /* l  = list with (next node to be search;closest point and distance;points already searched)
 clust.kd.i.nn:{[t;df;rp;d;cp;l]
  dist:{not min x[2;y]}[t]clust.i.axdist[t;l[1;1];raze l 2;df;rp;;d]/first l 0;

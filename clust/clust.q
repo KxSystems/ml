@@ -15,11 +15,13 @@ clust.hc:{[d;k;df;lf]
 clust.dgram:{[d;df;lf]
  m:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
  t:$[b:lf in`centroid`single;clust.kd.buildtree[flip d;r:ceiling count[d]%100];clust.i.buildtab[d;df]];
- $[b;clust.i.algoscc[d;1;df;r;lf;0b;t;m];({98h=type x 0}clust.i.algodgram[df;lf]/(t;m))1]}
+ $[b;clust.i.algoscc[d;1;df;r;lf;00b;t;m];({98h=type x 0}clust.i.algodgram[df;lf]/(t;m))1]}
 
 /CURE algorithm
 /* r = number of representative points
 /* c = compression
+/* b = boolean, 1b for C, 0b for q
+/* s = boolean, 1b to return a dictionary for the streaming notebook, 0b to return a table of clusters
 clust.cure:{[d;k;df;r;c;b;s]
  t:clust.kd.buildtree[flip d;r];
  $[b;$[s;(::);clust.i.rtabc[d]]clust.ccure.cure[r;c;k;t;flip d;df;s];clust.i.algoscc[d;k;df;r;c;s,1b;t;()]]}
@@ -44,7 +46,6 @@ clust.kmeans:{[d;k;n;i;df]
 /----streaming----\
 /cluster new points
 /* t  = dictionary with the information of the tree
-/* df = distance function
 /* p  = new point to be classified
 clust.clustnew:{[t;df;p]
  l:{{not x y}[x 2]clust.i.findl[y;x]/0}[t`tree]raze p;
