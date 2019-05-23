@@ -25,7 +25,7 @@ clust.ccure.dfd:`e2dist`edist`mdist!1 2 3;
 
 
 
-clust.ccure.i.cure:{[r;c;n;tree;d;df]
+clust.ccure.i.cure:{[r;c;n;tree;d;df;s]
  oreps:reps:flip d;
  r2l:((pc:count d 0)#0N){[tree;x;y]@[x;tree[3]y;:;y]}[tree]/where tree 2; / rep to leaf node it's in
  r2c:til pc; / rep to cluster it's in
@@ -56,7 +56,7 @@ clust.ccure.i.cure:{[r;c;n;tree;d;df]
   ndists[;mci 1]:(0N;0w);
   i+:1;
  ];
- :c2p where not gone;
+ $[s;`reps`tree`r2c`r2l!(reps ii;.[tree;(3;j);:;{x?y}[ii]each tree[3;]j:where tree[2;]];{x?y}[distinct c]each c:r2c ii;r2l ii:raze c2r);c2p where not gone]
  }
-clust.ccure.cure:{[r;c;n;t;d;df]clust.ccure.i.cure[r;c;n;t;d;df]}
+clust.ccure.cure:{[r;c;n;t;d;df;s]clust.ccure.i.cure[r;c;n;t;d;df;s]}
 
