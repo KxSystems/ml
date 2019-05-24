@@ -10,7 +10,7 @@ impf'[`cure_nn;`F`E;5];
 / shrink points towards their mean
 clust.ccure.shrink:{z-x*z-\:y}
 / x - representative points shrunk by y - compression towards mean from z - a list of points
-clust.ccure.i.curerep:{[x;y;z;df]t$clust.ccure.shrink[y;m]$["f"=t;clust.ccure.i.cure_cluster_reps_F;"e"=t;clust.ccure.i.cure_cluster_reps_E;'`type][z;x;(t:.Q.t type z 0)$m:avg z;df]}
+clust.ccure.i.curerep:{[rp;df;n;r;c]t$clust.ccure.shrink[c;m]$["f"=t;clust.ccure.i.cure_cluster_reps_F;"e"=t;clust.ccure.i.cure_cluster_reps_E;'`type][rp n;r;(t:.Q.t type rp[n] 0)$m:avg rp[n];df]}
 / from pi - a list of indices into reps - a list of representative points, find the closest (other) cluster and distance to it
 clust.ccure.kd.nnc:{[pi;tree;clusters;reps;df]@[;0;clusters]{mi:u?mn:min u:x[;1];(x[;0]mi;mn)}clust.ccure.kd.i.nns[;tree;clusters;reps;df]each pi}
 / closest (other) cluster and distance to it from x - a point index (into w - a list of reps) given a tree y and mapping from 
