@@ -7,21 +7,20 @@
 /* lf = linkage function
 clust.hc:{[d;k;df;lf]
  d:`float$d;
- dlerr:`$"linkage or distance metric not valid";
- werr:`$"ward must be used with e2dist";
- $[(not lf in key clust.i.ld)|not df in key clust.i.dd;'dlerr;[
- t:$[b:lf in`complete`average`ward;clust.i.buildtab[d;df];()]; 
- clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'werr;@[t;`nnd;%;2]];t];
-                  clust.i.algoscc[d;k;df;r:ceiling count[d]%100;lf;();clust;0b]]]]}
+ if[not df in key clust.i.dd;'clust.i.errors`derr];
+ if[not lf in key clust.i.ld;'clust.i.errors`lerr];
+ if[b:lf in`complete`average`ward;t:clust.i.buildtab[d;df]];
+ clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'clust.i.errors`werr;@[t;`nnd;%;2]];t];
+                  clust.i.algoscc[d;k;df;ceiling count[d]%100;lf;();clust;0b]]}
 
 /dendrogram
 clust.dgram:{[d;df;lf]
- dlerr:`$"linkage or distance metric not valid";
- $[(not lf in key clust.i.ld)|not df in key clust.i.dd;'dlerr;[
  d:`float$d;
+ if[not df in key clust.i.dd;'clust.i.errors`derr];
+ if[not lf in key clust.i.ld;'clust.i.errors`lerr];
  m:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
  t:$[b:lf in`centroid`single;clust.kd.buildtree[flip d;r:ceiling count[d]%100];clust.i.buildtab[d;df]];
- $[b;clust.i.algoscc[d;1;df;r;lf;00b;t;m];({98h=type x 0}clust.i.algodgram[df;lf]/(t;m))1]]]}
+ $[b;clust.i.algoscc[d;1;df;r;lf;00b;t;m];({98h=type x 0}clust.i.algodgram[df;lf]/(t;m))1]}
 
 /CURE algorithm
 /* r = number of representative points
@@ -30,35 +29,33 @@ clust.dgram:{[d;df;lf]
 /* s = boolean, 1b to return a dictionary for the streaming notebook, 0b to return a table of clusters
 clust.cure:{[d;k;df;r;c;b;s]
  d:`float$d;
- derr:`$"distance metric not valid"; 
- $[not df in key clust.i.dd;'derr;[
- $[b;clust.i.algoscc[d;k;clust.ccure.dfd[df];r;c;();clust.ccure;s];clust.i.algoscc[d;k;df;r;c;();clust;s]]]]}
+ if[not df in key clust.i.dd;'clust.i.errors`derr];
+ $[b;clust.i.algoscc[d;k;clust.ccure.dfd[df];r;c;();clust.ccure;s];clust.i.algoscc[d;k;df;r;c;();clust;s]]}
 
 /DBSCAN algorithm
 /* p = minimum number of points per cluster
 /* e = epsilon value
 clust.dbscan:{[d;df;p;e]
  d:`float$d;
- derr:`$"distance metric not valid";                 
- $[not df in key clust.i.dd;'derr;[
+ if[not df in key clust.i.dd;'clust.i.errors`derr];
  dm:clust.i.distmat[df;e;flip d]'[d;k:til count d];
  t:([]idx:k;dist:dm;clt:0N;valid:1b);
- clust.i.rtabdb[d]{0N<>x 1}clust.i.algodb[p]/(t;0;0)]]}
+ clust.i.rtabdb[d]{0N<>x 1}clust.i.algodb[p]/(t;0;0)}
 
 /k-means algorithm
 /* n = number of iterations
 /* i = initialisation type - 1b use points in dataset or 0b random initialisation
 clust.kmeans:{[d;k;n;i;df]
- $[not df in key clust.i.dd;'derr;[
+ if[not df in key clust.i.dd;'clust.i.errors`derr];
  dm:clust.i.typecast dm:flip d;
  init:$[i;clust.i.kpp[dm;k];clust.i.randinit[dm;k]];
  centers:n{{avg each x@\:y}[x]each value group clust.i.mindist[x;y;z]}[dm;;df]/init;
- clust.i.rtabkm[d]clust.i.mindist[dm;centers;df]]]}
+ clust.i.rtabkm[d]clust.i.mindist[dm;centers;df]}
 
 /----streaming----\
 /cluster new points
 /* t  = dictionary with the information of the tree
-/* p  = new point to be classified
-clust.clustnew:{[t;df;p]
- p:`float$p;
- clust.kd.nnc[enlist n;t`tree;t[`r2c],n:count t`reps;t[`reps],p;df]0}
+/* d  = new data to be classified
+clust.clustnew:{[t;df;d]
+ d:`float$d;
+ clust.kd.nnc[enlist n;t`tree;t[`r2c],n:count t`reps;t[`reps],d;df]0}
