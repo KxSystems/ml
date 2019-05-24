@@ -10,8 +10,8 @@ QLIBDIR=m64
 endif
 cure.so: cure.c cure.h kdtree.so kdtree.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -o cure.so cure.c kdtree.so $(LDRPATH)
-kdtree.so: kdtree.c kdtree.h xminmax.so xminmax.h
-	$(CC) $(CFLAGS) $(LDFLAGS) -o kdtree.so kdtree.c xminmax.so $(LDRPATH)
+kdtree.so: kdtree.c kdtree.h 
+	$(CC) $(CFLAGS) $(LDFLAGS) -o kdtree.so kdtree.c $(LDRPATH)
 
 %.so: %.c %.h
 ifeq ($(shell uname),Linux)
@@ -29,7 +29,6 @@ clean:
 cleanall: clean
 	if [ -f cure.so ]; then rm cure.so ; fi	
 	if [ -f kdtree.so ]; then rm kdtree.so ; fi	
-	if [ -f xminmax.so ]; then rm xminmax.so ; fi	
 	
 	
 

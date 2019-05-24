@@ -40,10 +40,10 @@ clust.i.cln:{{![x;enlist(=;`clt;z);0b;enlist[`clt]!enlist y]}/[x;til count cl;cl
 /* d  = data points
 /* k = number of clusters
 /* r = number of representative points
-clust.i.clvars:{[d;k;df;r;t]
+clust.i.clvars:{[d;k;df;r;t;ns]
  r2l:((pc:count d)#0N){[t;x;y]@[x;t[3]y;:;y]}[t]/where t 2;
  c2p:enlist each r2c:til pc;
- ndists:flip clust.kd.i.nns[;d;t;r2c;r2l;::;df]each r2c;
+ ndists:flip ns[`kd][`i][`nns][;t;r2c;d;df]each r2c;
  `oreps`r2l`r2c`gone`c2r`c2p`ndists`pc!(d;r2l;r2c;pc#0b;c2p;c2p;ndists;pc)}
 
 /true if number of clusters in a kd-tree (y) > desired number of clusters (x)
@@ -53,6 +53,12 @@ clust.i.cn:{x<exec count distinct clt from y}
 /* x  = point indices
 /* r  = number of representative points
 /* c  = compression
+/clust.i.curerep:{[rp;df;n;r;c]
+/maxp:n clust.i.imax clust.i.dd[df]each rp[n]-\:m:avg rp[n];
+/ rp:rp(r-1){[rp;ii;df;p]p,nn clust.i.imax{[d;nn;df;p]min{[d;nn;df;p]clust.i.dd[df]d[p]-d[nn]
+/  }[d;nn;df]each p}[rp;;df;p]each nn:ii except p}[rp;til count rp;df]/maxp;
+/ (rp*1-c)+\:c*m}
+
 clust.i.curerep:{[d;df;x;r;c]
  maxp:x clust.i.imax clust.i.dd[df]each d[x]-\:m:avg d x;
  rp:d(r-1){[d;df;x;p]p,i clust.i.imax{[d;df;i;p]min{[d;df;i;p]clust.i.dd[df]d[p]-d[i]
@@ -184,31 +190,32 @@ clust.i.kpp:{clust.i.kpp2[flip x;y]}
 clust.i.kpp2:{[m;n](n-1){y,x clust.i.iwrand[1]{x x?min x}each flip{sqrt sum x*x-:y}[flip x]'[y]}[m]/1?m}
 
 /Single,Centroid & Cure
-/* b = boolean, 1b for C, 0b for q
 /* m = dgram/linkage matrix
-clust.i.algoscc:{[d;k;df;r;c;b;t;m]
- v:clust.i.clvars[d;k;df;r;t];                                              / variables
+clust.i.algoscc:{[d;k;df;r;c;m;ns;b]
+ t:clust.kd.buildtree[flip d;r];
+ v:clust.i.clvars[d;k;df;r;t;ns];                                              / variables
  if[l:98h=type m;v[`ilm]:v`r2c];                                            / add variable for linkage matrix
  i:0;N:v[`pc]-k;                                                            / counter and n iterations
  while[i<N;
   mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1];                            / clusts to merge
   orl:v[`r2l]ori:raze v[`c2r]mci;                                           / old reps and their leaf nodes
   m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                  / update linkage matrix
-  npi:raze v[`c2p]mci;
+  npi:raze v[`c2p] mci;
   $[c~`single;nri:ori;
-   [nreps:$[b 1;clust.i.curerep[v`oreps;df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
+   [nreps:$[type[c]~neg 7h;ns[`i][`curerep][v[`oreps];df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
   d[nri:(count nreps)#ori]:nreps;                                           / overwrite any old reps w/ new ones
-  v[`r2l;nri]:nrl:{{not x y}[x 2]clust.i.findl[y;x]/0}[t]each d nri;        / leaf nodes for new reps, update tree
+  v[`r2l;nri]:nrl:ns[`kd][`searchfrom][t;;0]each nreps;        / leaf nodes for new reps, update tree
   t:.[t;(3;distinct orl);{y except x}ori];                                  / update tree w/ new reps, delete old reps
   t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                               / add new reps
   v[`r2c;nri]:v[`r2c]ori 0;                                                 / new clust is 1st of old clusts
   if[l;v[`ilm;nri]:1+max v`ilm];                                            / update indeces for linkage matrix
   v:{.[x;y;:;z]}/[v;flip(`c2p`c2r`gone;(mci;mci;mci 1));((npi;0#0);(nri;0#0);1b)];
-  cnc:clust.kd.nnc[nri;d;t;v`r2c;v`r2l;wg:where v`gone;df];
-  w:(where v[`ndists;0]in mci)except wg;
+  cnc:ns[`kd][`nnc][nri;t;v`r2c;d;df];
+  w:(where v[`ndists;0]in mci)except wg:where v[`gone];
   $[c~`single;v[`ndists;0;w]:mci 0;[v[`ndists;0 1;w]:$[count w;
-    flip{[x;y;z;r;g;df;pi]clust.kd.nnc[pi;x;y;z;r;g;df]}[d;t;v`r2c;v`r2l;wg;df]each v[`c2r]w;(0#0;0#0f)]]];
-  v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))]; / upd nearest clust/dist wrt new cluster
+    flip ns[`kd][`nnc][;t;v`r2c;d;df]each v[`c2r]w;(0#0;0#0f)]]];
+  / update all for clust d and closest clust, nearest clust and dist to new clust
+  v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
   i+:1];
-  $[b 0;`reps`tree`r2c`r2l!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;v[`r2l]ii:raze v`c2r);
+  $[b;`reps`tree`r2c`r2l!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;v[`r2l]ii:raze v`c2r);
     $[l;m;([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]]}
