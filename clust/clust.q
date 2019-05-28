@@ -6,8 +6,8 @@
 /* b = boolean, 1b for C, 0b for q
 /* s = boolean, 1b to return a dictionary for the streaming notebook, 0b to return a table of clusters
 clust.cure:{[d;k;r;i]
- cd:`df`c`b`s!(`e2dist;0;0b;0b); /defaults
- d:`float$d;if[(::)~i;i:cd];
+ i:(`df`c`b`s!(`e2dist;0;0b;0b)),i; /defaults
+ d:`float$d;
  if[not i[`df]in key clust.i.dd;'clust.i.errors`derr];
  $[i`b;clust.i.algoscc[d;k;clust.ccure.dfd[i`df];r;i`c;();clust.ccure;i`s];clust.i.algoscc[d;k;i`df;r;i`c;();clust;i`s]]}
 
