@@ -2,7 +2,7 @@
 
 clust.ccure.i.:(::)
 clib:2:[`$path,"/clust/ccode/./cure"]
-impf:{clust.ccure.i[u]:(2:[`$path,"/clust/ccode/./cure"])(u:`$"_"sv string(x;y)),z}
+impf:{clust.ccure.i[u]:clib(u:`$"_"sv string(x;y)),z}
 impf'[`cure_cluster_dists;`F`E;4];
 impf'[`cure_cluster_reps;`F`E;4];
 impf'[`cure_nn;`F`E;5];
