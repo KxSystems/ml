@@ -8,12 +8,15 @@ init:
 environment:
   matrix:
   - BITS: 64
-  - BITS: 32
+ 
 install:
 - cmd: >-
     call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars%BITS%.bat"
     mkdir %APPVEYOR_BUILD_FOLDER%\win\w%BITS%
     appveyor-retry appveyor DownloadFile https://github.com/KxSystems/kdb/raw/master/w%BITS%/q.lib -FileName %APPVEYOR_BUILD_FOLDER%\win\w%BITS%\q.lib
+
+build_script:
+- cmd: nmake /f win\Makefile all%BITS%
 
 artifacts:
 - path: ml_windows-$(appveyor_repo_tag_name).zip
