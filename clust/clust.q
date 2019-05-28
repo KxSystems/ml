@@ -48,8 +48,8 @@ clust.dgram:{[d;df;lf]
  if[not df in key clust.i.dd;'clust.i.errors`derr];
  if[not lf in key clust.i.ld;'clust.i.errors`lerr];
  m:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
- t:$[b:lf in`centroid`single;clust.kd.buildtree[flip d;r:ceiling count[d]%100];clust.i.buildtab[d;df]];
- $[b;clust.i.algoscc[d;1;df;r;lf;m;clust;0b];({98h=type x 0}clust.i.algodgram[df;lf]/(t;m))1]}
+ t:$[b:lf in`centroid`single;(::);clust.i.buildtab[d;df]];
+ $[b;clust.i.algoscc[d;1;df;ceiling count[d]%100;lf;m;clust;0b];({98h=type x 0}clust.i.algodgram[df;lf]/(t;m))1]}
 
 /k-means algorithm
 /* n = number of iterations
