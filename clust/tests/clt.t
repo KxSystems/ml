@@ -64,11 +64,11 @@ d2:flip@[;`Income`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/cust.cs
 
 (value exec idx by clt from .ml.clust.hc[d2;4;`e2dist;`single])~((til 195),196;195 197;enlist 198;enlist 199)
 
-(value exec idx by clt from .ml.clust.hc[d2;4;`e2dist;`centroid])~((til 123);arange[123;194;2];arange[124;199;2];195 197 199)
+(value exec idx by clt from .ml.clust.hc[d2;4;`edist;`centroid])~((til 123);arange[123;194;2];arange[124;199;2];195 197 199)
 
-(value exec idx by clt from .ml.clust.hc[d2;4;`e2dist;`average])~(arange[0;45;2];(arange[1;46;2]),(46+(til 77));arange[123;200;2];arange[124;200;2])
+(value exec idx by clt from .ml.clust.hc[d2;4;`edist;`average])~(arange[0;45;2];(arange[1;46;2]),(46+(til 77));arange[123;200;2];arange[124;200;2])
 
-(value exec idx by clt from .ml.clust.hc[d2;4;`e2dist;`complete])~(arange[0;43;2],(43+(til 80)),124 126 132 142 146 160;(arange[1;43;2]);arange[123;200;2];(arange[128;200;2])except 132 142 146 160)
+(value exec idx by clt from .ml.clust.hc[d2;4;`edist;`complete])~(arange[0;43;2],(43+(til 80)),124 126 132 142 146 160;(arange[1;43;2]);arange[123;200;2];(arange[128;200;2])except 132 142 146 160)
 
 (value exec idx by clt from .ml.clust.hc[d2;4;`e2dist;`ward])~(arange[0;43;2],(43+(til 80)),124 126 132 142 146 160;(arange[1;43;2]);arange[123;200;2];(arange[128;200;2])except 132 142 146 160)
 

@@ -53,12 +53,6 @@ clust.i.cn:{x<exec count distinct clt from y}
 /* x  = point indices
 /* r  = number of representative points
 /* c  = compression
-/clust.i.curerep:{[rp;df;n;r;c]
-/maxp:n clust.i.imax clust.i.dd[df]each rp[n]-\:m:avg rp[n];
-/ rp:rp(r-1){[rp;ii;df;p]p,nn clust.i.imax{[d;nn;df;p]min{[d;nn;df;p]clust.i.dd[df]d[p]-d[nn]
-/  }[d;nn;df]each p}[rp;;df;p]each nn:ii except p}[rp;til count rp;df]/maxp;
-/ (rp*1-c)+\:c*m}
-
 clust.i.curerep:{[d;df;x;r;c]
  maxp:x clust.i.imax clust.i.dd[df]each d[x]-\:m:avg d x;
  rp:d(r-1){[d;df;x;p]p,i clust.i.imax{[d;df;i;p]min{[d;df;i;p]clust.i.dd[df]d[p]-d[i]
@@ -88,6 +82,10 @@ clust.i.dbclust:{[c;p;l]
 clust.i.distca: {[lf;df;x;y]clust.i.ld[lf]each clust.i.dd[df]@'/:raze each x-/:\:/:y`pts}
 clust.i.distcw: {[lf;df;x;y]clust.i.ld[lf][x`n]'[y`n;clust.i.dd[df]each x[`pts]-/:y`pts]}
 clust.i.distmat:{[df;e;x;y;n]where e>=@[;n;:;0w]clust.i.dd[df]x-y}
+
+/error dictionary for initial input checks
+clust.i.errors:`derr`lerr`werr!(`$"invalid distance metric - must be in .ml.clust.i.dd";
+               `$"invalid linkage - must be in .ml.clust.i.ld";`$"ward must be used with e2dist")
 
 /get left or right child depending on direction 
 /* x = rep pts
@@ -202,7 +200,7 @@ clust.i.algoscc:{[d;k;df;r;c;m;ns;b]
   m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                  / update linkage matrix
   npi:raze v[`c2p] mci;
   $[c~`single;nri:ori;
-   [nreps:$[type[c]~neg 7h;ns[`i][`curerep][v[`oreps];df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
+   [nreps:$[not c~`centroid;ns[`i][`curerep][v[`oreps];df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
   d[nri:(count nreps)#ori]:nreps;                                           / overwrite any old reps w/ new ones
   v[`r2l;nri]:nrl:ns[`kd][`searchfrom][t;;0]each nreps;        / leaf nodes for new reps, update tree
   t:.[t;(3;distinct orl);{y except x}ori];                                  / update tree w/ new reps, delete old reps
