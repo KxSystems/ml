@@ -1,10 +1,14 @@
 \d .ml
 
 /CURE algorithm
+/* d = data points
+/* k = number of clusters
 /* r = number of representative points
-/* c = compression
-/* b = boolean, 1b for C, 0b for q
-/* s = boolean, 1b to return a dictionary for the streaming notebook, 0b to return a table of clusters
+/* i = dictionary of inputs, for default use ():
+/*     > df = distance function/metric
+/*     > c  = compression
+/*     > b  = boolean, 1b for C, 0b for q
+/*     > s  = boolean, 1b to return a dictionary for the streaming notebook, 0b to return a table of clusters
 clust.cure:{[d;k;r;i]
  i:(`df`c`b`s!(`e2dist;0;0b;0b)),i; /defaults
  d:`float$d;
@@ -28,10 +32,7 @@ clust.dbscan:{[d;df;p;e]
  t:([]idx:k;dist:dm;clt:0N;valid:1b);
  clust.i.rtabdb[d]{0N<>x 1}clust.i.algodb[p]/(t;0;0)}
 
-/hierarchical clustering
-/* d  = data
-/* k  = number of clusters
-/* df = distance function/metric   
+/hierarchical clustering 
 /* lf = linkage function
 clust.hc:{[d;k;df;lf]
  d:`float$d;

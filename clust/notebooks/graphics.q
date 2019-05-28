@@ -35,4 +35,4 @@ plotcl:{
 /utils dictionary for plothkc
 ud:`hc`cure`kmeans`dbscan!(enlist each(3 4;2 3;1 4;1 3)),'
  (.ml.clust.hc;.ml.clust.cure;.ml.clust.kmeans;.ml.clust.dbscan),'
- ({"df/lf: ",string[x 1],"/",string x 2};{"df/C: ",string[x 1],"/",string[x 4],"b"};{"df: ",string x 3};{"df: ",string x 0})
+ ({"df/lf: ",string[x 1],"/",string x 2};{"df/C: ",string[x[2;`df]],"/",string[x[2;`b]],"b"};{"df: ",string x 3};{"df: ",string x 0})
