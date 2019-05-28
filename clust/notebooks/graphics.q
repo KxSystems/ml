@@ -4,7 +4,7 @@ plt:.p.import`matplotlib.pyplot
 /* x = algo e.g.`hc`ward`cure`dbscan
 /* y = data
 /* z = inputs for the cluster functions
-plot:{$[x~`ward;plotw[x;y;z];plotcl[x;y;z]]}
+plotcluster:{$[x~`ward;plotw[x;y;z];plotcl[x;y;z]]}
 
 /plot ward or dbscan
 plotw:{
@@ -36,3 +36,22 @@ plotcl:{
 ud:`hc`cure`kmeans`dbscan!(enlist each(3 4;2 3;1 4;1 3)),'
  (.ml.clust.hc;.ml.clust.cure;.ml.clust.kmeans;.ml.clust.dbscan),'
  ({"df/lf: ",string[x 1],"/",string x 2};{"df/C: ",string[x[2;`df]],"/",string[x[2;`b]],"b"};{"df: ",string x 3};{"df: ",string x 0})
+
+/plot clusters, dendrogram or both for hierarchical
+/* d  = data points
+/* k  = number of clusters
+/* df = distance metric
+/* lf = linkage function
+/* f  = flag: `cluster`dgram or () to plot both
+plot:{[d;k;df;lf;f]
+ if[b:f~();f:`both];
+ subplots:plt[`:subplots][;]. dgrami f;
+ fig::subplots[@;0];axarr::subplots[@;1];
+ fig[`:set_size_inches;18.5;8.5];
+ if[b|f~`cluster;cl:.ml.clust.hc[d;k;df;lf];
+   {x[`:scatter]. flip y}[$[b;axarr[@;0];plt]]each exec pts by clt from cl];
+ if[b|f~`dgram;dm:.ml.clust.dgram[d;df;lf];hc[`:dendrogram]flip value flip dm];
+ plt[`:show][];}
+
+/input dictionary for plot
+dgrami:`cluster`dgram`both!(1 1;1 1;1 2)
