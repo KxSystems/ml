@@ -1,7 +1,8 @@
 \d .ml
 
 clust.ccure.i.:(::)
-clib:2:[`$path,"/clust/ccode/./cure"]
+0N!"H";
+0N!clib:2:[`$path,"/clust/ccode/./cure"]
 impf:{clust.ccure.i[u]:clib(u:`$"_"sv string(x;y)),z}
 impf'[`cure_cluster_dists;`F`E;4];
 impf'[`cure_cluster_reps;`F`E;4];
