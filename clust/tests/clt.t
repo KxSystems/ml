@@ -5,6 +5,7 @@
 arange:{x+z*til ceiling(y-x)%z}
 d1:(60#"F";",")0:`:clust/notebooks/data/ss5.csv
 d2:flip@[;`Income`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/cust.csv
+d3:flip (2#"F";",")0:`:clust/notebooks/data/sample1.csv
 
 /dbscan
 
@@ -14,7 +15,7 @@ d2:flip@[;`Income`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/cust.cs
 
 (value exec idx by clt from .ml.clust.dbscan[d1;`edist;5;5])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.dbscan[d2;`edist;4;300])~((til 197),198;enlist 197;enlist 199)
+(value exec idx by clt from .ml.clust.dbscan[d2;`edist;4;18])~((til 197),198;enlist 197;enlist 199)
 
 (value exec idx by clt from .ml.clust.dbscan[d1;`mdist;5;5])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
@@ -26,29 +27,29 @@ d2:flip@[;`Income`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/cust.cs
 /(value exec idx by clt from .ml.clust.kmeans[d1;4;2;1b;`mdist])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
 /cure
-(value exec idx by clt from .ml.clust.cure[d1;4;`e2dist;5;0;0b;0b])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+(value exec idx by clt from .ml.clust.cure[d1;4;5;()])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.cure[d1;4;`e2dist;5;0;1b;0b])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+(value exec idx by clt from .ml.clust.cure[d1;4;5;`df`c`b!(`e2dist;0;1b)])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.cure[d1;4;`edist;5;0;0b;0b])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+(value exec idx by clt from .ml.clust.cure[d1;4;5;`df`c`b!(`edist;0;0b)])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.cure[d1;4;`edist;5;0;1b;0b])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+(value exec idx by clt from .ml.clust.cure[d1;4;5;`df`c`b!(`edist;0;1b)])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.cure[d1;4;`mdist;5;0;0b;0b])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+(value exec idx by clt from .ml.clust.cure[d1;4;5;`df`c`b!(`mdist;0;0b)])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.cure[d1;4;`mdist;5;0;1b;0b])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+(value exec idx by clt from .ml.clust.cure[d1;4;5;`df`c`b!(`mdist;0;1b)])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.cure[d2;4;`e2dist;20;0;0b;0b])~((til 192),193 195 197;192 194 196;enlist 198;enlist 199)
+(value exec idx by clt from .ml.clust.cure[d2;4;20;()])~((til 192),193 195 197;192 194 196;enlist 198;enlist 199)
 
-(value exec idx by clt from .ml.clust.cure[d2;4;`e2dist;20;0;1b;0b])~((til 192),193 195 197;192 194 196;enlist 198;enlist 199)
+(value exec idx by clt from .ml.clust.cure[d2;4;20;`df`c`b!(`e2dist;0;1b)])~((til 192),193 195 197;192 194 196;enlist 198;enlist 199)
 
-(value exec idx by clt from .ml.clust.cure[d2;4;`edist;20;0;0b;0b])~((til 192),193 195 197;192 194 196;enlist 198;enlist 199)
+(value exec idx by clt from .ml.clust.cure[d2;4;20;`df`c`b!(`edist;0;0b)])~((til 192),193 195 197;192 194 196;enlist 198;enlist 199)
 
-(value exec idx by clt from .ml.clust.cure[d2;4;`edist;20;0;1b;0b])~((til 192),193 195 197;192 194 196;enlist 198;enlist 199)
+(value exec idx by clt from .ml.clust.cure[d2;4;20;`df`c`b!(`edist;0;1b)])~((til 192),193 195 197;192 194 196;enlist 198;enlist 199)
 
-(value exec idx by clt from .ml.clust.cure[d2;4;`mdist;10;0;0b;0b])~(til[123],arange[124;195;2];arange[123;200;2];enlist 196;enlist 198)
+(value exec idx by clt from .ml.clust.cure[d2;4;10;`df`c`b!(`mdist;0;0b)])~(til[123],arange[124;195;2];arange[123;200;2];enlist 196;enlist 198)
 
-(value exec idx by clt from .ml.clust.cure[d2;4;`mdist;10;0;1b;0b])~(til[123],arange[124;195;2];arange[123;200;2];enlist 196;enlist 198)
+(value exec idx by clt from .ml.clust.cure[d2;4;10;`df`c`b!(`mdist;0;1b)])~(til[123],arange[124;195;2];arange[123;200;2];enlist 196;enlist 198)
 
 /hierarchial
 
@@ -66,7 +67,7 @@ d2:flip@[;`Income`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/cust.cs
 
 (value exec idx by clt from .ml.clust.hc[d2;4;`edist;`centroid])~((til 123);arange[123;194;2];arange[124;199;2];195 197 199)
 
-(value exec idx by clt from .ml.clust.hc[d2;4;`edist;`average])~(arange[0;45;2];(arange[1;46;2]),(46+(til 77));arange[123;200;2];arange[124;200;2])
+(value exec idx by clt from .ml.clust.hc[d2;4;`edist;`average])~(arange[0;43;2],(43+(til 80));(arange[1;42;2]);arange[123;200;2];arange[124;200;2])
 
 (value exec idx by clt from .ml.clust.hc[d2;4;`edist;`complete])~(arange[0;43;2],(43+(til 80)),124 126 132 142 146 160;(arange[1;43;2]);arange[123;200;2];(arange[128;200;2])except 132 142 146 160)
 
@@ -74,7 +75,7 @@ d2:flip@[;`Income`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/cust.cs
 
 (value exec idx by clt from .ml.clust.hc[d1;4;`mdist;`single])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.hc[d1;4;`mdist;`ward])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+(value exec idx by clt from .ml.clust.hc[d1;4;`e2dist;`ward])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
 (value exec idx by clt from .ml.clust.hc[d1;4;`mdist;`centroid])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
@@ -86,8 +87,34 @@ d2:flip@[;`Income`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/cust.cs
 
 (value exec idx by clt from .ml.clust.hc[d2;4;`mdist;`average])~(arange[0;27;2],27,arange[28;43;2],43+(til 80);(arange[1;27;2],arange[29;42;2]);arange[123;200;2];arange[124;200;2])
 
-(value exec idx by clt from .ml.clust.hc[d2;4;`mdist;`complete])~(arange[0;45;2];(arange[1;46;2]),(46+til 45),92 95 96 97 99 101 102 103 104 106 107 109 110 
- 111 113 114 115 117 119 120 122;91 93 94 98 100 105 108 112 116 118 121,arange[124;200;2];arange[123;200;2])
+(value exec idx by clt from .ml.clust.hc[d2;4;`mdist;`complete])~((arange[0;45;2]),46 47 48 49 50 52,(54+til 69);(arange[1;46;2]),51 53;arange[123;200;2];arange[124;200;2])
 
 (value exec idx by clt from .ml.clust.hc[d2;4;`e2dist;`ward])~(arange[0;41;2],(42+til 81),124,126,132,142,146,160;arange[1;42;2];arange[123;200;2];128,130,134,136,138,140,144,(arange[148;199;2])except 160)
+
+
+/dendogram
+(select i1,i2,n from .ml.clust.dgram[d3;`edist;`centroid])~([]i1:1 0 5 6 11 14 12 16 15i;i2:3 2 8 9 10 4 7 13 17i;n:2i)
+
+(select i1,i2,n from .ml.clust.dgram[d3;`edist;`single])~([]i1:1 0 5 11 6 13 14 12 15i;i2:3 2 8 10 9 4 7 16 17i;n:2 2 2 4 2 5 3 5 10i)
+
+(select i1,i2,n from .ml.clust.dgram[d3;`edist;`average])~([]i1:1 0 5 6 10 11 12 16 15i;i2:3 2 8 9 4 14 7 13 17i;n:2 2 2 2 3 5 3 5 10i)
+
+(select i1,i2,n from .ml.clust.dgram[d3;`edist;`complete])~([]i1:1 0 5 6 10 12 11 15 16i;i2:3 2 8 9 4 7 14 13 17i;n:2 2 2 2 3 3 5 5 10i)
+
+(select i1,i2,n from .ml.clust.dgram[d3;`mdist;`centroid])~([]i1:1 5 0 12 7 11 15 13 17i;i2:3 8 2 10 9 14 6 4 16i;n:2i)
+
+(select i1,i2,n from .ml.clust.dgram[d3;`mdist;`single])~([]i1:1 5 0 12 7 13 6 11 15i;i2:3 8 2 10 9 4 14 16 17i;n:2 2 2 4 2 5 3 5 10i)
+
+(select i1,i2,n from .ml.clust.dgram[d3;`mdist;`average])~([]i1:1 5 0 12 7 13 11 16 15i;i2:3 8 2 10 9 4 14 6 17i;n:2 2 2 4 2 5 4 5 10i)
+
+(select i1,i2,n from .ml.clust.dgram[d3;`mdist;`complete])~([]i1:1 5 0 7 12 11 15 14 17i;i2:3 8 2 9 10 13 6 4 16i;n:2 2 2 2 4 4 5 5 10i)
+
+
+/streaming
+.ml.clust.cure[d3;4;30;`b`s!1 1]~`reps`tree`r2c`r2l!(d3[0 2 1 3 4 5 8 6 9 7];enlist each (neg 1;0b;1b;9 5 6 7 8 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 2 3;10#0)
+
+.ml.clust.cure[d3;4;30;`df`b`s!(`edist;1;1)]~`reps`tree`r2c`r2l!(d3[0 2 1 3 4 5 8 6 9 7];enlist each (neg 1;0b;1b;9 5 6 7 8 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 2 3;10#0)
+
+.ml.clust.cure[d3;4;30;`df`b`s!(`mdist;1;1)]~`reps`tree`r2c`r2l!(d3[0 2 1 3 4 5 8 6 7 9];enlist each (neg 1;0b;1b;7 5 6 8 9 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 3 3;10#0)
+
 
