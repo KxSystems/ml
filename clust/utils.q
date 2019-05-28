@@ -200,7 +200,7 @@ clust.i.algoscc:{[d;k;df;r;c;m;ns;b]
   m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                  / update linkage matrix
   npi:raze v[`c2p] mci;
   $[c~`single;nri:ori;
-   [nreps:$[type[c]~neg 7h;ns[`i][`curerep][v[`oreps];df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
+   [nreps:$[not c~`centroid;ns[`i][`curerep][v[`oreps];df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
   d[nri:(count nreps)#ori]:nreps;                                           / overwrite any old reps w/ new ones
   v[`r2l;nri]:nrl:ns[`kd][`searchfrom][t;;0]each nreps;        / leaf nodes for new reps, update tree
   t:.[t;(3;distinct orl);{y except x}ori];                                  / update tree w/ new reps, delete old reps
