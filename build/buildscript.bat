@@ -5,7 +5,7 @@ if "%APPVEYOR_REPO_TAG%"=="true" (
 )
 set PATH=C:\Perl;%PATH%
 perl -p -i.bak -e s/TOOLKITVERSION/`\$\"%ML_VERSION%\"/g ml.q
-call "build\compile.bat" || goto :error
+
 
 if not defined QLIC_KC (
  goto :nokdb
