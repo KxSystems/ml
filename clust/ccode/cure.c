@@ -2,8 +2,6 @@
 #include "kdtree.h"
 #include <stdio.h>
 #include <math.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define we wf
 

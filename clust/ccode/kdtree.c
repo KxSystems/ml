@@ -1,8 +1,6 @@
 #include "kdtree.h"
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
-#include <stdlib.h>
 
 
 // tree is (parent;isleft;isleaf;children;pivval;pivaxis) count[tree[0]]~num nodes

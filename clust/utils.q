@@ -40,7 +40,7 @@ clust.i.cln:{{![x;enlist(=;`clt;z);0b;enlist[`clt]!enlist y]}/[x;til count cl;cl
 /* d  = data points
 /* k = number of clusters
 /* r = number of representative points
-clust.i.clvars:{[d;k;df;r;t;ns]
+clust.i.clvars:{[d;k;df;t;ns]
  r2l:((pc:count d)#0N){[t;x;y]@[x;t[3]y;:;y]}[t]/where t 2;
  c2p:enlist each r2c:til pc;
  ndists:flip ns[`kd][`i][`nns][;t;r2c;d;df]each r2c;
@@ -191,7 +191,7 @@ clust.i.kpp2:{[m;n](n-1){y,x clust.i.iwrand[1]{x x?min x}each flip{sqrt sum x*x-
 /* m = dgram/linkage matrix
 clust.i.algoscc:{[d;k;df;r;c;m;ns;b]
  t:clust.kd.buildtree[flip d;r];
- v:clust.i.clvars[d;k;df;r;t;ns];                                              / variables
+ v:clust.i.clvars[d;k;df;t;ns];                                              / variables
  if[l:98h=type m;v[`ilm]:v`r2c];                                            / add variable for linkage matrix
  i:0;N:v[`pc]-k;                                                            / counter and n iterations
  while[i<N;
@@ -215,5 +215,5 @@ clust.i.algoscc:{[d;k;df;r;c;m;ns;b]
   / update all for clust d and closest clust, nearest clust and dist to new clust
   v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
   i+:1];
-  $[b;`reps`tree`r2c`r2l!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;v[`r2l]ii:raze v`c2r);
+  $[b;`reps`tree`r2c`r2l`ndists!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;v[`r2l]ii:raze v`c2r;v[`ndists]);
     $[l;m;([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]]}
