@@ -5,13 +5,9 @@ curl -fsSL -o q.lib https://github.com/KxSystems/kdb/raw/master/w64/q.lib || got
 set OP=%PATH%
 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 mkdir w64
-cl /LD /DKXVER=3 /Feml.dll                                   || goto :error
-move ml.dll w64
-set PATH=%OP%
+cl /LD /DKXVER=3 clust/ccode/cure.c clust/ccode/cure.def q.lib                                  || goto :error
 
-set OP=%PATH%
-call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-call build\compile.bat                               || goto :error
+set PATH=%OP%
 
 if "%APPVEYOR_REPO_TAG%"=="true" (
  set ML_VERSION=%APPVEYOR_REPO_TAG_NAME%
