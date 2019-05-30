@@ -5,8 +5,9 @@ curl -fsSL -o q.lib https://github.com/KxSystems/kdb/raw/master/w64/q.lib || got
 set OP=%PATH%
 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 mkdir w64
-cl /LD /Few64\cure.dll /DKXVER=3 clust/ccode/cure.c  q.lib                                  || goto :error
 cl /LD /Few64\kdtree.dll /DKXVER=3 clust/ccode/kdtree.c  q.lib                                  || goto :error
+cl /LD /Few64\cure.dll /DKXVER=3 clust/ccode/cure.c  q.lib                                  || goto :error
+
 move cure.dll w64
 move kdtree.dll w64
 set PATH=%OP%
