@@ -4,7 +4,7 @@ curl -fsSL -o q.lib https://github.com/KxSystems/kdb/raw/master/w64/q.lib || got
 set OP=%PATH%
 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 mkdir w64
-cl /LD /DKXVER=3 /Feml.dll /q.lib                                  || goto :error
+cl /LD /DKXVER=3 /Feml.dll /O2 q.lib                                  || goto :error
 move ml.dll w64
 set PATH=%OP%
 
