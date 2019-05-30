@@ -5,7 +5,7 @@ curl -fsSL -o q.lib https://github.com/KxSystems/kdb/raw/master/w64/q.lib || got
 set OP=%PATH%
 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 mkdir w64
-cl /LD /DKXVER=3 clust/ccode/cure.c clust/ccode/cure.def q.lib                                  || goto :error
+cl /LD /DKXVER=3 clust/ccode/cure.c q.lib                                  || goto :error
 
 set PATH=%OP%
 
