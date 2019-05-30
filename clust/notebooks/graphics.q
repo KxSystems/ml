@@ -4,7 +4,7 @@ plt:.p.import`matplotlib.pyplot
 /* x = algo e.g.`hc`ward`cure`dbscan
 /* y = data
 /* z = inputs for the cluster functions
-plotcluster:{$[x~`ward;plotw[x;y;z];plotcl[x;y;z]]}
+plotcluster:{[x;y;z]$[x~`ward;plotw[x;y;z];plotcl[x;y;z]]}
 
 /plot ward or dbscan
 plotw:{
@@ -17,10 +17,10 @@ plotw:{
  plt[`:show][];}
 
 /plot hierarchical, kmeans or cure
-plotcl:{
+plotcl:{[x;y;z]
  $[b::2<count first y;fig::plt[`:figure][];
   [subplots::plt[`:subplots]. ud[x;0];fig::subplots[@;0];axarr::subplots[@;1]]];
- fig[`:set_size_inches;18.5;8.5];
+ $[x~`hc;fig[`:set_size_inches;18.5;13];fig[`:set_size_inches;18.5;8.5]];
  fig[`:subplots_adjust][`hspace pykw .5];
  {[a;d;f;i]
   if[b;ax:fig[`:add_subplot][;;i+1;`projection pykw"3d"]. ud[a]0];
@@ -33,9 +33,9 @@ plotcl:{
  plt[`:show][];}
 
 /utils dictionary for plothkc
-ud:`hc`cure`kmeans`dbscan!(enlist each(3 4;2 3;1 4;1 3)),'
+ud:`hc`cure`kmeans`dbscan!(enlist each(6 3;2 3;1 4;1 3)),'
  (.ml.clust.hc;.ml.clust.cure;.ml.clust.kmeans;.ml.clust.dbscan),'
- ({"df/lf: ",string[x 1],"/",string x 2};{"df/C: ",string[x[2;`df]],"/",string[x[2;`b]],"b"};{"df: ",string x 3};{"df: ",string x 0})
+ ({"df/lf: ",string[x 1],"/",string [x 2],"/",string x 3};{"df/C: ",string[x[2;`df]],"/",string[x[2;`b]],"b"};{"df: ",string x 3};{"df: ",string x 0})
 
 /plot clusters, dendrogram or both for hierarchical
 /* d  = data points
@@ -48,7 +48,7 @@ plot:{[d;k;df;lf;f]
  subplots:plt[`:subplots][;]. dgrami f;
  fig::subplots[@;0];axarr::subplots[@;1];
  fig[`:set_size_inches;18.5;8.5];
- if[b|f~`cluster;cl:.ml.clust.hc[d;k;df;lf];
+ if[b|f~`cluster;cl:.ml.clust.hc[d;k;df;lf;1b];
    {x[`:scatter]. flip y}[$[b;axarr[@;0];plt]]each exec pts by clt from cl];
  if[b|f~`dgram;dm:.ml.clust.dgram[d;df;lf];hc[`:dendrogram]flip value flip dm];
  plt[`:show][];}

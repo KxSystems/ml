@@ -1,8 +1,6 @@
 #include "kdtree.h"
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
-#include <stdlib.h>
 
 qtemplate({
   "names":["kdtree_searchfrom_i","kdtree_rdist"],

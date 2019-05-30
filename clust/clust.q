@@ -34,13 +34,14 @@ clust.dbscan:{[d;df;p;e]
 
 /hierarchical clustering 
 /* lf = linkage function
-clust.hc:{[d;k;df;lf]
+/* bc = boolean or empty list for c or q implementation for centroid and single
+clust.hc:{[d;k;df;lf;bc]
  d:`float$d;
  if[not df in key clust.i.dd;'clust.i.errors`derr];
  if[not lf in key clust.i.ld;'clust.i.errors`lerr];
  if[b:lf in`complete`average`ward;t:clust.i.buildtab[d;df]];
  clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'clust.i.errors`werr;@[t;`nnd;%;2]];t];
-                  clust.i.algoscc[d;k;df;ceiling count[d]%100;lf;();clust;0b]]}
+                  clust.i.algoscc[d;k;$[bc;clust.ccure.dfd[df];df];ceiling count[d]%100;lf;();$[bc;clust.ccure;clust];0b]]}
 
 /hierarchical dendrogram
 clust.dgram:{[d;df;lf]
