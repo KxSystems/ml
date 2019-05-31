@@ -70,3 +70,21 @@ clust.sepIdx:{
  maxd:max {max clust.i.dd[y] each raze x[`pts][z]-/:\:x[`pts][z]}[r2;y]each til count r2;
  mind%maxd
  }
+
+/Homogeneity Score
+/*x = predicted cluster vales
+/*y = actual cluster values
+clust.homogeneitysc:{
+ pi:value count each group x; /
+ ent:neg sum(pi%sum pi)*(log[pi]-log(sum pi));  /entropy of pred values
+ cm:((count distinct x),count distinct y)#0;
+ cont:sum {[x;y;z] .[x;y,z;:;1]}[cm]'[x;y];
+ nz_val:(raze cont)except 0;
+ contsum:sum nz_val;
+ logcont:log(nz_val);
+ contnm:nz_val%contsum;
+ nonz:flip raze (til count cont),''where each cont<>0; /nonzero elements
+ out:(pis:sum cont)[last nonz]*(pjs:sum each cont)[first nonz];
+ logout:(neg log[out])+(log[sum pis]+log[sum pjs]);
+ mi:sum (contnm*(logcont-log[contsum]))+contnm*logout;
+ mi%ent}
