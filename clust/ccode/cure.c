@@ -1,5 +1,5 @@
 #include "cure.h"
-#include "kdtree.h"
+#include "clust/ccode/kdtree.h"
 #include <stdio.h>
 #include <math.h>
 #define EXP __declspec(dllexport)
