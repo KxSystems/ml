@@ -7,12 +7,8 @@ call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary
 
 cl /LD /DKXVER=3 /Feclust\ccode\kdtree.dll /O2 clust/ccode/kdtree.c  q.lib                                  || goto :error
 
-mv kdtree.dll clust/ccode
+cl /LD /DKXVER=3 /Feclust\ccode\cure.dll /O2 clust/ccode/cure.c  q.lib                                  || goto :error
 
-cl /LD /DKXVER=3 /Fecure.dll /O2 clust/ccode/cure.c  q.lib                                  || goto :error
-
-
-mv cure.dll clust/ccode
 
 
 set PATH=%OP%
