@@ -2,9 +2,19 @@
 .ml.loadfile`:clust/init.q
 .ml.loadfile`:util/init.q
 
+plt:   .p.import`matplotlib.pyplot
+fcps:  .p.import[`pyclustering.samples.definitions]`:FCPS_SAMPLES
+read:  .p.import[`pyclustering.utils]`:read_sample
+pydb:  .p.import[`sklearn.metrics]`:davies_bouldin_score
+pysil: .p.import[`sklearn.metrics]`:silhouette_score
+hscore:.p.import[`sklearn.metrics]`:homogeneity_score
+
 d1:(60#"F";",")0:`:clust/notebooks/data/ss5.csv
 d2:flip@[;`Income`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/cust.csv
 d3:flip (2#"F";",")0:`:clust/notebooks/data/sample1.csv
+d4:read[fcps`:SAMPLE_TARGET]`
+d5:read[fcps`:SAMPLE_LSUN]`
+
 
 /dbscan
 
@@ -116,4 +126,22 @@ d3:flip (2#"F";",")0:`:clust/notebooks/data/sample1.csv
 
 .ml.clust.cure[d3;4;30;`df`b`s!(`mdist;1;1)]~`reps`tree`r2c`r2l!(d3[0 2 1 3 4 5 8 6 7 9];enlist each (neg 1;0b;1b;7 5 6 8 9 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 3 3;10#0)
 
+/scoring metrics
+r:.ml.clust.hc[d4;6;`edist;`single;0b]
+r1:.ml.clust.dbscan[d5;`e2dist;5;.3]
+rnd:(count d5)?3
+
+.ml.clust.dbindex[r]~pydb[d4;r`clt]`
+
+.ml.clust.dbindex[r]~pydb[d4;r`clt]`
+
+(ceiling(.ml.clust.dunn[r1;`edist]*1000))~148
+
+.ml.clust.silhouette[r1;`edist]~pysil[d5;raze r1`clt]`
+
+.ml.clust.silhouette[r;`edist]~pysil[d4;raze r`clt]`
+
+(ceiling(.ml.clust.sepIdx[r1;`mdist]*1000))~141
+
+.ml.clust.homogeneitysc[r1`clt;rnd]~hscore[r1`clt;rnd]`
 
