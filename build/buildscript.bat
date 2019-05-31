@@ -5,11 +5,10 @@ curl -fsSL -o q.lib https://github.com/KxSystems/kdb/raw/master/w64/q.lib || got
 set OP=%PATH%
 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
-:: cl /LD /DKXVER=3 clust/ccode/cure.c clust/ccode/kdtree.c  q.lib                                  || goto :error
-cl /LD kdtree.dll q.lib /DKXVER=3 /Isrc\include clust/ccore/kdtree.c
-cl /LD cure.dll q.lib /DKXVER=3 /Isrc\include clust/ccore/cure.c
+cl /LD /DKXVER=3 /Fecure.dll /Fekdtree.dll /O2 clust/ccode/cure.c clust/ccode/kdtree.c  q.lib                                  || goto :error
 
-cp cure.dll kdtree.dll clust/ccode
+
+mv cure.dll kdtree.dll clust/ccode
 
 
 set PATH=%OP%
