@@ -7,7 +7,7 @@ call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary
 
 cl /LD /DKXVER=3 clust/ccode/cure.c clust/ccode/kdtree.c  q.lib                                  || goto :error
 
-move cure.dll kdtree.dll clust/ccode
+cp cure.dll kdtree.dll clust/ccode
 
 
 set PATH=%OP%
