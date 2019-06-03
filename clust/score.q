@@ -1,3 +1,4 @@
+.ml.loadfile`:util/init.q
 \d .ml
 
 /---Scoring metrics---\
@@ -23,6 +24,19 @@ clust.dunn:{
 /* y = distance metric as a symbol
 /* z = boolean(1b) if average coefficient
 clust.silhouette:{$[z;avg;]exec .ml.clust.i.sil[y;pts;group clt;1%(count each group clt)-1]'[clt;pts]from x}
+
+
+/Homogeneity Score
+/*x = actual cluster values
+/*y = predicted cluster values
+clust.homogeneity:{
+ if[count[x]<>n:count y;'`$"distinct lengths - lenght of lists has to be the same"];
+ if[not e:clust.i.entropy y;:1.];
+ cm:value confmat[x;y];
+ nm:(*\:/:).((count each group@)each(x;y))@\:til count cm;
+ mi:(sum/)0^cm*.[-;log(n*cm;nm)]%n;
+ mi%e}
+
 
 /---Utils---\
 
@@ -55,20 +69,6 @@ clust.i.sil:{[df;pts;i;k;c;p]
 /* z = single point
 clust.i.scdist:{clust.i.dd[x]each y-\:z}
 
-/Homogeneity Score
-/*x = predicted cluster vales
-/*y = actual cluster values
-clust.homogeneity:{
- pi:value count each group y; /
- ent:neg sum(pi%sum pi)*(log[pi]-log(sum pi));  /entropy of pred values
- cm:((count distinct y),count distinct x)#0;
- cont:sum {[x;y;z] .[x;y,z;:;1]}[cm]'[y;x];
- nz_val:(raze cont)except 0;
- contsum:sum nz_val;
- logcont:log(nz_val);
- contnm:nz_val%contsum;
- nonz:flip raze (til count cont),''where each cont<>0; /nonzero elements
- out:(pis:sum cont)[last nonz]*(pjs:sum each cont)[first nonz];
- logout:(neg log[out])+(log[sum pis]+log[sum pjs]);
- mi:sum (contnm*(logcont-log[contsum]))+contnm*logout;
- mi%ent}
+/entropy
+/*x = distribution
+clust.i.entropy:{neg sum(p%n)*(-). log(p;n:sum p:count each group x)}
