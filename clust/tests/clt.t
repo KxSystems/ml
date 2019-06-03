@@ -117,8 +117,6 @@ d5:read[fcps`:SAMPLE_LSUN]`
 (select i1,i2,n from .ml.clust.dgram[d3;`mdist;`average])~([]i1:1 5 0 12 7 13 11 16 15i;i2:3 8 2 10 9 4 14 6 17i;n:2 2 2 4 2 5 4 5 10i)
 
 (select i1,i2,n from .ml.clust.dgram[d3;`mdist;`complete])~([]i1:1 5 0 7 12 11 15 14 17i;i2:3 8 2 9 10 13 6 4 16i;n:2 2 2 2 4 4 5 5 10i)
-
-
 /streaming
 .ml.clust.cure[d3;4;30;`b`s!1 1]~`reps`tree`r2c`r2l!(d3[0 2 1 3 4 5 8 6 9 7];enlist each (neg 1;0b;1b;9 5 6 7 8 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 2 3;10#0)
 
