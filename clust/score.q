@@ -58,11 +58,11 @@ clust.i.scdist:{clust.i.dd[x]each y-\:z}
 /Homogeneity Score
 /*x = predicted cluster vales
 /*y = actual cluster values
-clust.homogeneitysc:{
- pi:value count each group x; /
+clust.homogeneity:{
+ pi:value count each group y; /
  ent:neg sum(pi%sum pi)*(log[pi]-log(sum pi));  /entropy of pred values
- cm:((count distinct x),count distinct y)#0;
- cont:sum {[x;y;z] .[x;y,z;:;1]}[cm]'[x;y];
+ cm:((count distinct y),count distinct x)#0;
+ cont:sum {[x;y;z] .[x;y,z;:;1]}[cm]'[y;x];
  nz_val:(raze cont)except 0;
  contsum:sum nz_val;
  logcont:log(nz_val);
