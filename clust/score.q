@@ -70,5 +70,11 @@ clust.i.sil:{[df;pts;i;k;c;p]
 clust.i.scdist:{clust.i.dd[x]each y-\:z}
 
 /entropy
-/*x = distribution
+/* x = distribution
 clust.i.entropy:{neg sum(p%n)*(-). log(p;n:sum p:count each group x)}
+
+/elbow
+/* x = data;
+/* y = distance
+/* z = maximum number of clusters
+clust.elbow:{{sum exec sum .ml.clust.i.scdist[y;pts;avg pts]by clt from clust.kmeans[x;z;100;1b;y]}[x;y]each 2+til z-1}
