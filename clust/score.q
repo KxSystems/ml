@@ -25,7 +25,6 @@ clust.dunn:{
 /* z = boolean(1b) if average coefficient
 clust.silhouette:{$[z;avg;]exec .ml.clust.i.sil[y;pts;group clt;1%(count each group clt)-1]'[clt;pts]from x}
 
-
 /Homogeneity Score
 /*x = actual cluster values
 /*y = predicted cluster values
@@ -36,7 +35,6 @@ clust.homogeneity:{
  nm:(*\:/:).((count each group@)each(x;y))@\:til count cm;
  mi:(sum/)0^cm*.[-;log(n*cm;nm)]%n;
  mi%e}
-
 
 /---Utils---\
 
@@ -61,7 +59,6 @@ clust.i.dintra:{raze{[df;p;x;y]clust.i.scdist[df;p x except til 1+y;p y]}[y;x;n]
 clust.i.sil:{[df;pts;i;k;c;p]
  d:clust.i.scdist[df;;p]each pts i;
  (%).((-).;max)@\:(min avg each;k[c]*sum@)@'d@/:(key[i]except c;c)}
-
 
 /distance calc
 /* x = distance metric
