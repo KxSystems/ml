@@ -216,4 +216,4 @@ clust.i.algoscc:{[d;k;df;r;c;m;ns;b]
   v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
   i+:1];
   $[b;`reps`tree`r2c`r2l!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;v[`r2l]ii:raze v`c2r);
-    $[l;m;([]idx:u;clt:{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]]}
+    $[l;m;([]idx:u;clt:raze{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]]}
