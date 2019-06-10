@@ -1,6 +1,7 @@
 \l ml.q
 .ml.loadfile`:clust/init.q
 .ml.loadfile`:util/init.q
+\S 10
 
 plt:   .p.import`matplotlib.pyplot
 fcps:  .p.import[`pyclustering.samples.definitions]`:FCPS_SAMPLES
@@ -10,10 +11,23 @@ pysil: .p.import[`sklearn.metrics]`:silhouette_score
 hscore:.p.import[`sklearn.metrics]`:homogeneity_score
 
 d1:(60#"F";",")0:`:clust/notebooks/data/ss5.csv
-d2:flip@[;`Income`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/cust.csv
+d2:flip@[;`AnnualIncome`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/Mall_Customers.csv
 d3:flip (2#"F";",")0:`:clust/notebooks/data/sample1.csv
 d4:read[fcps`:SAMPLE_TARGET]`
 d5:read[fcps`:SAMPLE_LSUN]`
+
+/kmeans
+(value exec idx by clt from .ml.clust.kmeans[d1;4;2;1b;`e2dist])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+
+(value exec idx by clt from .ml.clust.kmeans[d1;4;2;1b;`edist])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+
+(value exec idx by clt from .ml.clust.kmeans[d1;4;2;1b;`mdist])~((til 15);15+(til 15);30+(til 15);45+(til 15))
+
+(value exec idx by clt from .ml.clust.kmeans[distinct d2;5;5;1b;`e2dist])~(til[121]except 7 11 19 25 29 33 35 39 41;7 11 19 25 29 33 35 39 41,.ml.arange[121;128;2],.ml.arange[130;155;2],155,157,159;122,124,126,128,.ml.arange[129;154;2],.ml.arange[156;187;2];.ml.arange[161;196;2];188 190 192 194)
+
+(value exec idx by clt from .ml.clust.kmeans[distinct d2;5;5;1b;`edist])~(.ml.arange[0;45;2];.ml.arange[1;42;2];43,(45+til[74]),120;119,.ml.arange[122;129;2],.ml.arange[129;154;2],.ml.arange[156;195;2];.ml.arange[121;128;2],.ml.arange[130;155;2],.ml.arange[155;196;2])
+
+(value exec idx by clt from .ml.clust.kmeans[distinct d2;5;5;0b;`mdist])~(.ml.arange[0;41;2],44;.ml.arange[1;46;2];42,(46+til 75),124 129 139;.ml.arange[121;128;2],.ml.arange[130;155;2],.ml.arange[155;196;2];(122,.ml.arange[126;129;2],.ml.arange[131;154;2],.ml.arange[156;195;2])except 139)
 
 
 /dbscan
@@ -29,11 +43,6 @@ d5:read[fcps`:SAMPLE_LSUN]`
 (value exec idx by clt from .ml.clust.dbscan[d1;`mdist;5;5])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
 (value exec idx by clt from .ml.clust.dbscan[d2;`mdist;4;25])~(til[197],198;enlist 197;enlist 199)
-
-/kmeans
-/(value exec idx by clt from .ml.clust.kmeans[d1;4;2;1b;`e2dist])~((til 15);15+(til 15);30+(til 15);45+(til 15))
-
-/(value exec idx by clt from .ml.clust.kmeans[d1;4;2;1b;`mdist])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
 /cure
 (value exec idx by clt from .ml.clust.cure[d1;4;5;()])~((til 15);15+(til 15);30+(til 15);45+(til 15))
@@ -129,16 +138,16 @@ r:.ml.clust.hc[d4;6;`edist;`single;0b]
 r1:.ml.clust.dbscan[d5;`e2dist;5;.3]
 rnd:(count d5)?3
 
-.ml.clust.dbindex[r]~pydb[d4;r`clt]`
+.ml.clust.daviesbouldin[r]~pydb[d4;r`clt]`
 
-.ml.clust.dbindex[r]~pydb[d4;r`clt]`
+.ml.clust.daviesbouldin[r]~pydb[d4;r`clt]`
 
 (ceiling(.ml.clust.dunn[r1;`edist]*1000))~148
 
-.ml.clust.silhouette[r1;`edist]~pysil[d5;raze r1`clt]`
+.ml.clust.silhouette[r1;`edist;1b]~pysil[d5;raze r1`clt]`
 
-.ml.clust.silhouette[r;`edist]~pysil[d4;raze r`clt]`
+.ml.clust.silhouette[r;`edist;1b]~pysil[d4;raze r`clt]`
 
-(ceiling(.ml.clust.sepIdx[r1;`mdist]*1000))~141
+(ceiling .ml.clust.elbow[d3;`mdist;2])~enlist 3
 
-.ml.clust.homogeneitysc[r1`clt;rnd]~hscore[r1`clt;rnd]`
+.ml.clust.homogeneity[r1`clt;rnd]~hscore[rnd;r1`clt]`
