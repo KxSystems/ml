@@ -35,7 +35,8 @@ plotcl:{[x;y;z]
 /utils dictionary for plothkc
 ud:`hc`cure`kmeans`dbscan!(enlist each(6 3;2 3;1 4;1 3)),'
  (.ml.clust.hc;.ml.clust.cure;.ml.clust.kmeans;.ml.clust.dbscan),'
- ({"df/lf: ",string[x 1],"/",string [x 2],"/",string x 3};{"df/C: ",string[x[2;`df]],"/",string[x[2;`b]],"b"};{"df: ",string x 3};{"df: ",string x 0})
+ ({"df/lf: ",string[x 1],"/",string [x 2],$[x[2]in`complete`average;"";"/",string[x 3],"b"]};
+  {"df/C: ",string[x[2;`df]],"/",string[x[2;`b]],"b"};{"df: ",string x 3};{"df: ",string x 0})
 
 /plot clusters, dendrogram or both for hierarchical
 /* d  = data points
