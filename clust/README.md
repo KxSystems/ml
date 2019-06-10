@@ -2,9 +2,7 @@
 
 ## Introduction
 
-Clustering is a technique used in both data mining and machine learning to group similar data points together in order to identify patterns in their distributions. The task of clustering data can be carried out using a number of algorithms. Here we outline implementations of CURE (Clustering Using REpresentatives), DBSCAN (Density-based spatial clustering of applications with noise), hierarchical and k-means clustering.
-
-The algorithms defined here work based on distinct clustering methodologies namely; connectivity-based, centroid-based or density-based models.
+Clustering is a technique used in both data mining and machine learning to group similar data points together in order to identify patterns in their distributions. The task of clustering data can be carried out using a number of algorithms. The ML-Toolkit contains implementations of CURE (Clustering Using REpresentatives), DBSCAN (Density-based spatial clustering of applications with noise), hierarchical and k-means clustering. These algorithms work based on distinct clustering methodologies namely; connectivity-based, centroid-based or density-based models.
 
 -   Connectivity models, which include hierarchical and CURE, cluster data based on distances between individual data points.
 -   Centroid models such as k-means define clusters based on distances from single points which represent the cluster.
@@ -14,11 +12,7 @@ Each algorithm works by iteratively joining, separating or reassigning points un
 
 ## Features
 
-The clustering library contains the aforementioned clustering algorithms which can be used to cluster kbd+/q data. The library contains three main scripts:
-
-	- `clust.q` contains the clustering algorithms
-	- `kdtree.q` contains functions which create and build a k-d (k dimensional) tree, used for the CURE, single and centroid implementations
-	- `score.q` contains functions to score the clustering algorithms and find the optimum number of clusters
+The clustering library contains the aforementioned clustering algorithms which can be used to cluster kbd+/q data. Additionally, there are scripts to create and build a k-d (k dimensional) tree, used for the CURE, single and centroid implementations and scoring and optimization functions which can be applied to the clustering algorithms.
 
 ## Requirements
 
