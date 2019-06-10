@@ -92,4 +92,3 @@ clust.homogeneitysc:{
  logout:(neg log[out])+(log[sum pis]+log[sum pjs]);
  mi:sum (contnm*(logcont-log[contsum]))+contnm*logout;
  mi%ent}
-

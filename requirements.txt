@@ -4,4 +4,3 @@ scikit-learn
 statsmodels
 matplotlib
 pandas
-pyclustering
