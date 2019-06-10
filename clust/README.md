@@ -15,6 +15,8 @@ A k-dimensional tree (k-d tree) is used by the single and centroid hierarchical 
 - Scikit learn
 - PyClustering (data samples)
 
+To run the clustering algorithms using the C implementation, additional files must be downloaded to your computer. Instructions on how this is done can be found on https://code.kx.com/v2/interfaces/c-client-for-q/#linux
+
 ## Status
 
 The clustering library is still in development, further improvements will be made to the library in the coming months.
