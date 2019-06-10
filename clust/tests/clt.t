@@ -3,7 +3,6 @@
 .ml.loadfile`:util/init.q
 \S 10
 
-plt:   .p.import`matplotlib.pyplot
 fcps:  .p.import[`pyclustering.samples.definitions]`:FCPS_SAMPLES
 read:  .p.import[`pyclustering.utils]`:read_sample
 pydb:  .p.import[`sklearn.metrics]`:davies_bouldin_score
