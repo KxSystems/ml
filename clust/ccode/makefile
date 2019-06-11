@@ -5,7 +5,7 @@ LDRPATH=-Wl,-rpath,'$$ORIGIN'
 QLIBDIR=l64
 else ifeq ($(shell uname),Darwin)
 LDFLAGS=-dynamiclib -undefined dynamic_lookup
-LDRPATH=-Wl,-rpath,'$$ORIGIN'
+LDRPATH=-Wl,-rpath,@executable_path
 QLIBDIR=m64
 endif
 cure.so: cure.c cure.h kdtree.so kdtree.h
