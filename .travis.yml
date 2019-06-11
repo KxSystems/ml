@@ -59,7 +59,7 @@ deploy:
 jobs:
   include:
     - stage: docker
-      : required
+      sudo : required
       services:
         - docker
       install: skip
