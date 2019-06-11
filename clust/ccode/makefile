@@ -1,10 +1,10 @@
-CFLAGS=-fPIC -DKXVER=3 -O2
+CFLAGS=-DKXVER=3 -O2
 ifeq ($(shell uname),Linux)
-LDFLAGS=-shared
+LDFLAGS=-fPIC -shared
 LDRPATH=-Wl,-rpath,'$$ORIGIN'
 QLIBDIR=l64
 else ifeq ($(shell uname),Darwin)
-LDFLAGS=-dynamiclib -undefined dynamic_lookup
+LDFLAGS=-bundle -dynamiclib -undefined dynamic_lookup
 LDRPATH=-Wl,-rpath,@loader_path
 QLIBDIR=m64
 endif
@@ -17,7 +17,7 @@ kdtree.so: kdtree.c kdtree.h
 ifeq ($(shell uname),Linux)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
 else ifeq ($(shell uname),Darwin)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @executable_path/$@	
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @rpath/$@	
 endif
 
 %.c: %.qtemplate.c
