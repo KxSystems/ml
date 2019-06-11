@@ -5,7 +5,7 @@ LDRPATH=-Wl,-rpath,'$$ORIGIN'
 QLIBDIR=l64
 else ifeq ($(shell uname),Darwin)
 LDFLAGS=-dynamiclib -undefined dynamic_lookup
-LDRPATH=-Wl,-rpath,@executable_path
+LDRPATH=-Wl,-rpath,@loader_path
 QLIBDIR=m64
 endif
 cure.so: cure.c cure.h kdtree.so kdtree.h
@@ -17,7 +17,7 @@ kdtree.so: kdtree.c kdtree.h
 ifeq ($(shell uname),Linux)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
 else ifeq ($(shell uname),Darwin)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @rpath/$@	
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @executable_path/$@	
 endif
 
 %.c: %.qtemplate.c
