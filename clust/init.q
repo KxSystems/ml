@@ -1,4 +1,5 @@
-\ls clust/ccode
+\l p.q
+print(system"ls clust/ccode")
 .ml.loadfile`:clust/utils.q
 .ml.loadfile`:clust/kdtree.q
 .ml.loadfile`:clust/ccode/cutils.q
