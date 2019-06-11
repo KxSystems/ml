@@ -22,7 +22,7 @@ ybin:rand each 5000#0b
 .ml.fresh.i.fisher[xbin;ybin] ~ binary_feature_binary_test[xbin;ybin]
 
 / 1b.
-.ml.fresh.i.ks[ybin;xreal] ~ target_binary_feature_real_test[ybin;xreal]
+.ml.fresh.i.ks[0N!ybin;0N!xreal] ~ target_binary_feature_real_test[0N!ybin;0N!xreal]
 / 1c.
 .ml.fresh.i.ktau[xreal;yreal] ~ target_real_feature_real_test[xreal;yreal]
 
