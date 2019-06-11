@@ -17,7 +17,7 @@ kdtree.so: kdtree.c kdtree.h
 ifeq ($(shell uname),Linux)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
 else ifeq ($(shell uname),Darwin)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @rpath/$@	
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c 	
 endif
 
 %.c: %.qtemplate.c
