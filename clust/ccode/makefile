@@ -1,6 +1,6 @@
-CFLAGS=-DKXVER=3 -O2
+CFLAGS=-fPIC -DKXVER=3 -O2
 ifeq ($(shell uname),Linux)
-LDFLAGS=-fPIC -shared
+LDFLAGS=-shared
 LDRPATH=-Wl,-rpath,'$$ORIGIN'
 QLIBDIR=l64
 else ifeq ($(shell uname),Darwin)
