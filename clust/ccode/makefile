@@ -4,7 +4,7 @@ LDFLAGS=-fPIC -shared
 LDRPATH=-Wl,-rpath,'$$ORIGIN'
 QLIBDIR=l64
 else ifeq ($(shell uname),Darwin)
-LDFLAGS=-dynamiclib -undefined dynamic_lookup
+LDFLAGS=-fPIC -shared
 LDRPATH=-Wl,-rpath,@loader_path
 QLIBDIR=m64
 
