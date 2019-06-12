@@ -7,7 +7,6 @@ else ifeq ($(shell uname),Darwin)
 LDFLAGS=-dynamiclib -undefined dynamic_lookup
 LDRPATH=-Wl,-rpath,@loader_path
 QLIBDIR=m64
-.PHONY: print_vars
 
 endif
 cure.so: cure.c cure.h kdtree.so kdtree.h
@@ -20,8 +19,7 @@ ifeq ($(shell uname),Linux)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
 else ifeq ($(shell uname),Darwin)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @rpath/$@	
-	print_vars:
-		@echo $(otool) -L kdtree.so
+	$(info path = $(LDRPATH))
 
 endif
 
