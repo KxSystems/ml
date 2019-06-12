@@ -17,13 +17,15 @@ kdtree.so: kdtree.c kdtree.h
 ifeq ($(shell uname),Linux)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
 else ifeq ($(shell uname),Darwin)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c 	
+        otool -L kdtree.so
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @rpath/$@	
 endif
 
 %.c: %.qtemplate.c
 	q qc.q -q $< > $@
 %.h: %.qtemplate.h
 	q qc.q -q $< > $@
+
 clean:
 	for f in $$(ls *.[ch]|grep -v "qtemplate"|grep -v "^k.h"); do echo rm $$f; rm $$f ; done
 cleanall: clean
