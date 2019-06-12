@@ -3,24 +3,28 @@ ifeq ($(shell uname),Linux)
 LDFLAGS=-fPIC -shared
 LDRPATH=-Wl,-rpath,'$$ORIGIN'
 QLIBDIR=l64
+
+cure.so: cure.c cure.h kdtree.so kdtree.h
+	$(CC) $(CFLAGS) $(LDFLAGS) -o cure.so cure.c kdtree.so $(LDRPATH)
+kdtree.so: kdtree.c kdtree.h
+	$(CC) $(CFLAGS) $(LDFLAGS) -o kdtree.so kdtree.c $(LDRPATH)
+
+%.so: %.c %.h
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
+
 else ifeq ($(shell uname),Darwin)
 LDFLAGS=-dynamiclib -undefined dynamic_lookup
 LDRPATH=-Wl,-rpath,@loader_path
 QLIBDIR=m64
 
-endif
-cure.so: cure.c cure.h kdtree.so kdtree.h
-	$(CC) $(CFLAGS) $(LDFLAGS) -o cure.so cure.c kdtree.so $(LDRPATH)
-kdtree.so: kdtree.c kdtree.h 
-	$(CC) $(CFLAGS) $(LDFLAGS) -o kdtree.so kdtree.c $(LDRPATH)
-	$(info path = $(LDRPATH))
+cure.dylib: cure.c cure.h kdtree.so kdtree.h
+	$(CC) $(CFLAGS) $(LDFLAGS) -o cure.dylib cure.c kdtree.dylib $(LDRPATH)
+kdtree.dylib: kdtree.c kdtree.h
+	$(clang) $(CFLAGS) $(LDFLAGS) -o kdtree.dylib kdtree.c $(LDRPATH)
 
-%.so: %.c %.h
-ifeq ($(shell uname),Linux)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
-else ifeq ($(shell uname),Darwin)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @rpath/$@	
-	$(info path = $(LDRPATH))
+
+%.dylib: %.c %.h
+	$(clang) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @rpath/$@
 
 endif
 
