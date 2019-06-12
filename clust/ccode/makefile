@@ -13,6 +13,7 @@ cure.so: cure.c cure.h kdtree.so kdtree.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -o cure.so cure.c kdtree.so $(LDRPATH)
 kdtree.so: kdtree.c kdtree.h 
 	$(CC) $(CFLAGS) $(LDFLAGS) -o kdtree.so kdtree.c $(LDRPATH)
+	$(info path = $(LDRPATH))
 
 %.so: %.c %.h
 ifeq ($(shell uname),Linux)
