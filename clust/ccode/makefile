@@ -20,8 +20,8 @@ ifeq ($(shell uname),Linux)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
 else ifeq ($(shell uname),Darwin)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @rpath/$@	
-        print_vars:
-                @echo $(otool) -L kdtree.so
+	print_vars:
+		@echo $(otool) -L kdtree.so
 
 endif
 
