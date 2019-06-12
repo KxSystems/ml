@@ -34,9 +34,9 @@ beforescript:
 
 
 script:
-- echo $(ls clust/ccode)
 - (cd clust/ccode && make)
-- echo $(ls clust/ccode)
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+	otool -L clust/ccode/kdtree.lib;
 - echo "Preparing version $TRAVIS_BRANCH-$TRAVIS_COMMIT"
 - tar czf ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz *.q fresh/ util/ requirements.txt  LICENSE README.md
 - echo "Packaged as ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip"
