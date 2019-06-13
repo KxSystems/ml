@@ -1,7 +1,19 @@
 \d .ml
 
+/Affinity propagation algorithm
+/* d   = data points
+/* dmp = damping coefficient, number between 0 and 1
+/* p   = preference, either number or symbol, e.g. `min`med`avg 0 5 etc.
+/* b   = boolean for plot, 1b: each iteration, 0b: final iteration, (): don't plot
+clust.ap:{[d;dmp;p;b]
+ clust.i.dd,:enlist[`nege2dist]!enlist{neg x wsum x};
+ m:clust.i.createmtx d;
+ m[`s]:clust.i.updpref[m`s;p];
+ r:{not x[1]~x 2}clust.i.apalgo[d;dmp;b]/(m;(),0;(),1);
+ if[b~0b;pltex[d;r 2]];
+ clust.i.apout[d;r]}
+
 /CURE algorithm
-/* d = data points
 /* k = number of clusters
 /* r = number of representative points
 /* i = dictionary of inputs, for default use ():
