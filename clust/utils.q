@@ -146,18 +146,6 @@ clust.i.rtabkm:{([]idx:til count x;clt:y;pts:x)}
 /cast table/dictionary to matrix
 clust.i.typecast:{$[98=type x;value flip x;99=type x;value x;0=type x;x;'`type]}
 
-/----Streaming Notebook----
-
-/update rep pts
-clust.i.repupd:{[t;newp;df;r;c]
-  nd:newp,select pts,clt from t where valid;
-  rp:clust.i.curerep[nd`pts;;r;c]each exec i by clt from nd;
-  cl:raze value[cn]#'key cn:count each rp;
-  clust.kd.buildtree[raze value rp;cl;clust.i.dim rp;df]}
-
-/cluster new points
-clust.i.whichcl:{ind:@[;2]{0<count x 1}clust.kd.bestdist[x;z;0n;`e2dist]/(0w;y;y;y);exec clt from x where idx=ind}
-
 /create similarity, availability and responsibility matrices
 clust.i.createmtx:{
  s:clust.i.scdist[`nege2dist;x]each x;
@@ -181,7 +169,19 @@ clust.i.upda:{[m;dmp]
  (dmp*m`a)+a*1-dmp}
 
 /output table with pts and clt
-clust.i.apout:{([]pts:x;clt:@[;a](!). (da;til count da:distinct a:y 2))}
+clust.i.apout:{@[;a](!). (da;til count da:distinct a:x)}
+
+/----Streaming Notebook----
+
+/update rep pts
+clust.i.repupd:{[t;newp;df;r;c]
+  nd:newp,select pts,clt from t where valid;
+  rp:clust.i.curerep[nd`pts;;r;c]each exec i by clt from nd;
+  cl:raze value[cn]#'key cn:count each rp;
+  clust.kd.buildtree[raze value rp;cl;clust.i.dim rp;df]}
+
+/cluster new points
+clust.i.whichcl:{ind:@[;2]{0<count x 1}clust.kd.bestdist[x;z;0n;`e2dist]/(0w;y;y;y);exec clt from x where idx=ind}
 
 /----Algorithms----
 

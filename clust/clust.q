@@ -11,7 +11,7 @@ clust.ap:{[d;dmp;p;b]
  m[`s]:clust.i.updpref[m`s;p];
  r:{not x[1]~x 2}clust.i.apalgo[d;dmp;b]/(m;(),0;(),1);
  if[b~0b;pltex[d;r 2]];
- clust.i.apout[d;r]}
+ clust.i.rtabkm[d]clust.i.apout[r 2]}
 
 /CURE algorithm
 /* k = number of clusters
