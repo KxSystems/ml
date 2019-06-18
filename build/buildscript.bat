@@ -1,8 +1,7 @@
 :: Standalone build
-call "../clust/ccode/make.bat"
-set PATH=%OP%
 
-echo "here"
+(cd ../clust/ccode && call "make.bat")
+set PATH=%OP%
 
 if "%APPVEYOR_REPO_TAG%"=="true" (
  set ML_VERSION=%APPVEYOR_REPO_TAG_NAME%
