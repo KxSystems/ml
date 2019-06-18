@@ -7,11 +7,7 @@ if "%APPVEYOR_REPO_TAG%"=="true" (
 set PATH=C:\Perl;%PATH%
 perl -p -i.bak -e s/TOOLKITVERSION/`\$\"%ML_VERSION%\"/g ml.q
 
-set PATH=%OP%
-call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-cl /LD /DKXVER=3 clust/ccode/kdtree.def clust/ccode/kdtree.c clust/ccode/q.lib
-cl /LD /DKXVER=3 clust/ccode/cure.def clust/ccode/cure.c clust/ccode/q.lib clust/ccode/kdtree.lib
-set PATH=%OP%
+echo python --version
 
 (cd clust/ccode && call "make.bat")
 
