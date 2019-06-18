@@ -8,6 +8,9 @@ artifacts:
 skip_non_tags: false
 platform: x64
 
+before_build:
+    - cmd: ren "C:\Program Files (x86)\Windows Kits\10\include\00wdf" "wdf"
+
 build_script:
 - cmd: >-
 

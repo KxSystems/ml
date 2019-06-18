@@ -7,8 +7,6 @@ if "%APPVEYOR_REPO_TAG%"=="true" (
 set PATH=C:\Perl;%PATH%
 perl -p -i.bak -e s/TOOLKITVERSION/`\$\"%ML_VERSION%\"/g ml.q
 
-echo python --version
-
 (cd clust/ccode && call "make.bat")
 
 if not defined QLIC_KC (
