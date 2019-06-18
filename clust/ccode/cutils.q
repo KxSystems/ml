@@ -1,5 +1,8 @@
 \d .ml
 
+clust.kdtree.i.searchfrom:(`$path,"/clust/ccode/./kdtree") 2:`kdtree_searchfrom,3
+clust.ccure.kd.searchfrom:{[x;y;z]$[not type[y]~type x 4;'`type;clust.kdtree.i.searchfrom[x;y;z]]}
+
 clust.ccure.i.:(::)
 clib:2:[`$path,"/clust/ccode/./cure"]
 impf:{clust.ccure.i[u]:clib(u:`$"_"sv string(x;y)),z}
@@ -17,8 +20,3 @@ clust.ccure.kd.nnc:{[pi;tree;clusters;reps;df]@[;0;clusters]{mi:u?mn:min u:x[;1]
 / w - a list 
 clust.ccure.kd.i.nns:{[x;y;z;w;df]$["f"=.Q.t type w 0;clust.ccure.i.cure_nn_F;"e"=t;clust.ccure.i.cure_nn_E;'`type][x;y;z;w;df]}
 clust.ccure.dfd:`e2dist`edist`mdist!1 2 3;
-
-clust.kdtree.i.searchfrom:(`$path,"/clust/ccode/./kdtree") 2:`kdtree_searchfrom,3
-clust.ccure.kd.searchfrom:{[x;y;z]$[not type[y]~type x 4;'`type;clust.kdtree.i.searchfrom[x;y;z]]}
-
-
