@@ -1,6 +1,6 @@
 :: Standalone build
 
-(cd ../clust/ccode && call "make.bat")
+(cd clust/ccode && call "make.bat")
 set PATH=%OP%
 
 if "%APPVEYOR_REPO_TAG%"=="true" (
