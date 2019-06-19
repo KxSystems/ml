@@ -8,6 +8,7 @@ artifacts:
 skip_non_tags: false
 platform: x84
 
+
 build_script:
 - cmd: >-
 
