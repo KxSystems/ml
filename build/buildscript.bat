@@ -1,4 +1,11 @@
 :: Standalone build
+
+cd clust/ccode
+
+call "make.bat"
+
+cd ../..
+
 if "%APPVEYOR_REPO_TAG%"=="true" (
  set ML_VERSION=%APPVEYOR_REPO_TAG_NAME%
 ) else (

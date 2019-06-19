@@ -10,8 +10,6 @@ platform: x64
 
 build_script:
 - cmd: >-
-    (cd clust/ccode && call "make.bat")
- 
     build\buildscript.bat
 
     build\test.bat
