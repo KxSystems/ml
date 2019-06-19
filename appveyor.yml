@@ -8,10 +8,18 @@ artifacts:
 skip_non_tags: false
 platform: x64
 
+build:
+
+  publish_nuget: true
+
+  publish_core_console: true
+
+  verbosity: minimal
+
 build_script:
 - cmd: >-
-    call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-    call build\buildscript.bat
+    
+    build\buildscript.bat
 
     build\test.bat
 
