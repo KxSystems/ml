@@ -19,11 +19,9 @@ echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
 
-for d in $(find C:\Program Files (x86)\Windows Kits\10\include -maxdepth 1 -type d)
-  echo $d
+cd clust/ccode
 
-
-(cd clust/ccode && call "make.bat")
+call "make.bat"
 
 exit /b 0
 
