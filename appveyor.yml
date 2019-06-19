@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: '4.2.0.{build}'
 image:
 - Previous Visual Studio 2017
 clone_depth: 1
@@ -7,14 +7,6 @@ artifacts:
 - path: ml_windows-$(appveyor_repo_tag_name).zip
 skip_non_tags: false
 platform: x64
-
-build:
-
-  publish_nuget: true
-
-  publish_core_console: true
-
-  verbosity: minimal
 
 build_script:
 - cmd: >-
