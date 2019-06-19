@@ -1,6 +1,6 @@
 version: '4.2.0.{build}'
 image:
-- Previous Visual Studio 2017
+- Visual Studio 2017
 clone_depth: 1
 
 artifacts:
@@ -10,7 +10,8 @@ platform: x64
 
 build_script:
 - cmd: >-
-    
+    (cd clust/ccode && call "make.bat")
+ 
     build\buildscript.bat
 
     build\test.bat
