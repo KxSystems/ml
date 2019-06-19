@@ -6,7 +6,9 @@ clone_depth: 1
 artifacts:
 - path: ml_windows-$(appveyor_repo_tag_name).zip
 skip_non_tags: false
-platform: x84
+platform: x64
+
+call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 
 build_script:
