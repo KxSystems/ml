@@ -18,6 +18,11 @@ cd embedpy
 echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
+
+echo $(python --version)
+
+(cd clust/ccode && call "make.bat")
+
 exit /b 0
 
 :error
@@ -27,9 +32,4 @@ exit /b
 :nokdb
 echo no kdb
 exit /b 0
-
-echo $(python --version)
-
-(cd clust/ccode && call "make.bat")
-
 
