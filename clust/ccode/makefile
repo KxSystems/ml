@@ -5,14 +5,14 @@ LDRPATH=-Wl,-rpath,'$$ORIGIN'
 QLIBDIR=l64
 else ifeq ($(shell uname),Darwin)
 LDFLAGS=-dynamiclib -undefined dynamic_lookup
-LDRPATH=-Wl,-rpath,@loader_path
+LDRPATH=-Wl,-rpath,"@loader_path"
 QLIBDIR=m64
 
 endif
 cure.so: cure.c cure.h kdtree.so kdtree.h
 	$(CC) $(CFLAGS) $(LDFLAGS) -o cure.so cure.c -L/kdtree.so $(LDRPATH)
 kdtree.so: kdtree.c kdtree.h 
-	$(CC) $($$CFLAGS) $(LDFLAGS) -o kdtree.so kdtree.c $(LDRPATH)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o kdtree.so kdtree.c $(LDRPATH)
 
 %.so: %.c %.h
 ifeq ($(shell uname),Linux)
