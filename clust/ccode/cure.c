@@ -1,9 +1,7 @@
 #include "cure.h"
 #include "kdtree.h"
-#include "kdtree.c"
 #include <stdio.h>
 #include <math.h>
-#define EXP __declspec(dllexport)
 
 #define we wf
 

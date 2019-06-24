@@ -32,6 +32,18 @@ $ q
 q)\l ml/ml.q
 q).ml.loadfile`:clust/init.q
 ```
+##C Compiler
+To run Cure or Hierarchial (single and centroid) using C, the shared libraries must be compiled for the code to run. This can be done by running the following commands in the ccode folder of ml
+
+Linux & macOS
+```
+make
+```
+
+Windows
+```
+call "make.bat"
+```
 
 ## Documentation
 

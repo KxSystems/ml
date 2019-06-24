@@ -1,7 +1,6 @@
 #include "kdtree.h"
 #include <stdio.h>
 #include <math.h>
-#define EXP __declspec(dllexport)
 
 // tree is (parent;isleft;isleaf;children;pivval;pivaxis) count[tree[0]]~num nodes
 J kdtree_searchfrom_i_F(K tree,K point,J i){
