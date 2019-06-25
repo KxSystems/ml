@@ -8,7 +8,7 @@ xval.i.stratidx:{[k;x]r@'xval.i.shuffle each r:(,'/)(k;0N)#/:value n@'xval.i.shu
 xval.i.idx:{[k](0;k-1)_/:rotate[-1]\[til k]}
 xval.i.idxgen:{[f;g;k;n;x;y]raze n#enlist{{raze@''y}[;x]}each flip@'((x;y)@/:\:f[k;y])@\:/:g k}
 
-xval.i.apply:{[idx;k;n;x;y;a;f]{[a;f;d]f[a[]]d[]}[xval.i.pickledump a;f]peach idx[k;n;x;y]}
+xval.i.apply:{[idx;k;n;x;y;a;f]{[a;f;d]f[a[]]d[]}[xval.i.picklewrap a;f]peach idx[k;n;x;y]}
 xval.kfsplit:xval.i.apply xval.i.idxgen . xval.i`splitidx`idx
 xval.kfshuff:xval.i.apply xval.i.idxgen . xval.i`shuffidx`idx
 xval.kfstrat:xval.i.apply xval.i.idxgen . xval.i`stratidx`idx
@@ -29,4 +29,4 @@ xval.fitscore:{[p;a;d].[.[a[p]`:fit;d 0]`:score;d 1]`}
 loadfile`:util/mproc.q
 loadfile`:util/pickle.q
 if[0>system"s";mproc.init[abs system"s"]enlist".ml.loadfile`:util/pickle.q"];
-xval.i.pickledump:{$[0N!(0>system"s")&.p.i.isw x;{.ml.pickleload y}[;pickledump x];{y}[;x]]}
+xval.i.picklewrap:{$[0N!(0>system"s")&.p.i.isw x;{.ml.pickleload y}[;pickledump x];{y}[;x]]}
