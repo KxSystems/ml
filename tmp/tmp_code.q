@@ -164,5 +164,21 @@ pivot:{[t;idx;sym;val]?[t;();enlist[idx]!enlist idx;(!;sym;val)]}
 //x=pred value,y=true value
 homogeneityscore:{(value group x)~value group y}
 
-
+autoconvert:{[data;tgt]
+ len:count tgt;
+ $[99=type data;
+   $[1<>count distinct value count each data;
+     '`$"please don't use ragged dicts";
+     len=count first value data;
+     flip value data;
+     '`$"tgt and dict data must have len"];
+   98=type data;
+   $[len = count data;
+     flip value flip data;
+     '`$"tgt and table data must have len"];
+   0=type data;
+   $[len=.ml.shape[data]0;data;
+     len=.ml.shape[data]1;flip data;
+     '`$"supply a 2d array with one dimension equal to tgt"];
+   '`err]} 
 
