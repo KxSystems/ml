@@ -1,7 +1,6 @@
 \d .ml
 
 xval.i.shuffle:{neg[n]?n:count x}
-
 xval.i.splitidx:{[k;x](k;0N)#til count x}
 xval.i.shuffidx:{[k;x](k;0N)#xval.i.shuffle x}
 xval.i.stratidx:{[k;x]r@'xval.i.shuffle each r:(,'/)(k;0N)#/:value n@'xval.i.shuffle each n:group x}
@@ -11,7 +10,6 @@ xval.i.idxR:{[f;g;k;n;x;y]raze n#enlist xval.i.idx1[f;g;k;x;y]}
 xval.i.idxN:{[f;g;k;n;x;y]raze xval.i.idx1[f;g;;x;y]each n#k}
 
 xval.i.apply:{[idx;k;n;x;y;f]{[f;d]f d[]}[f]peach idx[k;n;x;y]}
-
 xval.kfsplit:xval.i.apply xval.i.idxR . xval.i`splitidx`groupidx
 xval.kfshuff:xval.i.apply xval.i.idxN . xval.i`shuffidx`groupidx
 xval.kfstrat:xval.i.apply xval.i.idxN . xval.i`stratidx`groupidx
@@ -35,4 +33,6 @@ xval.fitscore:{[a;p;d].[.[a[][p]`:fit;d 0]`:score;d 1]`}
 
 / multiprocess
 loadfile`:util/mproc.q
-if[0>system"s";mproc.init[abs system"s"]()];
+loadfile`:util/pickle.q
+if[0>system"s";mproc.init[abs system"s"]enlist".ml.loadfile`:util/pickle.q"];
+xval.picklewrap:{picklewrap[(0>system"s")&.p.i.isw x]x}
