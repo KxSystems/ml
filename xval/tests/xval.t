@@ -1,7 +1,7 @@
-\l ml/ml.q
-.ml.loadfile`:util/util.q
-.ml.loadfile`:xval/xval.q
-.ml.loadfile`:xval/tests/test.p
+\l ml.q
+\l util/util.q
+\l xval/xval.q
+\l xval/tests/test.p
 
 xf:flip(1000?100f;asc 1000?100f)
 yf:asc 1000?100f
