@@ -10,21 +10,25 @@ function .fresh.significant features; namely:
 In each case significance tests implemented within freshq are compared to
 equivalent significance tests implemented previously in python.
 \
+
 \l p.q
 \l fresh/extract.q
 \l fresh/select.q
 \l fresh/tests/significancetests.p
-xreal:5000?1000f
-xbin:rand each 5000#0b
-yreal:5000?1000f
-ybin:rand each 5000#0b
+
+xf:5000?1000f
+yf:5000?1000f
+xb:5000#0101101011b
+yb:5000#0101101011b
+
 / 1a.
-.ml.fresh.i.fisher[xbin;ybin] ~ binary_feature_binary_test[xbin;ybin]
+.ml.fresh.i.fisher[xb;yb] ~ binary_feature_binary_test[xb;yb]
 
 / 1b.
-.ml.fresh.i.ks[ybin;xreal] ~ target_binary_feature_real_test[ybin;xreal]
+.ml.fresh.i.ks[yb;xf] ~ target_binary_feature_real_test[yb;xf]
+
 / 1c.
-.ml.fresh.i.ktau[xreal;yreal] ~ target_real_feature_real_test[xreal;yreal]
+.ml.fresh.i.ktau[xf;yf] ~ target_real_feature_real_test[xf;yf]
 
 /
 2.

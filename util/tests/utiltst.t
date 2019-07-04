@@ -1,5 +1,5 @@
-\l ml.q
-.ml.loadfile`:util/init.q
+\l ml/ml.q
+\l util/init.q
 
 np:.p.import[`numpy]
 
