@@ -1,6 +1,6 @@
 \l ml.q
-.ml.loadfile`:util/init.q
-.ml.loadfile`:util/tests/mlpy.p
+\l util/init.q
+\l util/tests/mlpy.p
 
 np:.p.import[`numpy]
 skmetric:.p.import[`sklearn.metrics]
@@ -13,19 +13,21 @@ msle:.p.import[`sklearn.metrics]`:mean_squared_log_error
 mse:.p.import[`sklearn.metrics]`:mean_squared_error
 rocau:.p.import[`sklearn.metrics]`:roc_auc_score
 logloss:.p.import[`sklearn.metrics]`:log_loss
+mae:.p.import[`sklearn.metrics]`:mean_absolute_error
 
 x:1000?1000
 y:1000?1000
 xf:1000?100f
 yf:1000?100f
-xb:010010101011111010110111b
-yb:000000000001000000111000b
+xb:1000#0101101011b
+yb:1000#0000111000b
 xm:100 10#1000?100f
 ym:100 10#1000?100f
-xmb:100 10#1000?0b
-ymb:100 10#1000?0b
+xmb:100 10#xb
+ymb:100 10#yb
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 plaintabn:plaintab,'([]x4:1 3 0n)
+
 .ml.range[til 63] ~ 62
 .ml.range[5] ~ 0
 .ml.range[0 1 3 2f]~3f
@@ -38,56 +40,56 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 ("f"$flip value .ml.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
 
 .ml.accuracy[x;y] ~ skmetric[`:accuracy_score][x;y]`
-.ml.accuracy[xb;yb] ~ 0.4583333333333
+.ml.accuracy[xb;yb] ~ 0.5
 .ml.accuracy[3 2 2 0n 4;0n 4 3 2 4]~0.2
 .ml.accuracy[10#1b;10#0b]~0f
 
 .ml.precision[xb;yb;1b] ~ skmetric[`:precision_score][yb;xb]`
-.ml.precision[xb;yb;0b] ~ 0.8888888888889
-.ml.precision[24#1b;yb;1b]~skmetric[`:precision_score][yb;24#1b]`
-.ml.precision[24#0b;yb;0b]~0.8333333333333
-.ml.precision[24#1b;yb;1b]~0.16666666666667
+.ml.precision[xb;yb;0b] ~ 0.75
+.ml.precision[1000#1b;yb;1b]~skmetric[`:precision_score][yb;1000#1b]`
+.ml.precision[1000#0b;yb;0b]~0.7
+.ml.precision[1000#1b;yb;1b]~0.3
 .ml.precision[10#1b;10#1b;1b]~1f
 .ml.precision[10#1b;10#0b;1b]~0f
 
 .ml.sensitivity[xb;yb;1b] ~ skmetric[`:recall_score][yb;xb]`
-.ml.sensitivity[xb;yb;0b] ~ 0.4
-.ml.sensitivity[24#1b;yb;0b]~0f
-.ml.sensitivity[24#1b;yb;1b]~1f
+.ml.sensitivity[xb;yb;0b] ~ 0.428571428571429
+.ml.sensitivity[1000#1b;yb;0b]~0f
+.ml.sensitivity[1000#1b;yb;1b]~1f
 .ml.sensitivity[10#1b;10#1b;1b]~1f
 
 .ml.specificity[xb;yb;1b] ~ skmetric[`:recall_score][yb;xb;`pos_label pykw 0]`
 .ml.specificity[xb;yb;0b] ~ skmetric[`:recall_score][yb;xb;`pos_label pykw 1]`
-.ml.specificity[24#1b;yb;0b]~1f
-.ml.specificity[24#1b;yb;1b]~0f
+.ml.specificity[1000#1b;yb;0b]~1f
+.ml.specificity[1000#1b;yb;1b]~0f
 .ml.specificity[10#1b;10#0b;1b]~0f
 .ml.specificity[10#1b;10#1b;0b]~1f
 
 .ml.fbscore[xb;yb;1b;0.02] ~ fbscore[yb;xb;`beta pykw 0.02]`
 .ml.fbscore[xb;yb;1b;0.5] ~ fbscore[yb;xb;`beta pykw 0.5]`
 .ml.fbscore[xb;yb;1b;1.5] ~ fbscore[yb;xb;`beta pykw 1.5]`
-.ml.fbscore[xb;yb;0b;1.5]~0.481481481481481481
-.ml.fbscore[24#1b;yb;0b;.5]~0f
-.ml.fbscore[xb;24#1b;0b;.5]~0f
-.ml.fbscore[24#0b;24#1b;1b;.2]~0f
+.ml.fbscore[xb;yb;0b;1.5] ~ 0.493670886075949
+.ml.fbscore[1000#1b;yb;0b;.5]~0f
+.ml.fbscore[xb;1000#1b;0b;.5]~0f
+.ml.fbscore[1000#0b;1000#1b;1b;.2]~0f
 
 .ml.f1score[xb;yb;0b] ~ f1[xb;yb;`pos_label pykw 0]`
 .ml.f1score[xb;yb;1b] ~ f1[xb;yb;`pos_label pykw 1]`
-.ml.f1score[xb;24#0b;1b]~0f
-.ml.f1score[24#1b;yb;1b]~f1[24#1b;yb;`pos_label pykw 1]`
+.ml.f1score[xb;1000#0b;1b]~0f
+.ml.f1score[1000#1b;yb;1b]~f1[1000#1b;yb;`pos_label pykw 1]`
 .ml.f1score[10#1b;10#0b;1b]~f1[10#1b;10#0b;`pos_label pykw 1]`
 
 .ml.matcorr[xb;yb]~mcoeff[xb;yb]`
 .ml.matcorr[110010b;111111b]~0n
 .ml.matcorr[111111b;110010b]~0n
 
-(value .ml.confmat[xb;yb]) ~ (8 12;1 3)
+(value .ml.confmat[xb;yb])~(300 400;100 200)
 (value .ml.confmat[2 3# 0 0 1 1 0 0;2 3# 1 0 1 0 0 1]) ~ (0 1 0;0 0 0;1 0 0)
 (value .ml.confmat[1 2 3;3 2 1])~(0 0 1;0 1 0;1 0 0)
 (value .ml.confmat[1 2 3f;3 2 1f])~(0 0 1;0 1 0;1 0 0)
 (value .ml.confmat[3#1b;3#0b])~(0 3;0 0)
 
-(.ml.confdict[xb;yb;1b]) ~ `tn`fp`fn`tp!8 12 1 3
+.ml.confdict[xb;yb;1b] ~ `tn`fp`fn`tp!300 400 100 200
 .ml.confdict[3#0b;3#1b;0b] ~`tn`fp`fn`tp!0 3 0 0
 .ml.confdict[3#1b;3#0b;0b]~`tn`fp`fn`tp!0 0 3 0
 
@@ -121,6 +123,10 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.rmsle[x;y]~sqrt msle[x;y]`
 .ml.rmsle[x;x]~sqrt msle[x;x]`
 .ml.rmsle[1 0n 4 2 0n;1 2 4 2 1]~0f
+.ml.mae[x;y]~mae[x;y]`
+.ml.mae[xf;yf]~mae[xf;yf]`
+.ml.mae[xb;yb]~mae["i"$xb;"i"$yb]`
+.ml.mae[xb;xb]~0f
 (.ml.mape[x;y])~mean_absolute_percentage_error[y;x]
 .ml.mape[xf;yf]~mean_absolute_percentage_error[yf;xf]
 .ml.mape[xm;ym]~{mean_absolute_percentage_error[x;y]}'[flip ym;flip xm]
