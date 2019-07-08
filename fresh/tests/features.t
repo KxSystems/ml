@@ -12,7 +12,7 @@ xj:10000?10000;
 xi:10000?10000i;
 xf:10000?50000f;
 xh:10000?5000h;
-xb:1000?0b;
+xb:10000#0101101011b;
 x0:`float$();
 x1:1?100f;
 x2:2?100f;
@@ -25,6 +25,10 @@ xmaxj:200;
 xminfloat:20;
 xmaxf:200;
 k:100?100
+xs:enlist 1f
+
+autocorrkeys:`mean`var`median`std
+changequantkeys:`max`min`mean`var`median`std
 
 np:.p.import[`numpy] 
 
@@ -392,34 +396,58 @@ abs[.ml.fresh.feat.binnedentropy[xnull;50]] ~ 0f
 .ml.fresh.feat.treverseasymstat[x2;2] ~ "f"$time_reversal_asymmetry_statistic[x2;2]
 .ml.fresh.feat.treverseasymstat[xnull;2] ~ 0f
 
-(value .ml.fresh.feat.changequant[xf;0.2;0.8;1b])~(change_quantiles[xf;0.2;0.8;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xf;0.25;0.7;1b])~(change_quantiles[xf;0.25;0.7;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xf;0.2;0.65;1b])~(change_quantiles[xf;0.2;0.65;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xf;0.2;0.775;1b])~(change_quantiles[xf;0.2;0.775;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xf;0.2;0.8;0b])~(change_quantiles[xf;0.2;0.8;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xf;0.25;0.7;0b])~(change_quantiles[xf;0.25;0.7;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xf;0.2;0.65;0b])~(change_quantiles[xf;0.2;0.65;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xf;0.2;0.775;0b])~(change_quantiles[xf;0.2;0.775;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xj;0.2;0.8;1b])~(change_quantiles[xj;0.2;0.8;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xj;0.25;0.7;1b])~(change_quantiles[xj;0.25;0.7;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xj;0.2;0.65;1b])~(change_quantiles[xj;0.2;0.65;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xj;0.2;0.775;1b])~(change_quantiles[xj;0.2;0.775;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xj;0.2;0.8;0b])~(change_quantiles[xj;0.2;0.8;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xj;0.25;0.7;0b])~(change_quantiles[xj;0.25;0.7;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xj;0.2;0.65;0b])~(change_quantiles[xj;0.2;0.65;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xj;0.2;0.775;0b])~(change_quantiles[xj;0.2;0.775;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xi;0.2;0.8;1b])~(change_quantiles[xi;0.2;0.8;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xi;0.25;0.7;1b])~(change_quantiles[xi;0.25;0.7;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xi;0.2;0.65;1b])~(change_quantiles[xi;0.2;0.65;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xi;0.2;0.775;1b])~(change_quantiles[xi;0.2;0.775;1b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xi;0.2;0.8;0b])~(change_quantiles[xi;0.2;0.8;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xi;0.25;0.7;0b])~(change_quantiles[xi;0.25;0.7;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xi;0.2;0.65;0b])~(change_quantiles[xi;0.2;0.65;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[xi;0.2;0.775;0b])~(change_quantiles[xi;0.2;0.775;0b;]each `max`min`mean`var`median`std)
-(value .ml.fresh.feat.changequant[x0;0.2;0.775;1b])~(-0w 0w,4#0n)
-(value .ml.fresh.feat.changequant[x1;0.2;0.775;1b])~(-0w 0w,4#0n)
-(value .ml.fresh.feat.changequant[x2;0.2;0.775;1b])~(-0w 0w,4#0n)
-(value .ml.fresh.feat.changequant[xnull;0.2;0.775;1b])~(-0w 0w,4#0n)
+.ml.fresh.feat.indexmassquantile[xi;.6] ~ index_mass_quantile[xi;.6]
+.ml.fresh.feat.indexmassquantile[xj;1.] ~ index_mass_quantile[xj;1.]
+.ml.fresh.feat.indexmassquantile[xh;0.] ~ index_mass_quantile[xh;0.]
+.ml.fresh.feat.indexmassquantile[xi;x0] ~ x0
+
+.ml.fresh.feat.lastmax[xi] ~ first_location_of_maximum[xi]
+.ml.fresh.feat.lastmax[xj] ~ first_location_of_maximum[xj]
+.ml.fresh.feat.lastmax[xf] ~ first_location_of_maximum[xf]
+.ml.fresh.feat.lastmax[x0] ~ 0n
+.ml.fresh.feat.lastmax[xs] ~ 0f
+
+.ml.fresh.feat.lastmin[xi] ~ first_location_of_minimum[xi]
+.ml.fresh.feat.lastmin[xj] ~ first_location_of_minimum[xj]
+.ml.fresh.feat.lastmin[xf] ~ first_location_of_minimum[xf]
+.ml.fresh.feat.lastmin[x0] ~ 0n
+.ml.fresh.feat.lastmin[xs] ~ 0f
+
+(value .ml.fresh.feat.aggautocorr[xi]) ~ agg_autocorrelation[xi;]each autocorrkeys
+(value .ml.fresh.feat.aggautocorr[xj]) ~ agg_autocorrelation[xj;]each autocorrkeys
+(value .ml.fresh.feat.aggautocorr[xf]) ~ agg_autocorrelation[xf;]each autocorrkeys
+(value .ml.fresh.feat.aggautocorr[xh]) ~ agg_autocorrelation[xh;]each autocorrkeys
+(value .ml.fresh.feat.aggautocorr[xb]) ~ agg_autocorrelation[xb;]each autocorrkeys
+(value .ml.fresh.feat.aggautocorr[xnull]) ~ 4#0f
+
+(value .ml.fresh.feat.changequant[xf;0.2;0.8;1b]) ~ change_quantiles[xf;0.2;0.8;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xf;0.25;0.7;1b]) ~ change_quantiles[xf;0.25;0.7;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xf;0.2;0.65;1b]) ~ change_quantiles[xf;0.2;0.65;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xf;0.2;0.775;1b]) ~ change_quantiles[xf;0.2;0.775;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xf;0.2;0.8;0b]) ~ change_quantiles[xf;0.2;0.8;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xf;0.25;0.7;0b]) ~ change_quantiles[xf;0.25;0.7;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xf;0.2;0.65;0b]) ~ change_quantiles[xf;0.2;0.65;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xf;0.2;0.775;0b]) ~ change_quantiles[xf;0.2;0.775;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xj;0.2;0.8;1b]) ~ change_quantiles[xj;0.2;0.8;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xj;0.25;0.7;1b]) ~ change_quantiles[xj;0.25;0.7;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xj;0.2;0.65;1b]) ~ change_quantiles[xj;0.2;0.65;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xj;0.2;0.775;1b]) ~ change_quantiles[xj;0.2;0.775;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xj;0.2;0.8;0b]) ~ change_quantiles[xj;0.2;0.8;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xj;0.25;0.7;0b]) ~ change_quantiles[xj;0.25;0.7;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xj;0.2;0.65;0b]) ~ change_quantiles[xj;0.2;0.65;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xj;0.2;0.775;0b]) ~ change_quantiles[xj;0.2;0.775;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xi;0.2;0.8;1b]) ~ change_quantiles[xi;0.2;0.8;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xi;0.25;0.7;1b]) ~ change_quantiles[xi;0.25;0.7;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xi;0.2;0.65;1b]) ~ change_quantiles[xi;0.2;0.65;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xi;0.2;0.775;1b]) ~ change_quantiles[xi;0.2;0.775;1b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xi;0.2;0.8;0b]) ~ change_quantiles[xi;0.2;0.8;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xi;0.25;0.7;0b]) ~ change_quantiles[xi;0.25;0.7;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xi;0.2;0.65;0b]) ~ change_quantiles[xi;0.2;0.65;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[xi;0.2;0.775;0b]) ~ change_quantiles[xi;0.2;0.775;0b;]each changequantkeys
+(value .ml.fresh.feat.changequant[x0;0.2;0.775;1b]) ~ (-0w 0w,4#0n)
+(value .ml.fresh.feat.changequant[x1;0.2;0.775;1b]) ~ (-0w 0w,4#0n)
+(value .ml.fresh.feat.changequant[x2;0.2;0.775;1b]) ~ (-0w 0w,4#0n)
+(value .ml.fresh.feat.changequant[xnull;0.2;0.775;1b]) ~ (-0w 0w,4#0n)
 
 (.ml.fresh.feat.lintrend[xj]`slope) ~ linear_trend[xj][0]
 (.ml.fresh.feat.lintrend[xj]`intercept) ~ linear_trend[xj][1]
