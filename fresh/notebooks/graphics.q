@@ -29,4 +29,15 @@ displayCM:{[cm;classes;title;cmap]
 
  }
 
-
+plotprxpred:{
+    plt[`:close][]`;
+    plt[`:figure][`figsize pykw (15 7.5)]`;
+    plt[`:title][`$"Next day close price prediction"];
+    plt[`:plot][x;"r";`label pykw `$"real value"]`;
+    plt[`:plot][y;"k--";`label pykw `$"predicted value"]`;
+    plt[`:legend][]`;
+    plt[`:xlim][200;300]`;
+    plt[`:xlabel]["Random predicted date"];
+    plt[`:ylabel]["Close Price"];
+    plt[`:show][]`;
+ }
