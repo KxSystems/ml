@@ -1,10 +1,10 @@
 \d .ml
 
-clust.kdtree.i.searchfrom:(`$path,"/clust/ccode/./kdtree") 2:`kdtree_searchfrom,3
+clust.kdtree.i.searchfrom:`:kdtree 2:`kdtree_searchfrom,3
 clust.ccure.kd.searchfrom:{[x;y;z]$[not type[y]~type x 4;'`type;clust.kdtree.i.searchfrom[x;y;z]]}
 
 clust.ccure.i.:(::)
-clib:2:[`$path,"/clust/ccode/./cure"]
+clib:`:cure 2:
 impf:{clust.ccure.i[u]:clib(u:`$"_"sv string(x;y)),z}
 impf'[`cure_cluster_dists;`F`E;4];
 impf'[`cure_cluster_reps;`F`E;4];

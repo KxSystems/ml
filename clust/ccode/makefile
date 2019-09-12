@@ -1,36 +1,32 @@
-CFLAGS=-DKXVER=3 -O2
-ifeq ($(shell uname),Linux)
-LDFLAGS=-fPIC -shared
-LDRPATH=-Wl,-rpath,'$$ORIGIN'
-QLIBDIR=l64
-else ifeq ($(shell uname),Darwin)
-LDFLAGS=-dynamiclib -undefined dynamic_lookup
-LDRPATH=-Wl,-rpath,"@loader_path"
-QLIBDIR=m64
+OSFLAG :=
+MS :=
 
+ifeq ($(shell uname),Linux)
+ LNK     = -lrt
+ OSFLAG  = l
+ OSXOPTS = -fPIC -shared
+ LDRPATH = -Wl,-rpath,'$$ORIGIN'
+else ifeq ($(shell uname),Darwin)
+ OSFLAG  = m
+ LNK:=
+ OSXOPTS = -dynamiclib -undefined dynamic_lookup
+ LDRPATH = -Wl,-rpath,"@loader_path" 
 endif
+
+CFLAGS= -DKXVER=3 -O2
+MS    = $(shell getconf LONG_BIT)
+
+QARCH = $(OSFLAG)$(MS)
+Q     = $(QHOME)/$(QARCH) 
+
 cure.so: cure.c cure.h kdtree.so kdtree.h
-	$(CC) $(CFLAGS) $(LDFLAGS) -o cure.so cure.c kdtree.so $(LDRPATH)
-kdtree.so: kdtree.c kdtree.h 
-	$(CC) $(CFLAGS) $(LDFLAGS) -o kdtree.so kdtree.c $(LDRPATH)
+	$(CC) $(CFLAGS) $(OSXOPTS) $(LNK) -o cure.so cure.c kdtree.so $(LDRPATH)
 
-%.so: %.c %.h
-ifeq ($(shell uname),Linux)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
-else ifeq ($(shell uname),Darwin)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c -install_name @rpath/$@
+kdtree.so: kdtree.c kdtree.h
+	$(CC) $(CFLAGS) $(OSXOPTS) $(LNK) -o kdtree.so kdtree.c $(LDRPATH)
 
-endif
-
-%.c: %.qtemplate.c
-	q qc.q -q $< > $@
-%.h: %.qtemplate.h
-	q qc.q -q $< > $@
+install:
+	install cure.so kdtree.so $(Q)
 
 clean:
-	for f in $$(ls *.[ch]|grep -v "qtemplate"|grep -v "^k.h"); do echo rm $$f; rm $$f ; done
-cleanall: clean
-	if [ -f cure.so ]; then rm cure.so ; fi	
-	if [ -f kdtree.so ]; then rm kdtree.so ; fi	
-	
-
+	rm kdtree.so cure.so
