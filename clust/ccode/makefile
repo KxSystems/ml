@@ -10,7 +10,7 @@ QLIBDIR=m64
 
 endif
 cure.so: cure.c cure.h kdtree.so kdtree.h
-	$(CC) $(CFLAGS) $(LDFLAGS) -o cure.so cure.c -L/kdtree.so $(LDRPATH)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o cure.so cure.c kdtree.so $(LDRPATH)
 kdtree.so: kdtree.c kdtree.h 
 	$(CC) $(CFLAGS) $(LDFLAGS) -o kdtree.so kdtree.c $(LDRPATH)
 
