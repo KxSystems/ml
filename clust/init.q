@@ -1,5 +1,5 @@
-.ml.loadfile`:clust/utils.q
-.ml.loadfile`:clust/kdtree.q
-.ml.loadfile`:clust/ccode/cutils.q
-.ml.loadfile`:clust/clust.q
-.ml.loadfile`:clust/score.q
+.ml.loadfile`:clust/code/q/utils.q
+.ml.loadfile`:clust/code/q/kdtree.q
+.ml.loadfile`:clust/code/q/cutils.q
+.ml.loadfile`:clust/code/q/clust.q
+.ml.loadfile`:clust/code/q/score.q
