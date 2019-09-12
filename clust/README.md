@@ -22,27 +22,34 @@ The clustering library contains the aforementioned clustering algorithms which c
 - Scipy 1.1.0
 - PyClustering
 
-To run the CURE, single or centroid algorithms using the C implementation of the k-d tree, additional files must be downloaded. Instructions can be found at [code.kx.com](https://code.kx.com/v2/interfaces/c-client-for-q/#linux).
-
 ## Installation
-After placing the ml folder in $QHOME, test that all requirements have been installed correctly and that the library is ready for use by running the following:
+
+Place the ml library file in `$QHOME` and check that requirements have been met.
+
+### C Build
+
+To run the CURE single or centroid algorithms using the C implementation of the k-d tree, additional files must be downloaded. Instructions can be found at [code.kx.com](https://code.kx.com/v2/interfaces/c-client-for-q/#linux). The shared libraries must then be compiled by running below within the folder `ml/clust/code/c/`:
+
+__Mac & Linux__:
+
+```
+make && make install && make clean
+```
+
+__Windows__:
+
+```
+call "make.bat"
+```
+
+## Load
+
+Check that the library is ready for use by running the following:
 
 ```q
 $ q
 q)\l ml/ml.q
 q).ml.loadfile`:clust/init.q
-```
-##C Compiler
-To run Cure or Hierarchial (single and centroid) using C, the shared libraries must be compiled for the code to run. This can be done by running the following commands in the ccode folder of ml
-
-Linux & macOS
-```
-make
-```
-
-Windows
-```
-call "make.bat"
 ```
 
 ## Documentation
