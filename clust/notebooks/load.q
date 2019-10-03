@@ -11,5 +11,5 @@ genpts:{
 .z.ts:{h(`classify;genpts 1+rand 100)}
 
 /open connection and set timer
-h:hopen 5002;
+h:hopen 5007;
 system"t 5000"
