@@ -60,7 +60,7 @@ posParser:newParser[`en; `uniPOS`pennPOS`tokens]
 findPOSRuns[`uniPOS; `ADV`VERB;first posParser enlist". ."]~()
 findPOSRuns[`uniPOS; `DET;first posParser enlist "The"]~enlist(`the; enlist 0)
 findPOSRuns[`uniPOS; `VERB;first posParser enlist"The train from nowhere"]~()
-findPOSRuns[`uniPOS; `VERB;first posParser enlist"has been gone dancing"]~enlist(`$"has been gone dancing";0 1 2 3)
+findPOSRuns[`uniPOS; `VERB;first posParser enlist"has been gone dancing"]~enlist(`$"gone dancing";2 3)
 doc:first posParser enlist"Wade Hemsworth famously surveyed the Abitibi Waterways in North Ontario.";
 all(findPOSRuns[`uniPOS;`DET`PROPN;doc];findPOSRuns[`pennPOS;`DT`NNP`NNPS; doc])~\:((`$"wade hemsworth"; 0 1);(`$"the abitibi waterways"; 4 5 6);(`$"north ontario"; 8 9))
 p:newParser[`en;`tokens`isStop`sentIndices];

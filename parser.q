@@ -2,13 +2,14 @@
 
 .p.import[`sys;:;`:argv;()]; / spacy expects python be the main process
 
-p)def spell2(doc,model):
+p)def spell(doc,model):
   lst=[]
   for s in doc:
     if s._.hunspell_spell==False:
       sug=s._.hunspell_suggest
       if len(sug)>0:
         ([lst.append(n)for n in model((sug)[0])]) 
+      else:lst.append(s)
     else:
         lst.append(s)
   return lst
@@ -62,7 +63,7 @@ parser.i.alphalang:(!). flip(
   (`zh;`Chinese))
 
 // Create new parser
-// Valid opts : text keywords likeEmail likeNumber likeURL isStop tokens lemmas uniPOS pennPOS starts sentChars sentIndices
+// Valid opts : text keywords likeEmail likeNumber likeURL isStop tokens lemmas uniPOS pennPOS starts sentChars sentIndices spell
 parser.i.newParser:{[lang;opts]
   opts:{distinct x,raze parser.i.depOpts x}/[colnames:opts];
   disabled:`ner`tagger`parser except opts;
