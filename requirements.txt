@@ -1,3 +1,5 @@
 numpy
 beautifulsoup4
 spacy
+spacy_hunspell
+hunspell>=0.5.5

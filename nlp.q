@@ -110,3 +110,10 @@ sentiment:sent.score
 
 // Phonological representation of string (commented out for now)
 /doubleMetaphone:.p.import[`metaphone;`:doublemetaphone;<]
+
+
+/currently only for 2-gram
+n_gram:{[corpus]
+ tokens:raze corpus[`tokens]@'where each not corpus[`isStop]|corpus[`tokens]like\:"[0-9]*";
+ occ:(distinct tokens)!{count where y=x}[tokens]each distinct tokens;
+ raze{[x;y;z;n](enlist(z;n))!enlist(count where n=x 1+where z=x)%y[z]}[tokens;occ]''[tokens;next tokens]}
