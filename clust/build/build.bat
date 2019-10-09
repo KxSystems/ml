@@ -13,6 +13,7 @@ set PATH=%OP%
 
 move *.dll %QHOME%\w64
 
+del *.exp *.lib *.obj
 
 exit /b 0
 :error
