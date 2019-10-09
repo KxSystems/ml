@@ -47,33 +47,35 @@ clust.i.imin:{x?min x}
 clust.i.rtab:{update pts:x from @[clust.i.cln;`idx`clt`pts#y;y]}
 clust.i.algoscc:{[d;k;df;r;c;m;ns;b]
  t:clust.kd.buildtree[flip d;r];
- v:clust.i.clvars[d;k;df;t;ns];                                            
- if[l:98h=type m;v[`ilm]:v`r2c];                                           
- i:0;N:v[`pc]-k;                                                           
+ v:clust.i.clvars[d;k;df;t;ns];                                              / variables
+ if[l:98h=type m;v[`ilm]:v`r2c];                                            / add variable for linkage matrix
+ i:0;N:v[`pc]-k;                                                            / counter and n iterations
  while[i<N;
-  mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1];                          
-  orl:v[`r2l]ori:raze v[`c2r]mci;                                          
-  m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                
+  mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1];                            / clusts to merge
+  orl:v[`r2l]ori:raze v[`c2r]mci;                                           / old reps and their leaf nodes
+  m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                  / update linkage matrix
   npi:raze v[`c2p] mci;
   $[c~`single;nri:ori;
-   [nreps:$[not c~`centroid;ns[`i][`curerep][v[`oreps];df;npi;r;c];enlist avg v[`oreps]npi];
-  d[nri:(count nreps)#ori]:nreps;                                          
-  v[`r2l;nri]:nrl:ns[`kd][`searchfrom][t;;0]each nreps;       
-  t:.[t;(3;distinct orl);{y except x}ori];                                
-  t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                             
-  v[`r2c;nri]:v[`r2c]ori 0;                                               
-  if[l;v[`ilm;nri]:1+max v`ilm];                                          
+   [nreps:$[not c~`centroid;ns[`i][`curerep][v[`oreps];df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
+  d[nri:(count nreps)#ori]:nreps;                                           / overwrite any old reps w/ new ones
+  v[`r2l;nri]:nrl:ns[`kd][`searchfrom][t;;0]each nreps;        / leaf nodes for new reps, update tree
+  t:.[t;(3;distinct orl);{y except x}ori];                                  / update tree w/ new reps, delete old reps
+  t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                               / add new reps
+  v[`r2c;nri]:v[`r2c]ori 0;                                                 / new clust is 1st of old clusts
+  if[l;v[`ilm;nri]:1+max v`ilm];                                            / update indeces for linkage matrix
   v:{.[x;y;:;z]}/[v;flip(`c2p`c2r`gone;(mci;mci;mci 1));((npi;0#0);(nri;0#0);1b)];
   cnc:ns[`kd][`nnc][nri;t;v`r2c;d;df];
   w:(where v[`ndists;0]in mci)except wg:where v[`gone];
   $[c~`single;v[`ndists;0;w]:mci 0;[v[`ndists;0 1;w]:$[count w;
     flip ns[`kd][`nnc][;t;v`r2c;d;df]each v[`c2r]w;(0#0;0#0f)]]];
-  v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];i+:1];
-  $[b;`reps`tree`r2c`r2l!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;
-   v[`r2l]ii:raze v`c2r);
-  $[l;m;([]idx:u;clt:raze{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]]}
+  / update all for clust d and closest clust, nearest clust and dist to new clust
+  v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
+  i+:1];
+  $[b;
+    `reps`tree`r2c`r2l!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;v[`r2l]ii:raze v`c2r);
+    l;m;([]idx:u;clt:raze{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]}
 
-
+/
 / new cure
 \d .ml
 

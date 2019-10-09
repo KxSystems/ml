@@ -220,37 +220,58 @@ clust.i.algocaw:{[df;lf;t]
 clust.i.kpp:{clust.i.kpp2[flip x;y]}
 clust.i.kpp2:{[m;n](n-1){y,x clust.i.iwrand[1]{x x?min x}each flip{sqrt sum x*x-:y}[flip x]'[y]}[m]/1?m}
 
-/Single,Centroid & Cure
-/* m = dgram/linkage matrix
-clust.i.algoscc:{[d;k;df;r;c;m;ns;b]
+// Single,Centroid & Cure
+clust.i.algoscc:{[d;k;df;r;c;m;ns;stream]
+ // k-d tree
  t:clust.kd.buildtree[flip d;r];
- v:clust.i.clvars[d;k;df;t;ns];                                              / variables
- if[l:98h=type m;v[`ilm]:v`r2c];                                            / add variable for linkage matrix
- i:0;N:v[`pc]-k;                                                            / counter and n iterations
- while[i<N;
-  mci:u,v[`ndists;0;u:clust.i.imin v[`ndists]1];                            / clusts to merge
-  orl:v[`r2l]ori:raze v[`c2r]mci;                                           / old reps and their leaf nodes
-  m,:v[`ilm;mci],v[`ndists;1;u],count ori;                                  / update linkage matrix
-  npi:raze v[`c2p] mci;
-  $[c~`single;nri:ori;
-   [nreps:$[not c~`centroid;ns[`i][`curerep][v[`oreps];df;npi;r;c];enlist avg v[`oreps]npi]; / reps of new clust
-  d[nri:(count nreps)#ori]:nreps;                                           / overwrite any old reps w/ new ones
-  v[`r2l;nri]:nrl:ns[`kd][`searchfrom][t;;0]each nreps;        / leaf nodes for new reps, update tree
-  t:.[t;(3;distinct orl);{y except x}ori];                                  / update tree w/ new reps, delete old reps
-  t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];                               / add new reps
-  v[`r2c;nri]:v[`r2c]ori 0;                                                 / new clust is 1st of old clusts
-  if[l;v[`ilm;nri]:1+max v`ilm];                                            / update indeces for linkage matrix
+ // cluster variables, e.g. oreps, nreps, ndists etc
+ v:clust.i.clvars[d;k;df;t;ns];
+ // update linkage matrix for dendrogram (HC)
+ if[link:98h=type m;v[`ilm]:v`r2c];
+ i:0;while[i<v[`pc]-k;
+  // clusters to merge with min distances
+  mci:u,v[`ndists;0]u:clust.i.imin v[`ndists]1;
+  // old reps and their leaves
+  orl:v[`r2l]ori:raze v[`c2r]mci;
+  // update linkage matrix
+  if[link;m,:v[`ilm;mci],v[`ndists;1;u],count ori];
+  // indices in cluster to merge
+  npi:raze v[`c2p]mci;
+  // find reps in new cluster
+  $[sgl:c~`single;
+    // for single new reps=old reps -> no new points calculated 
+    nri:ori;
+    // if centroid reps=avg, if cure=calc reps
+    [nreps:$[c~`centroid;enlist avg v[`oreps]npi;ns[`i;`curerep][v`oreps;df;npi;r;c]];
+     // overwrite any old reps with new reps
+     d[nri:count[nreps]#ori]:nreps;
+     // new rep leaves
+     v[`r2l;nri]:nrl:ns[`kd;`searchfrom][t;;0]each nreps;
+     // update tree with new reps and delete old one
+     t:.[t;(3;distinct orl);{y except x}ori];
+     t:t{.[x;(3;y 0);{y,x}y 1]}/flip(nrl;nri)]];
+  // new cluster is first of old clusters
+  v[`r2c;nri]:v[`r2c]ori 0;
+  // update linkage matrix
+  if[link;v[`ilm;nri]:1+max v`ilm];
+  // update v with pts/reps that belong to new clust, add old clusts to gone
   v:{.[x;y;:;z]}/[v;flip(`c2p`c2r`gone;(mci;mci;mci 1));((npi;0#0);(nri;0#0);1b)];
-  cnc:ns[`kd][`nnc][nri;t;v`r2c;d;df];
-  w:(where v[`ndists;0]in mci)except wg:where v[`gone];
-  $[c~`single;v[`ndists;0;w]:mci 0;[v[`ndists;0 1;w]:$[count w;
-    flip ns[`kd][`nnc][;t;v`r2c;d;df]each v[`c2r]w;(0#0;0#0f)]]];
-  / update all for clust d and closest clust, nearest clust and dist to new clust
+  // nneighbour to clust
+  cnc:ns[`kd;`nnc][nri;t;v`r2c;d;df];
+  // old clust nneighbour
+  w:(where v[`ndists;0]in mci)except wg:where v`gone;
+  $[sgl;
+     // single - nneighbour=new clust
+     v[`ndists;0;w]:mci 0;
+     // else do nneighbour search
+     v[`ndists;0 1;w]:$[count w;flip ns[`kd;`nnc][;t;v`r2c;d;df]each v[`c2r]w;(0#0;0#0f)]];
+  // update nneighbour of merged cluster, and old clusters before merge to gone > "0N;inf"
   v[`ndists]:{.[x;y;:;z]}/[v`ndists;((::;mci 0);(::;mci 1));(cnc;(0N;0w))];
   i+:1];
-  $[b;
-    `reps`tree`r2c`r2l!(d ii;.[t;(3;j);:;{x?y}[ii]each t[3;]j:where t[2;]];{x?y}[distinct c]each c:v[`r2c]ii;v[`r2l]ii:raze v`c2r);
-    l;m;([]idx:u;clt:raze{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]}
+ // Output format - tree (streaming), matrix (hierarchical), table (cure)
+ $[stream;
+   `reps`tree`r2c`r2l!(d k;.[t;(3;j);:;{x?y}[ii]each t[3]j:where t 2];{x?y}[distinct c]each c:v[`r2c]k;v[`r2l]k:raze v`c2r);
+   link;m;([]idx:u;clt:raze{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]}
 
 /plots for affinity propagration
 /d .

@@ -5,7 +5,8 @@ clust.ap:{[d;df;dmp;p]
  if[not df in key clust.i.dd;'clust.i.err`dist];
  m:clust.i.createmtx[d;df];
  m[`s]:clust.i.updpref[m`s;p];
- r:clust.i.apalgo[d;dmp]. enlist{not x[1]~x 2}clust.i.apalgo[d;dmp]/(m;(),0;(),1);
+ same:0;maxitr:floor .1*count d;
+ r:clust.i.apstop[maxitr]clust.i.apalgo[d;dmp]/(m;(),0;(),1);
  clust.i.rtabkm[d]clust.i.apout[r 2]}
 
 / Utilities
@@ -15,6 +16,7 @@ clust.i.apalgo:{[d;dmp;i]  / i:(m;oe;ne)
  e:clust.i.imax each m[`a]+m`r;
  (m;i 2;e)}
 clust.i.apout:{@[;a](!). (da;til count da:distinct a:x)}
+clust.i.apstop:{$[y[1]~y 2;[same::same+1;$[same~x;:0b;:1b]];[same::0;:1b]]}
 clust.i.createmtx:{
  s:clust.i.scdist[y;x]each x;
  a:r:(n;n:count x)#0f;
