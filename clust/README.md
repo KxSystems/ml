@@ -28,7 +28,7 @@ Place the ml library file in `$QHOME` and check that requirements have been met.
 
 ### C Build
 
-To run the CURE single or centroid algorithms using the C implementation of the k-d tree, additional files must be downloaded. Instructions can be found at [code.kx.com](https://code.kx.com/v2/interfaces/c-client-for-q/#linux). The shared libraries must then be compiled by running below within the folder `ml/clust/code/c/`:
+To run the CURE single or centroid algorithms using the C implementation of the k-d tree, additional files must be downloaded. Instructions can be found at [code.kx.com](https://code.kx.com/v2/interfaces/c-client-for-q/#linux). The shared libraries must then be compiled by running below:
 
 __Mac & Linux__:
 
@@ -36,7 +36,7 @@ __Mac & Linux__:
 make && make install && make clean
 ```
 
-__Windows__:
+__Windows__ (within `build`):
 
 ```
 call build.bat
