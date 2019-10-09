@@ -39,7 +39,7 @@ make && make install && make clean
 __Windows__:
 
 ```
-call "make.bat"
+call build.bat
 ```
 
 ## Load
