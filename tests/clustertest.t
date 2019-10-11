@@ -1,6 +1,7 @@
+\l nlp.q
 \l init.q
 \d .nlp
-text: first (enlist "*";",";1) 0: `:./data/miniJeff.txt
+text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
 p:newParser[`en; enlist`keywords]
 corpus:p text
 emptyDoc:([] keywords:enlist ()!())
@@ -87,7 +88,7 @@ cluster.groupByCentroids[centroids enlist 2; corpus `keywords] ~ (0 1 2 7 8 9 10
 cluster.groupByCentroids[centroids; corpus[enlist 0] `keywords]~ enlist enlist 0           
 (til 15) ~ asc raze cluster.groupByCentroids[1_centroids;corpus`keywords]
 \d .
-text: first (enlist "*";",";1) 0: `:./data/miniJeff.txt
+text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
 p:.nlp.newParser[`en; enlist`keywords]
 corpus:p text
 emptyDoc:([] keywords:enlist ()!())

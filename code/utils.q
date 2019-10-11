@@ -47,14 +47,6 @@ i.jaro:{[s1;s2]
 // Jaro-Winkler distance of 2 strings
 i.jaroWinkler:{$[0.7<w:i.jaro[x;y];w+(sum mins(4#x)~'4#y)*.1*1-w;w]}
 
-// Cosine similarity of doc and centroid
-compareDocToCentroid:{[centroid;doc]
-  doc@:alignedKeys:distinct key[centroid],key doc;
-  cosineSimilarity[doc;centroid[alignedKeys]-doc]}
-
-// Calc cosine similarity between doc and entire corpus
-compareDocToCorpus:{[keywords;idx]compareDocs[keywords idx]each(idx+1)_ keywords}
-
 // Generating symmetric matrix from triangle (ragged list)
 i.matrixFromRaggedList:{m+flip m:((til count x)#'0.),'.5,'x}
 
@@ -67,3 +59,8 @@ p)from urllib.parse import urlparse
 p)import re
 p)seReg=re.compile('([a-z0-9]+:)?//')
 i.parseURLs:.p.eval["lambda url: urlparse(url if seReg.match(url) else 'http://' + url)";<]
+
+// Calc cosine similarity between doc and entire corpus
+i.compareDocToCorpus:{[keywords;idx]compareDocs[keywords idx]each(idx+1)_ keywords}
+
+

@@ -64,9 +64,9 @@ cluster.fastRadix:{[docs;n]
 cluster.MCL:{[docs;mn;sample]
   docs:cluster.i.asKeywords docs;
   keywords:docs idx:$[sample;(neg"i"$sqrt count docs)?count docs;til count docs];
-  similarities:i.matrixFromRaggedList compareDocToCorpus[keywords]each til count keywords;
+  similarities:i.matrixFromRaggedList i.compareDocToCorpus[keywords]each til count keywords;
   // Find all the clusters
-  clustersOfOne:1=count each clusters:cluster.similarityMatrix similarities>=mn;
+  clustersOfOne:1=count each clusters:cluster.i.similarityMatrix similarities>=mn;
   if[not sample;:clusters where not clustersOfOne];
   // Any cluster of 1 documents isn't a cluster, so throw it out
   outliers:raze clusters where clustersOfOne;
@@ -80,7 +80,7 @@ cluster.MCL:{[docs;mn;sample]
 
 // Graph clustering that works on a similarity matrix
 cluster.i.columnNormalize:{[mat]0f^mat%\:sum mat}
-cluster.similarityMatrix:{[mat]
+cluster.i.similarityMatrix:{[mat]
   matrix:"f"$mat;
   // SM Van Dongen's MCL clustering algorithm
   MCL:{[mat]

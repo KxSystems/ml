@@ -1,3 +1,4 @@
+\l nlp.q
 \l init.q
 \d .nlp
 basicParser:newParser[`en;enlist `tokens];
@@ -22,4 +23,6 @@ result:allQOptionsParser[enlist"O, the year was 1778 how I wish I was in Sherbro
 all(cols[result]~`keywords`sentChars`sentIndices;result[`keywords]~ enlist `o`year`wish`sherbrooke`letter`marque`came`king!8#0.125;result[`sentChars] ~ enlist (0 56; 57 95);result[`sentIndices] ~ enlist 0 13)
 result:first sentenceParser enlist" Hornpipe, jig, and reel. \nThis is a good song"
 all((cols result)~`tokens`sentChars`sentIndices;(result[`sentIndices] cut result[`tokens])~ (`hornpipe`jig`and`reel;`this`is`a`good`song))
+spellParser:newParser[`en;`tokens`spell];
+`hi`how`are`you~raze raze spellParser enlist "hii hiw are youu?"
 \d .

@@ -1,9 +1,10 @@
+\l nlp.q
 \l init.q
 \d .nlp
 charPosParser:newParser[`en; `sentChars`starts`tokens]
 doc:first charPosParser enlist text:"Le café noir était pour André Benoît. Mes aïeux été vieux."
 all(doc[`tokens]~`$("le";"café";"noir";"était";"pour";"andré";"benoît";"mes";"aïeux";"été";"vieux");(doc[`starts] cut text)~("Le ";"café ";"noir ";"était ";"pour ";"André ";"Benoît. ";"Mes ";"aïeux ";"été ";"vieux.");(doc[`sentChars;;0] cut text)~("Le café noir était pour André Benoît. ";"Mes aïeux été vieux.");((0,doc[`sentChars;;1]) cut text)~("Le café noir était pour André Benoît.";" Mes aïeux été vieux.";""))
-text: first (enlist "*";",";1) 0: `:./data/miniJeff.txt
+text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
 p:newParser[`en; `tokens`isStop];
 corpus:p text;
 keywords:TFIDF corpus;
@@ -98,9 +99,9 @@ keywords:keywordsContinuous enlist doc;
 99h ~ type keywords
 keywords:keywordsContinuous corpus;
 {x~desc x} keywords `chairman`chief`group`enron`thanks`mountains
-emails:.nlp.loadEmails["data/test.mbox"]
+emails:.nlp.loadEmails["tests/data/test.mbox"]
 `sender`to`date`subject`contentType`payload`text~cols emails
-(last .nlp.loadEmails["data/test.mbox"]`text)~"Your email client does not support HTML mails."
+(last .nlp.loadEmails["tests/data/test.mbox"]`text)~"Your email client does not support HTML mails."
 ("multipart/alternative";"multipart/alternative";"multipart/alternative";"multipart/alternative";"multipart/alternative";"multipart/alternative";"text/html";"multipart/alternative";"multipart/alternative")~emails`contentType
 parseURLs["http://www.google.com"]~`scheme`domainName`path`parameters`query`fragment!("http";"www.google.com";"";"";"";"")
 parseURLs["ssh://samsquanch@mx4.hotmail.com"][`scheme`domainName]~("ssh";"samsquanch@mx4.hotmail.com")
@@ -109,7 +110,7 @@ all(parseURLs["google.ca/test/index.html"][`scheme`domainName`path]~("http";"goo
 parseURLs["https://网站.中国.com"]~`scheme`domainName`path`parameters`query`fragment!("https";"网站.中国.com";"";"";"";"")
 (parseURLs each ("https://travel.gc.ca/";"https://www.canada.ca/en/revenue-agency.html"))~([]scheme:("https"; "https");domainName:("travel.gc.ca"; "www.canada.ca");path:(enlist "/";"/en/revenue-agency.html");parameters: (""; "");query:(""; "");fragment:(""; ""))
 \d .
-text: first (enlist "*";",";1) 0: `:./data/miniJeff.txt
+text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
 p:.nlp.newParser[`en;`tokens`isStop`text]
 corpus:p text
 phonecall:corpus i:where corpus[`text] like "*Telephone Call*"
