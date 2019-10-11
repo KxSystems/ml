@@ -1,4 +1,3 @@
-\l p.q
 \d .nlp
 version:@[{NLPVERSION};0;`development]
 path:{string`nlp^`$@[{"/"sv -1_"/"vs ssr[;"\\";"/"](-3#get .z.s)0};`;""]}`
