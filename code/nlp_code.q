@@ -10,11 +10,14 @@ findTimes:tm.findTimes
 
 /Email
 
-loadEmails:email.loadEmails:email.getMboxText
+// Read mbox file, convert to table, parse metadata & content
+email.loadEmails:loadEmails:email.getMboxText
 
-email.getGraph:email.getGraph
+// Graph of who emailed whom, inc number of mails
+email.getGraph:{[msgs]
+  0!`volume xdesc select volume:count i by sender,to from flip`sender`to!flip`$raze email.i.getToFrom each msgs}
 
-email.parseMail:email.parseMail
+email.parseMail:email.i.parseMail
 
 /Sentiment
 
@@ -114,9 +117,6 @@ parseURLs:{`scheme`domainName`path`parameters`query`fragment!i.parseURLs x}
 
 /Exploratory Analysis 
 
-// Detect language from text
-detectLang:{[text]`$.p.import[`langid][`:classify;<][raze text]0}
-
 // Find runs of tokens whose POS tags are in the set passed in
 // Returns pair (text; firstIndex)
 findPOSRuns:{[tagType;tags;doc]
@@ -125,13 +125,28 @@ findPOSRuns:{[tagType;tags;doc]
   runs:`$" "sv/:string each doc[`tokens]start+til each lengths;
   flip(runs;ii)}
 
-/util
-
 //currently only for 2-gram
-n_gram:{[corpus]
+bi_gram:{[corpus]
  tokens:raze corpus[`tokens]@'where each not corpus[`isStop]|corpus[`tokens]like\:"[0-9]*";
  occ:(distinct tokens)!{count where y=x}[tokens]each distinct tokens;
  raze{[x;y;z;n](enlist(z;n))!enlist(count where n=x 1+where z=x)%y[z]}[tokens;occ]''[tokens;next tokens]}
+
+/util 
+
+// Find Regular expressions within texts
+findRegex:{[text;expr]regex.matchAll[regex.objects[attr];text]}
+
+//Remove any ascii characters from a text
+rmv_ascii:regex.rmv_ascii
+
+//Remove certain characters from a string of text
+rmv_custom:regex.rmv_custom
+
+//Remove and replace certain characters from a string of text
+rmv_master:regex.rmv_master
+
+// Detect language from text
+detectLang:{[text]`$.p.import[`langid][`:classify;<][raze text]0}
 
 // Import all files in a dir recursively
 loadTextFromDir:{[fp]
@@ -141,3 +156,10 @@ loadTextFromDir:{[fp]
 // Get all sentences for a doc
 getSentences:i.getSentences
 
+//n-gram /slower than bi-gram, needs to be looked at
+ngram:{[corpus;n]
+ tokens:raze corpus[`tokens]@'where each not corpus[`isStop]|corpus[`tokens]like\:"[0-9]*";
+ windows:(ng-1)_{1_x,y}\[(ng:n-1)#0;tokens];
+ occ:(distinct windows)!{count where min y=x}[flip windows]each distinct windows;
+ raze{[x;y;z;tok;w;nt](enlist(w;nt))!enlist(count where nt=tok z+where min w=x)%y[w]}[flip windows;occ;ng;tokens]
+   '[windows;next(ng-1)_tokens]}
