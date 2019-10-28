@@ -14,6 +14,7 @@ tf.i.tokenDict:(!). flip(
 
 //Tokenize a text
 tf.tokenize:{
+ if[1=count x;-1"Text must be more than one character long"];
  tokenizer:tf.i.tokenopt[y];
  tokens:tokenizer[`:tokenize][enlist x];
  `$raze{.nlp.parser.i.cleanUTF8 each x}each tokens[`:to_list;<][]}
@@ -58,6 +59,6 @@ tf.wordshape:{[txt;tk;att]
  tokenizer:tf.i.tokenopt[tk];
  tokens:tokenizer[`:tokenize][enlist txt];
  tokenTab:`$raze{.nlp.parser.i.cleanUTF8 each x}each tokens[`:to_list;<][];
- attTab:att!{attrib:text[`:wordshape][y;text[`:WordShape][hsym tf.i.metaDict[x]]];
+ attTab:($[numAtt;enlist;]att)!$[numAtt:1~count[att];enlist;]{attrib:text[`:wordshape][y;text[`:WordShape][hsym tf.i.metaDict[x]]];
  where raze attrib[`:to_list;<][]}[;tokens]each att;
  attTab,(enlist `tokens)!enlist tokenTab}

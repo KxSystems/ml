@@ -29,7 +29,7 @@ email.i.getToFrom:{[msg]
   ((msg[`sender;0;1];)each msg[`to;;1]),$[98=type p:msg`payload;raze .z.s each p;()]}
 
 // Init python and q functions for reading mbox files
-email.parseMail:{email.i.parseMbox1 email.i.msgFromString[x]`.}
+email.i.parseMail:{email.i.parseMbox1 email.i.msgFromString[x]`.}
 email.i.parseMbox:{email.i.parseMbox1 each .p.list[<] .p.import[`mailbox;`:mbox]x}
 email.i.parseMbox1:{k!email.get.i[k:`sender`to`date`subject`contentType`payload]@\:.p.wrap x}
 

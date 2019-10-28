@@ -30,8 +30,28 @@ or with conda
 conda install --file requirements.txt
 ```
 
+**N.B** Tensorflow-Text is not a requirement to run all the nlp scripts, but will provide additional functionality if present
+
 * Download the English model using ```python -m spacy download en```
-   
+
+Other languages that spacy supports can be found at https://spacy.io/usage/models#languages
+
+To use the languages in the alpha stage of developement in spacy the following steps can be taken:
+
+To Download the Chinese model the jieba must be installed
+
+pip
+```bash
+pip install jieba
+```
+
+To download the Japanese model mecab must be installed
+
+pip
+```bash
+pip install mecab-python3
+```
+
 ## Installation
 Run tests with
 

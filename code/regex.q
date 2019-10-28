@@ -30,7 +30,3 @@ regex.patterns.yearmonthday:    "(",sv[regex.patterns.dtsep;3#enlist regex.patte
 
 regex.objects:regex.compile[;1b]each 1_regex.patterns
 
-regex.rmv_ascii:{x where x within (0;127)}
-regex.rmv_custom:{rtrim raze(l where{not(max ,'/)x like/:y}[;y]each l:" "vs x),'" "}
-regex.rmv_master:{{x:ssr[x;y;z];x}[;;z]/[x;y]}
-

@@ -15,7 +15,10 @@ keywords[0; `billion] > keywords[0; `transacting]
 enlist[(`u#`$())!()]~TFIDF([]tokens:enlist `$(); isStop:enlist `boolean$());
 keywords:TFIDF enlist corpus 1;
 98h~type keywords
-p:newParser[`en; enlist`keywords];
+keywords_tot:TFIDF_tot corpus
+keywords_tot[`erv]~keywords_tot[`published]
+keywords_tot[`mpr] > keywords_tot[`attached]
+p:newParser[`en;`keywords];
 corpus:p text;
 1f~compareDocs . corpus[`keywords]0 0
 0f~compareDocs[(enlist`a)!enlist 1;(enlist `b)!enlist 1]
@@ -28,6 +31,10 @@ truncate:{[precision; x]coefficient: 10 xexp precision;reciprocal[coefficient] *
 0f~truncate[3] cosineSimilarity[0 1; 1 0]
 1f~truncate[3] cosineSimilarity[0 1; 0 1]
 1f~truncate[3] cosineSimilarity[1; 1]
+centroid:sum corpus`keywords
+1 1f~2#desc compareDocToCentroid[centroid]each corpus`keywords
+1 1 1 1f~4#desc compareDocToCorpus[corpus`keywords;0]
+0 0 0f~3#asc compareDocToCorpus[corpus`keywords;0]
 explainSimilarity[(`a`b`c)!(.1 .2 .3);(`e`f`g)!(.1 .2 .3)]~(`$())!`float$()
 all(explainSimilarity[(`a`b`c)!(.1 .2 .3); (`$())!(`float$())]~(`$())!(`float$());explainSimilarity[(`$())!(`float$());(`a`b`c)!(.1 .2 .3)]~(`$())!(`float$());explainSimilarity[(`$())!(`float$());(`$())!(`float$())]~(`$())!(`float$()))        
 all(explainSimilarity[(enlist `a)!enlist .1;(enlist `a)!enlist .1]~(enlist `a)!enlist 1f;explainSimilarity[(enlist `a)!enlist .1;(enlist `a)!enlist .5]~(enlist `a)!enlist 1f;explainSimilarity[(enlist `a)!enlist .1;(enlist `b)!enlist .5]~(`$())!(`float$()))       
@@ -99,35 +106,36 @@ keywords:keywordsContinuous enlist doc;
 99h ~ type keywords
 keywords:keywordsContinuous corpus;
 {x~desc x} keywords `chairman`chief`group`enron`thanks`mountains
-emails:.nlp.loadEmails["tests/data/test.mbox"]
+emails:email.loadEmails["tests/data/test.mbox"]
 `sender`to`date`subject`contentType`payload`text~cols emails
-(last .nlp.loadEmails["tests/data/test.mbox"]`text)~"Your email client does not support HTML mails."
+(last emails`text)~"Your email client does not support HTML mails."
 ("multipart/alternative";"multipart/alternative";"multipart/alternative";"multipart/alternative";"multipart/alternative";"multipart/alternative";"text/html";"multipart/alternative";"multipart/alternative")~emails`contentType
+`sender`to`volume~cols email.getGraph emails
+1~(last email.getGraph emails)`volume
 parseURLs["http://www.google.com"]~`scheme`domainName`path`parameters`query`fragment!("http";"www.google.com";"";"";"";"")
 parseURLs["ssh://samsquanch@mx4.hotmail.com"][`scheme`domainName]~("ssh";"samsquanch@mx4.hotmail.com")
 parseURLs["https://www.google.ca:1234/test/index.html;myParam?foo=bar&quux=blort#abc=123&def=456"]~(!) . flip ((`scheme;"https");(`domainName;"www.google.ca:1234");(`path;"/test/index.html");(`parameters;   "myParam");(`query;"foo=bar&quux=blort");(`fragment;"abc=123&def=456"))
 all(parseURLs["google.ca/test/index.html"][`scheme`domainName`path]~("http";"google.ca";"/test/index.html");parseURLs["www.google.co.uk"][`scheme`domainName`path]~("http";"www.google.co.uk";""))
 parseURLs["https://网站.中国.com"]~`scheme`domainName`path`parameters`query`fragment!("https";"网站.中国.com";"";"";"";"")
 (parseURLs each ("https://travel.gc.ca/";"https://www.canada.ca/en/revenue-agency.html"))~([]scheme:("https"; "https");domainName:("travel.gc.ca"; "www.canada.ca");path:(enlist "/";"/en/revenue-agency.html");parameters: (""; "");query:(""; "");fragment:(""; ""))
-\d .
+seq:bi_gram[corpus]
+seq[`enrononline`management]~1f
+seq[`management`report]>seq[`report`june]
+`en~detectLang["This is a sentence"]
+`de~detectLang["Das ist ein Satz"]
+`fr~detectLang["C'est une phrase"]
+ascii["This is ä senteñcê"]~"This is  sentec"
+rmv_list   :("http*";"*,";"*&*";"*[0-9]*")
+rmv_custom["https//:google.com & https//:bing.com are 2 search engines!";rmv_list]~"are search engines!"
+rmv_master["https//:google.com & https//:bing.com are 2 search engines!";",.:?!/@'\n";""]~"httpsgooglecom & httpsbingcom are 2 search engines"
+loadDir:loadTextFromDir["tests/data/test.mbox"]
+`fileName`path`text~cols loadDir
+loadDir[`fileName]~enlist `test.mbox
 text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
-p:.nlp.newParser[`en;`tokens`isStop`text]
+p:newParser[`en;`tokens`isStop`text]
 corpus:p text
-phonecall:corpus i:where corpus[`text] like "*Telephone Call*"
-remaining:corpus til[count corpus]except i
-(`message`murdock`erica`error`jerry;`enron`know`let,`meeting`company)~key each 5#/:.nlp.compareCorpora[phonecall;remaining]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+phonecall:corpus n:where corpus[`text] like "*Telephone Call*"
+remaining:corpus til[count corpus]except n
+(`message`murdock`erica`error`jerry;`enron`know`let,`meeting`company)~key each 5#/:compareCorpora[phonecall;remaining]
+\d .
 

@@ -77,7 +77,7 @@ parser.i.spelldict:{{("/usr/share/hunspell/",x,"_",y,".dic";
  "/usr/share/hunspell/",x,"_",y,".aff")}[x]$["en"~x;"US";upper x]}
 
 // Returns a parser for the given language
-parser.i.newSubParser:{[lang;opts;disabled] 
+parser.i.newSubParser:{[lang;opts;disabled]  
  chklng:parser.i.alphalang lang;
  model:.p.import[$[`~chklng;`spacy;sv[`]`spacy.lang,lang]][hsym$[`~chklng;`load;chklng]
    ]. raze[$[`~chklng;lang;()];`disable pykw disabled];
@@ -91,7 +91,7 @@ parser.i.runParser:{[pyParser;colnames;opts;stopwords;docs]
   t:parser.i.cleanUTF8 each docs;
   parsed:parser.i.unpack[pyParser;opts;stopwords]each t;
   if[`keywords in opts;parsed[`keywords]:TFIDF parsed];
-  (colnames except `spell)#@[parsed;`text;:;t]}
+  (($[1=count colnames;enlist;]colnames) except `spell)#@[parsed;`text;:;t]}
 
 // Operations that must be done in q, or give better performance in q
 parser.i.unpack:{[pyParser;opts;stopwords;text]
@@ -113,7 +113,7 @@ parser.i.unpack:{[pyParser;opts;stopwords;text]
 
 // Python indexes into strings by char instead of byte, so must be modified to index a q string
 parser.i.adjustIndices:{[text;doc]
-  adj:cont-til count cont:where text within"\200\277";
+  adj:cont-til count cont:where ($[1~count text;enlist;]text) within"\200\277";
   if[`starts    in cols doc;doc[`starts   ]+:adj binr 1+doc`starts   ];
   if[`sentChars in cols doc;doc[`sentChars]+:adj binr 1+doc`sentChars];
   doc}

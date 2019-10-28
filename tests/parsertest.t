@@ -1,8 +1,8 @@
 \l nlp.q
 \l init.q
 \d .nlp
-basicParser:newParser[`en;enlist `tokens];
-keywordParser:newParser[`en; enlist `keywords]
+basicParser:newParser[`en;`tokens];
+keywordParser:newParser[`en;`keywords]
 allSpacyOptionsParser:newParser[`en;`likeEmail`likeURL`likeNumber`isStop`tokens`lemmas`uniPOS`pennPOS`starts];
 allQOptionsParser:newParser[`en; `keywords`sentChars`sentIndices];
 textPreservingParser:newParser[`en; `tokens`text];
