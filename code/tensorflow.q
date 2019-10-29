@@ -5,7 +5,9 @@ tensorf:.p.import[`tensorflow];
 text:.p.import[`tensorflow_text];
 tensorf[`:enable_eager_execution][];
 
-tf.i.tokenopt:{text[hsym tf.i.tokenDict[x]][]}
+tf.i.tokenopt:{
+ if[not x in key tf.i.tokenDict;-1"Form of tokenization not recognized"];
+ text[hsym tf.i.tokenDict[x]][]}
 
 /tokenization options for tensorflow_text
 tf.i.tokenDict:(!). flip(
@@ -29,14 +31,14 @@ tf.i.tokenizeSent:{
 
 //Sentiment analysis using tf tokenization
 tf.sent:{[txt;tk]
-  valences:.nlp.sent.i.lexicon tokens:lower rawTokens:tf.i.tokenizeSent[txt;tk];
+  valences:sent.i.lexicon tokens:lower rawTokens:tf.i.tokenizeSent[txt;tk];
   isUpperCase:(rawTokens=upper rawTokens)& rawTokens<>tokens;
   upperIndices:where isUpperCase & not all isUpperCase;
   valences[upperIndices]+:.nlp.sent.i.ALLCAPS_INCR*signum valences upperIndices;
-  valences:.nlp.sent.i.applyBoosters[tokens;isUpperCase;valences];
-  valences:.nlp.sent.i.negationCheck[tokens;valences];
-  valences:.nlp.sent.i.butCheck[tokens;valences];
-  .nlp.sent.i.scoreValence[0f^valences;txt]}
+  valences:sent.i.applyBoosters[tokens;isUpperCase;valences];
+  valences:sent.i.negationCheck[tokens;valences];
+  valences:sent.i.butCheck[tokens;valences];
+  sent.i.scoreValence[0f^valences;txt]}
 
 //Wordshape dictionary with attribute callable python functions
 tf.i.metaDict:(!). flip(
@@ -56,6 +58,7 @@ tf.i.metaDict:(!). flip(
 
 // Extrect the properties of strings 
 tf.wordshape:{[txt;tk;att]
+ if[not all l:att in key tf.i.metaDict;{-1 raze"Attribute ",string[x]," not recognised"}att where not l];
  tokenizer:tf.i.tokenopt[tk];
  tokens:tokenizer[`:tokenize][enlist txt];
  tokenTab:`$raze{.nlp.parser.i.cleanUTF8 each x}each tokens[`:to_list;<][];

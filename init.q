@@ -4,7 +4,6 @@ system"l ",path,"/","nlp.q"
 \d .nlp
 
 loadfile`:code/checkimport.p
- 
 loadfile`:code/utils.q
 loadfile`:code/regex.q
 loadfile`:code/sent.q
