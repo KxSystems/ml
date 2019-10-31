@@ -3,7 +3,6 @@ system"l ",path,"/","nlp.q"
 
 \d .nlp
 
-loadfile`:code/checkimport.p
 loadfile`:code/utils.q
 loadfile`:code/regex.q
 loadfile`:code/sent.q
@@ -12,5 +11,4 @@ loadfile`:code/date_time.q
 loadfile`:code/email.q
 loadfile`:code/cluster.q
 loadfile`:code/nlp_code.q
-if[all (`tensorflow,`$"tensorflow-text") in `$checkimport[];loadfile`:code/tensorflow.q]
 

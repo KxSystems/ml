@@ -73,9 +73,6 @@ parser.newParser:{[lang;opts]
   stopwords:(`$.p.list[model`:Defaults.stop_words]`),`$"-PRON-";
   parser.i.runParser[pyParser;colnames;opts;stopwords]}
 
-/parser.i.spelldict:{{("/usr/share/hunspell/",x,"_",y,".dic";
-/ "/usr/share/hunspell/",x,"_",y,".aff")}[x]$["en"~x;"US";upper x]}
-
 // Returns a parser for the given language
 parser.i.newSubParser:{[lang;opts;disabled]  
  chklng:parser.i.alphalang lang;

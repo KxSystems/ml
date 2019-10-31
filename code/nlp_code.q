@@ -146,7 +146,7 @@ rmv_custom:{rtrim raze(l where{not(max ,'/)x like/:y}[;y]each l:" "vs x),'" "}
 rmv_master:{{x:ssr[x;y;z];x}[;;z]/[x;y]}
 
 // Detect language from text
-detectLang:{[text]`$.p.import[`langid][`:classify;<][raze text]0}
+detectLang:{[text]`$.p.import[`langdetect][`:detect;<][text]}
 
 // Import all files in a dir recursively
 loadTextFromDir:{[fp]

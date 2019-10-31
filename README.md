@@ -30,8 +30,6 @@ or with conda
 conda install --file requirements.txt
 ```
 
-**N.B** Tensorflow (>=2.0) and Tensorflow_Text are not a requirement to run all the nlp scripts, but will provide additional functionality if installed. 
-
 * Download the English model using ```python -m spacy download en```
 
 Other languages that spacy supports can be found at https://spacy.io/usage/models#languages
@@ -65,7 +63,6 @@ Place the library file in `$QHOME` and load into a q instance using
 q)\l nlp/nlp.q
 q).nlp.loadfile`:init.q
 Loading init.q
-Loading code/checkimport.p
 Loading code/utils.q
 Loading code/regex.q
 Loading code/sent.q
@@ -75,7 +72,6 @@ Loading code/date.q
 Loading code/email.q
 Loading code/cluster.q
 Loading code/nlp_code.q
-Loading code/tensorflow.q
 q).nlp.findTimes"I went to work at 9:00am and had a coffee at 10:20"
 09:00:00.000 "9:00am" 18 24
 10:20:00.000 "10:20"  45 50
@@ -98,15 +94,15 @@ If you have [Docker installed](https://www.docker.com/community-edition) you can
     KDB+ 3.5 2018.04.25 Copyright (C) 1993-2018 Kx Systems
     l64/ 4()core 7905MB kx 0123456789ab 172.17.0.2 EXPIRE 2018.12.04 bob@example.com KOD #0000000
 
-    Loading utils.q
-    Loading regex.q
-    Loading sent.q
-    Loading parser.q
-    Loading time.q
-    Loading date.q
-    Loading email.q
-    Loading cluster.q
-    Loading nlp.q
+    Loading code/utils.q
+    Loading code/regex.q
+    Loading code/sent.q
+    Loading code/parser.q
+    Loading code/time.q
+    Loading code/date.q
+    Loading code/email.q
+    Loading code/cluster.q
+    Loading code/nlp_code.q
     q).nlp.findTimes"I went to work at 9:00am and had a coffee at 10:20"
     09:00:00.000 "9:00am" 18 24
     10:20:00.000 "10:20"  45 50
