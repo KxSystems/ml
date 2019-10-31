@@ -73,8 +73,8 @@ parser.newParser:{[lang;opts]
   stopwords:(`$.p.list[model`:Defaults.stop_words]`),`$"-PRON-";
   parser.i.runParser[pyParser;colnames;opts;stopwords]}
 
-parser.i.spelldict:{{("/usr/share/hunspell/",x,"_",y,".dic";
- "/usr/share/hunspell/",x,"_",y,".aff")}[x]$["en"~x;"US";upper x]}
+/parser.i.spelldict:{{("/usr/share/hunspell/",x,"_",y,".dic";
+/ "/usr/share/hunspell/",x,"_",y,".aff")}[x]$["en"~x;"US";upper x]}
 
 // Returns a parser for the given language
 parser.i.newSubParser:{[lang;opts;disabled]  
@@ -82,8 +82,9 @@ parser.i.newSubParser:{[lang;opts;disabled]
  model:.p.import[$[`~chklng;`spacy;sv[`]`spacy.lang,lang]][hsym$[`~chklng;`load;chklng]
    ]. raze[$[`~chklng;lang;()];`disable pykw disabled];
   if[`sbd in opts;model[`:add_pipe]$[`~chklng;model[`:create_pipe;`sentencizer];.p.pyget `x_sbd]];
-  if[`spell in opts;sphun:.p.import[`spacy_hunspell]`:spaCyHunSpell;hunspell:sphun[model;
-  .p.tuple parser.i.spelldict string lang];model[`:add_pipe]hunspell];  
+  if[`spell in opts;if[not .p.import[`spacy.tokens][`:Token][`:has_extension]["hunspell_spell"]`;
+   sphun:.p.import[`spacy_hunspell]`:spaCyHunSpell;hunspell:sphun[model;
+  `$lower .p.import[`platform][`:system][]`];model[`:add_pipe]hunspell]];  
  model}
 
 // Operations that must be done in q, or give better performance in q

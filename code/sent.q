@@ -92,7 +92,7 @@ sent.i.negationCheck:{[tokens;valences]
 // Load the dictionary of terms and their sentiment
 // Hutto, C.J. & Gilbert, E.E. (2014). VADER: A Parsimonious Rule-based Model for Sentiment Analysis of Social Media
 // Text. Eighth International Conference on Weblogs and Social Media (ICWSM-14). Ann Arbor, MI, June 2014.
-sent.i.lexicon :(!).("SF";"\t")0: hsym `$.nlp.path,"/code/vader/lexicon.txt";
+sent.i.lexicon :(!).("SF";"\t")0: hsym `$.nlp.path,"/vader/lexicon.txt";
 sent.i.lexicon,:(!). flip(
   (`$"the shit"; 3f);
   (`$"the bomb"; 3f);

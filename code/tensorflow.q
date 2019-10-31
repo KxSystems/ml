@@ -21,6 +21,16 @@ tf.tokenize:{
  tokens:tokenizer[`:tokenize][enlist x];
  `$raze{.nlp.parser.i.cleanUTF8 each x}each tokens[`:to_list;<][]}
 
+//Tokenize a text
+tf.tokenize2:{
+ if[1=count x;-1"Text must be more than one character long"];
+ tokenizer:tf.i.tokenopt[y];
+ tokens:tokenizer[`:tokenize_with_offsets;<][enlist x];
+ dict:`tokens`sent_start`sent_end!(`$raze{.nlp.parser.i.cleanUTF8 each x}each (.p.wrap tokens[0])[`:to_list;<][];
+  (.p.wrap tokens[1])[`:to_list;<][];(.p.wrap tokens[2])[`:to_list;<][]);
+  dict[z]}
+
+
 //Tokenization used for sentiment analysis-doesnt include symbols
 tf.i.tokenizeSent:{
  tokenizer:tf.i.tokenopt[y];

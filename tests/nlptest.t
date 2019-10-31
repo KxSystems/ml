@@ -106,6 +106,9 @@ keywords:keywordsContinuous enlist doc;
 99h ~ type keywords
 keywords:keywordsContinuous corpus;
 {x~desc x} keywords `chairman`chief`group`enron`thanks`mountains
+(1 1f,(2%3),(1%3),0.5 0.5 0.5 0.5 0.5 0.5)~value 10#ngram[enlist first corpus;2]
+1 1 .5 .5 1 1 1 1 1 1f~value 10#ngram[enlist first corpus;3]
+((`enrononline`management`report);(`management`report`june);(`report`june`attached))~key 3#ngram[enlist first corpus;3]
 emails:email.loadEmails["tests/data/test.mbox"]
 `sender`to`date`subject`contentType`payload`text~cols emails
 (last emails`text)~"Your email client does not support HTML mails."
@@ -137,5 +140,7 @@ corpus:p text
 phonecall:corpus n:where corpus[`text] like "*Telephone Call*"
 remaining:corpus til[count corpus]except n
 (`message`murdock`erica`error`jerry;`enron`know`let,`meeting`company)~key each 5#/:compareCorpora[phonecall;remaining]
+txt:"You can call the number 123 456 7890 or email us on name@email.com in book an appoinment for January,February and March for £30.00"
+findRegex[txt;`phoneNumber`emailAddress`yearmonthList`money]~`phoneNumber`emailAddress`yearmonthList`money!(enlist (" 123 456 7890";23;36);enlist("name@email.com";52;66);(("January";93;100);("February";101;109);("March";114;119);("30";125;127);("00";128;130));enlist("\302\24330.00";124;130))
 \d .
 

@@ -1,6 +1,6 @@
 \d .nlp
 
-/Date-Time
+// Date-Time
 
 // Find all dates : list of 5-tuples (startDate; endDate; dateText; startIndex; 1+endIndex)
 findDates:tm.findDates
@@ -8,7 +8,7 @@ findDates:tm.findDates
 // Find all times : list of 4-tuples (time; timeText; startIndex; 1+endIndex)
 findTimes:tm.findTimes
 
-/Email
+// Email
 
 // Read mbox file, convert to table, parse metadata & content
 email.loadEmails:loadEmails:email.getMboxText
@@ -19,12 +19,12 @@ email.getGraph:{[msgs]
 
 email.parseMail:email.i.parseMail
 
-/Sentiment
+// Sentiment
 
 // Calculate sentiment of sentence of short message
 sentiment:sent.score
 
-/Comparing docs/terms
+// Comparing docs/terms
 
 // Give 2 dicts of each term's affinity to each corpus
 // Algorithm from Rayson, Paul, and Roger Garside. "Comparing corpora using frequency profiling."
@@ -64,10 +64,10 @@ compareDocToCentroid:{[centroid;doc]
 // Calc cosine similarity between doc and entire corpus
 compareDocToCorpus:i.compareDocToCorpus
 
-/ Jaro-Winkler distance between 2 strings
+// Jaro-Winkler distance between 2 strings
 jaroWinkler:{i.jaroWinkler[lower x;lower y]}
 
-/Feature Vectors
+// Feature Vectors
 
 // Generate feature vector (of stemmed tokens) for a term
 findRelatedTerms:{[docs;term]
@@ -107,7 +107,7 @@ TFIDF:{[corpus]
 
 TFIDF_tot:{[corpus]desc sum t%'sum each t:TFIDF corpus}
 
-/Parse Data
+// Parse Data
 
 // Create a new parser using a spaCy model (must already be installed)
 newParser:parser.newParser
@@ -115,7 +115,7 @@ newParser:parser.newParser
 // Parse urls to dictionaries
 parseURLs:{`scheme`domainName`path`parameters`query`fragment!i.parseURLs x}
 
-/Exploratory Analysis 
+// Exploratory Analysis 
 
 // Find runs of tokens whose POS tags are in the set passed in
 // Returns pair (text; firstIndex)
@@ -125,24 +125,24 @@ findPOSRuns:{[tagType;tags;doc]
   runs:`$" "sv/:string each doc[`tokens]start+til each lengths;
   flip(runs;ii)}
 
-//currently only for 2-gram
+// Currently only for 2-gram
 bi_gram:{[corpus]
  tokens:raze corpus[`tokens]@'where each not corpus[`isStop]|corpus[`tokens]like\:"[0-9]*";
  occ:(distinct tokens)!{count where y=x}[tokens]each distinct tokens;
  raze{[x;y;z;n](enlist(z;n))!enlist(count where n=x 1+where z=x)%y[z]}[tokens;occ]''[tokens;next tokens]}
 
-/util 
+// Util 
 
 // Find Regular expressions within texts
-findRegex:{[text;expr]regex.matchAll[regex.objects[attr];text]}
+findRegex:{[text;expr]($[n;enlist;]expr)!$[n:1=count[expr];enlist;]{regex.matchAll[regex.objects[x];y]}[;text]each expr}
 
-//Remove any ascii characters from a text
+// Remove any ascii characters from a text
 ascii:{x where x within (0;127)}
 
-//Remove certain characters from a string of text
+// Remove certain characters from a string of text
 rmv_custom:{rtrim raze(l where{not(max ,'/)x like/:y}[;y]each l:" "vs x),'" "}
 
-//Remove and replace certain characters from a string of text
+// Remove and replace certain characters from a string of text
 rmv_master:{{x:ssr[x;y;z];x}[;;z]/[x;y]}
 
 // Detect language from text
@@ -156,10 +156,8 @@ loadTextFromDir:{[fp]
 // Get all sentences for a doc
 getSentences:i.getSentences
 
-//n-gram /slower than bi-gram, needs to be looked at
+// n-gram 
 ngram:{[corpus;n]
  tokens:raze corpus[`tokens]@'where each not corpus[`isStop]|corpus[`tokens]like\:"[0-9]*";
- windows:(ng-1)_{1_x,y}\[(ng:n-1)#0;tokens];
- occ:(distinct windows)!{count where min y=x}[flip windows]each distinct windows;
- raze{[x;y;z;tok;w;nt](enlist(w;nt))!enlist(count where nt=tok z+where min w=x)%y[w]}[flip windows;occ;ng;tokens]
-   '[windows;next(ng-1)_tokens]}
+ raze[key[b],/:'{key x}each value b]!raze value each value b:{(count each group x)%count x
+  }each last[tab]group neg[n-1]_flip(n-1)#tab:rotate\:[til n]tokens}

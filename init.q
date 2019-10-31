@@ -12,5 +12,5 @@ loadfile`:code/date_time.q
 loadfile`:code/email.q
 loadfile`:code/cluster.q
 loadfile`:code/nlp_code.q
-if[0~checkimport`tensorflow;loadfile`:code/tensorflow.q]
+if[all (`tensorflow,`$"tensorflow-text") in `$checkimport[];loadfile`:code/tensorflow.q]
 
