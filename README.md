@@ -50,6 +50,27 @@ pip
 pip install mecab-python3
 ```
 
+* spacy_hunspell is not a requirement to run these scripts, but can be installed using the following methods
+
+Linux
+```bash
+sudo apt-get install libhunspell-dev hunspell
+pip install spacy_hunspell
+```
+
+mac
+```bash
+wget https://iweb.dl.sourceforge.net/project/wordlist/speller/2019.10.06/hunspell-en_US-2019.10.06.zip;
+unzip hunspell-en_US-2019.10.06; sudo mv en_US.dic en_US.aff /Library/Spelling/; 
+brew install hunspell;
+export C_INCLUDE_PATH=/usr/local/include/hunspell;
+sudo ln -sf /usr/local/lib/libhunspell-1.7.a /usr/local/lib/libhunspell.a;
+sudo ln -sf /usr/local/Cellar/hunspell/1.7.0_2/lib/libhunspell-1.7.dylib /usr/local/Cellar/hunspell/1.7.0_2/lib/libhunspell.dylib;
+CFLAGS=$(pkg-config --cflags hunspell) LDFLAGS=$(pkg-config --libs hunspell) pip install hunspell==0.5.0
+```
+
+At the moment we do not support spacy_hunspell installation for windows
+
 ## Installation
 Run tests with
 
@@ -118,9 +139,7 @@ If you have [Docker installed](https://www.docker.com/community-edition) you can
 
 Documentation is available on the [nlp](https://code.kx.com/q/ml/nlp/) homepage.
 
-
-
-  
+ 
 
 ## Status
   

@@ -26,7 +26,15 @@ install:
   # grab latest embedpy
   - if [[ "x$QLIC_KC" != "x" ]]; then
       echo -n $QLIC_KC |base64 --decode > q/kc.lic;
-      pip -q install -r requirements.txt;
+      if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install libhunspell-dev hunspell;elif [ $TRAVIS_OS_NAME = osx ];
+      then sudo mkdir /Library/Spelling/;echo 'export PATH="/usr/local/opt/gettext/bin:$PATH"' >> ~/.bash_profile;
+      wget https://iweb.dl.sourceforge.net/project/wordlist/speller/2019.10.06/hunspell-en_US-2019.10.06.zip;
+      unzip hunspell-en_US-2019.10.06; sudo mv en_US.dic en_US.aff /Library/Spelling/; brew install hunspell;
+      export C_INCLUDE_PATH=/usr/local/include/hunspell;
+      sudo ln -sf /usr/local/lib/libhunspell-1.7.a /usr/local/lib/libhunspell.a;
+      sudo ln -sf /usr/local/Cellar/hunspell/1.7.0_2/lib/libhunspell-1.7.dylib /usr/local/Cellar/hunspell/1.7.0_2/lib/libhunspell.dylib;
+      CFLAGS=$(pkg-config --cflags hunspell) LDFLAGS=$(pkg-config --libs hunspell) pip install hunspell==0.5.0;fi;
+      pip install -r requirements.txt;
       python -m spacy download en; 
     fi
 beforescript:
