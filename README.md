@@ -27,7 +27,7 @@ pip install -r requirements.txt
 ```
 or with conda
 ```bash
-conda install --file requirements.txt
+conda install -c conda-forge --file requirements.txt
 ```
 
 * Download the English model using ```python -m spacy download en```
@@ -69,7 +69,7 @@ sudo ln -sf /usr/local/Cellar/hunspell/1.7.0_2/lib/libhunspell-1.7.dylib /usr/lo
 CFLAGS=$(pkg-config --cflags hunspell) LDFLAGS=$(pkg-config --libs hunspell) pip install hunspell==0.5.0
 ```
 
-At the moment we do not support spacy_hunspell installation for windows
+At the moment spacy_hunspell does not support installation for windows. More information can be found at https://github.com/tokestermw/spacy_hunspell
 
 ## Installation
 Run tests with
