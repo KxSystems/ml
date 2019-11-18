@@ -242,7 +242,7 @@ np:.p.import[`numpy]
 .ml.fresh.feat.mean2dercentral[xj] ~ mean_second_derivative_central[xj]
 .ml.fresh.feat.mean2dercentral[xf] ~ mean_second_derivative_central[xf]
 .ml.fresh.feat.mean2dercentral[xi] ~ mean_second_derivative_central[xi]
-.ml.fresh.feat.mean2dercentral[xb] ~ 0.0005
+.ml.fresh.feat.mean2dercentral[xb] ~ 0f
 .ml.fresh.feat.mean2dercentral[x0] ~ 0n
 .ml.fresh.feat.mean2dercentral[x1] ~ 0n
 .ml.fresh.feat.mean2dercentral[x2] ~ 0n
@@ -390,7 +390,7 @@ abs[.ml.fresh.feat.binnedentropy[xnull;50]] ~ 0f
 .ml.fresh.feat.treverseasymstat[xj;2] ~ time_reversal_asymmetry_statistic[xj;2]
 .ml.fresh.feat.treverseasymstat[xf;2] ~ time_reversal_asymmetry_statistic[xf;2]
 .ml.fresh.feat.treverseasymstat[xi;2] ~ time_reversal_asymmetry_statistic[xi;2]
-.ml.fresh.feat.treverseasymstat[xb;2] ~ 0.001
+.ml.fresh.feat.treverseasymstat[xb;2] ~ 0.0001
 .ml.fresh.feat.treverseasymstat[x0;2] ~ 0f
 .ml.fresh.feat.treverseasymstat[x1;2] ~ "f"$time_reversal_asymmetry_statistic[x1;2]
 .ml.fresh.feat.treverseasymstat[x2;2] ~ "f"$time_reversal_asymmetry_statistic[x2;2]
