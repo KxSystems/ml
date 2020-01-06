@@ -17,7 +17,9 @@ The NLP allows users to parse dataset using the spacy model from python in which
 The following python packages are required:
   1. numpy
   2. beautifulsoup4
-  3. spacy
+  3. spacy 
+
+* Tests were run using spacy version 2.2.1
 
 To install these packages with
 

@@ -1,4 +1,4 @@
 numpy
 beautifulsoup4
-spacy
+spacy==2.2.1
 langdetect
