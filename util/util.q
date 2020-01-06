@@ -3,7 +3,7 @@
 / shape of matrix/table
 shape:{-1_count each first scan x}
 / values between x and y in steps of length z
-arange:{x+z*til ceiling(y-x)%z}
+arange:{x+z*til 0|ceiling(y-x)%z}
 / z evenly spaced values between x and y
 linspace:{x+til[z]*(y-x)%z-1}
 / identity matrix
