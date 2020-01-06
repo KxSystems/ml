@@ -26,7 +26,7 @@ install:
   # grab latest embedpy
   - if [[ "x$QLIC_KC" != "x" ]]; then
       echo -n $QLIC_KC |base64 --decode > q/kc.lic;
-      pip install -r requirements.txt;
+      pip -q install -r requirements.txt;
       python -m spacy download en; 
     fi
 beforescript:
