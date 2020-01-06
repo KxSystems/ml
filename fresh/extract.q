@@ -108,7 +108,7 @@ fresh.createfeatures:{[data;aggs;cnames;conf]
  p0:exec f from conf where valid,pnum=0;
  p1:exec f,pnames,pvals from conf where valid,pnum>0;
  calcs:p0,raze p1[`f]cross'p1[`pnames],'/:'(cross/)each p1`pvals;
- calcs:(cnames:$[n:"j"$abs system"s";(n;0N)#;enlist]cnames)cross\:calcs;
+ calcs:(cnames:$[n:"j"$abs system"s";$[n<count cnames;(n;0N);(n)]#;enlist]cnames)cross\:calcs;
  q:{flip[(` sv'`.ml.fresh.feat,'x[;1];x[;0])],'last@''2_'x}each calcs;
  q:(`$ssr[;".";"o"]@''"_"sv''string raze@''calcs)!'q;
  r:(uj/).[?[;();aggs!aggs;]]peach flip((cnames,\:aggs:aggs,())#\:data;q);

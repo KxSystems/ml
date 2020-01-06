@@ -23,6 +23,8 @@ p)def< count_above_mean(x): x = np.asarray(x); m = np.mean(x); return np.where(x
 p)def< count_below_mean(x): x = np.asarray(x); m = np.mean(x); return np.where(x < m)[0].shape[0]
 p)def< first_location_of_maximum(x): x = np.asarray(x); return np.argmax(x) / len(x) if len(x) > 0 else np.NaN
 p)def< first_location_of_minimum(x): x = np.asarray(x); return np.argmin(x) / len(x) if len(x) > 0 else np.NaN
+p)def< last_location_of_minimum(x): x = np.asarray(x); return 1.0 - (1+np.argmin(x[::-1]))/ len(x) if len(x) > 0 else np.NaN
+p)def< last_location_of_maximum(x): x = np.asarray(x); return 1.0 - (1+np.argmax(x[::-1]))/ len(x) if len(x) > 0 else np.NaN
 p)def< ratio_val_num_to_t_series(x):return len(set(x))/len(x)
 p)def< ratio_beyond_r_sigma(x,r):return sum(abs(x - np.mean(x)) > r * np.std(x))/len(x)
 p)def< large_standard_deviation(x,r):x = np.asarray(x);return np.std(x) > (r * (max(x) - min(x)))
