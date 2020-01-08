@@ -1,4 +1,4 @@
-# How to contribute
+#How to contribute
 
 Thanks for choosing to contribute to this project.
 
@@ -6,7 +6,7 @@ If you haven't already, please view the [README](README.md) for an introduction 
 
 ## Contributing as a user (non-development)
 
-As a non-developer, you can still contribute in many ways. We are especially interesting in hearing from people using the project in production/working environments.
+As a non-developer, you can still contribute in many ways. We are especially interested in hearing from people using the project in production/working environments.
 
 If you spot any problems, please raise an issue within the project and provide as much information as possible. This should enable us to recreate the issue and check that any fix is appropriate.
 
