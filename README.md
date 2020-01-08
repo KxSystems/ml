@@ -1,7 +1,7 @@
 # Machine learning toolkit
 
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/ml)](https://github.com/kxsystems/ml/releases) [![Travis (.org) branch](https://img.shields.io/travis/kxsystems/embedpy/master?label=travis%20build)](https://travis-ci.org/kxsystems/ml/branches)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/ml)](https://github.com/kxsystems/ml/releases) [![Travis (.org) branch](https://img.shields.io/travis/kxsystems/embedpy/master?label=travis%20build)](https://travis-ci.org/KxSystems/ml.svg?branch=master)
 
 ## Introduction
 This repository contains the following sections:
