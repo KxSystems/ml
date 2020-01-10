@@ -1,4 +1,4 @@
-#How to contribute
+# How to contribute
 
 Thanks for choosing to contribute to this project.
 
