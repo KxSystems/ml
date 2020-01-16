@@ -6,7 +6,7 @@ cluster.i.asKeywords:{i.fillEmptyDocs $[-9=type x[0]`keywords;x;x`keywords]}
 // Get cohesiveness of cluster as measured by mean sum of squares error
 cluster.MSE:{[docs]
   $[0=n:count docs;0n;1=n;1.;0=sum count each docs;0n;
-    avg d*d:0^i.compareDocToCentroid[i.takeTop[50]i.fastSum docs]each i.fillEmptyDocs docs]}
+    avg d*d:0^compareDocToCentroid[i.takeTop[50]i.fastSum docs]each i.fillEmptyDocs docs]}
 
 // Bisecting k-means algo (repeatedly splits largest cluster in 2)
 cluster.bisectingKMeans:{[docs;k;n]
@@ -24,7 +24,7 @@ cluster.kmeans:{[docs;k;n]
   }[docs]/(k;0N)#neg[nd]?nd:count docs:cluster.i.asKeywords docs}
 
 // Match each doc to nearest centroid
-cluster.i.groupByCentroids:{[centroids;docs]
+cluster.groupByCentroids:{[centroids;docs]
   value group{[centroids;doc]$[0<m:max s:compareDocs[doc]each centroids;s?m;0n]}[centroids]each docs}
 
 // Merge any clusters with significant overlap into a single cluster
@@ -66,7 +66,7 @@ cluster.MCL:{[docs;mn;sample]
   keywords:docs idx:$[sample;(neg"i"$sqrt count docs)?count docs;til count docs];
   similarities:i.matrixFromRaggedList i.compareDocToCorpus[keywords]each til count keywords;
   // Find all the clusters
-  clustersOfOne:1=count each clusters:cluster.similarityMatrix similarities>=mn;
+  clustersOfOne:1=count each clusters:cluster.i.similarityMatrix similarities>=mn;
   if[not sample;:clusters where not clustersOfOne];
   // Any cluster of 1 documents isn't a cluster, so throw it out
   outliers:raze clusters where clustersOfOne;
@@ -76,11 +76,11 @@ cluster.MCL:{[docs;mn;sample]
   centroids:avg each keywords clusters;
   // Move each non-outlier to the nearest centroid
   nonOutliers:(til count docs)except idx outliers;
-  nonOutliers cluster.i.groupByCentroids[centroids;docs nonOutliers]}
+  nonOutliers cluster.groupByCentroids[centroids;docs nonOutliers]}
 
 // Graph clustering that works on a similarity matrix
 cluster.i.columnNormalize:{[mat]0f^mat%\:sum mat}
-cluster.similarityMatrix:{[mat]
+cluster.i.similarityMatrix:{[mat]
   matrix:"f"$mat;
   // SM Van Dongen's MCL clustering algorithm
   MCL:{[mat]
@@ -105,4 +105,4 @@ cluster.summarize:{[docs;n]
     centroids,:nearest:i.maxIndex docs[;i.maxIndex summary];
     summary-:docs nearest;
     summary:(where summary<0)_ summary];
-  cluster.i.groupByCentroids[docs centroids;docs]}
+  cluster.groupByCentroids[docs centroids;docs]}

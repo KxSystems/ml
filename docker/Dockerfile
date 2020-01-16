@@ -35,7 +35,7 @@ USER kx
 
 RUN . /opt/conda/etc/profile.d/conda.sh \
 	&& conda activate kx \
-	&& conda install --file /opt/kx/nlp/requirements.txt \
+	&& conda install -c conda-forge --file /opt/kx/nlp/requirements.txt \
 	&& conda clean -y --all \
 	&& python -m spacy download en
 

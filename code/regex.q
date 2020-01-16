@@ -28,7 +28,5 @@ regex.patterns.yearmonthdayList:"(",sv["|";regex.patterns`year`month`day],")"
 regex.patterns.yearmonth:       "(",sv[regex.patterns.dtsep;2#enlist regex.patterns.yearmonthList   ],")"
 regex.patterns.yearmonthday:    "(",sv[regex.patterns.dtsep;3#enlist regex.patterns.yearmonthdayList],")"
 
-/regex.patterns.mnsep:"[\\t \\\\]+"
-/regex.patterns.yearmonth: "(",sv[regex.patterns.mnsep;2#enlist regex.patterns.yearmonthList   ],")"
-
 regex.objects:regex.compile[;1b]each 1_regex.patterns
+

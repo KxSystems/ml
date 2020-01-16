@@ -1,7 +1,8 @@
+\l nlp.q
 \l init.q
 \d .nlp
-text: first (enlist "*";",";1) 0: `:./data/miniJeff.txt
-p:newParser[`en; enlist`keywords]
+text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
+p:newParser[`en;`keywords]
 corpus:p text
 emptyDoc:([] keywords:enlist ()!())
 truncate:{[precision; x]coefficient: 10 xexp precision;reciprocal[coefficient]*`long$coefficient*x}
@@ -78,17 +79,17 @@ orthogonalDocs:(`a`b!1 1f;`c`d!1 1f;`e`f!1 1f)
 .2 ~ truncate[2] cluster.MSE corpus[1 3 5 7 9; `keywords]
 corpus:p ("beep beep beep";"In Brittany, the Bretons play the bombard";"The Bretons of Brittany enjoy bombard music";"A special hand tool is needed to adjust a bike chain to the right length";"A chain whip is a tool used by a bike mechanic";"Chain oil is recommeneded instead of WD-40"; "A bike mechanic frequently gets chain oil on their hands"; "I enjoy medieval music";"The lute is a common medieval instrument";"Wire strings are common on medieval harps";"Lutes have too many strings";"Medieval wind instruments are also abundant";"No medieval wind instruments had strings";"The modern harp has mostly nylon strings";"Modern music is much less shrill");
 centroids:sum each corpus[`keywords] (enlist 0;1 + til 2;3 + til 4;7 + til 8)
-cluster.i.groupByCentroids[centroids; 1 _ corpus `keywords] ~ -1 + (1 2;3 4 5 6;7 8 9 10 11 12 13 14)
-cluster.i.groupByCentroids[centroids enlist 0; 1 _ corpus `keywords]~ enlist til 14
-cluster.i.groupByCentroids[centroids 1 2; corpus `keywords]~ (0 8 9 10 11 12 13;1 2 7 14;3 4 5 6)
-cluster.i.groupByCentroids[centroids; corpus `keywords]~(enlist 0;1 2;3 4 5 6;7 8 9 10 11 12 13 14)
-cluster.i.groupByCentroids[centroids 0 1 2;()] ~ ()
-cluster.i.groupByCentroids[centroids enlist 2; corpus `keywords] ~ (0 1 2 7 8 9 10 11 12 13 14; 3 4 5 6)
-cluster.i.groupByCentroids[centroids; corpus[enlist 0] `keywords]~ enlist enlist 0           
-(til 15) ~ asc raze cluster.i.groupByCentroids[1_centroids;corpus`keywords]
+cluster.groupByCentroids[centroids; 1 _ corpus `keywords] ~ -1 + (1 2;3 4 5 6;7 8 9 10 11 12 13 14)
+cluster.groupByCentroids[centroids enlist 0; 1 _ corpus `keywords]~ enlist til 14
+cluster.groupByCentroids[centroids 1 2; corpus `keywords]~ (0 8 9 10 11 12 13;1 2 7 14;3 4 5 6)
+cluster.groupByCentroids[centroids; corpus `keywords]~(enlist 0;1 2;3 4 5 6;7 8 9 10 11 12 13 14)
+cluster.groupByCentroids[centroids 0 1 2;()] ~ ()
+cluster.groupByCentroids[centroids enlist 2; corpus `keywords] ~ (0 1 2 7 8 9 10 11 12 13 14; 3 4 5 6)
+cluster.groupByCentroids[centroids; corpus[enlist 0] `keywords]~ enlist enlist 0           
+(til 15) ~ asc raze cluster.groupByCentroids[1_centroids;corpus`keywords]
 \d .
-text: first (enlist "*";",";1) 0: `:./data/miniJeff.txt
-p:.nlp.newParser[`en; enlist`keywords]
+text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
+p:.nlp.newParser[`en;`keywords]
 corpus:p text
 emptyDoc:([] keywords:enlist ()!())
 cluster:.nlp.cluster.summarize[corpus;10]
