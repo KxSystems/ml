@@ -1,11 +1,11 @@
 \d .nlp
 
 //Loading python script to extract rtf text
-system"l ",.nlp.path,"/","extract_rtf.p";
-striprtf:.p.get[`striprtf;<]
+system"l ",.nlp.path,"/","code/extract_rtf.p";
+i.striprtf:.p.get[`striprtf;<]
 
 // Read mbox file, convert to table, parse metadata & content
-email.i.getMboxText:{[fp]update text:.nlp.email.i.extractText each payload from email.i.parseMbox fp}
+email.getMboxText:{[fp]update text:.nlp.email.i.extractText each payload from email.i.parseMbox fp}
 
 email.i.findmime:{all(99=type each y`payload;x~/:y`contentType;0b~'y[`payload]@'`attachment)}
 email.i.html2text:{email.i.bs[x;"html.parser"][`:get_text;"\\n"]`} / extract text from html
@@ -16,7 +16,7 @@ email.i.extractText:{
    / use beautiful soup to extract text from html
    count i:where email.i.findmime["text/html"]x ;"\n\n"sv{email.i.html2text x[y][`payload]`content}[x]each i;
    / use python script to extract text from rtf
-   count i:where email.i.findmime["application/rtf"]x ;"\n\n"sv{striprtf x[y][`payload]`content}[x]each i;
+   count i:where email.i.findmime["application/rtf"]x ;"\n\n"sv{i.striprtf x[y][`payload]`content}[x]each i;
    "\n\n"sv .z.s each x`payload]}
 
 
@@ -31,7 +31,7 @@ email.i.getToFrom:{[msg]
 // Init python and q functions for reading mbox files
 email.i.parseMail:{email.i.parseMbox1 email.i.msgFromString[x]`.}
 email.i.parseMbox:{email.i.parseMbox1 each .p.list[<] .p.import[`mailbox;`:mbox]x}
-email.i.parseMbox1:{k!email.get[k:`sender`to`date`subject`contentType`payload]@\:.p.wrap x}
+email.i.parseMbox1:{k!email.get.i[k:`sender`to`date`subject`contentType`payload]@\:.p.wrap x}
 
 email.i.bs:.p.import[`bs4]`:BeautifulSoup
 email.i.getaddr:.p.import[`email.utils;`:getaddresses;<]
@@ -40,13 +40,13 @@ email.i.decodehdr:.p.import[`email.header;`:decode_header]
 email.i.makehdr:.p.import[`email.header;`:make_header]
 email.i.msgFromString:.p.import[`email]`:message_from_string
 
-email.get.sender:{email.i.getaddr e where not(::)~'e:raze x[`:get_all;<]each("from";"resent-from")}
-email.get.to:{email.i.getaddr e where not any(::;"")~/:\:e:raze x[`:get_all;<]each("to";"cc";"resent-to";"resent-cc")}
-email.get.date:{"P"$"D"sv".:"sv'3 cut{$[1=count x;"0";""],x}each string 6#email.i.parsedate x[@;`date]}
-email.get.subject:{$[(::)~(s:x[@;`subject])`;"";email.i.makehdr[email.i.decodehdr s][`:__str__][]`]}
-email.get.contentType:{x[`:get_content_type][]`}
+email.get.i.sender:{email.i.getaddr e where not(::)~'e:raze x[`:get_all;<]each("from";"resent-from")}
+email.get.i.to:{email.i.getaddr e where not any(::;"")~/:\:e:raze x[`:get_all;<]each("to";"cc";"resent-to";"resent-cc")}
+email.get.i.date:{"P"$"D"sv".:"sv'3 cut{$[1=count x;"0";""],x}each string 6#email.i.parsedate x[@;`date]}
+email.get.i.subject:{$[(::)~(s:x[@;`subject])`;"";email.i.makehdr[email.i.decodehdr s][`:__str__][]`]}
+email.get.i.contentType:{x[`:get_content_type][]`}
 / return a dict of `attachment`content or a table of payloads, content is byte[] for binary data, char[] for text
-email.get.payload:{
+email.get.i.payload:{
  if[x[`:is_multipart][]`;:email.i.parseMbox1 each x[`:get_payload][]`];
  raw:x[`:get_payload;`decode pykw 1]; / raw bytes decoded from base64 encoding, wrapped embedPy
  if[all("application/rtf"~(x[`:get_content_type][]`);"attachment"~x[`:get_content_disposition][]`);:`attachment`content!(0b;raw`)];
