@@ -137,7 +137,7 @@ loadDir[`fileName]~enlist `test.mbox
 text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
 p:newParser[`en;`tokens`isStop`text]
 corpus:p text
-phonecall:corpus i:where corpus[`text] like "*Telephone Call*"
+phonecall:corpus n:where corpus[`text] like "*Telephone Call*"
 remaining:corpus til[count corpus]except n
 (`message`murdock`erica`error`jerry;`enron`know`let,`meeting`company)~key each 5#/:compareCorpora[phonecall;remaining]
 txt:"You can call the number 123 456 7890 or email us on name@email.com in book an appoinment for January,February and March for £30.00"
