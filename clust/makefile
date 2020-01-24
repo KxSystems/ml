@@ -19,11 +19,11 @@ MS    = $(shell getconf LONG_BIT)
 QARCH = $(OSFLAG)$(MS)
 Q     = $(QHOME)/$(QARCH) 
 
-cure.so: cure.c cure.h kdtree.so kdtree.h
-	$(CC) $(CFLAGS) $(OSXOPTS) $(LNK) -o cure.so cure.c kdtree.so $(LDRPATH)
+cure.so: src/cure.c src/cure.h kdtree.so src/kdtree.h
+	$(CC) $(CFLAGS) $(OSXOPTS) $(LNK) -o cure.so src/cure.c kdtree.so $(LDRPATH)
 
-kdtree.so: kdtree.c kdtree.h
-	$(CC) $(CFLAGS) $(OSXOPTS) $(LNK) -o kdtree.so kdtree.c $(LDRPATH)
+kdtree.so: src/kdtree.c src/kdtree.h
+	$(CC) $(CFLAGS) $(OSXOPTS) $(LNK) -o kdtree.so src/kdtree.c $(LDRPATH)
 
 install:
 	install cure.so kdtree.so $(Q)
