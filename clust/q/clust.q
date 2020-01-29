@@ -23,6 +23,7 @@ clust.ap:{[d;dmp;p;b]
 /*     > s  = boolean, 1b to return a dictionary for the streaming notebook, 0b to return a table of clusters
 clust.cure:{[d;k;r;i]
  i:(`df`c`b`s!(`e2dist;0;0b;0b)),i; /defaults
+ if[100h<>type@[{get x};`.ml.clust.ccure;{x;-1"C function not available defaulting to q";0b}];i[`b]:0b];
  d:`float$d;
  if[not i[`df]in key clust.i.dd;'clust.i.errors`derr];
  $[i`b;clust.i.algoscc[d;k;clust.ccure.dfd[i`df];r;i`c;();clust.ccure;i`s];clust.i.algoscc[d;k;i`df;r;i`c;();clust;i`s]]}
@@ -42,12 +43,13 @@ clust.dbscan:{[d;df;p;e]
  if[not df in key clust.i.dd;'clust.i.errors`derr];
  dm:clust.i.distmat[df;e;flip d]'[d;k:til count d];
  t:([]idx:k;dist:dm;clt:0N;valid:1b);
- clust.i.rtabdb[d]{0N<>x 1}clust.i.algodb[p]/(t;0;0)}
+ clust.i.outlier clust.i.rtabdb[d]{0N<>x 1}clust.i.algodb[p]/(t;0;0)}
 
 /hierarchical clustering 
 /* lf = linkage function
 /* bc = boolean or empty list for c or q implementation for centroid and single
 clust.hc:{[d;k;df;lf;bc]
+ if[100h<>type@[{get x};`.ml.clust.ccure;{x;-1"C function not available defaulting to q";0b}];bc:0b];
  d:`float$d;
  if[not df in key clust.i.dd;'clust.i.errors`derr];
  if[not lf in key clust.i.ld;'clust.i.errors`lerr];

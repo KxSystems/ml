@@ -134,6 +134,11 @@ clust.i.nmw:{[df;lf;t;cd]
 /dictionary of functions to find distances
 clust.i.newmin:`average`complete`ward!(2#clust.i.nmca),clust.i.nmw
 
+/update outliers in dbscan to -1
+clust.i.outlier:{[r]
+ fc:exec pts by clt from r;
+ $[0<count outlier:where 1=count each fc;update clt:-1 from r where clt in outlier;r]}
+
 /kmeans random initialisation
 clust.i.randinit:{flip x@\:neg[y]?til count x 0}
 
