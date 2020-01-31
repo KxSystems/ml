@@ -1,8 +1,14 @@
 # Machine learning toolkit
-## Introduction
-This repository contains at present two distinct sections. First is an implementation of the FRESH (FeatuRe Extraction and Scalable Hypothesis testing) algorithm for use in the extraction of features from time series data and the reduction in the number of features through statistical testing. The second section contains utility functions relating to areas including statistical analysis, data preprocessing and array manipulation.
 
-The contents of both sections are explained in greater depth within the [FRESH](https://code.kx.com/v2/ml/toolkit/fresh/) and [Utilities](https://code.kx.com/v2/ml/toolkit/utilities/metric) documentation.
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/ml)](https://github.com/kxsystems/ml/releases) [![Travis (.org) branch](https://img.shields.io/travis/kxsystems/embedpy/master?label=travis%20build)](https://travis-ci.org/kxsystems/ml/branches)
+
+## Introduction
+This repository contains the following sections:
+*  An implementation of the FRESH (FeatuRe Extraction and Scalable Hypothesis testing) algorithm for use in the extraction of features from time series data and the reduction in the number of features through statistical testing. 
+*  Utility functions relating to areas including statistical analysis, data preprocessing and array manipulation.
+*  Cross validation and grid-search functions allowing for testing of the stability of models to changes in the volume of data or the specific subsets of data used in training.
+
+The contents of these sections are explained in greater depth within [FRESH](https://code.kx.com/v2/ml/toolkit/fresh/), [Utilities](https://code.kx.com/v2/ml/toolkit/utilities/metric) and [Cross Validation](https://code.kx.com/v2/ml/toolkit/xval) documentation.
 
 ## Requirements
 
@@ -20,8 +26,6 @@ or via conda:
 conda install --file requirements.txt
 ```
 
-*Running of the notebook examples contained within the FRESH section of this library will require the installation of JupyterQ however this is not a dependancy for the running of functions at an individual level.*
-
 ## Installation
 
 Place the library file in `$QHOME` and load into a q instance using `ml/ml.q`
@@ -31,6 +35,16 @@ This will load all the functions contained within the `.ml` namespace
 q)\l ml/ml.q
 q).ml.loadfile`:init.q
 ```
+
+## Examples
+
+Examples showing implementations of several components of this toolkit can be found [here](https://github.com/KxSystems/mlnotebooks/). These notebooks include examples of the following sections of the toolkit.
+
+*  Pre-processing functions
+*  Implementations of the FRESH algorithm
+*  Cross validation and grid search capabilities
+*  Results Scoring functionality
+
 
 ## Documentation
 

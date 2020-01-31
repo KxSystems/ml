@@ -87,6 +87,8 @@ fresh.i.adfuller:.p.import[`statsmodels.tsa.stattools]`:adfuller
 fresh.i.welch   :.p.import[`scipy.signal]`:welch
 fresh.i.findpeak:.p.import[`scipy.signal]`:find_peaks_cwt
 
+fresh.i.pyfeat:`aggautocorr`augfuller`fftaggreg`fftcoeff`numcwtpeaks`partautocorrelation`spktwelch
+
 / q utils
 fresh.i.getlenseqwhere:{(1_deltas i,count x)where x i:where differ x}
 fresh.i.peakfind:{neg[y]_y _min x>/:xprev\:[-1 1*z]x}
@@ -103,8 +105,17 @@ fresh.loadparams hsym`$path,"/fresh/hyperparam.txt"; / default params
 
 / feature extraction
 fresh.createfeatures:{[data;aggs;cnames;conf]
- p1:select from(p:0!select from conf where valid)where pnum>0;
- calcs:cnames cross(exec f from p where pnum=0),raze p1[`f]cross'p1[`pnames],'/:'(cross/)each p1`pvals;
- colnames:`$ssr[;".";"o"]each"_"sv'string raze each calcs;
- r:?[data;();aggs!aggs:aggs,();colnames!flip[(fresh.feat calcs[;1];calcs[;0])],'(last each)each 2_'calcs];
- 1!{[r;c]![r;();0b;enlist c],'(`$"_"sv'string c,'cols t)xcol t:r c}/[0!r;exec c from meta[r]where null t]}
+ p0:exec f from conf where valid,pnum=0;
+ p1:exec f,pnames,pvals from conf where valid,pnum>0;
+ calcs:p0,raze p1[`f]cross'p1[`pnames],'/:'(cross/)each p1`pvals;
+ calcs:(cnames:$[n:"j"$abs system"s";$[n<count cnames;(n;0N);(n)]#;enlist]cnames)cross\:calcs;
+ q:{flip[(` sv'`.ml.fresh.feat,'x[;1];x[;0])],'last@''2_'x}each calcs;
+ q:(`$ssr[;".";"o"]@''"_"sv''string raze@''calcs)!'q;
+ r:(uj/).[?[;();aggs!aggs;]]peach flip((cnames,\:aggs:aggs,())#\:data;q);
+ aggs xkey{[r;c]
+  ![r;();0b;enlist c],'(`$"_"sv'string c,'cols t)xcol t:r c
+ }/[0!r;exec c from meta[r]where null t]}
+
+/ allow multiprocess
+loadfile`:util/mproc.q
+if[0>system"s";mproc.init[abs system"s"]enlist".ml.loadfile`:fresh/init.q"];
