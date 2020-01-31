@@ -23,7 +23,7 @@ p)def< target_binary_feature_real_test(y, x):
     x_y1 = x[y == y1]
     x_y0 = x[y == y0]
 
-    KS, p_ks = stats.ks_2samp(x_y1, x_y0)
+    KS, p_ks = stats.ks_2samp(x_y1, x_y0,mode='asymp')
     return p_ks
 
 p)def< target_real_feature_real_test(x, y):

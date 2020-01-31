@@ -1,5 +1,5 @@
 \l ml.q
-.ml.loadfile`:util/init.q
+\l util/init.q
 
 np:.p.import[`numpy]
 skmetric:.p.import[`sklearn.metrics]
@@ -21,16 +21,16 @@ x:1000?40
 y:1000?40
 xf:1000?100f
 yf:1000?100f
-xb:010010101011111010110111b
-yb:000000000001000000111000b
+xb:1000#0101101011b
+yb:1000#0000111000b
 onehotx:`a`p`l`h`j
 symtf:([]`a`b`b`a`a;"f"$til 5)
 symti:([]`a`b`b`a`a;til 5)
 symtb:([]`a`b`b`a`a;11001b)
 symtn:([]`a`b`b``a;til 5)
 symm:([] `a`b`b`a`a;til 5;`q`w`q`q`w)
-xm:100 10#1000?100f
-ym:100 10#1000?100f
+xm:100 10#xb
+ym:100 10#yb
 ti:([]1000?500;1000#30;1000?1000;1000?1000)
 tf:([]1000?500f;1000#30f;1000?1000f;1000?100f)
 tb:([]1000?0b;1000#1b;1000?0b;1000?0b)

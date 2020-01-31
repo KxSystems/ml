@@ -1,11 +1,21 @@
 \l ml.q
-.ml.loadfile`:util/init.q
+\l util/init.q
 
 np:.p.import[`numpy]
 
 p)import pandas as pd
+p)import numpy as np
+p)import datetime
 t:.p.eval"pd.DataFrame({'fcol':[0.1,0.2,0.3,0.4,0.5],'jcol':[10,20,30,40,50]})"
 t2:.p.eval"pd.DataFrame({'fcol':[None,None,None,None,None],'jcol':[True,False,True,False,True]})"
+t3:.p.eval"pd.DataFrame({'date':[datetime.date(2005, 7, 14),datetime.date(2005, 7, 15)],'time':[datetime.time(12, 10, 30,500)
+   ,datetime.time(12, 13, 30,200)],'str':['h','i'],'ind':[1.3,2.5],'bool':[True,False]})"
+t4:.p.eval"pd.DataFrame({'bool':[True,False],'date':[np.datetime64('2005-02-25'),np.datetime64('2015-12-22')],'timed':[datetime.timedelta(hours=-5),
+   datetime.timedelta(seconds=1000)]})"
+p)dtT = pd.Series(pd.date_range('2019-01-01 1:30',periods=2)).to_frame(name='dt')
+p)dtT['dt_with_tz']=dtT.dt.dt.tz_localize('CET')
+t5: .p.eval "dtT"
+dt1:2019.01.01D01:30:00.000000000 2019.01.02D01:30:00.000000000
 
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 xm:100 10#1000?100f
@@ -17,6 +27,8 @@ dfsj:.ml.tab2df tx:select by scol,jcol from tt
 (dfsx:.ml.tab2df tx)[`:index][:;`:names;(`scol;::)]
 (dfxj:.ml.tab2df tx)[`:index][:;`:names;(::;`jcol)]
 (dfxx:.ml.tab2df tx)[`:index][:;`:names;(::;::)]
+tt2:([]date:2005.07.14 2005.07.15;timesp:("N"$"12:10:30.000500000";"N"$"12:13:30.000200007");time:20:30:00.001 19:23:20.201;str:enlist each ("h";"i");ind:1.3 2.5;bool:10b)
+112 112 112 10 -9 -1h~type each first (.ml.tab2df tt2)[`:values]`
 
 .ml.shape[1 2 3*/:til 10] ~ np[`:shape][1 2 3*/:til 10]`
 .ml.shape[enlist 1] ~ np[`:shape][enlist 1]`
@@ -43,6 +55,10 @@ first[.ml.eye[1]] ~ enlist 1f
 
 .ml.df2tab[t]~([]fcol:0.1*1+til 5;jcol:10*1+til 5)
 .ml.df2tab[t2]~([]fcol:5#(::);jcol:10101b)
+.ml.df2tab_tz[t3;0b;1b]~([]date:2005.07.14 2005.07.15;time:("N"$"12:10:30.000500000";"N"$"12:13:30.000200000");str:enlist each ("h";"i");ind:1.3 2.5;bool:10b)
+.ml.df2tab_tz[t4;0b;1b]~([]bool:10b;date:"p"$(2005.02.25;2015.12.22);timed:(neg "N"$"05:00:00";"N"$"00:16:40"))
+.ml.df2tab_tz[t5;1b;0b]~([]dt:dt1;dt_with_tz:dt1)
+.ml.df2tab_tz[t5;0b;0b]~([]dt:dt1;dt_with_tz:dt1-"T"$"01:00:00")
 
 tt~update`$scol from .ml.df2tab df
 tj~update`$scol from .ml.df2tab dfj
