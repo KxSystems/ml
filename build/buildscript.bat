@@ -1,11 +1,3 @@
-:: Standalone build
-
-cd clust/build
-
-call "build.bat"
-
-cd ../..
-
 if "%APPVEYOR_REPO_TAG%"=="true" (
  set ML_VERSION=%APPVEYOR_REPO_TAG_NAME%
 ) else (
@@ -25,7 +17,13 @@ cd embedpy
 echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
+
+cd clust/build
+call "build.bat"
+cd ../..
+
 exit /b 0
+
 
 :error
 echo failed with error 

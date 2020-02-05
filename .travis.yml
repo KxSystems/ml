@@ -34,7 +34,7 @@ beforescript:
 
 
 script:
-- (cd clust/ccode && make && make install && make clean)
+- (cd clust && make && make install && make clean)
 - echo "Preparing version $TRAVIS_BRANCH-$TRAVIS_COMMIT"
 - tar czf ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz *.q fresh/ util/ clust/ requirements.txt  LICENSE README.md
 - echo "Packaged as ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip"

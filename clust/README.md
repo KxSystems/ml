@@ -41,6 +41,7 @@ __Windows__ (within `build`):
 ```
 call build.bat
 ```
+**Note** This is built using Microsoft Visual Studio 2017
 
 ## Load
 

@@ -275,7 +275,7 @@ clust.i.algoscc:{[d;k;df;r;c;m;ns;stream]
   i+:1];
  // Output format - tree (streaming), matrix (hierarchical), table (cure)
  $[stream;
-   `reps`tree`r2c`r2l!(d k;.[t;(3;j);:;{x?y}[ii]each t[3]j:where t 2];{x?y}[distinct c]each c:v[`r2c]k;v[`r2l]k:raze v`c2r);
+   `reps`tree`r2c`r2l!(d k;.[t;(3;j);:;{x?y}[k]each t[3]j:where t 2];{x?y}[distinct c]each c:v[`r2c]k;v[`r2l]k:raze v`c2r);
    link;m;([]idx:u;clt:raze{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]}
 
 /plots for affinity propagration
