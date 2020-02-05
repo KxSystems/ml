@@ -1,8 +1,8 @@
 :: Standalone build
 
-cd clust/ccode
+cd clust/build
 
-call "make.bat"
+call "build.bat"
 
 cd ../..
 
@@ -25,9 +25,6 @@ cd embedpy
 echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
-
-call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-
 exit /b 0
 
 :error
