@@ -8,9 +8,11 @@ fresh.i.fisherexact:.p.import[`scipy.stats]`:fisher_exact
 / q utils
 fresh.i.ktau:{fresh.i.kendalltau[<;x;y]1}
 fresh.i.fisher:{fresh.i.fisherexact[<;count@''@\:[group@'x value group y]distinct x]1}
+
+/ Function change due to scipy update https://github.com/scipy/scipy/blob/v1.3.2/scipy/stats/stats.py#L5385-L5573
 fresh.i.ks:{
  k:max abs(-). value(1+d bin\:raze d)%n:count each d:asc each y group x;
- fresh.i.ksdistrib[k*en+.12+.11%en:sqrt prd[n]%sum n]`}
+ fresh.i.ksdistrib[k*en:sqrt prd[n]%sum n]`}
 fresh.i.ksyx:{fresh.i.ks[y;x]}
 
 / feature significance

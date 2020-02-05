@@ -9,7 +9,7 @@ that are present in the tsfresh documentation. It should be noted that for large
 \l fresh/tests/test.p
 
 xj:10000?10000;
-xi:10000?10000i;
+xi:1000?1000i;
 xf:10000?50000f;
 xh:10000?5000h;
 xb:10000#0101101011b;
@@ -63,7 +63,7 @@ np:.p.import[`numpy]
 .ml.fresh.feat.absenergy[xj] ~ "f"$abs_energy[xj]
 .ml.fresh.feat.absenergy[xf] ~ abs_energy[xf]
 .ml.fresh.feat.absenergy[xb] ~ "f"$abs_energy[xb]
-.ml.fresh.feat.absenergy[xi] ~ "f"$abs_energy[xi]
+.ml.fresh.feat.absenergy[xi] = "f"$abs_energy[xi]
 .ml.fresh.feat.absenergy[x0] ~ "f"$abs_energy[x0]
 .ml.fresh.feat.absenergy[x1] ~ "f"$abs_energy[x1]
 .ml.fresh.feat.absenergy[x2] ~ "f"$abs_energy[x2]
@@ -242,14 +242,14 @@ np:.p.import[`numpy]
 .ml.fresh.feat.mean2dercentral[xj] ~ mean_second_derivative_central[xj]
 .ml.fresh.feat.mean2dercentral[xf] ~ mean_second_derivative_central[xf]
 .ml.fresh.feat.mean2dercentral[xi] ~ mean_second_derivative_central[xi]
-.ml.fresh.feat.mean2dercentral[xb] ~ 0.0005
+.ml.fresh.feat.mean2dercentral[xb] ~ 0f
 .ml.fresh.feat.mean2dercentral[x0] ~ 0n
 .ml.fresh.feat.mean2dercentral[x1] ~ 0n
 .ml.fresh.feat.mean2dercentral[x2] ~ 0n
 .ml.fresh.feat.mean2dercentral[xnull] ~ 0n
 
 .ml.fresh.feat.skewness[xj] ~ skewness_py[xj]
-(.ml.fresh.feat.skewness[xf] - skewness_py[xf])<1e-15
+(.ml.fresh.feat.skewness[xf] - skewness_py[xf])<1e-13
 .ml.fresh.feat.skewness[xb] ~ skewness_py[xb]
 .ml.fresh.feat.skewness[xi] ~ skewness_py[xi]
 .ml.fresh.feat.skewness[x0] ~ 0n
@@ -390,7 +390,7 @@ abs[.ml.fresh.feat.binnedentropy[xnull;50]] ~ 0f
 .ml.fresh.feat.treverseasymstat[xj;2] ~ time_reversal_asymmetry_statistic[xj;2]
 .ml.fresh.feat.treverseasymstat[xf;2] ~ time_reversal_asymmetry_statistic[xf;2]
 .ml.fresh.feat.treverseasymstat[xi;2] ~ time_reversal_asymmetry_statistic[xi;2]
-.ml.fresh.feat.treverseasymstat[xb;2] ~ 0.001
+.ml.fresh.feat.treverseasymstat[xb;2] ~ 0.0001
 .ml.fresh.feat.treverseasymstat[x0;2] ~ 0f
 .ml.fresh.feat.treverseasymstat[x1;2] ~ "f"$time_reversal_asymmetry_statistic[x1;2]
 .ml.fresh.feat.treverseasymstat[x2;2] ~ "f"$time_reversal_asymmetry_statistic[x2;2]
@@ -401,24 +401,17 @@ abs[.ml.fresh.feat.binnedentropy[xnull;50]] ~ 0f
 .ml.fresh.feat.indexmassquantile[xh;0.] ~ index_mass_quantile[xh;0.]
 .ml.fresh.feat.indexmassquantile[xi;x0] ~ x0
 
-.ml.fresh.feat.lastmax[xi] ~ first_location_of_maximum[xi]
-.ml.fresh.feat.lastmax[xj] ~ first_location_of_maximum[xj]
-.ml.fresh.feat.lastmax[xf] ~ first_location_of_maximum[xf]
+.ml.fresh.feat.lastmax[xi] ~ last_location_of_maximum[xi]
+.ml.fresh.feat.lastmax[xj] ~ last_location_of_maximum[xj]
+.ml.fresh.feat.lastmax[xf] ~ last_location_of_maximum[xf]
 .ml.fresh.feat.lastmax[x0] ~ 0n
 .ml.fresh.feat.lastmax[xs] ~ 0f
 
-.ml.fresh.feat.lastmin[xi] ~ first_location_of_minimum[xi]
-.ml.fresh.feat.lastmin[xj] ~ first_location_of_minimum[xj]
-.ml.fresh.feat.lastmin[xf] ~ first_location_of_minimum[xf]
+.ml.fresh.feat.lastmin[xi] ~ last_location_of_minimum[xi]
+.ml.fresh.feat.lastmin[xj] ~ last_location_of_minimum[xj]
+.ml.fresh.feat.lastmin[xf] ~ last_location_of_minimum[xf]
 .ml.fresh.feat.lastmin[x0] ~ 0n
 .ml.fresh.feat.lastmin[xs] ~ 0f
-
-(value .ml.fresh.feat.aggautocorr[xi]) ~ agg_autocorrelation[xi;]each autocorrkeys
-(value .ml.fresh.feat.aggautocorr[xj]) ~ agg_autocorrelation[xj;]each autocorrkeys
-(value .ml.fresh.feat.aggautocorr[xf]) ~ agg_autocorrelation[xf;]each autocorrkeys
-(value .ml.fresh.feat.aggautocorr[xh]) ~ agg_autocorrelation[xh;]each autocorrkeys
-(value .ml.fresh.feat.aggautocorr[xb]) ~ agg_autocorrelation[xb;]each autocorrkeys
-(value .ml.fresh.feat.aggautocorr[xnull]) ~ 4#0f
 
 (value .ml.fresh.feat.changequant[xf;0.2;0.8;1b]) ~ change_quantiles[xf;0.2;0.8;1b;]each changequantkeys
 (value .ml.fresh.feat.changequant[xf;0.25;0.7;1b]) ~ change_quantiles[xf;0.25;0.7;1b;]each changequantkeys
@@ -474,13 +467,13 @@ abs[.ml.fresh.feat.binnedentropy[xnull;50]] ~ 0f
 (.ml.fresh.feat.lintrend[xnull]`intercept) ~ 0f
 (.ml.fresh.feat.lintrend[xnull]`rval) ~ 0f
 
-(value .ml.fresh.feat.aggautocorr[xj]) ~ agg_autocorrelation[xj;]each `mean`var`median`std
-(value .ml.fresh.feat.aggautocorr[xf]) ~ agg_autocorrelation[xf;]each `mean`var`median`std
-(value .ml.fresh.feat.aggautocorr[xb]) ~ agg_autocorrelation[xb;]each `mean`var`median`std
-(value .ml.fresh.feat.aggautocorr[xi]) ~ agg_autocorrelation[xi;]each `mean`var`median`std
+(value .ml.fresh.feat.aggautocorr[xj]) ~ agg_autocorrelation[xj;]each autocorrkeys
+(value .ml.fresh.feat.aggautocorr[xf]) ~ agg_autocorrelation[xf;]each autocorrkeys
+(1_value .ml.fresh.feat.aggautocorr[xb]) ~ 1_agg_autocorrelation[xb;]each autocorrkeys
+(value .ml.fresh.feat.aggautocorr[xi]) ~ agg_autocorrelation[xi;]each autocorrkeys
 (value .ml.fresh.feat.aggautocorr[x0]) ~ 4#0f
 (value .ml.fresh.feat.aggautocorr[x1]) ~ 4#0f
-(value .ml.fresh.feat.aggautocorr[x2]) ~ agg_autocorrelation[x2;]each `mean`var`median`std
+(value .ml.fresh.feat.aggautocorr[x2]) ~ agg_autocorrelation[x2;]each autocorrkeys
 (value .ml.fresh.feat.aggautocorr[xnull]) ~ 4#0f
 
 (.ml.fresh.feat.fftaggreg[xj]`centroid) ~ fft_aggregated[xj][0]

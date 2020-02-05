@@ -114,7 +114,7 @@ count[.ml.xv.kfstrat[k;1;xc;yc;fs[dtc][]]]~3
 (rnd[(avg/).ml.gs.kfsplit[k;1;xc;yc;fs dtc;pc;0]]-rnd@[;0]gridsearchc[xc;yc])<.05
 
 ((@[;2].ml.gs.kfsplit[k;1;xf;yf;fs net;pr;.2])-@[;0]gridsearchr[xf;yf])<.05
-((@[;2].ml.gs.kfsplit[k;1;xi;yi;fs net;pr;.2])-@[;0]gridsearchr[xi;yi])<.05
+((@[;2].ml.gs.kfsplit[k;1;xi;yi;fs net;pr;.2])-@[;0]gridsearchr[xi;yi])<.06
 ((@[;2].ml.gs.kfsplit[k;1;xb;yb;fs dtc;pc;.2])-@[;0]gridsearchc[xb;yb])<.05
 ((@[;2].ml.gs.kfsplit[k;1;xc;yc;fs dtc;pc;.2])-@[;0]gridsearchc[xc;yc])<.05
 
