@@ -1,3 +1,11 @@
+:: Standalone build
+
+cd clust/ccode
+
+call "make.bat"
+
+cd ../..
+
 if "%APPVEYOR_REPO_TAG%"=="true" (
  set ML_VERSION=%APPVEYOR_REPO_TAG_NAME%
 ) else (
@@ -5,7 +13,6 @@ if "%APPVEYOR_REPO_TAG%"=="true" (
 )
 set PATH=C:\Perl;%PATH%
 perl -p -i.bak -e s/TOOLKITVERSION/`\$\"%ML_VERSION%\"/g ml.q
-
 
 if not defined QLIC_KC (
  goto :nokdb
@@ -18,6 +25,9 @@ cd embedpy
 echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
+
+call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
 exit /b 0
 
 :error
@@ -27,5 +37,4 @@ exit /b
 :nokdb
 echo no kdb
 exit /b 0
-
 
