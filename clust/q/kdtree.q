@@ -4,23 +4,22 @@
 
 /Build a k-d tree
 /* d = data points
-/* r = number of rep pts
+/* r = value restricting how many datapoints can be held per leaf within the tree (<=2*r)
 clust.kd.buildtree:{[d;r]clust.kd.create[clust.kd.pivot[d;r];-1;1;0b;til count d 0]}
 
-/Each nearest neighbouring cluster
+/Each nearest neighbouring cluster and corresponding distance
 /* rp = representative points 
 /* t  = k-d tree
 /* cl = list linking points to their clusters
 /* df = distance function/metric
-
 clust.kd.nnc:{[rp;t;cl;d;df]
  u:{(x[y 0];y 1)}[cl]each clust.kd.i.nns[;t;cl;d;df]each rp;
  raze u clust.i.imin u[;1]}
 
 /Search where the point belongs to in the tree
 /* x = tree
-/* y = points to search
-/* z = node in tree
+/* y = point to search
+/* z = node in tree to start search
 clust.kd.searchfrom:{
  {not x y}[x 2]clust.i.findl[y;x]/z}
 
@@ -38,12 +37,15 @@ clust.kd.create:{[f;p;o;left;idx]
  r:.z.s[f;p+o;1+count l 0;0b;u[0;1]];              / right subtree
  (p;left;0b;enlist p+o+1+0,count l 0;u[1;0];u[1;1]),'l,'r}
 
-/Return 1b if at a leaf, or ((leftinds;rightinds);(pivot value;pivot axis)) if we can split further
+/Return 1b if at a leaf or if all datapoints are a repeated value, or ((leftinds;rightinds);(pivot value;pivot axis)) if we can split further
 clust.kd.pivot:{[d;r;idx]                                                
  if[count[idx]<=2*r;:1b];
  axis:clust.i.imax var each d[;idx];
+ // Get the values of the datapoints at the defined splitting axis
+ // bin these points based on the average of their 2 midpoints values
  pivi:usi bin piv:avg(usi:u si:iasc u)floor .5*-1 0+count u:d[axis;idx];
  if[pivi in -1+0,count usi;:1b];
+ // Split points into the left and right branches
  u:(0,pivi+1)cut idx si;
  piv:min d[axis;u 1];
  (u;piv,axis)}
