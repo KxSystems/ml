@@ -19,13 +19,11 @@ clust.i.ld.centroid:raze
 clust.i.ld.ward:{z%(1%y)+1%x}
 
 clust.i.dists:{[data;df;pt;idxs]clust.i.dd[df]pt-data[;idxs]}
-clust.i.closest:{[data;df;pt;idxs]
-  `point`distance!(idxs dists?md;md:min dists:clust.i.dists[data;df;pt;idxs])}
+clust.i.closest:{[data;df;pt;idxs]`point`distance!(idxs dists?md;md:min dists:clust.i.dists[data;df;pt;idxs])}
 
 // kd tree
 
-clust.kd.newtree:{[data;leafsz]
-  clust.kd.i.tree[data;leafsz]`leaf`left`parent`self`idxs!(0b;0b;0N;0;til count data 0)}
+clust.kd.newtree:{[data;leafsz]clust.kd.i.tree[data;leafsz]`leaf`left`parent`self`idxs!(0b;0b;0N;0;til count data 0)}
 
 clust.kd.i.tree:{[data;leafsz;node]
   if[leafsz<=.5*count node`idxs;
@@ -68,8 +66,7 @@ clust.kmeans:{[data;df;k;iter;kpp]
   clust.i.getclust[data;df;reppts1]}
 
 clust.i.getclust:{[data;df;reppts]
-  dist:{[data;df;reppt]clust.i.dd[df]reppt-data}[data;df]each flip reppts;
-  max til[count dist]*dist=\:min dist}
+  max til[count dist]*dist=\:min dist:{[data;df;reppt]clust.i.dd[df]reppt-data}[data;df]each flip reppts}
 
 clust.i.initrdm:{[data;k]data[;neg[k]?count data 0]}
 
@@ -78,8 +75,7 @@ clust.i.initkpp:{[df;data;k]
   infos:(k-1)clust.i.kpp[data;df]\info0;
   flip infos`point}
 
-clust.i.kpp:{[data;df;info]
-  @[info;`point;:;data[;s binr rand last s:sums info[`dists]&:clust.i.dists[data;df;info`point;::]]]}
+clust.i.kpp:{[data;df;info]@[info;`point;:;data[;s binr rand last s:sums info[`dists]&:clust.i.dists[data;df;info`point;::]]]}
 
 // dbscan
 
@@ -91,5 +87,4 @@ clust.dbscan:{[data;df;minpts;eps]
 
 clust.i.nbhood:{[data;df;eps;idx]where eps>@[;idx;:;0w]clust.i.dd[df]data-data[;idx]}
 clust.i.dbalgo:{[t]update cluster:0|1+max t`cluster,corepoint:0b from t where i in clust.i.nbhoodidxs[t]/[first where t`corepoint]}
-clust.i.nbhoodidxs:{[t;idxs]
-  asc distinct idxs,raze exec nbhood from t[distinct idxs,raze t[idxs]`nbhood]where corepoint}
+clust.i.nbhoodidxs:{[t;idxs]asc distinct idxs,raze exec nbhood from t[distinct idxs,raze t[idxs]`nbhood]where corepoint}
