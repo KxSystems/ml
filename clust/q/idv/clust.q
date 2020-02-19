@@ -88,3 +88,35 @@ clust.dbscan:{[data;df;minpts;eps]
 clust.i.nbhood:{[data;df;eps;idx]where eps>@[;idx;:;0w]clust.i.dd[df]data-data[;idx]}
 clust.i.dbalgo:{[t]update cluster:0|1+max t`cluster,corepoint:0b from t where i in clust.i.nbhoodidxs[t]/[first where t`corepoint]}
 clust.i.nbhoodidxs:{[t;idxs]asc distinct idxs,raze exec nbhood from t[distinct idxs,raze t[idxs]`nbhood]where corepoint}
+
+// ap
+
+clust.ap:{[data;df;dmp;diag]
+  if[not df in key clust.i.dd;clust.i.err.dd[]];
+  info0:clust.i.apinit[data;df;diag];
+  info1:{[maxiter;info]maxiter>info`matches}[.1*count data]clust.i.apalgo[dmp]/info0;
+  distinct[info1`exemplars]?info1`exemplars}
+
+clust.i.apinit:{[data;df;diag]
+  s:@[;;:;diag raze s]'[s:clust.i.dists[data;df;data]each k;k:til n:count data 0];
+  `matches`exemplars`s`a`r!(0;0#0;s),(2;n;n)#0f}
+
+clust.i.apalgo:{[dmp;info]
+  info[`r]:clust.i.updr[dmp;info];
+  info[`a]:clust.i.upda[dmp;info];
+  ex:{x?max x}each sum info`a`r;
+  update exemplars:ex,matches:?[exemplars~ex;matches+1;0]from info}
+
+clust.i.updr:{[dmp;info]
+  mx:{[x;i]@[count[x]#mx;j;:;]max@[x;i,j:x?mx:max x;:;-0w]}'[sum info`s`a;til count info`r];
+  (dmp*info`r)+(1-dmp)*info[`s]-mx}
+
+clust.i.upda:{[dmp;info]
+  s:sum@[;;:;0f]'[pv:0|info`r;k:til n:count info`a];
+  a:@[;;:;]'[0&(s+info[`r]@'k)-/:pv;k;s];
+  (dmp*info`a)+a*1-dmp}
+~                                                                                                    
+~                                                                                                    
+~                                                                                                    
+~                                                                                                    
+~                                                                                             
