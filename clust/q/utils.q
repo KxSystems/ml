@@ -73,7 +73,7 @@ clust.i.dd:`e2dist`edist`mdist`cshev!({x wsum x};{sqrt x wsum x};{sum abs x};{mi
 /* l = list with (table;pt inds to search)
 clust.i.dbclust:{[c;p;l]
  ncl:{[t;p;s]raze{[t;p;i]
-  if[p<=count cl:t[i]`dist;:exec idx from t where idx in cl,valid]
+  if[p<=count cl:t[i]`dist;:exec idx from t where i in cl,valid]
   }[t;p]each exec idx from t where idx in s,valid}[t:l 0;p]each s:l 1;
  t:update clt:c,valid:0b from t where idx in distinct raze s;
  (t;ncl)}
@@ -210,7 +210,7 @@ clust.i.algodgram:{[df;lf;x]
 /* p = minimum number of points per cluster
 /* l = list with (table;next cluster idx;counter)
 clust.i.algodb:{[p;l]
- cl:{0<>sum type each x 1}clust.i.dbclust[c:l 2;p]/(l 0;l 1); 
+ cl:{0<>any(y[0]`idx)in raze x 1}[;l]clust.i.dbclust[c:l 2;p]/(l 0;l 1); 
  nc:first exec idx from t:cl 0 where valid;
  (t;nc;1+c)}
 
@@ -263,7 +263,7 @@ clust.i.algoscc:{[d;k;df;r;c;m;ns;stream]
   v:{.[x;y;:;z]}/[v;flip(`c2p`c2r`gone;(mci;mci;mci 1));((npi;0#0);(nri;0#0);1b)];
   // nneighbour to clust
   cnc:ns[`kd;`nnc][nri;t;v`r2c;d;df];
-  // old clust nneighbour
+  // any points that had old clust as nneighbour
   w:(where v[`ndists;0]in mci)except wg:where v`gone;
   $[sgl;
      // single - nneighbour=new clust
