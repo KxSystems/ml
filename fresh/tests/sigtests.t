@@ -38,7 +38,7 @@ number of features would be determined to be insignificant given their
 p-value and the set FDR level.
 \
 pddf:.p.import[`pandas]`:DataFrame
-asmatrix:pddf`:as_matrix
+asmatrix:pddf`:to_numpy
 tab2df:{r:.p.import[`pandas;`:DataFrame.from_dict;flip 0!x][@;cols x];$[count k:keys x;r[`:set_index]k;r]}
 table1:([]1000000?100f;asc 1000000?100f;desc 1000000?100f;1000000?100f;1000000?100f;asc 1000000?100f)
 table2:([]asc 1000000?100f;asc 1000000?100f;desc 1000000?100f;1000000?0b;desc 1000000?100f;asc 1000000?100f)

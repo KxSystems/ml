@@ -1,7 +1,7 @@
 \d .ml
 
 clust.kdtree.i.searchfrom:`:kdtree 2:(`kdtree_searchfrom;3)
-clust.ccure.kd.searchfrom:{$[type[y]~type x 4;clust.kdtree.i.searchfrom[x;y;z];'`type]}
+clust.ccure.kd.searchfrom:{clust.kdtree.i.searchfrom[x;y;z]}
 
 clust.ccure.i.:(::)
 clib:`:cure 2:

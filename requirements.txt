@@ -3,5 +3,5 @@ scipy
 scikit-learn
 statsmodels
 matplotlib
-pandas
+pandas>=0.21
 pyclustering
