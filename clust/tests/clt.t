@@ -41,7 +41,7 @@ d5:read[fcps`:SAMPLE_LSUN]`
 
 (value exec idx by clt from .ml.clust.dbscan[d1;`mdist;5;5])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.dbscan[d2;`mdist;4;25])~(197 199;til[197],198)
+(value exec idx by clt from .ml.clust.dbscan[d2;`mdist;5;25])~(197 199;til[197],198)
 
 /cure
 (value exec idx by clt from .ml.clust.cure[d1;4;5;()])~((til 15);15+(til 15);30+(til 15);45+(til 15))

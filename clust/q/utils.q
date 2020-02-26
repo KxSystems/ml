@@ -44,7 +44,7 @@ clust.i.clvars:{[d;k;df;t;ns]
  r2l:((pc:count d)#0N){[t;x;y]@[x;t[3]y;:;y]}[t]/where t 2;
  c2p:enlist each r2c:til pc;
  ndists:flip ns[`kd][`i][`nns][;t;r2c;d;df]each r2c;
- `oreps`r2l`r2c`gone`c2r`c2p`ndists`pc!(d;r2l;r2c;pc#0b;c2p;c2p;ndists;pc)}
+ `oreps`r2l`r2c`gone`c2r`c2p`ndists`odists`pc!(d;r2l;r2c;pc#0b;c2p;c2p;ndists;ndists;pc)}
 
 /true if number of clusters in a kd-tree (y) > desired number of clusters (x)
 clust.i.cn:{x<exec count distinct clt from y}
@@ -262,12 +262,18 @@ clust.i.algoscc:{[d;k;df;r;c;m;ns;stream]
   // update v with pts/reps that belong to new clust, add old clusts to gone
   v:{.[x;y;:;z]}/[v;flip(`c2p`c2r`gone;(mci;mci;mci 1));((npi;0#0);(nri;0#0);1b)];
   // nneighbour to clust
-  cnc:ns[`kd;`nnc][nri;t;v`r2c;d;df];
-  // any points that had old clust as nneighbour
+  nnlst:$[nrc&0<count nl:nri where not mcl;[(flip v[`odists;::;nl]),];]
+     clust.i.fndcl[v`r2c]each ns[`kd;`i;`nns][;t;v`r2c;d;df]each $[nrc:sgl&2<count nri;
+     mci,nn:nri where mcl:mci[0]=v[`r2c]v[`odists;0]nri;sgl;mci;nri];
+  cnc:raze nnlst clust.i.imin nnlst[;1];
+  if[sgl;v[`odists;::;$[nrc;(nl),mci,nn;mci]]:flip nnlst];
+  // old clust nneighbour
   w:(where v[`ndists;0]in mci)except wg:where v`gone;
   $[sgl;
      // single - nneighbour=new clust
+     [w1:where v[`odists;0]in mci;
      v[`ndists;0;w]:mci 0;
+     v[`odists;0;w1]:mci 0];
      // else do nneighbour search
      v[`ndists;0 1;w]:$[count w;flip ns[`kd;`nnc][;t;v`r2c;d;df]each v[`c2r]w;(0#0;0#0f)]];
   // update nneighbour of merged cluster, and old clusters before merge to gone > "0N;inf"
@@ -277,6 +283,9 @@ clust.i.algoscc:{[d;k;df;r;c;m;ns;stream]
  $[stream;
    `reps`tree`r2c`r2l!(d k;.[t;(3;j);:;{x?y}[k]each t[3]j:where t 2];{x?y}[distinct c]each c:v[`r2c]k;v[`r2l]k:raze v`c2r);
    link;m;([]idx:u;clt:raze{where y in'x}[v[`c2p]where not v`gone]each u:til count v`oreps;pts:v`oreps)]}
+
+//Get cluster that nearest neighbour belongs to
+clust.i.fndcl:{(x[y 0];y 1)};
 
 /plots for affinity propagration
 /d .

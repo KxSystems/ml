@@ -55,7 +55,7 @@ clust.hc:{[d;k;df;lf;bc]
  if[not lf in key clust.i.ld;'clust.i.errors`lerr];
  if[b:lf in`complete`average`ward;t:clust.i.buildtab[d;df]];
  clust.i.rtab[d]$[b;clust.i.cn[k]clust.i.algocaw[df;lf]/$[lf~`ward;$[df<>`e2dist;'clust.i.errors`werr;@[t;`nnd;%;2]];t];
-                  clust.i.algoscc[d;k;$[0N!bc;clust.ccure.dfd[df];df];1000&(ceiling count[d]%100);lf;();$[bc;clust.ccure;clust];0b]]}
+                  clust.i.algoscc[d;k;$[bc;clust.ccure.dfd[df];df];1000&(ceiling count[d]%100);lf;();$[bc;clust.ccure;clust];0b]]}
 
 /hierarchical dendrogram
 clust.dgram:{[d;df;lf]
