@@ -33,15 +33,15 @@ d5:read[fcps`:SAMPLE_LSUN]`
 
 (value exec idx by clt from .ml.clust.dbscan[d1;`e2dist;5;5])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.dbscan[d2;`e2dist;4;300])~((til 197),198;enlist 197;enlist 199)
+(value exec idx by clt from .ml.clust.dbscan[d2;`e2dist;4;300])~(197 199;til[197],198)
 
 (value exec idx by clt from .ml.clust.dbscan[d1;`edist;5;5])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.dbscan[d2;`edist;4;18])~((til 197),198;enlist 197;enlist 199)
+(value exec idx by clt from .ml.clust.dbscan[d2;`edist;4;18])~(197 199;til[197],198)
 
 (value exec idx by clt from .ml.clust.dbscan[d1;`mdist;5;5])~((til 15);15+(til 15);30+(til 15);45+(til 15))
 
-(value exec idx by clt from .ml.clust.dbscan[d2;`mdist;4;25])~(til[197],198;enlist 197;enlist 199)
+(value exec idx by clt from .ml.clust.dbscan[d2;`mdist;5;25])~(197 199;til[197],198)
 
 /cure
 (value exec idx by clt from .ml.clust.cure[d1;4;5;()])~((til 15);15+(til 15);30+(til 15);45+(til 15))
@@ -126,11 +126,11 @@ d5:read[fcps`:SAMPLE_LSUN]`
 
 (select i1,i2,n from .ml.clust.dgram[d3;`mdist;`complete])~([]i1:1 5 0 7 12 11 15 14 17i;i2:3 8 2 9 10 13 6 4 16i;n:2 2 2 2 4 4 5 5 10i)
 /streaming
-.ml.clust.cure[d3;4;30;`b`s!1 1]~`reps`tree`r2c`r2l!(d3[0 2 1 3 4 5 8 6 9 7];enlist each (neg 1;0b;1b;9 5 6 7 8 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 2 3;10#0)
+.ml.clust.cure[d3;4;30;`b`s!1 1]~`reps`tree`r2c`r2l!(d3[4 2 1 0 3 5 8 9 6 7];enlist each (neg 1;0b;1b;9 5 6 7 8 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 2 3;10#0)
 
-.ml.clust.cure[d3;4;30;`df`b`s!(`edist;1;1)]~`reps`tree`r2c`r2l!(d3[0 2 1 3 4 5 8 6 9 7];enlist each (neg 1;0b;1b;9 5 6 7 8 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 2 3;10#0)
+.ml.clust.cure[d3;4;30;`df`b`s!(`edist;1;1)]~`reps`tree`r2c`r2l!(d3[4 2 1 0 3 5 8 9 6 7];enlist each (neg 1;0b;1b;9 5 6 7 8 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 2 3;10#0)
 
-.ml.clust.cure[d3;4;30;`df`b`s!(`mdist;1;1)]~`reps`tree`r2c`r2l!(d3[0 2 1 3 4 5 8 6 7 9];enlist each (neg 1;0b;1b;7 5 6 8 9 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 3 3;10#0)
+.ml.clust.cure[d3;4;30;`df`b`s!(`mdist;1;1)]~`reps`tree`r2c`r2l!(d3[4 2 3 0 1 5 8 6 9 7];enlist each (neg 1;0b;1b;7 5 6 8 9 0 1 2 3 4;0n;0N);0 0 0 0 0 1 1 2 3 3;10#0)
 
 /scoring metrics
 r:.ml.clust.hc[d4;6;`edist;`single;0b]

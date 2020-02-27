@@ -1,11 +1,3 @@
-:: Standalone build
-
-cd clust/ccode
-
-call "make.bat"
-
-cd ../..
-
 if "%APPVEYOR_REPO_TAG%"=="true" (
  set ML_VERSION=%APPVEYOR_REPO_TAG_NAME%
 ) else (
@@ -26,9 +18,12 @@ echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
 cd ..
 echo p)print('embedpy runs') | q -q || goto :error
 
-call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+cd clust/build
+call "build.bat"
+cd ../..
 
 exit /b 0
+
 
 :error
 echo failed with error 
