@@ -17,12 +17,11 @@ install:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
   # Useful for debugging any issues with conda
   - conda info -a
   - if [ $TRAVIS_OS_NAME = linux ]; then QLIBDIR=l64; elif [ $TRAVIS_OS_NAME = osx ]; then QLIBDIR=m64; else echo "unknown OS ('$TRAVIS_OS_NAME')" >&2; exit 1; fi; export QLIBDIR
   - conda install -c kx embedPy # grab kdb+ and embedPy with conda
-  - cp -r $(conda info --base)/q q && export QHOME=$(pwd)/q && export PATH=$QHOME/$QLIBDIR:$PATH
+  - cp -r $(conda info --root)/q q && export QHOME=$(pwd)/q && export PATH=$QHOME/$QLIBDIR:$PATH
   # grab latest embedpy
   - if [[ "x$QLIC_KC" != "x" ]]; then
       echo -n $QLIC_KC |base64 --decode > q/kc.lic;
