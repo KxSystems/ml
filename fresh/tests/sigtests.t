@@ -38,7 +38,6 @@ number of features would be determined to be insignificant given their
 p-value and the set FDR level.
 \
 pddf:.p.import[`pandas]`:DataFrame
-asmatrix:pddf`:values
 tab2df:{r:.p.import[`pandas;`:DataFrame.from_dict;flip 0!x][@;cols x];$[count k:keys x;r[`:set_index]k;r]}
 table1:([]1000000?100f;asc 1000000?100f;desc 1000000?100f;1000000?100f;1000000?100f;asc 1000000?100f)
 table2:([]asc 1000000?100f;asc 1000000?100f;desc 1000000?100f;1000000?0b;desc 1000000?100f;asc 1000000?100f)
@@ -46,7 +45,7 @@ table3:([]desc 1000000?1f;1000000?10f;asc 1000000?1f)
 table4:([]1000000?0b;1000000?1f;1000000?1f)
 target1:asc 1000000?100f;target2:desc 1000000?1f;target3:target4:1000000?0b
 bintest:{2=count distinct x}
-pdmatrix:{asmatrix[benjamini_hochberg_test[y;"FALSE";x]]}
+pdmatrix:{pddf[benjamini_hochberg_test[y;"FALSE";x]][`:values]}
 k:{pdmatrix[x;y]`}
 vec:{k[x;y][;2]}
 bhfn:{[table;target]
