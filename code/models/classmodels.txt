@@ -1,0 +1,11 @@
+AdaBoostClassifier         | sklearn   ;   ensemble       ; seed ; multi
+RandomForestClassifier     | sklearn   ;   ensemble       ; seed ; multi
+GradientBoostingClassifier | sklearn   ;   ensemble       ; seed ; multi
+LogisticRegression         | sklearn   ;   linear_model   ; seed ; binary
+GaussianNB                 | sklearn   ;   naive_bayes    ; ::   ; binary
+KNeighborsClassifier       | sklearn   ;   neighbors      ; ::   ; multi
+MLPClassifier              | sklearn   ;   neural_network ; seed ; multi
+SVC                        | sklearn   ;   svm            ; seed ; binary
+LinearSVC                  | sklearn   ;   svm            ; seed ; binary
+binarykeras                | keras     ;   binary         ; seed ; binary
+multikeras                 | keras     ;   multi          ; seed ; multi

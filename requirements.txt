@@ -1,0 +1,6 @@
+reportlab
+joblib
+matplotlib
+numpy
+statsmodels
+scikit-learn
