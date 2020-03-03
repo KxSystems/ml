@@ -1,0 +1,78 @@
+language: c
+os:
+- linux
+- osx
+git:
+  depth: 1
+
+install:
+  # We do this conditionally because it saves us some downloading if the
+  # version is the same.
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-4.5.4-MacOSX-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+  - if [ $TRAVIS_OS_NAME = linux ]; then QLIBDIR=l64; elif [ $TRAVIS_OS_NAME = osx ]; then QLIBDIR=m64; else echo "unknown OS ('$TRAVIS_OS_NAME')" >&2; exit 1; fi; export QLIBDIR
+  - conda install -c kx embedPy # grab kdb+ and embedPy with conda
+  - cp -r $(conda info --base)/q q && export QHOME=$(pwd)/q && export PATH=$QHOME/$QLIBDIR:$PATH
+  # grab latest embedpy
+  - if [[ "x$QLIC_KC" != "x" ]]; then
+      echo -n $QLIC_KC |base64 --decode > q/kc.lic;
+      pip -q install -r requirements.txt;
+    fi
+beforescript:
+  - IMPLEMENTATION=$(if [[ "x$TRAVIS_TAG" == "x" ]]; then echo $TRAVIS_BRANCH-$TRAVIS_COMMIT; else echo $TRAVIS_TAG; fi;)
+  - perl -p -i -e 's/AUTOMLVERSION/`\$\"'${IMPLEMENTATION}'\"/g' automl.q
+
+script:
+- echo "Preparing version $TRAVIS_BRANCH-$TRAVIS_COMMIT"
+- git clone https://github.com/KxSystems/ml.git
+- tar czf automl_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz *.q requirements.txt  LICENSE README.md
+- echo "Packaged as automl_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip"
+-  if [[ "x$QLIC_KC" != "x" ]]; then
+    curl -fsSL -o test.q https://github.com/KxSystems/embedpy/raw/master/test.q;
+    q test.q -q;
+
+  else
+    echo No kdb+, no tests;
+  fi
+
+
+deploy:
+  provider: releases
+  api_key: "$GITHUB_APIKEY"
+  file_glob: true
+  file: automl_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz
+  skip_cleanup: true
+  on:
+    tags: true
+jobs:
+  include:
+  - stage: docker
+    sudo: required
+    services:
+    - docker
+    install: skip
+    script:
+    - docker build -t kxsys/automl:latest -f docker/Dockerfile .
+    - docker tag kxsys/automl:latest kxsys/automl:$TRAVIS_BRANCH
+    deploy:
+      provider: script
+      script:
+      - echo $DOCKER_PASSWORD|docker login --username $DOCKER_USERNAME --password-stdin
+        && docker push kxsys/automl:latest && docker push kxsys/automl:$TRAVIS_BRANCH
+      skip_cleanup: true
+      on:
+        tags: true
+        condition: "$TRAVIS_BRANCH =~ ^[0-9]+\\."
+notifications:
+  slack:
+    secure: VkUUP69xoY8Z9mqWd5YWtI9elW14D8KPrOFYLm1beOXJcPFRvDV1uS+vy1pIK4VNc8h1Apo1tVeMPWoHpIQ7Sr9iRlmeXyOI/5EQXGD3tSmiQQHmvZsKHFxDRpnRjWMgH4Zejm7pPk47EIB8o06jYieM3UbDSD5vusAYyoQ8XknvlwG6qw5X1A03f0LcKNua8VUvPWip0QOf0tffZeOcQKmvSDJpBHs8mK8Ag3AHZBIQPEJC9JTUgk1NLAfeKtGnGUPwV1mGujmfmRP0hwRfOJ85hic9+pQZfuEeKQDBVeIjTGZ9Dj2I0AWgLCveIsyjadEjbzX9AV6YlIHZmHhtRG3gBvMywD5+8B7PbMNI1csuMI3YVGdQ6P8EVGj26KztL8K/3eWsqit2t/z4pkZn2U5KSOkVpSDhUejHWP47lSwu7bz2KbEwd5Wdje/P/OBNaAS/Dx9asnIBWyfNxcTFEJ29/DVBBxD0ChnlBWjEnwKohFUWCfq/1biCkKeFaApO3DbGk+pSTKu5wVtZiILfuPXtZLoOdFKVBP/ddy/qz999X2RKlyiO8/L+JVOSP6g9BvzBAXLB8jKy9kWSwmYPZbdMixlQfAnxN2r7ddM9tToDj+uED+n4CYyVHqQd3Vdk0oPKKvb3zNF7uqvrxY8bGLJ+EuMkJiNiPnKsc+AYRqs=
