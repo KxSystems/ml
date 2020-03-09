@@ -14,6 +14,7 @@ i.keraslist:`regkeras`multikeras`binarykeras
 
 /. r > the predicted values for a given model as applied to input data
 fitscore:{[d;s;mtype]
+  // encode multi-class labels appropriately
   if[mtype~`multi;d[;1]:npa@'flip@'./:[;((::;0);(::;1))](0,count d[0]1)_/:value .ml.i.onehot1(,/)d[;1]];
   m:get[".automl.",string[mtype],"mdl"][d;s;mtype];
   m:get[".automl.",string[mtype],"fit"][d;m];
