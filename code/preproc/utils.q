@@ -1,6 +1,6 @@
 \d .automl
 
-// For the following code the parameter naming convention holds
+// For the following code the parameter naming convention
 // defined here is applied to avoid repetition throughout the file
 /* t   = input table
 /* typ = symbol type of the problem being solved (this determines accepted types)
@@ -19,11 +19,11 @@ prep.i.autotype:{[t;typ;p]
       tb:flip cls!t cls;
       prep.i.errcol[cols t;cls;typ]];
     typ=`fresh;
-    // ignore the aggregating colums for FRESH as these can be of any type
-    [aprcls:flip (l:p[`aggcols])_ flip t;
+    // ignore the aggregating columns for FRESH as these can be of any type
+    [aprcls:flip(l:p[`aggcols])_ flip t;
       cls:.ml.i.fndcols[aprcls;"sfiehjb"];
       // restore the aggregating columns 
-      tb:flip (l!t l,:()),cls!t cls;
+      tb:flip(l!t l,:()),cls!t cls;
       prep.i.errcol[cols t;cols tb;typ]];
     '`$"This form of feature extraction is not currently supported"];
   tb}
@@ -56,7 +56,7 @@ prep.i.lencheck:{[t;tgt;typ;p]
       if[count[tgt]<>count t;
          '`$"Must have the same number of targets as values in table"];
     '`$"Input for typ must be a supported type"];
-    '`$"Input for typ must be a supported symbol or ::"]}
+    '`$"Input for typ must be a supported symbol"]}
 
 // Null encoding of table
 /* fn = function to be applied to column from which the value to fill nulls is derived (med/min/max)
@@ -72,17 +72,19 @@ prep.i.nullencode:{[t;fn]
 /* b   = boolean flag indicating if table is to be returned (0) or encoding type returned (1)
 /* enc = how encoding is to be applied, if dictionary outlining encoding perform encoding accordingly
 /*       otherwise, return a table with symbols encoded appropriately on all relevant columns
-/*       or the dictionary outlining how the encoding would be performed
-/. r   > the data encoded appropriately for the task 
-/.       table with symbols encoded or dictionary denoting how to encode the data 
+/*       or the dictionary outlining how the encoding would be performed (based on 'b' above)
+/. r   > the data encoded appropriately for the task table with symbols 
+/.       encoded or dictionary denoting how to encode the data (based on 'b' above)
 prep.i.symencode:{[t;n;b;p;enc]
   $[99h=type enc;
     r:$[`fresh~p`typ;
-        // Both frequency and one hot encoding is to be applied
+        // Both frequency and one hot encoding is to be applied if true
         $[all {not ` in x}each value enc;
           // Encoding for FRESH is performed on aggregation sub table basis not entire columns
           .ml.onehot[raze .ml.freqencode[;enc`freq]each flip each 0!p[`aggcols]xgroup t;enc`ohe];
+          // one hot encode if freq is empty
           ` in enc`freq;.ml.onehot[t;enc`ohe];
+          // frequency encode if ohe is empty
           ` in enc`ohe;raze .ml.freqencode[;enc`freq]each flip each 0!p[`aggcols]xgroup t;
           t];
         `normal~p`typ;
@@ -93,10 +95,13 @@ prep.i.symencode:{[t;n;b;p;enc]
           t];
         '`$"This form of encoding has yet to be implemented for the specified type of automl"];
     [sc:.ml.i.fndcols[t;"s"]except $[tp:`fresh~p`typ;acol:p`aggcols;(::)];
+      // if no symbol columns return table or empty encoding schema
       if[0=count sc;r:$[b=1;`freq`ohe!``;t]];
       if[0<count sc;
+        // list of frequency encoding columns
         fc:where n<count each distinct each sc!flip[t]sc;
         ohe:sc where not sc in fc;
+        // return encoding schema or appy encoding as appropriate
         r:$[b=1;`freq`ohe!(fc;ohe);
             tp;.ml.onehot[raze .ml.freqencode[;fc]each flip each 0!acol xgroup t;ohe];
             .ml.onehot[.ml.freqencode[t;fc];ohe]]];
@@ -116,9 +121,9 @@ prep.i.bulktransform:{[t]
   flip flip[t],n!(,/)(prd;sum;{first(%)x};{last deltas x})@/:\:t c}
 
 // Used for the recursive application of functions to a kdb+ table
-/* fn = function to be applied to the table
 /* t  = table
-/. table with the desired transform applied
+/* fn = function to be applied to the table
+/. table with the desired transforms applied recursively
 prep.i.applyfn:{[t;fn]typ:type fn;@[;t]$[-11h=typ;get[fn];100h=typ;fn;.automl.prep.i.default]}
 
 // Perform a truncated single value decomposition on unique linear combinations of float columns
@@ -137,7 +142,7 @@ prep.i.default:{[t]t}
 // Error message related to the 'refusal' of the feature significance tests to 
 // find appropriate columns to explain the data from those produced
 prep.i.freshsigerr:"The feature significance extraction process deemed none of the features",
-  "to be important continuing anyway"
+  "to be important continuing anyway with all features"
 
 
 // Utils.q utilities
@@ -156,5 +161,5 @@ prep.i.errcol:{[cl;sl;typ]
 /. r  > dictionary with the appropriate metadata returned
 prep.i.metafn:{[t;sl;fl]$[0<count sl;fl@\:/:flip(sl)#t;()]}
 
-// List of functions to be applied in metadata function for non-numeric data
+// Default list of functions to be applied in metadata function for non-numeric data
 prep.i.nonnumeric:{[t](count;{count distinct x};{};{};{};{};t)}

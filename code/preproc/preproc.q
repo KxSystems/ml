@@ -10,7 +10,8 @@
 /* tgt = target data
 /* typ = type of feature extraction being performed
 /* p   = is a set of parameters as a dictionary or :: ('default set')
-/. r   > a new table with the data preprocessed for the problem being solved
+/. r   > Mixed list containing:
+/.       (table with the data preprocessed appropriately; description of each column)
 preproc:{[t;tgt;typ;p]
   prep.i.lencheck[t;tgt;typ;p];
   show dscrb:prep.i.describe t;

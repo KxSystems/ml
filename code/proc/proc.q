@@ -2,12 +2,16 @@
 
 // Run cross validated machine learning models on training data and choose the best model.
 /* t     = table of features as output from preprocessing pipeline/feature extraction
+/* tgt   = target data
 /* mdls  = appropriate models from `.automl.proc.models` above
+/* cnms  = column names for all columns required to be shuffled for feature impact
+/* p     = parameter dictionary passed as default or modified by user
 /* dt    = date and time that the run was initialized (this is used in the feature impact function) 
 /* fpath = file paths for saving down information
-/* tgt   = target data
-/* p     = parameter dictionary passed as default or modified by user
 /. r     > all relevant information about the running of the sets of models
+/.         1. average score for all models;  2. name of best scoring model; 3. score of best model on holdout
+/.         3. time for cross validation run; 4. time to complete fit, predict and score with best model
+/.         5. scoring function used; 6. embedpy model which produced the best score
 proc.runmodels:{[data;tgt;mdls;cnms;p;dt;fpath]
   system"S ",string p`seed;
   // Apply train test split to keep holdout for feature impact plot and testing of vanilla best model

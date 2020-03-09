@@ -8,7 +8,7 @@
 /* tgt   = target vector
 /* ftype = type of feature extraction being completed (`fresh/`normal)
 /* ptype = type of problem regression/class (`reg/`class)
-/* p     = parameters (::) produces default other changes are user dependent
+/* p     = parameters (::) produces default other changes are user dependent dict/flat-file
 /. r     > returns date and time of run
 run:{[tb;tgt;ftype;ptype;p]
   dtdict:`stdate`sttime!(.z.D;.z.T);
@@ -16,7 +16,7 @@ run:{[tb;tgt;ftype;ptype;p]
   dict:i.updparam[tb;p;ftype],enlist[`typ]!enlist ftype;
   // Check that the functions to overwrite default behaviour exist in process
   i.checkfuncs[dict];
-  // update the seed randomly if user does not specify the seed in p
+  // update the seed based on time of day if user does not specify the seed in p
   if[`rand_val~dict[`seed];dict[`seed]:"j"$.z.t];
   // if required to save data construct the appropriate folders
   if[dict[`saveopt]in 1 2;spaths:i.pathconstruct[dtdict;dict`saveopt]];
@@ -49,7 +49,9 @@ run:{[tb;tgt;ftype;ptype;p]
   // Run all appropriate models on the training set
   // Set numpy random seed if multiple prcoesses
   if[0<abs[system "s"];.p.import[`numpy][`:random.seed][dict`seed]];
+  // Run cross validated search across all possible models
   bm:proc.runmodels[xtrn;ytrn;mdls;cols tts`xtrain;dict;dtdict;spaths];
+  // Extract the appropriate scoring function from the dataset
   fn:i.scfn[dict;mdls];
   // Do not run grid search on deterministic models returning score on the test set and model
   if[a:bm[1]in i.excludelist;
@@ -124,7 +126,7 @@ new:{[t;dt;tm]
 // Saves down flatfile of default dict
 /* fn    = filename as string, symbol or hsym
 /* ftype = type of feature extraction, e.g. `fresh or `normal
-/. r     > flatfile of dictionary parameters
+/. r     > flatfile of representing default dictionary saved to code/models
 savedefault:{[fn;ftype]
   // Check type of filename and convert to string
   fn:$[10h~typf:type fn;fn;

@@ -1,6 +1,6 @@
 \d .automl
 
-// The following aspects of the naming parameter naming are used throughout this file
+// The following aspects of the parameter naming are used throughout this file
 /* t   = data as table
 /* p   = dictionary of parameters (type of feature extract dependant)
 /* typ = type of feature extraction (FRESH/normal/tseries ...)
@@ -12,6 +12,7 @@
 
 // This function checks that functions a user is attempting to overwrite
 // default behaviour with are valid, this can be expanded as required
+/. r > null or error if a function to be applied is not valid
 i.checkfuncs:{[dict]
   fns:raze dict[`funcs`prf`tts`sigfeats],value[dict`scf],first each dict`xv`gs;
   if[0<cnt:sum locs:@[{$[not type[get[x]]in(99h;100h;104h);'err;0b]};;{[err]err;1b}]each fns;
@@ -19,9 +20,9 @@ i.checkfuncs:{[dict]
     '"The function",/funclst," are not defined in your process\n"]
  }
 
-//  This function sets or updates the default parameter dictionary as appropriate
+// This function sets or updates the default parameter dictionary as appropriate
+/. r > dictionary with default parameters updated as required
 i.updparam:{[t;p;typ]
-  dict:
     $[typ=`fresh;
       {[t;p]d:i.freshdefault[];
        d:$[(ty:type p)in 10 -11 99h;
@@ -85,13 +86,13 @@ i.normaldefault:{`xv`gs`funcs`prf`scf`seed`saveopt`hld`tts`sz`sigfeats!
    `class`reg!(`.ml.accuracy;`.ml.mse);`rand_val;2;0.2;`.ml.traintestsplit;0.2;`.automl.prep.freshsignificance)}
 
 // Apply an appropriate scoring function to predictions from a model
-/* xtst = test data
-/* ytst = test target
+/* data = testing dataset (xtrain;ytrain;xtest;ytest)
 /* mdl  = fitted embedPy model object/function to be applied
 /* bmn  = best model name (symbol)
 /* scf  = scoring function which determines best model
 /* fnm  = name of the base representation of the function to be applied (reg/multi/bin)
-/. r    > score for the model based on the predictions on test data
+/. r    > Mixed list, 
+/.        (score for the model based on the predictions on test data; vector of predictions)
 i.scorepred:{[data;bmn;mdl;scf;fnm]
   pred:$[bmn in i.keraslist;
          // Formatting of first param is a result of previous implementation choices
@@ -104,9 +105,10 @@ i.scorepred:{[data;bmn;mdl;scf;fnm]
 /* dt = date-time of model start (dict)
 /* bmn = best model name (`symbol)
 /* bmo = best model object (embedPy)
-/* r = all applied models (table)
-i.savemdl:{[bmn;bmo;mdls;nms]
-  fname:nms[0]`models;mo:i.ssrsv[nms[1]`models];
+/* fpath = dictionary of file paths for saving
+/. r   > saved model to disk at "outputs/2020.03.09/run_16.34.22.262/models"
+i.savemdl:{[bmn;bmo;mdls;fpath]
+  fname:fpath[0]`models;mo:i.ssrsv[fpath[1]`models];
   joblib:.p.import[`joblib];
   $[(`sklearn=?[mdls;enlist(=;`model;bmn,());();`lib])0;
       (joblib[`:dump][bmo;fname,"/",string[bmn]];-1"Saving down ",string[bmn]," model to ",mo);
@@ -138,7 +140,7 @@ i.models:{[ptyp;tgt;p]
 /. r    > model table with appropriate models removed if needed and model removal highlighted
 i.updmodels:{[mdls;tgt]
  $[10000<count tgt;
-   [-1"\nLimiting the models being applied due to number targets>100,000";
+   [-1"\nLimiting the models being applied due to number targets>10,000";
     -1"No longer running neural nets or svms\n";
     select from mdls where(lib<>`keras),not fnc in`neural_network`svm];mdls]}
 
@@ -195,6 +197,8 @@ i.normalproc:{[t;p]
   t:.ml.infreplace[t];
   t:first prep.normalcreate[t;p];
   pfeat:p`features;
+  // It is not guaranteed that all features will be created on new data
+  // no nulls -> no encode -> no feature, as such we may need to augment additional data
   if[not all ftc:pfeat in cols t;
      newcols:pfeat where not ftc;
      t:pfeat xcols flip flip[t],newcols!((count newcols;count t)#0f),()];
@@ -224,7 +228,7 @@ i.freshproc:{[t;p]
 
 // Create the folders that are required for the saving of the config,models, images and reports
 /* dt  = date and time dictionary denoting the start of a run
-/* svo = save option defined by the user, this can only be 1/2 in this case
+/* svo = save option defined by the user, this can only be 1/2, 0 never reached in functions
 /. r   > the file paths in its full format or truncated for use in outputs to terminal
 i.pathconstruct:{[dt;svo]
   names:`config`models;

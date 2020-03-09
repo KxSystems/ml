@@ -49,6 +49,7 @@ proc.i.extractdict:proc.i.edict["hyperparams.txt";"/code/models/";]
 
 // Extraction of an appropriately valued dictionary from a non complex flat file
 /* sn = name mapping to appropriate text file in, as a symbol
+/. r  > dictionary parsed from an appropriate flat file
 proc.i.txtparse:{[sn;fp]{key(!).("S=;")0:x}each(!).("S*";"|")0:hsym`$path,fp,proc.i.files sn}
 
 // Extract the appropriate ordering of output scores to allow the best model to be chosen
