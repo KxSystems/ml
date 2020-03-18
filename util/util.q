@@ -32,7 +32,8 @@ df2tab_tz:{
     d,:dtk!date_time_convert[;z] each d dtk:key[d]dti];
  n!flip c#d}
 // Convert python float32 function to produce correct precision without conversion to real
-float32_convert:{$[y~0b;x;?[0.000001>x;"F"$string x;0.000001*floor 0.5+x*1000000]]}
+// note check for x~()!() which is required in cases where underlying representation is float32 for dates/times
+float32_convert:{$[(y~0b)|x~()!();x;?[0.000001>x;"F"$string x;0.000001*floor 0.5+x*1000000]]}
 // Convert time zone data (0b -> UTC time; 1b -> local time)
 tz_convert:{$[y~0b;dt_convert;{"P"$neg[6]_/:'x[`:astype;`str][`:to_dict;<;`list]}]x}
 // Convert datetime/datetimetz to timestamp
