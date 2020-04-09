@@ -27,17 +27,20 @@ run:{[tb;tgt;ftype;ptype;p]
   // This provides an encoding map which can be used in reruns of automl even
   // if the data is no longer in the appropriate format for symbol encoding
   encoding:prep.i.symencode[tb;10;1;dict;::];
-  prep:preproc[tb;tgt;ftype;dict];tb:prep 0;dscrb:prep 1;-1 i.runout`pre;
-  tb:$[ftype=`fresh;prep.freshcreate[tb;dict];
-       ftype=`normal;prep.normalcreate[tb;dict];
-       '`$"Feature extraction type is not currently supported"];
-  feats:get[dict[`sigfeats]][tb 0;tgt];
+  // Preprocess the dataset and provide insights into initial data structure
+  prep:preproc[tb;tgt;ftype;dict];
+  tb:prep`table;dscrb:prep`describe;
+  -1 i.runout`pre;
+  tb:prep.create[tb;dict;ftype];
+  // assign the returned values from the feature extraction phase
+  feat_tab:tb`preptab;feat_time:tb`preptime;
+  sigfeats:get[dict[`sigfeats]][feat_tab;tgt];
   // Encode target data if target is a symbol vector
   if[11h~type tgt;tgt:.ml.labelencode tgt];
   // Apply the appropriate train/test split to the data
   // the following currently runs differently if the parameters are defined
   // in a file or through the more traditional dictionary/(::) format
-  tts:($[-11h=type dict`tts;get;]dict[`tts])[;tgt;dict`sz]tab:feats#tb 0;
+  tts:($[-11h=type dict`tts;get;]dict[`tts])[;tgt;dict`sz]tab:sigfeats#feat_tab;
   // Centralizing the table to matrix conversion makes it easier to avoid
   // repetition of this task which can be computationally expensive
   xtrn:flip value flip tts`xtrain;xtst:flip value flip tts`xtest;
@@ -46,44 +49,29 @@ run:{[tb;tgt;ftype;ptype;p]
   // Check if Tensorflow/Keras not available for use, NN models removed
   if[1~checkimport[];mdls:?[mdls;enlist(<>;`lib;enlist `keras);0b;()]];
   -1 i.runout`sig;-1 i.runout`slct;-1 i.runout[`tot],string[ctb:count cols tab];
-  // Run all appropriate models on the training set
   // Set numpy random seed if multiple prcoesses
   if[0<abs[system "s"];.p.import[`numpy][`:random.seed][dict`seed]];
-  // Run cross validated search across all possible models
+  // Run the initial model selection procedure
   bm:proc.runmodels[xtrn;ytrn;mdls;cols tts`xtrain;dict;dtdict;spaths];
-  // Extract the appropriate scoring function from the dataset
-  fn:i.scfn[dict;mdls];
-  // Do not run grid search on deterministic models returning score on the test set and model
-  if[a:bm[1]in i.excludelist;
-    data:(xtrn;ytrn;xtst;ytst);
-    funcnm:string first exec fnc from mdls where model=bm[1];
-    -1 i.runout`ex;r:i.scorepred[data;bm[1];expmdl:last bm;fn;funcnm];
-    score:r 0;pred:r 1];
-  // Run grid search on the best model for the parameter sets defined in hyperparams.txt
-  if[b:not a;
-    -1 i.runout`gs;
-    prms:proc.gs.psearch[xtrn;ytrn;xtst;ytst;bm 1;dict;ptype;mdls];
-    score:prms 0;expmdl:prms 2;pred:prms 3];
+  // extract information to be used in this function
+  mdl_name:bm`best_scoring_name;best_mdl:bm`best_model;
+  data:(xtrn;ytrn;xtst;ytst);
+  // Run optimization procedure or finalize models in case of deterministic models
+  optim:proc.optimize[data;dict;ptype;mdls;mdl_name;best_mdl];
+  best_mdl:optim`best_model;score:optim`score;pred:optim`preds;
   -1 i.runout[`sco],string[score],"\n";
   // Print confusion matrix for classification problems
-  if[ptype~`class;
-    -1 i.runout[`cnf];show .ml.conftab[pred;tts`ytest];
-    if[dict[`saveopt]in 1 2;post.i.displayCM[value .ml.confmat[pred;tts`ytest];`$string asc distinct pred,tts`ytest;"";();bm 1;spaths]]];
-  // Save down a pdf report summarizing the running of the pipeline
-  if[2=dict`saveopt;
-    -1 i.runout[`save],i.ssrsv[spaths[1]`report];
-    report_param:post.i.reportdict[ctb;bm;tb;path;(prms 1;score;dict`xv;dict`gs);spaths;dscrb];
-    if[ptype=`class;ptype:$[2<count distinct tgt;`multi_classification;`binary_classification]];
-    post.report[report_param;dtdict;spaths[0]`report;ptype]];
-  if[dict[`saveopt]in 1 2;
-    // Extract the Python library from which the best model was derived, used for model rerun
-    pylib:?[mdls;enlist(=;`model;enlist bm 1);();`lib];
-    // additional metadata information to be saved to disk
-    hp:$[b;enlist[`hyper_parameters]!enlist prms 1;()!()];
-    exmeta:`features`test_score`best_model`symencode`pylib!(feats;score;bm 1;encoding;pylib 0);
-    metadict:dict,hp,exmeta;
-    i.savemdl[bm 1;expmdl;mdls;spaths];
-    i.savemeta[metadict;dtdict;spaths]];
+  if[(ptype~`class);post.confmat[pred;ytst;mdl_name;spaths;dict]];
+  // Set up required information for saving and save as appropriate
+  hp:$[mdl_name in i.excludelist;()!();enlist[`hyper_params]!enlist optim`hyper_params];
+  exmeta_keys:`best_scoring_name`cnt_feats`features`test_score`symencode`feat_time`describe;
+  exmeta_vals:(mdl_name;ctb;sigfeats;score;encoding;feat_time;dscrb);
+  exmeta:exmeta_keys!exmeta_vals;
+  dict:exmeta,hp,dict;
+  if[dict[`saveopt] = 2;
+    report_param:post.i.reportdict[dict;bm;spaths];
+    post.save_report[report_param;spaths;ptype;dtdict]];
+  if[dict[`saveopt]in 1 2;post.save_info[mdls;dict;mdl_name;best_mdl;spaths;dtdict]];
   // return (date;time) for .automl.new
   value dtdict
   }
@@ -113,8 +101,8 @@ new:{[t;dt;tm]
     ];
   $[(mp:metadata[`pylib])in `sklearn`keras;
     // Apply the relevant saved down model to new data
-    [fp_upd:i.ssrwin[path,"/outputs/",fp,"/models/",string metadata[`best_model]];
-     if[bool:(mdl:metadata[`best_model])in i.keraslist;fp_upd,:".h5"];
+    [fp_upd:i.ssrwin[path,"/outputs/",fp,"/models/",string metadata[`best_scoring_name]];
+     if[bool:(mdl:metadata[`best_scoring_name])in i.keraslist;fp_upd,:".h5"];
      model:$[mp~`sklearn;skload;krload]fp_upd;
      $[bool;
        [fnm:neg[5]_string lower mdl;get[".automl.",fnm,"predict"][(0n;(data;0n));model]];

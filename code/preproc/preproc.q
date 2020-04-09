@@ -25,5 +25,5 @@ preproc:{[t;tgt;typ;p]
   tb:.ml.dropconstant tb;
   tb:prep.i.nullencode[tb;med];
   // perform an infinity replace and rejoin the separated aggregate columns for FRESH
-  ($[`fresh=typ;flip sepdata,;flip]flip .ml.infreplace tb;dscrb)
+  `table`describe!($[`fresh=typ;flip sepdata,;flip]flip .ml.infreplace tb;dscrb)
   }

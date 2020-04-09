@@ -93,30 +93,14 @@ post.i.displayCM:{[cm;classes;title;cmap;mdl;fpath]
 // Utilities for report generation
 
 // The following dictionary is used to make report generation more seautomless
-/* cfeat = count of features
+/* dict  = parameters describing information about the overall model run
 /* bm    = information about the best model returned from `.automl.proc.runmodels`
-/* tm    = list with the time for feature extraction to take place returned from .automl.prep.*create
-/* path  = output from ".automl.path" for the system
-/* xvgs  = list of information about the models used and scores achieved for xval and grid-search
-/* fpath = image file path
-/* dscrb = description of input table
+/* fpath = image file paths
 /. r     > dictionary with the appropriate information added
-post.i.reportdict:{[cfeat;bm;tm;path;xvgs;fpath;dscrb]
-  dd:(0#`)!();
-  select
-    feats    :cfeat,
-    dict     :bm 0,
-    impact   :(fpath[0][`images],"Impact_Plot_",string[bm 1],".png"),
-    holdout  :bm 2,
-    xvtime   :bm 3,
-    bmtime   :bm 4,
-    metric   :bm 5,
-    feat_time:tm 1,
-    gs       :xvgs 0,
-    score    :xvgs 1,
-    xv       :xvgs 2,
-    gscfg    :xvgs 3,
-    confmat  :(fpath[0][`images],"Confusion_Matrix_",string[bm 1],".png"),
-    describe :dscrb
-  from dd}
+post.i.reportdict:{[dict;bm;fpath]
+  // Construct the relevant image paths
+  best_mdl:bm`best_scoring_name;
+  images:`impact_plot`conf_plot!(fpath[0][`images],"Impact_Plot_",string[best_mdl],".png";fpath[0][`images],"Confusion_Matrix_",string[best_mdl],".png");
+  dict,bm,images
+  }
 

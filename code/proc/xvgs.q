@@ -33,7 +33,7 @@ proc.xv.seed:{[xtrn;ytrn;p;mdls]
 /* bm   = name of the best model as on which a grid search should be completed as a symbol
 /*        derived from initial cross validation
 /* typ  = type of the problem being solved, this can be either `class or `reg
-/. r    > a mixed list containing:
+/. r    > a dictionary containing:
 /.        1. the score achieved for the best model; 2. the hyperparameters from the best model
 /.        3. the fitted best model; 4. predicted values based on testing set
 proc.gs.psearch:{[xtrn;ytrn;xtst;ytst;bm;p;typ;mdls]
@@ -63,7 +63,7 @@ proc.gs.psearch:{[xtrn;ytrn;xtst;ytst;bm;p;typ;mdls]
   bmdl:epymdl[pykwargs hyp][`:fit][xtrn;ytrn];
   pred:bmdl[`:predict][xtst]`;
   score:fn[pred;ytst];
-  (score;hyp;bmdl;pred)
+  `score`hyper_params`best_model`preds!(score;hyp;bmdl;pred)
   }
 
 

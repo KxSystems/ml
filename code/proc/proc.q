@@ -50,4 +50,24 @@ proc.runmodels:{[data;tgt;mdls;cnms;p;dt;fpath]
   if[2=p[`saveopt];post.featureimpact[bs;(bm;mdls);value tt;cnms;scf;dt;fpath;p]];
   // Outputs from run models. These are used in the generation of a pdf report
   // or are used within later sections of the pipeline.
-  (s1;bs;s2;xv_tend;bm_tend;scf;bm)}
+  key_vals:`model_scores`best_scoring_name`holdout`xval_time`val_time`metric`best_model;
+  out_vals:(s1;bs;s2;xv_tend;bm_tend;scf;bm);
+  key_vals!out_vals}
+
+// Optimize models using grid search procedures if appropriate, otherwise predict on test data
+/* data     = (xtrn;xtst;ytrn;ytst)
+/* dict     = appropriate hyperparameters
+/* ptype    = problem type being approached
+/* mdls     = table outlining appropriate information about the models
+/* mdl_name = model name
+/* best_mdl = embedPy object containing the best model
+/. r        > dictionary containing score, prediction and best model
+proc.optimize:{[data;dict;ptype;mdls;mdl_name;best_mdl]
+  fn:i.scfn[dict;mdls];
+  $[mdl_name in i.excludelist;
+    [funcnm:string first exec fnc from mdls where model=mdl_name;
+     -1 i.runout`ex;
+     i.scorepred[data;mdl_name;best_mdl;fn;funcnm],enlist[`best_model]!enlist best_mdl];
+    [-1 i.runout`gs;proc.gs.psearch[;;;;mdl_name;dict;ptype;mdls]. data]
+   ]
+  }

@@ -6,6 +6,15 @@
 /* p   = parameter dictionary passed as default or modified by user
 /* tgt = target data
 
+// Call feature creation procedures based on feature extraction type
+/* typ = feature creation type (`normal;`fresh)
+/. r   > dictionary `preptab`preptime!(tab with creation completed;time taken to complete creation)
+prep.create:{[t;p;typ]
+  $[typ=`fresh;prep.freshcreate[t;p];
+    typ=`normal;prep.normalcreate[t;p];
+    '`$"Feature extraction type is not currently supported"]
+  }
+
 // Create features using the FRESH algorithm
 /. r > table of fresh created features and the time taken to complete extraction as a mixed list
 prep.freshcreate:{[t;p]
@@ -17,7 +26,7 @@ prep.freshcreate:{[t;p]
   t:"f"$prep.i.nullencode[value .ml.fresh.createfeatures[t;agg;cols2use;prm];med];
   fe_end:.z.T-fe_start;
   t:.ml.infreplace t;
-  (0^.ml.dropconstant t;fe_end)}
+  `preptab`preptime!(0^.ml.dropconstant t;fe_end)}
 
 
 // In all cases feature significance currently returns the top 25% of important features
@@ -43,5 +52,5 @@ prep.normalcreate:{[t;p]
   // Apply the transform of time specific columns as appropriate
   if[0<count tcols;tb^:.ml.timesplit[tcols#t;::]];
   fe_end:.z.T-fe_start;
-  (tb;fe_end)}
+  `preptab`preptime!(tb;fe_end)}
 
