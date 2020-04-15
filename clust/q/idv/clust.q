@@ -103,6 +103,14 @@ clust.kd.i.findnext:{[tree;pt;node]tree node[`children]node[`midval]<=pt node`ax
 /. r    > returns dictionary of leaf node pt belongs to
 clust.kd.i.findleaf:{[tree;pt;node]{[node]not node`leaf}clust.kd.i.findnext[tree;pt]/node}
 
+// K-D tree C functions
+
+if[112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::];
+ clust.kd.i.findleaf:{[tree;point;node]tree clust.kd.c.findleaf[tree;point;node`self]}]
+
+if[112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::];
+ clust.kd.nn:{[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;data;(1_key clust.i.dd)?df;xidxs;pt]}]
+
 // K-Means
 
 // K-Means algorithm
