@@ -77,22 +77,15 @@ static void kd_i_nnleaf(K point, K data, K idxs, K xidxs, distFuncType distFunc,
   K dpoint = ktn(KF, data->n);
   for(J i=0; i<idxs->n; ++i){
     idx = kJ(idxs)[i];
-    chk = 0;
-    for(J k=0; k<xidxs->n; ++k){
-      if(idx == kJ(xidxs)[k]){
-	chk += 1;
-        break;
-      }
-    }
-    if(chk)
+    if(kG(xidxs)[idx])
       continue;
     for(J j=0; j<data->n; ++j){
       kF(dpoint)[j] = kF(point)[j] - kF(kK(data)[j])[idx];
     }
     dst = distFunc(dpoint);
     if(dst < *nndst){
-      *nndst=dst;
-      *nnidx=idx;
+      *nndst = dst;
+      *nnidx = idx;
     }
   }
   r0(dpoint);
