@@ -103,7 +103,7 @@ clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
 
 clust.hcscc:{[d;df;lf;k;n;c]
  r:(count[d 0]-k).[clust.i.algoscc[d;df;lf]]/clust.i.initscc[d;df;k;n;c];
- @[;;:;]/[count[d 0]#0N;vres`reppts;til count vres:select from r[1]where valid]}
+ @[;;:;]/[count[d 0]#0N;vres`points;til count vres:select from r[1]where valid]}
 
 clust.i.initscc:{[d;df;k;n;c]
  kdtree:clust.kd.newtree[d]1000&ceiling .01*nd:count d 0;
