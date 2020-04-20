@@ -1,44 +1,59 @@
 \d .ml
 
-// Hierarchical clustering
-
-// HC
 /* data = data points in `value flip` format
 /* df   = distance function
 /* lf   = linkage function
 /* k    = number of clusters
 /. r    > return list of clusters
 clust.hc:{[data;df;lf;k]
+ if[lf in`complete`average`ward;:clust.hccaw[data;df;lf;k]];
+ if[lf in`single`centroid`cure ;:clust.hcscc[data;df;lf;k;::;::]];
+ }
+
+/* data = data points in `value flip` format
+/* df   = distance function
+/* k    = number of clusters
+/* n    = number of representative points per cluster
+/* c    = compression factor for representative points
+/. r    > return list of clusters
+clust.cure:{[data;df;k;n;c]clust.hcscc[data;df;`cure;k;n;c]}
+
+// Complete, Average, Ward (CAW) Linkage
+
+/* data = data points in `value flip` format
+/* df   = distance function
+/* lf   = linkage function
+/* k    = number of clusters
+/. r    > return list of clusters
+clust.hccaw:{[data;df;lf;k]
  // check distance and linkage functions, plus extra check for ward
-  if[not df in key clust.i.dd;clust.i.err.dd[]];
-  if[not lf in key clust.i.ld;clust.i.err.ld[]];
-  if[(not df in`edist`e2dist)&lf=`ward;clust.i.err.ward[]];
+ if[not df in key clust.i.dd;clust.i.err.dd[]];
+ if[not lf in key clust.i.ld;clust.i.err.ld[]];
+ if[(not df in`edist`e2dist)&lf=`ward;clust.i.err.ward[]];
  // create initial cluster table
- t0:clust.i.inithc[data;df];
+ t0:clust.i.initcaw[data;df];
  // merge clusters based on chosen algorithm
- t1:{[k;t]k<count distinct t`clt}[k]clust.i.algohc[data;df;lf]/t0;
+ t1:{[k;t]k<count distinct t`clt}[k]clust.i.algocaw[data;df;lf]/t0;
  // return file clusters
  clust.i.reindex t1`clt}
-
-// HC utility functions
 
 // Initialize cluster table
 /* data = data points in `value flip` format
 /* df   = distance function
 /. r    > returns a table with distances, neighbors, clusters and representatives
-clust.i.inithc:{[data;df]
+clust.i.initcaw:{[data;df]
  // create table with distances and nearest neighhbors noted
  t:{[data;df;i]`nni`nnd!(d?m;m:min d:@[;i;:;0w]clust.i.dists[data;df;data;i])}[data;df]each til count data 0;
  // update each points cluster and representatives
  update clt:i,reppt:flip data from t}
 
-// HC algo
+// CAW algo
 /* data = data points in `value flip` format
 /* df   = distance function
 /* lf   = linkage function
 /* t    = cluster table
 /. r    > returns updated cluster table
-clust.i.algohc:{[data;df;lf;t]
+clust.i.algocaw:{[data;df;lf;t]
  // merge closest clusters
  merge:distinct value first select clt,nni from t where nnd=min nnd;
  // add new cluster into table
@@ -84,14 +99,11 @@ clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
  rpt:{[a;b;m;n]((m*a)+(n*b))%m+n}[x`reppt;nn`reppt;x`n;nn`n];
  update nni:nidx,nnd:ndst,reppt:count[i]#enlist rpt from t where clt=chk}
 
-// SCC Part
+// Single, Centroid, Cure (SCC) Linkage
 
-clust.i.scc:{[d;df;lf;k;n;c]
+clust.hcscc:{[d;df;lf;k;n;c]
  r:(count[d 0]-k).[clust.i.algoscc[d;df;lf]]/clust.i.initscc[d;df;k;n;c];
- r 1}
-
-clust.hcscc:clust.i.scc[;;;;::;::]  / [d;df;lf;k]
-clust.cure :clust.i.scc[;;`cure;;;] / [d;df;k;n;c]
+ @[;;:;]/[count[d 0]#0N;vres`reppts;til count vres:select from r[1]where valid]}
 
 clust.i.initscc:{[d;df;k;n;c]
  kdtree:clust.kd.newtree[d]1000&ceiling .01*nd:count d 0;
