@@ -96,7 +96,7 @@ clust.i.hcupd.average:clust.i.hcupd.complete
 clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
  dsts:{[df;lf;x;y]2*clust.i.ld[lf][x`n;y`n]clust.i.dd[df]x[`reppt]-y`reppt}[df;lf;cpts chk]each cpts _ chk;
  nn:cpts nidx:dsts?ndst:min dsts;
- rpt:{[a;b;m;n]((m*a)+(n*b))%m+n}[x`reppt;nn`reppt;x`n;nn`n];
+ rpt:{[a;b;m;n]((m*a)+(n*b))%m+n}[cpts[chk]`reppt;nn`reppt;cpts[chk]`n;nn`n];
  update nni:nidx,nnd:ndst,reppt:count[i]#enlist rpt from t where clt=chk}
 
 // Single, Centroid, Cure (SCC) Linkage
