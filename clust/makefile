@@ -13,7 +13,7 @@ else ifeq ($(shell uname),Darwin)
  LDRPATH = -Wl,-rpath,"@loader_path" 
 endif
 
-CFLAGS= -DKXVER=3 -O2
+CFLAGS= -DKXVER=3 -O2 -Wall -Wno-strict-aliasing -Wno-parentheses -Wextra -Werror -Wsign-compare
 MS    = $(shell getconf LONG_BIT)
 
 QARCH = $(OSFLAG)$(MS)

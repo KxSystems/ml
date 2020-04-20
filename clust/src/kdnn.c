@@ -59,15 +59,10 @@ enum KdTreeCols{ leafCol, leftCol, selfCol, prntCol, chldCol, axisCol, mvalCol, 
 
 static J kd_i_findleaf(K tree, K point, J idx){
   K tvals = kK(tree->k)[1];
-  J nrows = kK(tvals)[0]->n;
   G* leafVec = kG(kK(tvals)[leafCol]);
-  G* leftVec = kG(kK(tvals)[leftCol]);
-  J* selfVec = kJ(kK(tvals)[selfCol]);
-  J* prntVec = kJ(kK(tvals)[prntCol]);
   K* chldVec = kK(kK(tvals)[chldCol]);
   J* axisVec = kJ(kK(tvals)[axisCol]);
   F* mvalVec = kF(kK(tvals)[mvalCol]);
-  K* idxsVec = kK(kK(tvals)[idxsCol]);
 
   while(!leafVec[idx]){
     F pval = kF(point)[axisVec[idx]];
@@ -78,7 +73,7 @@ static J kd_i_findleaf(K tree, K point, J idx){
 }
 
 static void kd_i_nnleaf(K point, K data, K idxs, K xidxs, distFuncType distFunc, F *nndst, J *nnidx){
-  J idx, chk;
+  J idx;
   F dst;
   K dpoint = ktn(KF, data->n);
   for(J i=0; i<idxs->n; ++i){
@@ -108,9 +103,7 @@ EXP K kd_findleaf(K tree,K point,K kidx){
 EXP K kd_nn(K tree, K data, K dfidx, K xidxs, K point){
   K tvals = kK(tree->k)[1];
   J nrows = kK(tvals)[0]->n;
-  G* leafVec = kG(kK(tvals)[leafCol]);
   G* leftVec = kG(kK(tvals)[leftCol]);
-  J* selfVec = kJ(kK(tvals)[selfCol]);
   J* prntVec = kJ(kK(tvals)[prntCol]);
   K* chldVec = kK(kK(tvals)[chldCol]);
   J* axisVec = kJ(kK(tvals)[axisCol]);
