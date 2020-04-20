@@ -19,14 +19,14 @@ MS    = $(shell getconf LONG_BIT)
 QARCH = $(OSFLAG)$(MS)
 Q     = $(QHOME)/$(QARCH) 
 
-cure.so: src/cure.c src/cure.h kdtree.so src/kdtree.h
-	$(CC) $(CFLAGS) $(OSXOPTS) $(LNK) -o cure.so src/cure.c kdtree.so $(LDRPATH)
+kdnn.so: src/kdnn.c src/k.h
+	$(CC) $(CFLAGS) $(OSXOPTS) $(LNK) -Isrc -o kdnn.so src/kdnn.c $(LDRPATH)
 
-kdtree.so: src/kdtree.c src/kdtree.h
-	$(CC) $(CFLAGS) $(OSXOPTS) $(LNK) -o kdtree.so src/kdtree.c $(LDRPATH)
+src/k.h:
+	curl -s -L https://github.com/KxSystems/kdb/raw/master/c/c/k.h -o src/k.h 
 
 install:
-	install cure.so kdtree.so $(Q)
+	install kdnn.so $(Q)
 
 clean:
-	rm kdtree.so cure.so
+	rm kdnn.so
