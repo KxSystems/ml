@@ -1,6 +1,12 @@
 #include <math.h>
 #include "k.h"
 
+#ifdef _WIN32
+#define EXP __declspec(dllexport)
+#else
+#define EXP
+#endif
+
 // Distance Functions
 
 enum DistFuncs{ edist , e2dist , mdist , cshev , nege2dist };
@@ -93,13 +99,13 @@ static void kd_i_nnleaf(K point, K data, K idxs, K xidxs, distFuncType distFunc,
 
 // Find correct leaf, for point, from node (kidx)
 
-K kd_findleaf(K tree,K point,K kidx){
+EXP K kd_findleaf(K tree,K point,K kidx){
   return kj(kd_i_findleaf(tree, point, kidx->j));
 }
 
 // Find nearest neighbour for point
 
-K kd_nn(K tree, K data, K dfidx, K xidxs, K point){
+EXP K kd_nn(K tree, K data, K dfidx, K xidxs, K point){
   K tvals = kK(tree->k)[1];
   J nrows = kK(tvals)[0]->n;
   G* leafVec = kG(kK(tvals)[leafCol]);
