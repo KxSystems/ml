@@ -1,7 +1,0 @@
-LIBRARY kdtree
-EXPORTS
-kdtree_searchfrom_i_F
-kdtree_searchfrom_i_E
-kdtree_rdist_F
-kdtree_rdist_E
-kdtree_searchfrom
