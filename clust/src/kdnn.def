@@ -1,4 +1,0 @@
-LIBRARY kdnn
-EXPORTS
-kd_findleaf
-kd_nn
