@@ -1,5 +1,6 @@
 \d .ml
 
+// Hierarchical Clustering
 /* data = data points in `value flip` format
 /* df   = distance function
 /* lf   = linkage function
@@ -13,6 +14,7 @@ clust.hc:{[data;df;lf;k]
  if[lf in`single`centroid;:clust.hcscc[data;df;lf;k;::;::]];
  }
 
+// CURE algorithm
 /* data = data points in `value flip` format
 /* df   = distance function
 /* k    = number of clusters
@@ -22,7 +24,6 @@ clust.hc:{[data;df;lf;k]
 clust.cure:{[data;df;k;n;c]clust.hcscc[data;df;`cure;k;n;c]}
 
 // Complete, Average, Ward (CAW) Linkage
-
 /* data = data points in `value flip` format
 /* df   = distance function
 /* lf   = linkage function
@@ -74,8 +75,11 @@ clust.i.algocaw:{[data;df;lf;t]
 /* chk  = points to check
 /. r    > returns updated cluster table
 clust.i.hcupd.complete:{[cpts;df;lf;t;chk]
+ // calculate cluster distances using complete method
  dsts:{[df;lf;x;y]clust.i.ld[lf]raze clust.i.dd[df]x[`pts]-\:'y`pts}[df;lf;cpts chk]each cpts _ chk;
+ // find nearest neighbors
  nidx:dsts?ndst:min dsts;
+ // update cluster table
  update nni:nidx,nnd:ndst from t where clt=chk}
 
 // Average linkage
@@ -95,52 +99,103 @@ clust.i.hcupd.average:clust.i.hcupd.complete
 /* chk  = points to check
 /. r    > returns updated cluster table
 clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
+ // calculate distances usind ward method
  dsts:{[df;lf;x;y]2*clust.i.ld[lf][x`n;y`n]clust.i.dd[df]x[`reppt]-y`reppt}[df;lf;cpts chk]each cpts _ chk;
+ // find nearest neighbors
  nn:cpts nidx:dsts?ndst:min dsts;
+ // calculate representative points
  rpt:{[a;b;m;n]((m*a)+(n*b))%m+n}[cpts[chk]`reppt;nn`reppt;cpts[chk]`n;nn`n];
+ // update cluster table
  update nni:nidx,nnd:ndst,reppt:count[i]#enlist rpt from t where clt=chk}
 
 // Single, Centroid, Cure (SCC) Linkage
-
+/* data = data points in `value flip` format
+/* df   = distance function
+/* lf   = linkage function
+/* k    = number of clusters
+/* n    = number of representative points per cluster
+/* c    = compression factor for representative points
+/. r    > return list of clusters
 clust.hcscc:{[data;df;lf;k;n;c]
  r:(count[data 0]-k).[clust.i.algoscc[data;df;lf]]/clust.i.initscc[data;df;k;n;c];
  @[;;:;]/[count[data 0]#0N;vres`points;til count vres:select from r[1]where valid]}
 
+// Initialize SCC clusters
+/* data = data points in `value flip` format
+/* df   = distance function
+/* k    = number of clusters
+/* n    = number of representative points per cluster
+/* c    = compression factor for representative points
+/. r    > return list of parameters, clusters, representative points and the kdtree
 clust.i.initscc:{[data;df;k;n;c]
+ // build kdtree
  kdtree:clust.kd.newtree[data]1000&ceiling .01*nd:count data 0;
+ // create distance table with closest clusters identified
  dists:update closestClust:closestPoint from{[kdtree;data;df;i]clust.kd.nn[kdtree;data;df;i;data[;i]]}[kdtree;data;df]each til nd;
  r2l:exec self idxs?til count i from select raze idxs,self:self where count each idxs from kdtree where leaf;
+ // create cluster table 
  clusts:select clust:i,valid:1b,reppts:enlist each i,points:enlist each i,closestDist,closestClust from dists;
+ // create table of representative points for each cluster
  reppts:select reppt:i,clust:i,leaf:r2l,closestDist,closestClust from dists;
  reppts:reppts,'flip(rpcols:`$"x",'string til count data)!data;
+ // create list of important parameters to carry forward
  params:`k`n`c`rpcols!(k;n;c;rpcols);
+ // return as a list to be passed to algos
  (params;clusts;reppts;kdtree)}
 
+// Representative points for Centroid linkage
+/* p = list of data points
+/. r > return list of representative points
 clust.i.centrep:{[p]enlist avg each p}
+
+// Representative points for CURE
+/* df = distance function
+/* n  = number of representative points per cluster
+/* c  = compression factor for representative points
+/* p  = list of data points
+/. r  > return list of representative points
 clust.i.curerep:{[df;n;c;p]rpts:1_first(n&count p 0).[{[df;rpts;p]
  rpts,:enlist p[;i:clust.i.imax min clust.i.dd[df]each p-/:neg[1|-1+count rpts]#rpts];
  (rpts;.[p;(::;i);:;0n])}[df]]/(enlist avgpt:avg each p;p);
  (rpts*1-c)+\:c*avgpt}
 
+// SCC algo
+/* data   = data points in `value flip` format
+/* df     = distance function
+/* lf     = linkage function
+/* params = dictionary of parameters - k (no. clusts), n (no. reppts per clust), reppts, kdtree
+/* clusts = cluster table
+/* reppts = representative points and associated info
+/* kdtree = k-dimensional tree storing points and distances
+/. r      > return list of parameters, clusters, representative points and the kdtree
 clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
+ // merge closest clusters
  clust0:exec clust{x?min x}closestDist from clusts where valid;
  newmrg:clusts clust0,clust1:clusts[clust0]`closestClust;
  newmrg:update valid:10b,reppts:(raze reppts;0#0),points:(raze points;0#0)from newmrg;
+ // keep track of old reppts
  oldrep:reppts newmrg[0]`reppts;
 
+ // find reps in new cluster
  $[sgl:lf~`single;
+   // for single new reps=old reps -> no new points calculated 
    newrep:select reppt,clust:clust0 from oldrep;
+   // if centroid reps=avg, if cure=calc reps
   [newrep:flip params[`rpcols]!flip$[lf~`centroid;clust.i.centrep;clust.i.curerep[df;params`n;params`c]]data[;newmrg[0]`points];
    newrep:update clust:clust0,reppt:count[i]#newmrg[0]`reppts from newrep;
+   // new rep leaves
    newrep[`leaf]:(clust.kd.i.findleaf[kdtree;;kdtree 0]each flip newrep params`rpcols)`self;
    newmrg[0;`reppts]:newrep`reppt;
+   // update tree with new reps and delete old one
    kdtree:.[kdtree;(oldrep`leaf;`idxs);except;oldrep`reppt];
    kdtree:.[kdtree;(newrep`leaf;`idxs);union ;newrep`reppt];
  ]];
+ // update clusters and reppts
  clusts:@[clusts;newmrg`clust;,;delete clust from newmrg];
  reppts:@[reppts;newrep`reppt;,;delete reppt from newrep];
 
  updrep:reppts newrep`reppt;
+ // nneighbour to clust
  if[sgl;updrep:select from updrep where closestClust in newmrg`clust];
  updrep:updrep,'clust.kd.nn[kdtree;reppts params`rpcols;df;newmrg[0]`points]each flip updrep params`rpcols;
  updrep:update closestClust:reppts[closestPoint;`clust]from updrep;
@@ -154,9 +209,11 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
  clusts:@[clusts;updrep`clust;,;`closestDist`closestClust#updrep];
 
  $[sgl;
+  // single - nneighbour=new clust
   [clusts:update closestClust:clust0 from clusts where valid,closestClust=clust1;
-   reppts:update closestClust:clust0 from reppts where       closestClust=clust1;
-  ];if[count updcls:select from clusts where valid,closestClust in(clust0;clust1);
+   reppts:update closestClust:clust0 from reppts where       closestClust=clust1];
+   // else do nneighbour search
+   if[count updcls:select from clusts where valid,closestClust in(clust0;clust1);
    updcls:updcls,'{x clust.i.imin x`closestDist}each clust.kd.nn[kdtree;reppts params`rpcols;df]/:'
      [updcls`reppts;flip each reppts[updcls`reppts]@\:params`rpcols];
    updcls[`closestClust]:reppts[updcls`closestPoint]`clust;

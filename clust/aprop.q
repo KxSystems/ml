@@ -23,7 +23,9 @@ clust.ap:{[data;df;dmp;diag]
 /. r    > returns a dictionary with similarity, availability and responsibility matrices
 /         and keys for matches and exemplars to be filled during further iterations
 clust.i.apinit:{[data;df;diag]
+ // calculate similarity matrix values
  s:@[;;:;diag raze s]'[s:clust.i.dists[data;df;data]each k;k:til n:count data 0];
+ // create lists/matrices of zeros for other variables
  `matches`exemplars`s`a`r!(0;0#0;s),(2;n;n)#0f}
 
 // Run affinity propagation algorithm
