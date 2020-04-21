@@ -1,5 +1,6 @@
-.ml.loadfile`:clust/q/utils.q
-.ml.loadfile`:clust/q/kdtree.q
-@[.ml.loadfile;`:clust/q/cutils.q;{x;-1"No shared object files for cutils.q, only q implementations available";}]
-.ml.loadfile`:clust/q/clust.q
-.ml.loadfile`:clust/q/score.q
+.ml.loadfile`:clust/util.q
+.ml.loadfile`:clust/kdtree.q
+.ml.loadfile`:clust/kmeans.q
+.ml.loadfile`:clust/aprop.q
+.ml.loadfile`:clust/dbscan.q
+.ml.loadfile`:clust/hierarchical.q

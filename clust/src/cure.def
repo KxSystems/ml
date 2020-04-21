@@ -1,8 +1,0 @@
-LIBRARY cure
-EXPORTS
-cure_nn_F
-cure_cluster_dists_F
-cure_cluster_reps_F
-cure_nn_E
-cure_cluster_dists_E
-cure_cluster_reps_E
