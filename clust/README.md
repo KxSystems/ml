@@ -2,17 +2,17 @@
 
 ## Introduction
 
-Clustering is a technique used in both data mining and machine learning to group similar data points together in order to identify patterns in their distributions. The task of clustering data can be carried out using a number of algorithms. The ML-Toolkit contains implementations of CURE (Clustering Using REpresentatives), DBSCAN (Density-based spatial clustering of applications with noise), hierarchical and k-means clustering. These algorithms work based on distinct clustering methodologies namely; connectivity-based, centroid-based or density-based models.
+Clustering is a technique used in both data mining and machine learning to group similar data points together in order to identify patterns in their distributions. The task of clustering data can be carried out using a number of algorithms. The ML-Toolkit contains implementations of Affinity Propagation, CURE (Clustering Using REpresentatives), DBSCAN (Density-based spatial clustering of applications with noise), hierarchical and k-means clustering. These algorithms work based on distinct clustering methodologies namely; connectivity-based, centroid-based or density-based models.
 
 -   Connectivity models, which include hierarchical and CURE, cluster data based on distances between individual data points.
--   Centroid models such as k-means define clusters based on distances from single points which represent the cluster.
+-   Centroid models such as affinity propagration and k-means define clusters based on distances from single points which represent the cluster.
 -   Density-based models such as DBSCAN define clusters based on data points being within a certain distance of each other and in defined concentrations.
 
 Each algorithm works by iteratively joining, separating or reassigning points until the desired number of clusters have been achieved. The process of finding the correct cluster for each data point is a case of trial and error, where parameters must be altered in order to find the optimum solution.
 
 ## Features
 
-The clustering library contains the aforementioned clustering algorithms which can be used to cluster kbd+/q data. Additionally, there are scripts to create and build a k-d (k dimensional) tree, used for the CURE, single and centroid implementations and scoring and optimization functions which can be applied to the clustering algorithms.
+The clustering library contains the aforementioned clustering algorithms which can be used to cluster kdb+/q data. Additionally, there are scripts to create and build a k-d (k dimensional) tree, used for the CURE, single and centroid implementations and scoring and optimization functions which can be applied to the clustering algorithms.
 
 ## Requirements
 
@@ -41,7 +41,7 @@ __Windows__ (within `build`):
 ```
 call build.bat
 ```
-**Note** This is built using Microsoft Visual Studio 2017
+**Note**: `build.bat` runs with Visual Studio 2019. For other versions, please modify file accordingly.
 
 ## Load
 
