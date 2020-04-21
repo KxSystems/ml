@@ -6,8 +6,11 @@
 /* k    = number of clusters
 /. r    > return list of clusters
 clust.hc:{[data;df;lf;k]
+ // check distance and linkage functions
+ if[not df in key clust.i.dd;clust.i.err.dd[]];
+ if[not lf in key clust.i.ld;clust.i.err.ld[]];
  if[lf in`complete`average`ward;:clust.hccaw[data;df;lf;k]];
- if[lf in`single`centroid`cure ;:clust.hcscc[data;df;lf;k;::;::]];
+ if[lf in`single`centroid;:clust.hcscc[data;df;lf;k;::;::]];
  }
 
 /* data = data points in `value flip` format
@@ -26,9 +29,7 @@ clust.cure:{[data;df;k;n;c]clust.hcscc[data;df;`cure;k;n;c]}
 /* k    = number of clusters
 /. r    > return list of clusters
 clust.hccaw:{[data;df;lf;k]
- // check distance and linkage functions, plus extra check for ward
- if[not df in key clust.i.dd;clust.i.err.dd[]];
- if[not lf in key clust.i.ld;clust.i.err.ld[]];
+ // check distance function for ward
  if[(not df in`edist`e2dist)&lf=`ward;clust.i.err.ward[]];
  // create initial cluster table
  t0:clust.i.initcaw[data;df];
@@ -101,17 +102,17 @@ clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
 
 // Single, Centroid, Cure (SCC) Linkage
 
-clust.hcscc:{[d;df;lf;k;n;c]
- r:(count[d 0]-k).[clust.i.algoscc[d;df;lf]]/clust.i.initscc[d;df;k;n;c];
- @[;;:;]/[count[d 0]#0N;vres`points;til count vres:select from r[1]where valid]}
+clust.hcscc:{[data;df;lf;k;n;c]
+ r:(count[data 0]-k).[clust.i.algoscc[data;df;lf]]/clust.i.initscc[data;df;k;n;c];
+ @[;;:;]/[count[data 0]#0N;vres`points;til count vres:select from r[1]where valid]}
 
-clust.i.initscc:{[d;df;k;n;c]
- kdtree:clust.kd.newtree[d]1000&ceiling .01*nd:count d 0;
- dists:update closestClust:closestPoint from{[kdtree;d;df;i]clust.kd.nn[kdtree;d;df;i;d[;i]]}[kdtree;d;df]each til nd;
+clust.i.initscc:{[data;df;k;n;c]
+ kdtree:clust.kd.newtree[data]1000&ceiling .01*nd:count data 0;
+ dists:update closestClust:closestPoint from{[kdtree;data;df;i]clust.kd.nn[kdtree;data;df;i;data[;i]]}[kdtree;data;df]each til nd;
  r2l:exec self idxs?til count i from select raze idxs,self:self where count each idxs from kdtree where leaf;
  clusts:select clust:i,valid:1b,reppts:enlist each i,points:enlist each i,closestDist,closestClust from dists;
  reppts:select reppt:i,clust:i,leaf:r2l,closestDist,closestClust from dists;
- reppts:reppts,'flip(rpcols:`$"x",'string til count d)!d;
+ reppts:reppts,'flip(rpcols:`$"x",'string til count data)!data;
  params:`k`n`c`rpcols!(k;n;c;rpcols);
  (params;clusts;reppts;kdtree)}
 
@@ -121,7 +122,7 @@ clust.i.curerep:{[df;n;c;p]rpts:1_first(n&count p 0).[{[df;rpts;p]
  (rpts;.[p;(::;i);:;0n])}[df]]/(enlist avgpt:avg each p;p);
  (rpts*1-c)+\:c*avgpt}
 
-clust.i.algoscc:{[d;df;lf;params;clusts;reppts;kdtree]
+clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
  clust0:exec clust{x?min x}closestDist from clusts where valid;
  newmrg:clusts clust0,clust1:clusts[clust0]`closestClust;
  newmrg:update valid:10b,reppts:(raze reppts;0#0),points:(raze points;0#0)from newmrg;
@@ -129,7 +130,7 @@ clust.i.algoscc:{[d;df;lf;params;clusts;reppts;kdtree]
 
  $[sgl:lf~`single;
    newrep:select reppt,clust:clust0 from oldrep;
-  [newrep:flip params[`rpcols]!flip$[lf~`centroid;clust.i.centrep;clust.i.curerep[df;params`n;params`c]]d[;newmrg[0]`points];
+  [newrep:flip params[`rpcols]!flip$[lf~`centroid;clust.i.centrep;clust.i.curerep[df;params`n;params`c]]data[;newmrg[0]`points];
    newrep:update clust:clust0,reppt:count[i]#newmrg[0]`reppts from newrep;
    newrep[`leaf]:(clust.kd.i.findleaf[kdtree;;kdtree 0]each flip newrep params`rpcols)`self;
    newmrg[0;`reppts]:newrep`reppt;
