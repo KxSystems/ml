@@ -27,7 +27,7 @@ clust.i.nbhood:{[data;df;eps;idx]where eps>@[;idx;:;0w]clust.i.dd[df]data-data[;
 // Run DBSCAN algorithm and update cluster of each point
 /* t = cluster info table
 /. r > returns updated cluster table with old clusters merged
-clust.i.dbalgo:{[t]update cluster:0|1+max t`cluster,corepoint:0b from t where i in clust.i.nbhoodidxs[t]/[first where t`corepoint]}
+clust.i.dbalgo:{[t]update cluster:0|1+max t`cluster,corepoint:0b from t where i in .ml.clust.i.nbhoodidxs[t]/[first where t`corepoint]}
 
 // Find indices in each points neighborhood
 /* t    = cluster info table
