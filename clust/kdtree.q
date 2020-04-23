@@ -21,7 +21,7 @@ clust.kd.nn:{[tree;data;df;xidxs;pt]
 /* data   = data points in `value flip` format
 /* leafsz = number of points per leaf (<2*number of representatives)
 /* node   = dictionary with info for a given node in the tree
-/. r      > returns tree table
+/. r      > returns kdtree table
 clust.kd.i.tree:{[data;leafsz;node]
  if[leafsz<=.5*count node`idxs;
   chk:xdata<med xdata@:ax:clust.i.imax dvar:var each xdata:data[;node`idxs];
