@@ -58,14 +58,15 @@ clust.i.initcaw:{[data;df]
 clust.i.algocaw:{[data;df;lf;t]
  // merge closest clusters
  merge:distinct value first select clt,nni from t where nnd=min nnd;
- // add new cluster into table
- t:update clt:1+max t`clt from t where clt in merge;
+ // add new cluster and reppt into table
+ t:update clt:1+max t`clt,reppt:count[i]#enlist sum[reppt]%count[i] from t where clt in merge;
  // exec pts by cluster
  cpts:exec pts:data[;i],n:count i,last reppt by clt from t;
  // find points initially closest to new cluster points
  chks:exec distinct clt from t where nni in merge;
  // run specific algo and return updated table
  clust.i.hcupd[lf][cpts;df;lf]/[t;chks]}
+
 
 // Complete linkage
 /* cpts = points in each cluster
@@ -99,14 +100,12 @@ clust.i.hcupd.average:clust.i.hcupd.complete
 /* chk  = points to check
 /. r    > returns updated cluster table
 clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
- // calculate distances usind ward method
+ // calculate distances using ward method
  dsts:{[df;lf;x;y]2*clust.i.ld[lf][x`n;y`n]clust.i.dd[df]x[`reppt]-y`reppt}[df;lf;cpts chk]each cpts _ chk;
  // find nearest neighbors
- nn:cpts nidx:dsts?ndst:min dsts;
- // calculate representative points
- rpt:{[a;b;m;n]((m*a)+(n*b))%m+n}[cpts[chk]`reppt;nn`reppt;cpts[chk]`n;nn`n];
- // update cluster table
- update nni:nidx,nnd:ndst,reppt:count[i]#enlist rpt from t where clt=chk}
+ nidx:dsts?ndst:min dsts;
+ // update cluster table and rep pts
+ update nni:nidx,nnd:ndst from t where clt=chk}
 
 // Single, Centroid, Cure (SCC) Linkage
 /* data = data points in `value flip` format
@@ -145,7 +144,7 @@ clust.i.initscc:{[data;df;k;n;c]
 
 // Representative points for Centroid linkage
 /* p = list of data points
-/. r > return list of representative points
+/. r > return representative point
 clust.i.centrep:{[p]enlist avg each p}
 
 // Representative points for CURE
@@ -167,7 +166,7 @@ clust.i.curerep:{[df;n;c;p]rpts:1_first(n&count p 0).[{[df;rpts;p]
 /* clusts = cluster table
 /* reppts = representative points and associated info
 /* kdtree = k-dimensional tree storing points and distances
-/. r      > return list of parameters, clusters, representative points and the kdtree
+/. r      > return list of parameters dict, clusters, representative points and kdtree tables
 clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
  // merge closest clusters
  clust0:exec clust{x?min x}closestDist from clusts where valid;
@@ -186,7 +185,7 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
    // new rep leaves
    newrep[`leaf]:(clust.kd.i.findleaf[kdtree;;kdtree 0]each flip newrep params`rpcols)`self;
    newmrg[0;`reppts]:newrep`reppt;
-   // update tree with new reps and delete old one
+   // delete old points from leaf and update new point to new rep leaf
    kdtree:.[kdtree;(oldrep`leaf;`idxs);except;oldrep`reppt];
    kdtree:.[kdtree;(newrep`leaf;`idxs);union ;newrep`reppt];
  ]];
@@ -204,7 +203,7 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
   reppts:@[reppts;updrep`reppt;,;select closestDist,closestClust from updrep];
   updrep:reppts newrep`reppt;
  ];
- 
+ // update nneighbour of new clust  
  updrep@:raze clust.i.imin updrep`closestDist;
  clusts:@[clusts;updrep`clust;,;`closestDist`closestClust#updrep];
 
