@@ -41,7 +41,7 @@ __Windows__ (within `build`):
 ```
 call build.bat
 ```
-**Note**: `build.bat` runs with Visual Studio 2019. For other versions, please modify file accordingly.
+**Note**: `build.bat` runs with Visual Studio 2019 and 2017. For other versions, please modify file accordingly.
 
 ## Load
 
