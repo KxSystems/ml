@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The automated machine learning library described here is built largely on the tools available within the machine learning toolkit. The purpose of this framework is to provide users with the ability to automate the process of applying machine learning techniques to real-world problems. In the absence of expert machine learning engineers this handles the following processes within a traditional workflow.
+The automated machine learning library described here is built largely on the tools available within the machine learning toolkit available [here](https://github.com/kxsystems/ml). The purpose of this framework is to provide users with the ability to automate the process of applying machine learning techniques to real-world problems. In the absence of expert machine learning engineers this handles the following processes within a traditional workflow.
 
 - Data preprocessing
 - Feature engineering and feature selection
