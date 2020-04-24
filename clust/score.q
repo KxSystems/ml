@@ -1,76 +1,84 @@
+// load in toolkit utilities for confmat
 .ml.loadfile`:util/init.q
+
 \d .ml
 
-/---Scoring metrics---\
+// Unsupervised Learning
 
-/Davies-Bouldin index (euclidean distance only)
-/* x = results table (idx, clt, pts) produced by .clust.ml.cure/dbscan/hc/kmeans
-clust.daviesbouldin:{
- n:count v:value exec a:avg pts,p:pts by clt from x;
- s:avg each clust.i.scdist[`edist]'[v`p;v`a];
- (sum{[s;a;x;y]max(s[y]+s e)%'clust.i.scdist[`edist;a e:x except y;a y]}[s;v`a;t]each t:til n)%n}
+// Davies-Bouldin index - Euclidean distance only (edist)
+/* data = data points in `value flip` format
+/* clt  = list of clusters produced by .ml.clust algos
+clust.daviesbouldin:{[data;clt]
+ s:avg each clust.i.dists[;`edist;;::]'[p;a:avg@''p:{x[;y]}[data]each group clt];
+ (sum{[s;a;x;y]max(s[p]+s e)%'clust.i.dists[flip a e:x _y;`edist;a p:y;::]}[s;a;t]each t:til n)%n:count a}
 
-/Dunn Index
-/* x = results table (idx, clt, pts) produced by .clust.ml.cure/dbscan/hc/kmeans
-/* y = distance metric as a symbol
-clust.dunn:{
- t:til count v:value exec pts,mx:max .ml.clust.i.dintra[pts;y]by clt from x;
- mn:min raze clust.i.dinter[y;v`pts;t]each t;
- mn%max raze v`mx}
+// Dunn index
+/* data = data points in `value flip` format
+/* df   = distance function
+/* clt  = list of clusters produced by .ml.clust algos
+clust.dunn:{[data;df;clt]
+ mx:clust.i.maxintra[df]each p:{x[;y]}[data]each group clt;
+ mn:min raze clust.i.mininter[df;p]each -2_({1_x}\)til count p;
+ mn%max raze mx}
 
-/Elbow method
-/* x = data
-/* y = distance
-/* z = maximum number of clusters
-clust.elbow:{{sum exec sum .ml.clust.i.scdist[y;pts;avg pts]by clt from clust.kmeans[x;z;100;1b;y]}[x;y]each 2+til z-1}
+// Silhouette score
+/* data = data points in `value flip` format
+/* df   = distance function
+/* clt  = list of clusters produced by .ml.clust algos
+/* isavg = boolean indicating whether to return a list of scores or the average score
+clust.silhouette:{[data;df;clt;isavg]
+ $[isavg;avg;]clust.i.sil[data;df;group clt;1%(count each group clt)-1]'[clt;flip data]}
 
-/Homogeneity Score
+// Supervised Learning
+
+// Homogeneity Score
 /* x = predicted cluster labels
 /* y = true cluster labels
-clust.homogeneity:{
- if[count[x]<>n:count y;'`$"distinct lengths - lenght of lists has to be the same"];
- if[not e:clust.i.entropy y;:1.];
- cm:value confmat[x;y];
- nm:(*\:/:).((count each group@)each(x;y))@\:til count cm;
+clust.homogeneity:{[pred;true]
+ if[count[pred]<>n:count true;'`$"distinct lengths - lenght of lists has to be the same"];
+ if[not e:clust.i.entropy true;:1.];
+ cm:value confmat[pred;true];
+ nm:(*\:/:).((count each group@)each(pred;true))@\:til count cm;
  mi:(sum/)0^cm*.[-;log(n*cm;nm)]%n;
  mi%e}
 
-/Silhouette coefficient for entire dataset
-/* x = results table (idx, clt, pts) produced by .clust.ml.cure/dbscan/hc/kmeans
-/* y = distance metric as a symbol
-/* z = boolean(1b) if average coefficient
-clust.silhouette:{$[z;avg;]exec .ml.clust.i.sil[y;pts;group clt;1%(count each group clt)-1]'[clt;pts]from x}
+// Optimum number of clusters
 
-/---Utils---\
+// Elbow method
+/* data = data points in `value flip` format
+/* df   = distance function
+/* k    = maximum number of clusters
+clust.elbow:{[data;df;k]
+ {[data;df;k]
+  sum sum each clust.i.dists[;df;;::]'[p;a:avg@''p:{x[;y]}[data]each group clust.kmeans[data;df;k;100;1b]]
+  }[data;df]each 2+til k-1}
 
-/intercluster distances
-/* df = distance metric
-/* p  = points per cluster
-/* x = til number of clusters
-/* y = index of the cluster
-clust.i.dinter:{[df;p;x;y]{(min/)clust.i.scdist[x;y]each z}[df;p y]each p x except til 1+y}
+// Utilities
 
-/intra-cluster distances
-/* x = points in the cluster
-/* y = distance metric
-clust.i.dintra:{raze{[df;p;x;y]clust.i.scdist[df;p x except til 1+y;p y]}[y;x;n]each n:til count x}
-
-/entropy
+// Entropy
 /* x = distribution
 clust.i.entropy:{neg sum(p%n)*(-). log(p;n:sum p:count each group x)}
 
-/distance calc
-/* x = distance metric
-/* y = list of points
-/* z = single point
-clust.i.scdist:{clust.i.dd[x]each y-\:z}
+// Maximum intra-cluster distance
+/* df  = distance function
+/* pts = data points in `value flip` format
+clust.i.maxintra:{[df;pts]
+ max raze{[df;pts;x;y]clust.i.dists[pts;df;pts[;y];x except til 1+y]}[df;pts;n]each n:til count first pts}
 
-/Silhouette coefficient
-/* pts = points in the dataset
-/* i   = clusters of all points
-/* k   = coefficient to multiply by
-/* c   = cluster of the point
-/* p   = point
-clust.i.sil:{[df;pts;i;k;c;p]
- d:clust.i.scdist[df;;p]each pts i;
- (%).((-).;max)@\:(min avg each;k[c]*sum@)@'d@/:(key[i]except c;c)}
+// Minimum inter-cluster distance
+/* df   = distance function
+/* pts  = data points in `value flip` format
+/* idxs = cluster indices
+clust.i.mininter:{[df;pts;idxs]
+ {[df;pts;x;y](min/)clust.i.dists[pts y;`edist;;::]each flip pts x}[df;pts;idxs 0]each 1_idxs}
+
+// Silhouette coefficient
+/* data = data points in `value flip` format
+/* df   = distance function
+/* idxs = point indices grouped by cluster
+/* k    = coefficient to multiply by
+/* clt  = cluster of the current point
+/* pt   = current point
+clust.i.sil:{[data;df;idxs;k;clt;pt]
+ d:clust.i.dists[data;df;pt]each idxs;
+ (%).((-).;max)@\:(min avg each;k[clt]*sum@)@'d@/:(key[idxs]except clt;clt)}
