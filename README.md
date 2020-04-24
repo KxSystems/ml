@@ -23,6 +23,7 @@ The problems which can be solved by this framework will be expanded over time as
 
 The following requirements cover all those needed to run the libraries in the current build of the toolkit.
 
+- kdb+ ≥ 3.6
 - embedPy
 - ML-Toolkit
 
