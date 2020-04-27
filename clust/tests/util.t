@@ -5,7 +5,7 @@
 \S 10
 
 d1:"f"$(til 5;3 2 5 1 4)
-d2:(2#"F";",")0:`:clust/notebooks/data/sample1.csv
+d2:(2#"F";",")0:`:clust/tests/data/sample1.csv
 tree:.ml.clust.kd.newtree[d1;1]
 tree2:.ml.clust.kd.newtree[d2;2]
 info:.ml.clust.i.apinit[d1;`e2dist;max]
