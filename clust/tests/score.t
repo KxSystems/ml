@@ -9,7 +9,7 @@ pysil: .p.import[`sklearn.metrics]`:silhouette_score
 hscore:.p.import[`sklearn.metrics]`:homogeneity_score
 
 d1:flip(60#"F";",")0:`:clust/tests/data/ss5.csv
-d2:@[;`AnnualIncome`SpendingScore]("SSFFF";(),",")0:`:clust/tests/data/Mall_Customers.csv
+d2:@[;`AnnualIncome`SpendingScore]("SSIII";(),",")0:`:clust/tests/data/Mall_Customers.csv
 clt1:.ml.clust.hc[d1;`edist;`single;4]
 clt2:.ml.clust.hc[d2;`e2dist;`ward;4]
 clt3:.ml.clust.cure[d2;`edist;4;20;0.2]

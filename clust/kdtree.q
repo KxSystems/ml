@@ -28,7 +28,7 @@ clust.kd.i.tree:{[data;leafsz;node]
   if[all leafsz<=count each(lIdxs:where chk;rIdxs:where not chk);
    n:count lTree:.z.s[data;leafsz]update left:1b,parent:self,self+1  ,idxs:idxs lIdxs from node;
            rTree:.z.s[data;leafsz]update left:0b,parent:self,self+1+n,idxs:idxs rIdxs from node;
-   node:select leaf,left,self,parent,children:self+1+(0;n),axis:ax,midval:min xdata rIdxs,idxs:0#0 from node;
+   node:select leaf,left,self,parent,children:self+1+(0;n),axis:ax,midval:"f"$min xdata rIdxs,idxs:0#0 from node;
    :enlist[node],lTree,rTree]];
  enlist select leaf:1b,left,self,parent,children:0#0,axis:0N,midval:0n,idxs from node}
 
@@ -71,7 +71,7 @@ clust.kd.i.findleaf:{[tree;pt;node]{[node]not node`leaf}clust.kd.i.findnext[tree
 // K-D tree C functions
 
 if[112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::];
- clust.kd.i.findleaf:{[tree;point;node]tree clust.kd.c.findleaf[tree;point;node`self]}]
+ clust.kd.i.findleaf:{[tree;point;node]tree clust.kd.c.findleaf[tree;"f"$point;node`self]}]
 
 if[112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::];
- clust.kd.nn:{[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];pt]}]
+ clust.kd.nn:{[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;"f"$data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];"f"$pt]}]
