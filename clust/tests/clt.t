@@ -5,7 +5,7 @@
 \S 10
 
 d1:flip(60#"F";",")0:`:clust/tests/data/ss5.csv
-d2:@[;`AnnualIncome`SpendingScore]("SSFFF";(),",")0:`:clust/tests/data/Mall_Customers.csv
+d2:@[;`AnnualIncome`SpendingScore]("SSIII";(),",")0:`:clust/tests/data/Mall_Customers.csv
 
 // K-Means
 

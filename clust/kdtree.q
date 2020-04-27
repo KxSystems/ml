@@ -74,4 +74,4 @@ if[112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::];
  clust.kd.i.findleaf:{[tree;point;node]tree clust.kd.c.findleaf[tree;point;node`self]}]
 
 if[112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::];
- clust.kd.nn:{[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];pt]}]
+ clust.kd.nn:{[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;"f"$data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];pt]}]
