@@ -4,3 +4,4 @@
 .ml.loadfile`:clust/aprop.q
 .ml.loadfile`:clust/dbscan.q
 .ml.loadfile`:clust/hierarchical.q
+.ml.loadfile`:clust/score.q

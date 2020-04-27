@@ -4,13 +4,14 @@
 
 \S 10
 
-d1:flip(60#"F";",")0:`:clust/notebooks/data/ss5.csv
-d2:@[;`AnnualIncome`SpendingScore]("SSFFF";(),",")0:`:clust/notebooks/data/Mall_Customers.csv
+d1:flip(60#"F";",")0:`:clust/tests/data/ss5.csv
+d2:@[;`AnnualIncome`SpendingScore]("SSFFF";(),",")0:`:clust/tests/data/Mall_Customers.csv
 
 // K-Means
 
 value[group .ml.clust.kmeans[d1;`e2dist;4;2;1b]]~d1clt:((til 15);15+(til 15);30+(til 15);45+(til 15))
 value[group .ml.clust.kmeans[d1;`edist;4;2;1b]]~d1clt
+value[group .ml.clust.kmeans[d2;`e2dist;4;3;1b]]~(til[122]except 41;41 122,.ml.arange[123;180;2];.ml.arange[124;199;2];.ml.arange[181;200;2])
 
 // DBSCAN
 
@@ -47,7 +48,6 @@ value[group .ml.clust.hc[d2;`edist;`complete;4]]~(.ml.arange[0;43;2],(43+(til 80
 value[group .ml.clust.ap[d1;`e2dist;0.7;min]]~d1clt
 value[group .ml.clust.ap[d1;`mdist;0.3;avg]]~((til[15] except 12),30;12,31+til 14;(15,45+til 15)except 47;(16+til[14]),47)
 count[value group .ml.clust.ap[d2;`edist;0.2;max]]~ 199
-
 
 
 

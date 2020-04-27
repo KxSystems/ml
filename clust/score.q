@@ -10,7 +10,7 @@
 /* clt  = list of clusters produced by .ml.clust algos
 clust.daviesbouldin:{[data;clt]
  s:avg each clust.i.dists[;`edist;;::]'[p;a:avg@''p:{x[;y]}[data]each group clt];
- (sum{[s;a;x;y]max(s[p]+s e)%'clust.i.dists[flip a e:x _y;`edist;a p:y;::]}[s;a;t]each t:til n)%n:count a}
+ (sum{[s;a;x;y]max(s[y]+s e)%'clust.i.dists[flip a e:x _y;`edist;a y;::]}[s;a;t]each t:til n)%n:count a}
 
 // Dunn index
 /* data = data points in `value flip` format
@@ -50,7 +50,7 @@ clust.homogeneity:{[pred;true]
 /* k    = maximum number of clusters
 clust.elbow:{[data;df;k]
  {[data;df;k]
-  sum sum each clust.i.dists[;df;;::]'[p;a:avg@''p:{x[;y]}[data]each group clust.kmeans[data;df;k;100;1b]]
+  sum raze clust.i.dists[;df;;::]'[p;a:avg@''p:{x[;y]}[data]each group clust.kmeans[data;df;k;100;1b]]
   }[data;df]each 2+til k-1}
 
 // Utilities
@@ -70,7 +70,7 @@ clust.i.maxintra:{[df;pts]
 /* pts  = data points in `value flip` format
 /* idxs = cluster indices
 clust.i.mininter:{[df;pts;idxs]
- {[df;pts;x;y](min/)clust.i.dists[pts y;`edist;;::]each flip pts x}[df;pts;idxs 0]each 1_idxs}
+ {[df;pts;n](min/)clust.i.dists[pts[0];df;pts[n]]each til count pts[0]0}[df;pts]each 1_idxs}
 
 // Silhouette coefficient
 /* data = data points in `value flip` format
