@@ -24,7 +24,7 @@ info:.ml.clust.i.apinit[d1;`e2dist;max]
 .ml.clust.kd.newtree[d2;2][`idxs]~(0#0;0#0;0 2;1 3 4;0#0;6 9;5 7 8)
 .ml.clust.kd.newtree[d2;2][`axis]~ 0 0 0N 0N 1 0N 0N
 .ml.clust.kd.nn[tree;d1;`edist;0;d2[;2]][`closestPoint]~2
-.ml.clust.kd.nn[tree;d1;`mdist;1 2 3 4;d1[;1]][`closestPoint`closestDist]~(0;2)
+.ml.clust.kd.nn[tree;d1;`mdist;1 2 3 4;d1[;1]][`closestPoint`closestDist]~(0;2f)
 .ml.clust.kd.nn[tree;d1;`mdist;1;7 9f][`closestPoint`closestDist]~(4;8f)
 .ml.clust.kd.nn[tree2;d2;`edist;1 2 3;d1[;1]][`closestPoint]~0
 .ml.clust.kd.nn[tree2;d2;`edist;1 5 2;d1[;3]][`closestPoint]~3
