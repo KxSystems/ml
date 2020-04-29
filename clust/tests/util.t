@@ -29,9 +29,9 @@ info:.ml.clust.i.apinit[d1;`e2dist;max]
 .ml.clust.kd.nn[tree2;d2;`edist;1 2 3;d1[;1]][`closestPoint]~0
 .ml.clust.kd.nn[tree2;d2;`edist;1 5 2;d1[;3]][`closestPoint]~3
 .ml.clust.kd.nn[tree2;d2;`edist;0;d2[;2]][`closestPoint`closestDist]~(2;0f)
-.ml.clust.kd.i.findleaf[tree;d1[;1];tree 0]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;0b;3;1;0#0;0N;0n;enlist 1))
-.ml.clust.kd.i.findleaf[tree;d2[;4];tree 2]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;1b;2;1;0#0;0N;0n;enlist 0))
-.ml.clust.kd.i.findleaf[tree2;d2[;1];tree2 1]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;0b;3;1;0#0;0N;0n;1 3 4))
+.ml.clust.kd.findleaf[tree;d1[;1];tree 0]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;0b;3;1;0#0;0N;0n;enlist 1))
+.ml.clust.kd.findleaf[tree;d2[;4];tree 2]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;1b;2;1;0#0;0N;0n;enlist 0))
+.ml.clust.kd.findleaf[tree2;d2[;1];tree2 1]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;0b;3;1;0#0;0N;0n;1 3 4))
 
 // K-Means
 
