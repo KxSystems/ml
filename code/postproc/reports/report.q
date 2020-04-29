@@ -17,18 +17,15 @@ post.report:{[dict;dt;fname;ptype]
  f:title[pdf;775;0;"kdb+/q AutoML model generated report"];
 
  font[pdf;"Helvetica";11];
- fline1:"This report outlines the results for a ",ssr[string ptype;"_";" "]," problem achieved through the running ";
- f:cell[pdf;f;40;fline1];
+ f:cell[pdf;f;40;"This report outlines the results for a ",ssr[string ptype;"_";" "]," problem achieved through the running "];
 
- fline2:"of kdb+/q autoML. This run started at ",string[dt`stdate]," at ",string[dt`sttime],".";
- f:cell[pdf;f;15;fline2];
+ f:cell[pdf;f;15;"of kdb+/q autoML. This run started at ",string[dt`stdate]," at ",string[dt`sttime],"."];
 
  font[pdf;"Helvetica-Bold";13];
  f:cell[pdf;f;30;"Description of Input Data"];
 
-  font[pdf;"Helvetica";11];
- feats:"The following is a breakdown of information for each of the relevant columns in the dataset";
- f:cell[pdf;f;30;feats];
+ font[pdf;"Helvetica";11];
+ f:cell[pdf;f;30;"The following is a breakdown of information for each of the relevant columns in the dataset"];
 
  vd:.ml.df2tab .ml.tab2df[value d:(dti:10&count dict`describe)#dict`describe][`:round][3];
  t:enlist[enlist[`col],cols vd],key[d],'flip value flip vd;
@@ -38,11 +35,9 @@ post.report:{[dict;dt;fname;ptype]
  f:cell[pdf;f;30;"Breakdown of Pre-Processing"];
 
  font[pdf;"Helvetica";11];
- feats:"Following the extraction of features a total of ",string[dict`cnt_feats]," were produced.";
- f:cell[pdf;f;30;feats];
+ f:cell[pdf;f;30;"Following the extraction of features a total of ",string[dict`cnt_feats]," were produced."];
 
- feats:"Feature extraction took ",string[dict`feat_time]," time in total.";
- f:cell[pdf;f;30;feats];
+ f:cell[pdf;f;30;"Feature extraction took ",string[dict`feat_time]," time in total."];
 
  font[pdf;"Helvetica-Bold";13];
  f:cell[pdf;f;30;"Initial Scores"];
@@ -58,21 +53,13 @@ post.report:{[dict;dt;fname;ptype]
  
  f:image[pdf;path,"/code/postproc/images/train_test_validate.png";f;90;500;70];
  font[pdf;"Helvetica";10];
- fig_1:"Figure 1: This is representative image showing the data split into training,",
-        "validation and testing sets.";
- f:cell[pdf;f;25;fig_1];
+ f:cell[pdf;f;25;"Figure 1: This is representative image showing the data split into training, validation and testing sets."];
 
  font[pdf;"Helvetica";11];
- xvtime1:"The total time to complete the running of cross validation",
-         " for each of the models on the training set was: ";
- xvtime2:string[dict`xval_time],".";
+ f:cell[pdf;f;30;"The total time to complete the running of cross validation for each of the models on the training set was: "];
+ f:cell[pdf;f;15;string[dict`xval_time],"."];
 
- f:cell[pdf;f;30;xvtime1];
- f:cell[pdf;f;15;xvtime2];
-
- metric:"The metric that is being used for scoring and optimizing the models was: ",
-         string[dict`metric],".";
- f:cell[pdf;f;30;metric];
+ f:cell[pdf;f;30;"The metric that is being used for scoring and optimizing the models was: ",string[dict`metric],"."];
 
  // Take in a kdb dictionary for printing line by line to the pdf file.
  dd:{(,'/)string(key x;count[x]#" ";count[x]#"=";count[x]#" ";value x)}dict`model_scores;
@@ -81,9 +68,7 @@ post.report:{[dict;dt;fname;ptype]
 
  f:image[pdf;dict`impact_plot;f;350;400;300];
  font[pdf;"Helvetica";10];
- fig_2:"Figure 2: This is the feature impact for a number of the most significant",
-        " features as determined on the training set";
- f:cell[pdf;f;25;fig_2];
+ f:cell[pdf;f;25;"Figure 2: This is the feature impact for a number of the most significant features as determined on the training set"];
 
  font[pdf;"Helvetica-Bold";13];
  f:cell[pdf;f;30;"Model selection summary"];
@@ -91,43 +76,35 @@ post.report:{[dict;dt;fname;ptype]
  font[pdf;"Helvetica";11];
  f:cell[pdf;f;30;"Best scoring model = ",string bst_mdl];
 
- holdout:"The score on the validation set for this model was = ",string[dict`holdout],".";
- f:cell[pdf;f;30;holdout];
+ f:cell[pdf;f;30;"The score on the validation set for this model was = ",string[dict`holdout],"."];
 
- bmtime:"The total time to complete the running of this model on the validation set was: ",
-         string[dict`val_time],".";
- f:cell[pdf;f;30;bmtime];
+ f:cell[pdf;f;30;"The total time to complete the running of this model on the validation set was: ",string[dict`val_time],"."];
 
  if[not bst_mdl in i.excludelist;
    font[pdf;"Helvetica-Bold";13];
    gstitle:"Grid search for a ",string[bst_mdl]," model.";
-   f:cell[pdf;f;30;gstitle];
+   f:cell[pdf;f;30;"Grid search for a ",string[bst_mdl]," model."];
    
    font[pdf;"Helvetica";11];
-   gscfg:$[(dict[`gs]0)in `mcsplit`pcsplit;
+   f:cell[pdf;f;30;]$[(dict[`gs]0)in `mcsplit`pcsplit;
            "The grid search was completed using .ml.gs.",string[dict[`gs]0],
              " with a percentage of ",string[dict[`gs]1],"% of training data used for validation";
            "A ",string[dict[`gs]1],"-fold grid-search was performed on the training set",
              " to find the best model using, ",string[dict[`gs]0],"."];
-   f:cell[pdf;f;30;gscfg];
    
    font[pdf;"Helvetica";11];
-   gsp:"The following are the hyperparameters which have been deemed optimal for the model";
-   f:cell[pdf;f;30;gsp];
+   f:cell[pdf;f;30;"The following are the hyperparameters which have been deemed optimal for the model"];
    
    dgs:{(,'/)string(key x;count[x]#" ";count[x]#"=";count[x]#" ";value x)}dict`hyper_params;
    cntf:first [count dgs]{[m;h;s]ff:cell[m;h[0];15;s[h[1]]];(ff;1+h[1])}[pdf;;dgs]/(f-5;0);
    f:first cntf];
   
-  fin:"The score for the best model fit on the entire training set and scored ",
-      "on the test set was = ",string[dict`test_score];
-  f:cell[pdf;f;30;fin];
+  f:cell[pdf;f;30;"The score for the best model fit on the entire training set and scored on the test set was = ",string[dict`test_score]];
 
  if[string[ptype]like"*class*";
     f:image[pdf;dict`conf_plot;f;350;350;350];
     font[pdf;"Helvetica";10];
-    fig_3:"Figure 3: This is the confusion matrix produced for predictions made on the testing set";
-    cell[pdf;f;25;fig_3]];
+    cell[pdf;f;25;"Figure 3: This is the confusion matrix produced for predictions made on the testing set"]];
 
   pdf[`:save][];
  }

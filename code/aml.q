@@ -20,58 +20,65 @@ run:{[tb;tgt;ftype;ptype;p]
   if[`rand_val~dict[`seed];dict[`seed]:"j"$.z.t];
   // if required to save data construct the appropriate folders
   if[dict[`saveopt]in 1 2;spaths:i.pathconstruct[dtdict;dict`saveopt]];
-  mdls:i.models[ptype;tgt;dict];
+  // dictionaries allowing parameters and values to be assigned throughout this function
+  // this ensures that the number of local variables does not exceed allowed levels
+  params:()!();
+  vals:()!();
+  params[`mdls]:i.models[ptype;tgt;dict];
   system"S ",string dict`seed;
   tb:prep.i.autotype[tb;ftype;dict];
   -1 i.runout`col;
   // This provides an encoding map which can be used in reruns of automl even
   // if the data is no longer in the appropriate format for symbol encoding
-  encoding:prep.i.symencode[tb;10;1;dict;::];
+  params[`symencode]:prep.i.symencode[tb;10;1;dict;::];
+  // Encode target data if target is a symbol vector
+  if[11h~type tgt;tgt:.ml.labelencode tgt];
   // Preprocess the dataset and provide insights into initial data structure
   prep:preproc[tb;tgt;ftype;dict];
-  tb:prep`table;dscrb:prep`describe;
+  tb:prep`table;
+  params[`describe]:prep`describe;
   -1 i.runout`pre;
   tb:prep.create[tb;dict;ftype];
   // assign the returned values from the feature extraction phase
-  feat_tab:tb`preptab;feat_time:tb`preptime;
-  sigfeats:get[dict[`sigfeats]][feat_tab;tgt];
-  // Encode target data if target is a symbol vector
-  if[11h~type tgt;tgt:.ml.labelencode tgt];
+  vals[`feat_tab]:tb`preptab;
+  params[`feat_time]:tb`preptime;
+  params[`features]:get[dict[`sigfeats]][vals`feat_tab;tgt];
   // Apply the appropriate train/test split to the data
   // the following currently runs differently if the parameters are defined
   // in a file or through the more traditional dictionary/(::) format
-  tts:($[-11h=type dict`tts;get;]dict[`tts])[;tgt;dict`sz]tab:sigfeats#feat_tab;
+  tts:($[-11h=type dict`tts;get;]dict[`tts])[;tgt;dict`sz]tab:params[`features]#vals`feat_tab;
   // Centralizing the table to matrix conversion makes it easier to avoid
   // repetition of this task which can be computationally expensive
-  xtrn:flip value flip tts`xtrain;xtst:flip value flip tts`xtest;
-  ytrn:tts`ytrain;ytst:tts`ytest;
-  mdls:i.kerascheck[mdls;tts;tgt];
+  vals[`xtrn]:flip value flip tts`xtrain;vals[`xtst]:flip value flip tts`xtest;
+  vals[`ytrn]:tts`ytrain;vals[`ytst]:tts`ytest;
+  params[`mdls]:i.kerascheck[params`mdls;tts;tgt];
   // Check if Tensorflow/Keras not available for use, NN models removed
-  if[1~checkimport[];mdls:?[mdls;enlist(<>;`lib;enlist `keras);0b;()]];
-  -1 i.runout`sig;-1 i.runout`slct;-1 i.runout[`tot],string[ctb:count cols tab];
+  if[1~checkimport[];params[`mdls]:?[params`mdls;enlist(<>;`lib;enlist `keras);0b;()]];
+  -1 i.runout`sig;-1 i.runout`slct;
+  -1 i.runout[`tot],string[params[`cnt_feats]:count cols tab];
   // Set numpy random seed if multiple prcoesses
   if[0<abs[system "s"];.p.import[`numpy][`:random.seed][dict`seed]];
   // Run the initial model selection procedure
-  bm:proc.runmodels[xtrn;ytrn;mdls;cols tts`xtrain;dict;dtdict;spaths];
+  bm:proc.runmodels[vals`xtrn;vals`ytrn;params`mdls;cols tts`xtrain;dict;dtdict;spaths];
   // extract information to be used in this function
-  mdl_name:bm`best_scoring_name;best_mdl:bm`best_model;
-  data:(xtrn;ytrn;xtst;ytst);
+  params[`best_scoring_name]:bm`best_scoring_name;
+  vals[`best_mdl]:bm`best_model;
+  data:vals`xtrn`ytrn`xtst`ytst;
   // Run optimization procedure or finalize models in case of deterministic models
-  optim:proc.optimize[data;dict;ptype;mdls;mdl_name;best_mdl];
-  best_mdl:optim`best_model;score:optim`score;pred:optim`preds;
-  -1 i.runout[`sco],string[score],"\n";
+  optim:proc.optimize[data;dict;ptype;;;vals`best_mdl]. params`mdls`best_scoring_name;
+  vals[`best_mdl]:optim`best_model;
+  params[`test_score]:optim`score;
+  params[`pred]:optim`preds;
+  -1 i.runout[`sco],string[params`test_score],"\n";
   // Print confusion matrix for classification problems
-  if[(ptype~`class);post.confmat[pred;ytst;mdl_name;spaths;dict]];
+  if[(ptype~`class);post.confmat[;vals`ytst;;spaths;dict]. params`pred`best_scoring_name];
   // Set up required information for saving and save as appropriate
-  hp:$[mdl_name in i.excludelist;()!();enlist[`hyper_params]!enlist optim`hyper_params];
-  exmeta_keys:`best_scoring_name`cnt_feats`features`test_score`symencode`feat_time`describe;
-  exmeta_vals:(mdl_name;ctb;sigfeats;score;encoding;feat_time;dscrb);
-  exmeta:exmeta_keys!exmeta_vals;
-  dict:exmeta,hp,dict;
+  hp:$[params[`best_scoring_name]in i.excludelist;()!();enlist[`hyper_params]!enlist optim`hyper_params];
+  dict:params,hp,dict;
   if[dict[`saveopt] = 2;
-    report_param:post.i.reportdict[dict;bm;spaths];
-    post.save_report[report_param;spaths;ptype;dtdict]];
-  if[dict[`saveopt]in 1 2;post.save_info[mdls;dict;mdl_name;best_mdl;spaths;dtdict]];
+    post.save_report[;spaths;ptype;dtdict]post.i.reportdict[dict;bm;spaths]];
+  if[dict[`saveopt]in 1 2;
+    post.save_info[;dict;;vals`best_mdl;spaths;dtdict]. params`mdls`best_scoring_name];
   // return (date;time) for .automl.new
   value dtdict
   }

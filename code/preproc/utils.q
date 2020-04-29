@@ -58,6 +58,10 @@ prep.i.lencheck:{[t;tgt;typ;p]
     '`$"Input for typ must be a supported type"];
     '`$"Input for typ must be a supported symbol"]}
 
+prep.i.tgtcheck:{[tgt]
+  if[not 0<var tgt;'"Target must have more than one unique value"]
+  }
+
 // Null encoding of table
 /* fn = function to be applied to column from which the value to fill nulls is derived (med/min/max)
 /. r  > the table will null values filled if required

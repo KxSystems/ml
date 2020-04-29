@@ -14,6 +14,7 @@
 /.       (table with the data preprocessed appropriately; description of each column)
 preproc:{[t;tgt;typ;p]
   prep.i.lencheck[t;tgt;typ;p];
+  prep.i.tgtcheck[tgt];
   show dscrb:prep.i.describe t;
   t:prep.i.symencode[t;10;0;p;::];
   // For FRESH the aggregate columns need to be excluded from the preprocessing

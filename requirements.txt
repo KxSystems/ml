@@ -4,3 +4,4 @@ matplotlib
 numpy
 statsmodels
 scikit-learn
+pandas>=1.0
