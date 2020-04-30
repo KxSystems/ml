@@ -35,9 +35,9 @@ value[group .ml.clust.cure[d2;`mdist;4;10;0.1]]~(til[122],.ml.arange[122;191;2];
 
 value[group .ml.clust.hc[d1;`e2dist;`single;4]]~d1clt
 value[group .ml.clust.hc[d1;`e2dist;`ward;4]]~d1clt
-value[group .ml.clust.hc[d1;`e2dist;`centroid;4]]~d1clt
+value[group .ml.clust.hc[d1;`mdist;`centroid;4]]~d1clt
 value[group .ml.clust.hc[d1;`e2dist;`average;4]]~d1clt
-value[group .ml.clust.hc[d1;`e2dist;`complete;4]]~d1clt
+value[group .ml.clust.hc[d1;`mdist;`complete;4]]~d1clt
 value[group .ml.clust.hc[d2;`e2dist;`single;4]]~((til 195),196;195 197;enlist 198;enlist 199)
 value[group .ml.clust.hc[d2;`e2dist;`ward;4]]~(.ml.arange[0;43;2],(43+(til 80)),124 126 132 142 146 160;(.ml.arange[1;43;2]);.ml.arange[123;200;2];(.ml.arange[128;200;2])except 132 142 146 160)
 value[group .ml.clust.hc[d2;`edist;`centroid;4]]~((til 123);.ml.arange[123;194;2];.ml.arange[124;199;2];195 197 199)
@@ -47,9 +47,5 @@ value[group .ml.clust.hc[d2;`edist;`complete;4]]~(.ml.arange[0;43;2],(43+(til 80
 
 value[group .ml.clust.ap[d1;`e2dist;0.7;min]]~d1clt
 value[group .ml.clust.ap[d1;`mdist;0.3;avg]]~((til[15] except 12),30;12,31+til 14;(15,45+til 15)except 47;(16+til[14]),47)
+value[group .ml.clust.ap[d2;`mdist;0.8;avg]]~(.ml.arange[0;45;2],47 48 49 54 55 56 57 59 66 67 69 71 72 74 77 79 82 83 85,((89+til[13])except 90 95),105 106 107 108 109 112 113 114 115 116 118 121 199;(.ml.arange[1;46;2],46 50 51 52 53 58 60 61 62 63 64 65 68 70 73 75 76 78 80 81 84 86 87 88 90 95 102 103 104 110 111 117 119 120 122 123 125 127 129 131 133 198) except 11;11,.ml.arange[124;197;2];.ml.arange[135;198;2])
 count[value group .ml.clust.ap[d2;`edist;0.2;max]]~ 199
-
-
-
-
-
