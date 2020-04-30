@@ -15,14 +15,18 @@ info:.ml.clust.i.apinit[d1;`e2dist;max]
 .ml.clust.i.dists[d1;`e2dist;4 2;1 2 3]~9 13 2
 .ml.clust.i.dists[d1;`e2dist;8 2;til 5]~65 49 45 26 20
 .ml.clust.i.closest[d1;`e2dist;1 2;til 5]~`point`distance!(1;0)
-.ml.clust.i.closest[d1;`e2dist;3 6;reverse til 5]~`point`distance!(2;2)
+.ml.clust.i.closest[d2;`e2dist;3 6;reverse til 5][`point]~2
+.ml.clust.kd.newtree[d1;2][`left]~010b
+.ml.clust.kd.newtree[d1;2][`leaf]~011b
+.ml.clust.kd.newtree[d1;2][`midval]~2 0n 0n
+.ml.clust.kd.newtree[d1;2][`parent]~0N 0 0
+.ml.clust.kd.newtree[d1;2][`idxs]~(0#0;0 1;2 3 4)
+.ml.clust.kd.newtree[d1;2][`axis]~0 0N 0N
 .ml.clust.kd.newtree[d2;3][`left]~010b
 .ml.clust.kd.newtree[d2;3][`leaf]~011b
 .ml.clust.kd.newtree[d2;3][`idxs]~(0#0;til 5;5 6 7 8 9)
-.ml.clust.kd.newtree[d2;2][`leaf]~0011011b
-.ml.clust.kd.newtree[d2;2][`parent]~0N 0 1 1 0 4 4
-.ml.clust.kd.newtree[d2;2][`idxs]~(0#0;0#0;0 2;1 3 4;0#0;6 9;5 7 8)
-.ml.clust.kd.newtree[d2;2][`axis]~ 0 0 0N 0N 1 0N 0N
+.ml.clust.kd.newtree[d2;3][`parent]~0N 0 0
+.ml.clust.kd.newtree[d2;3][`idxs]~(0#0;til 5;5+til 5)
 .ml.clust.kd.nn[tree;d1;`edist;0;d2[;2]][`closestPoint]~2
 .ml.clust.kd.nn[tree;d1;`mdist;1 2 3 4;d1[;1]][`closestPoint`closestDist]~(0;2f)
 .ml.clust.kd.nn[tree;d1;`mdist;1;7 9f][`closestPoint`closestDist]~(4;8f)
@@ -32,17 +36,18 @@ info:.ml.clust.i.apinit[d1;`e2dist;max]
 .ml.clust.kd.findleaf[tree;d1[;1];tree 0]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;0b;3;1;0#0;0N;0n;enlist 1))
 .ml.clust.kd.findleaf[tree;d2[;4];tree 2]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;1b;2;1;0#0;0N;0n;enlist 0))
 .ml.clust.kd.findleaf[tree2;d2[;1];tree2 1]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;0b;3;1;0#0;0N;0n;1 3 4))
+.ml.clust.kd.findleaf[tree2;d1[;0];tree2 2]~(`leaf`left`self`parent`children`axis`midval`idxs!(1b;1b;2;1;0#0;0N;0n;0 2))
 
 // K-Means
 
 .ml.clust.i.getclust[d2;`e2dist;d2[;1 2]]~1 0 1 0 0 0 0 0 0 0
 .ml.clust.i.getclust[d2;`e2dist;d2[;1 2 3]]~1 0 1 2 2 2 2 2 2 2
 .ml.clust.i.getclust[d1;`e2dist;d1[;2 3]]~0 1 0 1 0
-.ml.clust.i.getclust[d1;`mdist;d1[;3 4]]~1 0 1 0 1 
+.ml.clust.i.getclust[d1;`edist;d1[;3 4]]~0 0 1 0 1
 
 // DBSCAN
 
-.ml.clust.i.nbhood[d1;`edist;.2;3]~`long$()
+.ml.clust.i.nbhood["f"$d1;`edist;10;4]~0 1 2 3
 .ml.clust.i.nbhood[d2;`e2dist;0.1;1]~ 0 3
 .ml.clust.i.nbhood[d2;`edist;0.3;3]~0 1
 
