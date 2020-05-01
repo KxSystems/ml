@@ -135,7 +135,7 @@ clust.i.initscc:{[data;df;k;n;c]
  dists:update closestClust:closestPoint from{[kdtree;data;df;i]clust.kd.nn[kdtree;data;df;i;data[;i]]}[kdtree;data;df]each til nd;
  r2l:exec self idxs?til count i from select raze idxs,self:self where count each idxs from kdtree where leaf;
  // create cluster table 
- clusts:select clust:i,valid:1b,reppts:enlist each i,points:enlist each i,closestDist,closestClust from dists;
+ clusts:select clusti:i,clust:i,valid:1b,reppts:enlist each i,points:enlist each i,closestDist,closestClust from dists;
  // create table of representative points for each cluster
  reppts:select reppt:i,clust:i,leaf:r2l,closestDist,closestClust from dists;
  reppts:reppts,'flip(rpcols:`$"x",'string til count data)!data;
@@ -176,7 +176,6 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
  newmrg:update valid:10b,reppts:(raze reppts;0#0),points:(raze points;0#0)from newmrg;
  // keep track of old reppts
  oldrep:reppts newmrg[0]`reppts;
-
  // find reps in new cluster
  $[sgl:lf~`single;
    // for single new reps=old reps -> no new points calculated 
@@ -194,7 +193,10 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
  // update clusters and reppts
  clusts:@[clusts;newmrg`clust;,;delete clust from newmrg];
  reppts:@[reppts;newrep`reppt;,;delete reppt from newrep];
-
+ 
+ newcl:max[clusts`clusti]+1;
+ clusts[clust0;`clusti]:newcl;
+ 
  updrep:reppts newrep`reppt;
  // nneighbour to clust
  if[sgl;updrep:select from updrep where closestClust in newmrg`clust];
