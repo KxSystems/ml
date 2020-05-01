@@ -40,10 +40,10 @@ info:.ml.clust.i.apinit[d1;`e2dist;max]
 
 // K-Means
 
-.ml.clust.i.getclust[d2;`e2dist;d2[;1 2]]~1 0 1 0 0 0 0 0 0 0
-.ml.clust.i.getclust[d2;`e2dist;d2[;1 2 3]]~1 0 1 2 2 2 2 2 2 2
-.ml.clust.i.getclust[d1;`e2dist;d1[;2 3]]~0 1 0 1 0
-.ml.clust.i.getclust[d1;`edist;d1[;3 4]]~0 0 1 0 1
+.ml.clust.i.getclust[d2;`e2dist;flip d2[;1 2]]~1 0 1 0 0 0 0 0 0 0
+.ml.clust.i.getclust[d2;`e2dist;flip d2[;1 2 3]]~1 0 1 2 2 2 2 2 2 2
+.ml.clust.i.getclust[d1;`e2dist;flip d1[;2 3]]~0 1 0 1 0
+.ml.clust.i.getclust[d1;`edist;flip d1[;3 4]]~0 0 1 0 1
 
 // DBSCAN
 

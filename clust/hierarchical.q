@@ -26,9 +26,7 @@ clust.hc:{[data;df;lf;k;dgram]
 /. r    > return list of clusters
 clust.cure:{[data;df;k;n;c]
  if[not df in key clust.i.dd;clust.i.err.dd[]];
- // convert to floating values
- data:"f"$data;
- clust.hcscc[data;df;`cure;k;n;c]}
+ clust.hcscc["f"$data;df;`cure;k;n;c]}
 
 // Complete, Average, Ward (CAW) Linkage
 /* data = data points in `value flip` format

@@ -9,10 +9,8 @@
 clust.dbscan:{[data;df;minpts;eps]
  // check distance function
  if[not df in key clust.i.dd;clust.i.err.dd[]];
- // convert to floating values
- data:"f"$data;
  // calculate distances and find all points which are not outliers
- nbhood:clust.i.nbhood[data;df;eps]each til count data 0;
+ nbhood:clust.i.nbhood["f"$data;df;eps]each til count data 0;
  // update outlier cluster to null
  t:update cluster:0N,corepoint:minpts<=1+count each nbhood from([]nbhood);
  // find cluster for remaining points and return list of clusters
