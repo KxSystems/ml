@@ -10,10 +10,8 @@ clust.hc:{[data;df;lf;k]
  // check distance and linkage functions
  if[not df in key clust.i.dd;clust.i.err.dd[]];
  if[not lf in key clust.i.ld;clust.i.err.ld[]];
- // convert to floating values
- data:"f"$data;
- if[lf in`complete`average`ward;:clust.hccaw[data;df;lf;k]];
- if[lf in`single`centroid;:clust.hcscc[data;df;lf;k;::;::]];
+ if[lf in`complete`average`ward;:clust.hccaw["f"$data;df;lf;k]];
+ if[lf in`single`centroid;:clust.hcscc["f"$data;df;lf;k;::;::]];
  }
 
 // CURE algorithm
@@ -25,9 +23,7 @@ clust.hc:{[data;df;lf;k]
 /. r    > return list of clusters
 clust.cure:{[data;df;k;n;c]
  if[not df in key clust.i.dd;clust.i.err.dd[]];
- // convert to floating values
- data:"f"$data;
- clust.hcscc[data;df;`cure;k;n;c]}
+ clust.hcscc["f"$data;df;`cure;k;n;c]}
 
 // Complete, Average, Ward (CAW) Linkage
 /* data = data points in `value flip` format
