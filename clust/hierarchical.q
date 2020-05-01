@@ -1,19 +1,20 @@
 \d .ml
 
 // Hierarchical Clustering
-/* data = data points in `value flip` format
-/* df   = distance function
-/* lf   = linkage function
-/* k    = number of clusters
+/* data  = data points in `value flip` format
+/* df    = distance function
+/* lf    = linkage function
+/* k     = number of clusters
+/* dgram = boolean indicating whether to make a dendrogram or not (1b/0b)
 /. r    > return list of clusters
-clust.hc:{[data;df;lf;k]
+clust.hc:{[data;df;lf;k;dgram]
  // check distance and linkage functions
  if[not df in key clust.i.dd;clust.i.err.dd[]];
  if[not lf in key clust.i.ld;clust.i.err.ld[]];
  // convert to floating values
  data:"f"$data;
- if[lf in`complete`average`ward;:clust.hccaw[data;df;lf;k]];
- if[lf in`single`centroid;:clust.hcscc[data;df;lf;k;::;::]];
+ if[lf in`complete`average`ward;:clust.hccaw[data;df;lf;k;dgram]];
+ if[lf in`single`centroid;:clust.hcscc[data;df;lf;k;::;::;dgram]];
  }
 
 // CURE algorithm
@@ -34,16 +35,27 @@ clust.cure:{[data;df;k;n;c]
 /* df   = distance function
 /* lf   = linkage function
 /* k    = number of clusters
-/. r    > return list of clusters
-clust.hccaw:{[data;df;lf;k]
+/* dgram = boolean indicating whether to make a dendrogram or not (1b/0b)
+/. r    > return dendrogram or list of clusters
+clust.hccaw:{[data;df;lf;k;dgram]
  // check distance function for ward
  if[(not df in`edist`e2dist)&lf=`ward;clust.i.err.ward[]];
  // create initial cluster table
  t0:clust.i.initcaw[data;df];
+ // create linkage matrix
+ m:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
  // merge clusters based on chosen algorithm
- t1:{[k;t]k<count distinct t`clt}[k]clust.i.algocaw[data;df;lf]/t0;
- // return file clusters
- clust.i.reindex t1`clt}
+ r:{[k;r]k<count distinct r[0]`clt}[k]clust.i.algocaw[data;df;lf]/(t0;m);
+ // return dendrogram or list of clusters
+ $[dgram;clust.i.upddgram[r 0;r 1];clust.i.reindex r[0]`clt]}
+
+// Update dendrogram for CAW with final cluster of all the points
+/* t = cluster table
+/* m = linkage matrix
+/. r > returns updated linkage matrix
+clust.i.upddgram:{[t;m]
+ m,:value exec first clt,first nni,first nnd,count reppt from t where nnd=min nnd;
+ m}
 
 // Initialize cluster table
 /* data = data points in `value flip` format
@@ -59,9 +71,12 @@ clust.i.initcaw:{[data;df]
 /* data = data points in `value flip` format
 /* df   = distance function
 /* lf   = linkage function
-/* t    = cluster table
-/. r    > returns updated cluster table
-clust.i.algocaw:{[data;df;lf;t]
+/* l    = list with cluster table and linkage matrix
+/. r    > returns updated l
+clust.i.algocaw:{[data;df;lf;l]
+ t:l 0;m:l 1;
+ // update linkage matrix
+ m,:value exec first clt,first nni,first nnd,count reppt from t where nnd=min nnd;
  // merge closest clusters
  merge:distinct value first select clt,nni from t where nnd=min nnd;
  // add new cluster and reppt into table
@@ -71,8 +86,9 @@ clust.i.algocaw:{[data;df;lf;t]
  // find points initially closest to new cluster points
  chks:exec distinct clt from t where nni in merge;
  // run specific algo and return updated table
- clust.i.hcupd[lf][cpts;df;lf]/[t;chks]}
-
+ t:clust.i.hcupd[lf][cpts;df;lf]/[t;chks];
+ // return updated table and matrix
+ (t;m)}
 
 // Complete linkage
 /* cpts = points in each cluster
@@ -121,9 +137,11 @@ clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
 /* n    = number of representative points per cluster
 /* c    = compression factor for representative points
 /. r    > return list of clusters
-clust.hcscc:{[data;df;lf;k;n;c]
- r:(count[data 0]-k).[clust.i.algoscc[data;df;lf]]/clust.i.initscc[data;df;k;n;c];
- @[;;:;]/[count[data 0]#0N;vres`points;til count vres:select from r[1]where valid]}
+clust.hcscc:{[data;df;lf;k;n;c;dgram]
+ r:(count[data 0]-k).[clust.i.algoscc[data;df;lf]]/clust.i.initscc[data;df;k;n;c;dgram];
+ $[dgram;
+   clust.i.dgramidx last[r]0;
+   @[;;:;]/[count[data 0]#0N;vres`points;til count vres:select from r[1]where valid]]}
 
 // Initialize SCC clusters
 /* data = data points in `value flip` format
@@ -132,7 +150,7 @@ clust.hcscc:{[data;df;lf;k;n;c]
 /* n    = number of representative points per cluster
 /* c    = compression factor for representative points
 /. r    > return list of parameters, clusters, representative points and the kdtree
-clust.i.initscc:{[data;df;k;n;c]
+clust.i.initscc:{[data;df;k;n;c;dgram]
  // build kdtree
  kdtree:clust.kd.newtree[data]1000&ceiling .01*nd:count data 0;
  // create distance table with closest clusters identified
@@ -145,8 +163,9 @@ clust.i.initscc:{[data;df;k;n;c]
  reppts:reppts,'flip(rpcols:`$"x",'string til count data)!data;
  // create list of important parameters to carry forward
  params:`k`n`c`rpcols!(k;n;c;rpcols);
+ lnkmat:([]i1:`int$();i2:`int$();dist:`float$();n:`int$());
  // return as a list to be passed to algos
- (params;clusts;reppts;kdtree)}
+ (params;clusts;reppts;kdtree;(lnkmat;dgram))}
 
 // Representative points for Centroid linkage
 /* p = list of data points
@@ -173,14 +192,17 @@ clust.i.curerep:{[df;n;c;p]rpts:1_first(n&count p 0).[{[df;rpts;p]
 /* reppts = representative points and associated info
 /* kdtree = k-dimensional tree storing points and distances
 /. r      > return list of parameters dict, clusters, representative points and kdtree tables
-clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
+clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
  // merge closest clusters
  clust0:exec clust{x?min x}closestDist from clusts where valid;
  newmrg:clusts clust0,clust1:clusts[clust0]`closestClust;
  newmrg:update valid:10b,reppts:(raze reppts;0#0),points:(raze points;0#0)from newmrg;
+
+ // make dendrogram if required
+ if[lnkmat 1;m:lnkmat 0;m,:newmrg[`clust],fnew[`closestDist],count(fnew:first newmrg)`reppts;lnkmat[0]:m];
+
  // keep track of old reppts
  oldrep:reppts newmrg[0]`reppts;
-
  // find reps in new cluster
  $[sgl:lf~`single;
    // for single new reps=old reps -> no new points calculated 
@@ -225,4 +247,15 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
    clusts:@[clusts;updcls`clust;,;select closestDist,closestClust from updcls];
  ]];
 
- (params;clusts;reppts;kdtree)}
+ (params;clusts;reppts;kdtree;lnkmat)}
+
+// Update initial dendrogram structure to show path of merges so that the dendrogram can be plotted with scipy
+/* dgram = dendrogram stucture produced using .ml.clust.hc[...;...;...;...;1b]
+/. r     > returns dendrogram
+clust.i.dgramidx:{[dgram]
+ // initial cluster indices, number of merges and loop counter
+ cl:raze dgram`i1`i2;n:count dgram;i:0;
+ // increment a cluster for every occurrence in the tree
+ while[n>i+1;cl[where[cl=cl i]except i]:1+max cl;i+:1];
+ // update dendrogram with new indices
+ ![dgram;();0b;`i1`i2!n cut cl]}
