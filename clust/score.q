@@ -70,7 +70,7 @@ clust.i.maxintra:{[df;pts]
 /* pts  = data points in `value flip` format
 /* idxs = cluster indices
 clust.i.mininter:{[df;pts;idxs]
- {[df;pts;n](min/)clust.i.dists[pts[0];df;pts[n]]each til count pts[0]0}[df;pts]each 1_idxs}
+ {[df;pts;i;j](min/)clust.i.dists[pts[i];df;pts[j]]each til count pts[i]0}[df;pts;first idxs]each 1_idxs}
 
 // Silhouette coefficient
 /* data = data points in `value flip` format
