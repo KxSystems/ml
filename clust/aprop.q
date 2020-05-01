@@ -9,6 +9,8 @@
 clust.ap:{[data;df;dmp;diag]
  // check distance function and diagonal value
  if[not df in key clust.i.dd;clust.i.err.dd[]];
+ // convert to floating values
+ data:"f"$data;
  // create initial table with exemplars/matches and similarity, availability and responsibility matrices
  info0:clust.i.apinit[data;df;diag];
  // run AP algo until there is no change in results over `0.1*count data` runs

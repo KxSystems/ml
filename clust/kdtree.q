@@ -14,7 +14,7 @@ clust.kd.newtree:{[data;leafsz]clust.kd.i.tree[data;leafsz]`leaf`left`parent`sel
 /* pt    = point to find nearest neighbor for
 /. r     > returns nearest neighbor dictionary with closest point, distance, points searched and points to search
 clust.kd.nn:{[tree;data;df;xidxs;pt]
- start:`closestPoint`closestDist`xnodes`node!(0N;0w;0#0;clust.kd.i.findleaf[tree;pt;tree 0]);
+ start:`closestPoint`closestDist`xnodes`node!(0N;0w;0#0;clust.kd.findleaf[tree;pt;tree 0]);
  2#{[nninfo]not null nninfo[`node;`self]}clust.kd.i.nncheck[tree;data;df;xidxs;pt]/start}
 
 // Create tree table where each row represents a node
@@ -48,7 +48,7 @@ clust.kd.i.nncheck:{[tree;data;df;xidxs;pt;nninfo]
  ]];
  if[not null childidx:first nninfo[`node;`children]except nninfo`xnodes;
    childidx:$[(nninfo`closestDist)<clust.i.dd[df]pt[nninfo[`node]`axis]-nninfo[`node]`midval;
-     0N;clust.kd.i.findleaf[tree;pt;tree childidx]`self
+     0N;clust.kd.findleaf[tree;pt;tree childidx]`self
  ]];
  if[null childidx;nninfo[`xnodes],:nninfo[`node]`self];
  nninfo[`node]:tree nninfo[`node;`parent]^childidx;
@@ -66,12 +66,12 @@ clust.kd.i.findnext:{[tree;pt;node]tree node[`children]node[`midval]<=pt node`ax
 /* pt   = current point to put in tree
 /* node = current node to check
 /. r    > returns dictionary of leaf node pt belongs to
-clust.kd.i.findleaf:{[tree;pt;node]{[node]not node`leaf}clust.kd.i.findnext[tree;pt]/node}
+clust.kd.findleaf:{[tree;pt;node]{[node]not node`leaf}clust.kd.i.findnext[tree;pt]/node}
 
 // K-D tree C functions
 
 if[112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::];
- clust.kd.i.findleaf:{[tree;point;node]tree clust.kd.c.findleaf[tree;"f"$point;node`self]}]
+ clust.kd.findleaf:{[tree;point;node]tree clust.kd.c.findleaf[tree;"f"$point;node`self]}]
 
 if[112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::];
  clust.kd.nn:{[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;"f"$data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];"f"$pt]}]
