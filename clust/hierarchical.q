@@ -10,10 +10,8 @@ clust.hc:{[data;df;lf;k]
  // check distance and linkage functions
  if[not df in key clust.i.dd;clust.i.err.dd[]];
  if[not lf in key clust.i.ld;clust.i.err.ld[]];
- // convert to floating values
- data:"f"$data;
- if[lf in`complete`average`ward;:clust.hccaw[data;df;lf;k]];
- if[lf in`single`centroid;:clust.hcscc[data;df;lf;k;::;::]];
+ if[lf in`complete`average`ward;:clust.hccaw["f"$data;df;lf;k]];
+ if[lf in`single`centroid;:clust.hcscc["f"$data;df;lf;k;::;::]];
  }
 
 // CURE algorithm
@@ -25,9 +23,7 @@ clust.hc:{[data;df;lf;k]
 /. r    > return list of clusters
 clust.cure:{[data;df;k;n;c]
  if[not df in key clust.i.dd;clust.i.err.dd[]];
- // convert to floating values
- data:"f"$data;
- clust.hcscc[data;df;`cure;k;n;c]}
+ clust.hcscc["f"$data;df;`cure;k;n;c]}
 
 // Complete, Average, Ward (CAW) Linkage
 /* data = data points in `value flip` format
@@ -189,7 +185,7 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree]
   [newrep:flip params[`rpcols]!flip$[lf~`centroid;clust.i.centrep;clust.i.curerep[df;params`n;params`c]]data[;newmrg[0]`points];
    newrep:update clust:clust0,reppt:count[i]#newmrg[0]`reppts from newrep;
    // new rep leaves
-   newrep[`leaf]:(clust.kd.i.findleaf[kdtree;;kdtree 0]each flip newrep params`rpcols)`self;
+   newrep[`leaf]:(clust.kd.findleaf[kdtree;;kdtree 0]each flip newrep params`rpcols)`self;
    newmrg[0;`reppts]:newrep`reppt;
    // delete old points from leaf and update new point to new rep leaf
    kdtree:.[kdtree;(oldrep`leaf;`idxs);except;oldrep`reppt];
