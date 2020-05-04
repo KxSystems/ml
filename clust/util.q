@@ -19,8 +19,6 @@ clust.i.dists:{[data;df;pt;idxs]clust.i.dd[df]pt-data[;idxs]}
 clust.i.closest:{[data;df;pt;idxs]`point`distance!(idxs dists?md;md:min dists:clust.i.dists[data;df;pt;idxs])}
 
 // Index functions
-clust.i.imax:{x?max x}
-clust.i.imin:{x?min x}
 clust.i.reindex:{distinct[x]?x}
 
 // Error dictionary
