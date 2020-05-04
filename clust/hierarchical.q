@@ -234,9 +234,6 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
  clusts:@[clusts;newmrg`clust;,;delete clust from newmrg];
  reppts:@[reppts;newrep`reppt;,;delete reppt from newrep];
  
- newcl:max[clusts`clusti]+1;
- clusts[clust0;`clusti]:newcl;
- 
  updrep:reppts newrep`reppt;
  // nneighbour to clust
  if[sgl;updrep:select from updrep where closestClust in newmrg`clust];
