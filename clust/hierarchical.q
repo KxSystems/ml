@@ -210,8 +210,8 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
  clust0:exec clust{x?min x}closestDist from clusts where valid;
  newmrg:clusts clust0,clust1:clusts[clust0]`closestClust;
  newmrg:update valid:10b,reppts:(raze reppts;0#0),points:(raze points;0#0)from newmrg;
- 
- // make dendrogram if required
+
+// make dendrogram if required
  if[lnkmat 1;m:lnkmat 0;m,:newmrg[`clusti],fnew[`closestDist],count(fnew:first newmrg)`points;lnkmat[0]:m];
 
  // keep track of old reppts
