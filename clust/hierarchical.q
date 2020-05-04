@@ -11,10 +11,8 @@ clust.hc:{[data;df;lf;k;dgram]
  // check distance and linkage functions
  if[not df in key clust.i.dd;clust.i.err.dd[]];
  if[not lf in key clust.i.ld;clust.i.err.ld[]];
- // convert to floating values
- data:"f"$data;
- if[lf in`complete`average`ward;:clust.hccaw[data;df;lf;k;dgram]];
- if[lf in`single`centroid;:clust.hcscc[data;df;lf;k;::;::;dgram]];
+ if[lf in`complete`average`ward;:clust.hccaw["f"$data;df;lf;2;1b]];
+ if[lf in`single`centroid;:clust.hcscc["f"$data;df;lf;1;::;::;1b]];
  }
 
 // CURE algorithm
@@ -26,7 +24,7 @@ clust.hc:{[data;df;lf;k;dgram]
 /. r    > return list of clusters
 clust.cure:{[data;df;k;n;c]
  if[not df in key clust.i.dd;clust.i.err.dd[]];
- clust.hcscc["f"$data;df;`cure;k;n;c]}
+ clust.hcscc["f"$data;df;`cure;1;n;c;1b]}
 
 // Complete, Average, Ward (CAW) Linkage
 /* data = data points in `value flip` format
@@ -46,6 +44,23 @@ clust.hccaw:{[data;df;lf;k;dgram]
  r:{[k;r]k<count distinct r[0]`clt}[k]clust.i.algocaw[data;df;lf]/(t0;m);
  // return dendrogram or list of clusters
  $[dgram;clust.i.upddgram[r 0;r 1];clust.i.reindex r[0]`clt]}
+
+// convert dendrogram tab to clusters
+/* tab - dendrogram table
+/* n  - cutting value
+/* crit - cutting criteria (`dist or `k)
+/.r - returns list of clusters
+clust.dend2clust:{[tab;kval;crit]
+ // Extract k value by number of clusters or distance cut off
+ k:$[`k~crit;kval-1;0|count[tab]-exec first i from tab where dist>kval];
+ // Get the index of the cluster that was made at cutting point k
+ cltind:(2*cntt:count[tab])-k-1;
+ // exclude any clusters made after this point
+ cls:inds where cltind>inds:raze[neg[k]#'clts:tab[`i1`i2]];
+ // extract the indices within the clusters made until k, excluding any outliers
+ clusts:{last{count x[0]}clust.i.extractclt[x;z]/(y;())}[clts;;cntt+1]each cls where cls>cntt;
+ // update points to the cluster they belong to
+ @[;;:;]/[(1+cntt)#0N;clusts;til count clusts]}
 
 // Update dendrogram for CAW with final cluster of all the points
 /* t = cluster table
@@ -138,7 +153,7 @@ clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
 clust.hcscc:{[data;df;lf;k;n;c;dgram]
  r:(count[data 0]-k).[clust.i.algoscc[data;df;lf]]/clust.i.initscc[data;df;k;n;c;dgram];
  $[dgram;
-   clust.i.dgramidx last[r]0;
+   last[r]0;
    @[;;:;]/[count[data 0]#0N;vres`points;til count vres:select from r[1]where valid]]}
 
 // Initialize SCC clusters
@@ -155,7 +170,7 @@ clust.i.initscc:{[data;df;k;n;c;dgram]
  dists:update closestClust:closestPoint from{[kdtree;data;df;i]clust.kd.nn[kdtree;data;df;i;data[;i]]}[kdtree;data;df]each til nd;
  r2l:exec self idxs?til count i from select raze idxs,self:self where count each idxs from kdtree where leaf;
  // create cluster table 
- clusts:select clust:i,valid:1b,reppts:enlist each i,points:enlist each i,closestDist,closestClust from dists;
+ clusts:select clusti:i,clust:i,valid:1b,reppts:enlist each i,points:enlist each i,closestDist,closestClust from dists;
  // create table of representative points for each cluster
  reppts:select reppt:i,clust:i,leaf:r2l,closestDist,closestClust from dists;
  reppts:reppts,'flip(rpcols:`$"x",'string til count data)!data;
@@ -196,8 +211,8 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
  newmrg:clusts clust0,clust1:clusts[clust0]`closestClust;
  newmrg:update valid:10b,reppts:(raze reppts;0#0),points:(raze points;0#0)from newmrg;
 
- // make dendrogram if required
- if[lnkmat 1;m:lnkmat 0;m,:newmrg[`clust],fnew[`closestDist],count(fnew:first newmrg)`reppts;lnkmat[0]:m];
+// make dendrogram if required
+ if[lnkmat 1;m:lnkmat 0;m,:newmrg[`clusti],fnew[`closestDist],count(fnew:first newmrg)`points;lnkmat[0]:m];
 
  // keep track of old reppts
  oldrep:reppts newmrg[0]`reppts;
@@ -218,7 +233,7 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
  // update clusters and reppts
  clusts:@[clusts;newmrg`clust;,;delete clust from newmrg];
  reppts:@[reppts;newrep`reppt;,;delete reppt from newrep];
-
+ 
  updrep:reppts newrep`reppt;
  // nneighbour to clust
  if[sgl;updrep:select from updrep where closestClust in newmrg`clust];
@@ -257,3 +272,14 @@ clust.i.dgramidx:{[dgram]
  while[n>i+1;cl[where[cl=cl i]except i]:1+max cl;i+:1];
  // update dendrogram with new indices
  ![dgram;();0b;`i1`i2!n cut cl]}
+
+// Extract points within merged cluster
+/* clts - list of cluster indices
+/* cntt - count of dend table 
+/* inds - list containing index in list to search and indices points found within that cluster
+/r. - returns list containing next index to search, and additional points found within cluster
+clust.i.extractclt:{[clts;cntt;inds]
+  // extract the points that were merged at this point
+  mrgclt:raze clts[;inds[0]-cntt];
+  // Store any single clts, break down clts more than single point
+  (mrgclt where inext;inds[1],mrgclt where not inext:mrgclt>=cntt)}
