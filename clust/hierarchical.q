@@ -23,9 +23,9 @@ clust.dgram2clt:{[t;cutcrit;cutval]
  // exclude any clusters made after point k
  exclt:i where idx>i:raze neg[k]#'allclt:t`i1`i2;
  // extract indices within clusters made until k, excluding any outliers
- clt:{last{count x 0}clust.i.extractclt[x;y]/(z;())}[allclt;cntt+1]each exclt where exclt>cntt;
+ clt:{last{count x 0}clust.i.extractclt[x;y]/(z;())}[allclt;cntt+1]each exclt except outliers:exclt where exclt<=cntt;
  // update points to the cluster they belong to
- @[;;:;]/[(1+cntt)#0N;clt;til count clt]}
+ @[;;:;]/[(1+cntt)#0N;clt,enlist each outliers;til k+1]}
 
 // Hierarchical Clustering
 /* data  = data points in `value flip` format

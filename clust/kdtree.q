@@ -70,11 +70,10 @@ clust.kd.q.findleaf:clust.kd.findleaf:{[tree;pt;node]{[node]not node`leaf}clust.
 
 // K-D tree C functions
 /* b = type of code to use q or C
-clust.kd.qC:{[b]
-     clust.kd[`nn`findleaf]:$[b;(clust.kd.q.nn;clust.kd.q.findleaf);
-      (112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::])&112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::];
+clust.kd.qC:{[b] clust.kd[`nn`findleaf]:
+      $[b|not ((112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::])&112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::]);
+      (clust.kd.q.nn;clust.kd.q.findleaf);
       ({[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;"f"$data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];"f"$pt]};
-      {[tree;point;node]tree clust.kd.c.findleaf[tree;"f"$point;node`self]});
-      "C function not available, defaulting to q"]}
+      {[tree;point;node]tree clust.kd.c.findleaf[tree;"f"$point;node`self]})]};
 
 clust.kd.qC[0b];

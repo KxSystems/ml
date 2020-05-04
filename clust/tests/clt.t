@@ -34,7 +34,7 @@ value[group .ml.clust.dbscan[d2;`mdist;7;24]]~(til 196;196 197 198 199)
 value[group .ml.clust.dgram2clt[.ml.clust.cure[d1;`e2dist;5;0];`k;4]]~d1clt
 value[group .ml.clust.dgram2clt[.ml.clust.cure[d1;`edist;10;0.2];`k;4]]~d1clt
 value[group .ml.clust.dgram2clt[.ml.clust.cure[d1;`mdist;3;0.15];`k;4]]~d1clt
-value[group .ml.clust.dgram2clt[.ml.clust.cure[d2;`e2dist;20;0];`k;4]]~((til 192),193 195 197;192 194 196; 198 199)
+value[group .ml.clust.dgram2clt[.ml.clust.cure[d2;`e2dist;20;0];`k;4]]~((til 192),193 195 197;192 194 196;enlist 198;enlist 199)
 value[group .ml.clust.dgram2clt[.ml.clust.cure[d2;`edist;20;0.2];`k;4]]~(0 1 3 4,.ml.arange[5;16;2],16 17 18 19 20 21 23 25 26 27 28 29 31 33 35,(37+til 86),124 126 132 142 146 160;2 6 8 10 12 14 22 24 30 32 34 36;.ml.arange[123;200;2];128 130 134 136 138 140 144,.ml.arange[148;199;2]except 160)
 value[group .ml.clust.dgram2clt[.ml.clust.cure[d2;`mdist;10;0.1];`k;4]]~(til[122],.ml.arange[122;191;2];.ml.arange[123;194;2];192 194 196 198;195 197 199)
 
@@ -45,10 +45,11 @@ value[group .ml.clust.dgram2clt[.ml.clust.cure[d2;`mdist;10;0.1];`k;4]]~(til[122
 (asc each mat .ml.clust.hc[d1;`edist;`centroid])~asc each lnk[flip d1;`centroid;`euclidean]`
 (asc each mat .ml.clust.hc[d1;`mdist;`average])~asc each lnk[flip d1;`average;`cityblock]`
 .ml.clust.hc[d2;`e2dist;`single][`dist]~(lnk[flip d2;`single;`sqeuclidean]`)[;2]
-value[group .ml.clust.dgram2clt[.ml.clust.hc[d2;`e2dist;`single];`k;4]]~((til 195),196;195 197;198 199)
+value[group .ml.clust.dgram2clt[.ml.clust.hc[d2;`e2dist;`single];`k;4]]~((til 195),196;195 197;enlist 198;enlist 199)
 value[group .ml.clust.dgram2clt[.ml.clust.hc[d2;`e2dist;`ward];`k;4]]~(.ml.arange[0;43;2],(43+(til 80)),124 126 132 142 146 160;(.ml.arange[1;43;2]);.ml.arange[123;200;2];(.ml.arange[128;200;2])except 132 142 146 160)
 value[group .ml.clust.dgram2clt[.ml.clust.hc[d2;`edist;`centroid];`k;4]]~((til 123);.ml.arange[123;194;2];.ml.arange[124;199;2];195 197 199)
 value[group .ml.clust.dgram2clt[.ml.clust.hc[d2;`edist;`complete];`k;4]]~(.ml.arange[0;43;2],(43+(til 80));(.ml.arange[1;43;2]);.ml.arange[123;200;2];.ml.arange[124;200;2])
+value[group .ml.clust.dgram2clt[.ml.clust.hc[d2;`mdist;`average];`k;4]]~(.ml.arange[0;27;2],27,.ml.arange[28;43;2],43+(til 80);(.ml.arange[1;27;2],.ml.arange[29;42;2]);.ml.arange[123;200;2];.ml.arange[124;200;2])
 
 // Dgram2clt
 
