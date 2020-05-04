@@ -13,7 +13,7 @@ clust.kd.newtree:{[data;leafsz]clust.kd.i.tree[data;leafsz]`leaf`left`parent`sel
 /* xidxs = points to exclude in search
 /* pt    = point to find nearest neighbor for
 /. r     > returns nearest neighbor dictionary with closest point, distance, points searched and points to search
-clust.kd.nn:{[tree;data;df;xidxs;pt]
+clust.kd.q.nn:clust.kd.nn:{[tree;data;df;xidxs;pt]
  start:`closestPoint`closestDist`xnodes`node!(0N;0w;0#0;clust.kd.findleaf[tree;pt;tree 0]);
  2#{[nninfo]not null nninfo[`node;`self]}clust.kd.i.nncheck[tree;data;df;xidxs;pt]/start}
 
@@ -66,12 +66,15 @@ clust.kd.i.findnext:{[tree;pt;node]tree node[`children]node[`midval]<=pt node`ax
 /* pt   = current point to put in tree
 /* node = current node to check
 /. r    > returns dictionary of leaf node pt belongs to
-clust.kd.findleaf:{[tree;pt;node]{[node]not node`leaf}clust.kd.i.findnext[tree;pt]/node}
+clust.kd.q.findleaf:clust.kd.findleaf:{[tree;pt;node]{[node]not node`leaf}clust.kd.i.findnext[tree;pt]/node}
 
 // K-D tree C functions
+/* b = type of code to use q or C
+clust.kd.qC:{[b]
+     clust.kd[`nn`findleaf]:$[b;(clust.kd.q.nn;clust.kd.q.findleaf);
+      (112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::])&112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::];
+      ({[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;"f"$data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];"f"$pt]};
+      {[tree;point;node]tree clust.kd.c.findleaf[tree;"f"$point;node`self]});
+      "C function not available, defaulting to q"]}
 
-if[112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::];
- clust.kd.findleaf:{[tree;point;node]tree clust.kd.c.findleaf[tree;"f"$point;node`self]}]
-
-if[112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::];
- clust.kd.nn:{[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;"f"$data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];"f"$pt]}]
+clust.kd.qC[0b];
