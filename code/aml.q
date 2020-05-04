@@ -127,8 +127,10 @@ savedefault:{[fn;ftype]
   fn:$[10h~typf:type fn;fn;
       -11h~typf;$[":"~first strf;1_;]strf:string typf;
       '`$"filename must be string, symbol or hsym"];
+  fp:hsym`$i.ssrwin[raze[path],"/code/models/",fn];
+  if[not ()~key fp;'"This file already exists."];
   // Open handle to file fn
-  h:hopen hsym`$i.ssrwin[raze[path],"/code/models/",fn];
+  h:hopen fp;
   // Set d to default dictionary for feat_typ
   d:$[`fresh ~ftype;i.freshdefault[];
       `normal~ftype;i.normaldefault[];

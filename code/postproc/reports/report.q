@@ -45,9 +45,9 @@ post.report:{[dict;dt;fname;ptype]
  font[pdf;"Helvetica";11];
  xval:$[(dict[`xv]0)in `mcsplit`pcsplit;
          "A percentage based cross validation .ml.",string[dict[`xv]0],
-           " was performed with a holdout set of ",string[dict[`xv]1],
-           "% of training data used for validation.";
-         string[dict[`xv]1],"-fold cross validation was performed on the training",
+           " was performed with a set of size ",string[dict[`xv]1],
+           " of training data used as holdout.";
+         string[dict[`xv]1],"-fold cross validation was performed on the training ",
            "set to find the best model using, ",string[dict[`xv]0],"."];
  f:cell[pdf;f;30;xval];
  
@@ -89,7 +89,7 @@ post.report:{[dict;dt;fname;ptype]
    f:cell[pdf;f;30;]$[(dict[`gs]0)in `mcsplit`pcsplit;
            "The grid search was completed using .ml.gs.",string[dict[`gs]0],
              " with a percentage of ",string[dict[`gs]1],"% of training data used for validation";
-           "A ",string[dict[`gs]1],"-fold grid-search was performed on the training set",
+           "A ",string[dict[`gs]1],"-fold grid-search was performed on the training + validation set",
              " to find the best model using, ",string[dict[`gs]0],"."];
    
    font[pdf;"Helvetica";11];

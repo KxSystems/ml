@@ -156,10 +156,10 @@ i.runout:`col`pre`sig`slct`tot`ex`gs`sco`cnf`save!
   "\nFeature creation and significance testing complete";
   "Starting initial model selection - allow ample time for large datasets";
   "\nTotal features being passed to the models = ";
-  "Continuing to final model fitting on holdout set";
-  "Continuing to grid-search and final model fitting on holdout set";
-  "\nBest model fitting now complete - final score on test set = ";
-  "Confusion matrix for test set:\n";
+  "Continuing to final model fitting on testing set";
+  "Continuing to grid-search and final model fitting on testing set";
+  "\nBest model fitting now complete - final score on testing set = ";
+  "Confusion matrix for testing set:\n";
   "\nSaving down procedure report to ")
 
 
