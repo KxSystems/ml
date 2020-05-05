@@ -60,6 +60,10 @@ i.ap:{$[0=type y;x each y;98=type y;flip x each flip y;99<>type y;x y;98=type ke
 / find columns of x with type in y
 i.fndcols:{m[`c]where(m:0!meta x)[`t]in y}
 
+// indexing functions
+i.imax:{x?max x}
+i.imin:{x?min x}
+
 // required python utilities for df2tab
 i.isinstance:.p.import[`builtins][`:isinstance;<]
 i.dt        :.p.import[`datetime]

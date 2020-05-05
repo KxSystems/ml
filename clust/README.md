@@ -39,7 +39,7 @@ make && make install && make clean
 __Windows__ (within `build`):
 
 ```
-call build.bat
+call build.bat 2017
 ```
 **Note**: `build.bat` runs with Visual Studio 2019 and 2017. For other versions, please modify file accordingly.
 

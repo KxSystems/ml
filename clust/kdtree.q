@@ -24,7 +24,7 @@ clust.kd.q.nn:clust.kd.nn:{[tree;data;df;xidxs;pt]
 /. r      > returns kdtree table
 clust.kd.i.tree:{[data;leafsz;node]
  if[leafsz<=.5*count node`idxs;
-  chk:xdata<med xdata@:ax:clust.i.imax dvar:var each xdata:data[;node`idxs];
+  chk:xdata<med xdata@:ax:i.imax dvar:var each xdata:data[;node`idxs];
   if[all leafsz<=count each(lIdxs:where chk;rIdxs:where not chk);
    n:count lTree:.z.s[data;leafsz]update left:1b,parent:self,self+1  ,idxs:idxs lIdxs from node;
            rTree:.z.s[data;leafsz]update left:0b,parent:self,self+1+n,idxs:idxs rIdxs from node;
@@ -70,11 +70,10 @@ clust.kd.q.findleaf:clust.kd.findleaf:{[tree;pt;node]{[node]not node`leaf}clust.
 
 // K-D tree C functions
 /* b = type of code to use q or C
-clust.kd.qC:{[b]
-     clust.kd[`nn`findleaf]:$[b;(clust.kd.q.nn;clust.kd.q.findleaf);
-      (112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::])&112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::];
+clust.kd.qC:{[b] clust.kd[`nn`findleaf]:
+      $[b|not ((112=type clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::])&112=type clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::]);
+      (clust.kd.q.nn;clust.kd.q.findleaf);
       ({[tree;data;df;xidxs;pt]`closestPoint`closestDist!clust.kd.c.nn[tree;"f"$data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];"f"$pt]};
-      {[tree;point;node]tree clust.kd.c.findleaf[tree;"f"$point;node`self]});
-      "C function not available, defaulting to q"]}
+      {[tree;point;node]tree clust.kd.c.findleaf[tree;"f"$point;node`self]})]};
 
 clust.kd.qC[0b];

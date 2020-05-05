@@ -3,11 +3,10 @@
 // CURE algorithm
 /* data = data points in `value flip` format
 /* df   = distance function
-/* k    = number of clusters
 /* n    = number of representative points per cluster
 /* c    = compression factor for representative points
-/. r    > return list of clusters
-clust.cure:{[data;df;k;n;c]
+/. r    > return a dendrogram table
+clust.cure:{[data;df;n;c]
  if[not df in key clust.i.dd;clust.i.err.dd[]];
  clust.hcscc["f"$data;df;`cure;1;n;c;1b]}
 
@@ -24,9 +23,9 @@ clust.dgram2clt:{[t;cutcrit;cutval]
  // exclude any clusters made after point k
  exclt:i where idx>i:raze neg[k]#'allclt:t`i1`i2;
  // extract indices within clusters made until k, excluding any outliers
- clt:{last{count x 0}clust.i.extractclt[x;y]/(z;())}[allclt;cntt+1]each exclt where exclt>cntt;
+ clt:{last{count x 0}clust.i.extractclt[x;y]/(z;())}[allclt;cntt+1]each exclt except outliers:exclt where exclt<=cntt;
  // update points to the cluster they belong to
- @[;;:;]/[(1+cntt)#0N;clt;til count clt]}
+ @[;;:;]/[(1+cntt)#0N;clt,enlist each outliers;til k+1]}
 
 // Hierarchical Clustering
 /* data  = data points in `value flip` format
@@ -189,7 +188,7 @@ clust.i.centrep:{[p]enlist avg each p}
 /* p  = list of data points
 /. r  > return list of representative points
 clust.i.curerep:{[df;n;c;p]rpts:1_first(n&count p 0).[{[df;rpts;p]
- rpts,:enlist p[;i:clust.i.imax min clust.i.dd[df]each p-/:neg[1|-1+count rpts]#rpts];
+ rpts,:enlist p[;i:i.imax min clust.i.dd[df]each p-/:neg[1|-1+count rpts]#rpts];
  (rpts;.[p;(::;i);:;0n])}[df]]/(enlist avgpt:avg each p;p);
  (rpts*1-c)+\:c*avgpt}
 
@@ -264,7 +263,7 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
   updrep:reppts newrep`reppt;
  ];
  // update nneighbour of new clust  
- updrep@:raze clust.i.imin updrep`closestDist;
+ updrep@:raze i.imin updrep`closestDist;
  clusts:@[clusts;updrep`clust;,;`closestDist`closestClust#updrep];
 
  $[sgl;
@@ -273,7 +272,7 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
    reppts:update closestClust:clust0 from reppts where       closestClust=clust1];
    // else do nneighbour search
    if[count updcls:select from clusts where valid,closestClust in(clust0;clust1);
-   updcls:updcls,'{x clust.i.imin x`closestDist}each clust.kd.nn[kdtree;reppts params`rpcols;df]/:'
+   updcls:updcls,'{x i.imin x`closestDist}each clust.kd.nn[kdtree;reppts params`rpcols;df]/:'
      [updcls`reppts;flip each reppts[updcls`reppts]@\:params`rpcols];
    updcls[`closestClust]:reppts[updcls`closestPoint]`clust;
    clusts:@[clusts;updcls`clust;,;select closestDist,closestClust from updcls];
