@@ -24,7 +24,7 @@ clust.kd.q.nn:clust.kd.nn:{[tree;data;df;xidxs;pt]
 /. r      > returns kdtree table
 clust.kd.i.tree:{[data;leafsz;node]
  if[leafsz<=.5*count node`idxs;
-  chk:xdata<med xdata@:ax:i.imax dvar:var each xdata:data[;node`idxs];
+  chk:xdata<med xdata@:ax:imax dvar:var each xdata:data[;node`idxs];
   if[all leafsz<=count each(lIdxs:where chk;rIdxs:where not chk);
    n:count lTree:.z.s[data;leafsz]update left:1b,parent:self,self+1  ,idxs:idxs lIdxs from node;
            rTree:.z.s[data;leafsz]update left:0b,parent:self,self+1+n,idxs:idxs rIdxs from node;

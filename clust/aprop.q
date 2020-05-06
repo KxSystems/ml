@@ -38,7 +38,7 @@ clust.i.apalgo:{[dmp;info]
  // update availability matrix
  info[`a]:clust.i.upda[dmp;info];
  // find new exemplars
- ex:i.imax each sum info`a`r;
+ ex:imax each sum info`a`r;
  // return updated `info` with new exemplars/matches
  update exemplars:ex,matches:?[exemplars~ex;matches+1;0]from info}
 
