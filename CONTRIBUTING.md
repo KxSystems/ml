@@ -42,5 +42,5 @@ In order to have your pull request approved in a timely manner, please provide c
 
 ### Additional Resources
 
-[Machine Learning Documentation](https://code.kx.com/ml/)
+[Machine Learning Documentation](https://code.kx.com/q/ml/)
 
