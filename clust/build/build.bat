@@ -14,7 +14,9 @@ if exist "%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" (
   for /F "tokens=* USEBACKQ" %%F in (`"%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -version 15.0 -property installationPath`) do set INSTALLPATH=%%F
 )
 
-if NOT "" == "%INSTALLPATH%" (
+if NOT "" == "%VSDIR%" (
+	call "%VSDIR%"
+) else if NOT "" == "%INSTALLPATH%" (
   call "%INSTALLPATH%\VC\Auxiliary\Build\vcvars64.bat"
 ) else (
   goto :error

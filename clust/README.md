@@ -38,7 +38,7 @@ __Windows__ (within `build`):
 ```
 call build.bat
 ```
-**Note**: `build.bat` runs with Visual Studio 2017 and 2019 64 bit. For other versions, please modify file accordingly.
+**Note**: `build.bat` runs with Visual Studio 2017 and 2019 64 bit. For other versions, please set an environment variable named `VSDIR` pointing to the path of your Visual Studio batch file (vcvars32.bat, vcvars64.bat etc).
 
 ## Load
 
