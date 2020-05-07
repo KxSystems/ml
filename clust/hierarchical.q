@@ -48,7 +48,7 @@ clust.hc:{[data;df;lf]
 /. r    > return dendrogram or list of clusters
 clust.hccaw:{[data;df;lf;k;dgram]
  // check distance function for ward
- if[(not df in`edist`e2dist)&lf=`ward;clust.i.err.ward[]];
+ if[(not df~`e2dist)&lf=`ward;clust.i.err.ward[]];
  // create initial cluster table
  t0:clust.i.initcaw[data;df];
  // create linkage matrix
@@ -67,6 +67,7 @@ clust.hccaw:{[data;df;lf;k;dgram]
 /* c    = compression factor for representative points
 /. r    > return list of clusters
 clust.hcscc:{[data;df;lf;k;n;c;dgram]
+ if[(not df in `edist`e2dist)&lf=`centroid;clust.i.err.centroid[]];
  r:(count[data 0]-k).[clust.i.algoscc[data;df;lf]]/clust.i.initscc[data;df;k;n;c;dgram];
  $[dgram;
    clust.i.dgramidx last[r]0;
