@@ -7,6 +7,7 @@ This repository contains the following sections:
 *  An implementation of the FRESH (FeatuRe Extraction and Scalable Hypothesis testing) algorithm for use in the extraction of features from time series data and the reduction in the number of features through statistical testing. 
 *  Utility functions relating to areas including statistical analysis, data preprocessing and array manipulation.
 *  Cross validation and grid-search functions allowing for testing of the stability of models to changes in the volume of data or the specific subsets of data used in training.
+*  Clustering algorithms used to group data points and to identify patterns in their distributions. The algorithms make use of a k-dimensional tree to store points and scoring functions to analyze how well they performed.
 
 The contents of these sections are explained in greater depth within [FRESH](https://code.kx.com/v2/ml/toolkit/fresh/), [Utilities](https://code.kx.com/v2/ml/toolkit/utilities/metric) and [Cross Validation](https://code.kx.com/v2/ml/toolkit/xval) documentation.
 
@@ -44,6 +45,7 @@ Examples showing implementations of several components of this toolkit can be fo
 *  Implementations of the FRESH algorithm
 *  Cross validation and grid search capabilities
 *  Results Scoring functionality
+*  Clustering methods applied to datasets
 
 
 ## Documentation

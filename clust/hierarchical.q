@@ -10,23 +10,6 @@ clust.cure:{[data;df;n;c]
  if[not df in key clust.i.dd;clust.i.err.dd[]];
  clust.hcscc["f"$data;df;`cure;1;n;c;1b]}
 
-// Convert dendrogram table to clusters
-/* t       - dendrogram table
-/* cutcrit - cutting criteria (`dist or `k)
-/* cutval  - cutting value
-/. r       > returns a list of clusters
-clust.dgram2clt:{[t;cutcrit;cutval]
- // extract k value from number of clusters or distance cut off
- k:$[`k~cutcrit;("i"$cutval)-1;0|count[t]-exec first i from t where dist>cutval];
- // get index of cluster made at cutting point k
- idx:(2*cntt:count t)-k-1;
- // exclude any clusters made after point k
- exclt:i where idx>i:raze neg[k]#'allclt:t`i1`i2;
- // extract indices within clusters made until k, excluding any outliers
- clt:{last{count x 0}clust.i.extractclt[x;y]/(z;())}[allclt;cntt+1]each exclt except outliers:exclt where exclt<=cntt;
- // update points to the cluster they belong to
- @[;;:;]/[(1+cntt)#0N;clt,enlist each outliers;til k+1]}
-
 // Hierarchical Clustering
 /* data  = data points in `value flip` format
 /* df    = distance function
@@ -40,10 +23,10 @@ clust.hc:{[data;df;lf]
  if[lf in`single`centroid;:clust.hcscc["f"$data;df;lf;1;::;::;1b]];}
 
 // Complete, Average, Ward (CAW) Linkage
-/* data = data points in `value flip` format
-/* df   = distance function
-/* lf   = linkage function
-/* k    = number of clusters
+/* data  = data points in `value flip` format
+/* df    = distance function
+/* lf    = linkage function
+/* k     = number of clusters
 /* dgram = boolean indicating whether to make a dendrogram or not (1b/0b)
 /. r    > return dendrogram or list of clusters
 clust.hccaw:{[data;df;lf;k;dgram]
@@ -65,6 +48,7 @@ clust.hccaw:{[data;df;lf;k;dgram]
 /* k    = number of clusters
 /* n    = number of representative points per cluster
 /* c    = compression factor for representative points
+/*dgram = boolean indicating whether to make a dendrogram or not (1b/0b)
 /. r    > return list of clusters
 clust.hcscc:{[data;df;lf;k;n;c;dgram]
  if[(not df in `edist`e2dist)&lf=`centroid;clust.i.err.centroid[]];
@@ -72,6 +56,22 @@ clust.hcscc:{[data;df;lf;k;n;c;dgram]
  $[dgram;
    clust.i.dgramidx last[r]0;
    @[;;:;]/[count[data 0]#0N;vres`points;til count vres:select from r[1]where valid]]}
+
+// Convert dendrogram table to k clusters
+/* t       = dendrogram table
+/* kval    = number of clusters
+/. r       > returns a list of clusters
+clust.hccutk:{[t;kval]
+ k:kval-1;
+ clust.i.cutdgram[t;k]}
+
+// Convert dendrogram table to clusters based on distance threshold
+/* t       = dendrogram table
+/* dthresh = cutting distance threshold
+/. r       > returns a list of clusters
+clust.hccutdist:{[t;dthresh]
+ k:0|count[t]-exec first i from t where dist>dthresh;
+ clust.i.cutdgram[t;k]}
 
 // Update dendrogram for CAW with final cluster of all the points
 /* t = cluster table
@@ -189,7 +189,7 @@ clust.i.centrep:{[p]enlist avg each p}
 /* p  = list of data points
 /. r  > return list of representative points
 clust.i.curerep:{[df;n;c;p]rpts:1_first(n&count p 0).[{[df;rpts;p]
- rpts,:enlist p[;i:i.imax min clust.i.dd[df]each p-/:neg[1|-1+count rpts]#rpts];
+ rpts,:enlist p[;i:imax min clust.i.dd[df]each p-/:neg[1|-1+count rpts]#rpts];
  (rpts;.[p;(::;i);:;0n])}[df]]/(enlist avgpt:avg each p;p);
  (rpts*1-c)+\:c*avgpt}
 
@@ -204,10 +204,24 @@ clust.i.dgramidx:{[dgram]
  // update dendrogram with new indices
  ![dgram;();0b;`i1`i2!n cut cl]}
 
+// Convert dendrogram table to clusters
+/* t       = dendrogram table
+/* k       = define splitting value in dendrogram table
+/. r       > returns a list of clusters
+clust.i.cutdgram:{[t;k]
+ // get index of cluster made at cutting point k
+ idx:(2*cntt:count t)-k-1;
+ // exclude any clusters made after point k
+ exclt:i where idx>i:raze neg[k]#'allclt:t`i1`i2;
+ // extract indices within clusters made until k, excluding any outliers
+ clt:{last{count x 0}clust.i.extractclt[x;y]/(z;())}[allclt;cntt+1]each exclt except outliers:exclt where exclt<=cntt;
+ // update points to the cluster they belong to
+ @[;;:;]/[(1+cntt)#0N;clt,enlist each outliers;til k+1]}
+
 // Extract points within merged cluster
-/* clts - list of cluster indices
-/* cntt - count of dend table 
-/* inds - list containing index in list to search and indices points found within that cluster
+/* clts = list of cluster indices
+/* cntt = count of dend table 
+/* inds = list containing index in list to search and indices points found within that cluster
 /r. - returns list containing next index to search, and additional points found within cluster
 clust.i.extractclt:{[clts;cntt;inds]
   // extract the points that were merged at this point
@@ -264,7 +278,7 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
   updrep:reppts newrep`reppt;
  ];
  // update nneighbour of new clust  
- updrep@:raze i.imin updrep`closestDist;
+ updrep@:raze imin updrep`closestDist;
  clusts:@[clusts;updrep`clust;,;`closestDist`closestClust#updrep];
 
  $[sgl;
@@ -273,7 +287,7 @@ clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
    reppts:update closestClust:clust0 from reppts where       closestClust=clust1];
    // else do nneighbour search
    if[count updcls:select from clusts where valid,closestClust in(clust0;clust1);
-   updcls:updcls,'{x i.imin x`closestDist}each clust.kd.nn[kdtree;reppts params`rpcols;df]/:'
+   updcls:updcls,'{x imin x`closestDist}each clust.kd.nn[kdtree;reppts params`rpcols;df]/:'
      [updcls`reppts;flip each reppts[updcls`reppts]@\:params`rpcols];
    updcls[`closestClust]:reppts[updcls`closestPoint]`clust;
    clusts:@[clusts;updcls`clust;,;select closestDist,closestClust from updcls];

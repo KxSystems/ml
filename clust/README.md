@@ -12,15 +12,12 @@ Each algorithm works by iteratively joining, separating or reassigning points un
 
 ## Features
 
-The clustering library contains the aforementioned clustering algorithms which can be used to cluster kdb+/q data. Additionally, there are scripts to create and build a k-d (k dimensional) tree, used for the CURE, single and centroid implementations and scoring and optimization functions which can be applied to the clustering algorithms.
+The clustering library contains the aforementioned clustering algorithms which can be used to cluster kdb+/q data. Additionally, there are scripts to create a k-d (k dimensional) tree, used for the CURE, single and centroid implementations and scoring and optimization functions which can be applied to the clustering algorithms.
 
 ## Requirements
 
 - embedPy
 - Matplotlib 2.1.1
-- Sklearn 0.19.1
-- Scipy 1.1.0
-- PyClustering
 
 ## Installation
 
@@ -39,9 +36,9 @@ make && make install && make clean
 __Windows__ (within `build`):
 
 ```
-call build.bat 2017
+call build.bat
 ```
-**Note**: `build.bat` runs with Visual Studio 2019 and 2017. For other versions, please modify file accordingly.
+**Note**: `build.bat` runs with Visual Studio 2017 and 2019 64 bit. For other versions, please modify file accordingly.
 
 ## Load
 
