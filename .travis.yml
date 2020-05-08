@@ -32,13 +32,15 @@ beforescript:
   - IMPLEMENTATION=$(if [[ "x$TRAVIS_TAG" == "x" ]]; then echo $TRAVIS_BRANCH-$TRAVIS_COMMIT; else echo $TRAVIS_TAG; fi;)
   - perl -p -i -e 's/TOOLKITVERSION/`\$\"'${IMPLEMENTATION}'\"/g' ml.q
 
+
 script:
+- (cd clust && make && make install && make clean)
 - echo "Preparing version $TRAVIS_BRANCH-$TRAVIS_COMMIT"
-- tar czf ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz *.q fresh/ util/ requirements.txt  LICENSE README.md
+- tar czf ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.tgz *.q fresh/ util/ clust/ requirements.txt  LICENSE README.md
 - echo "Packaged as ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip"
 -  if [[ "x$QLIC_KC" != "x" ]]; then
     curl -fsSL -o test.q https://github.com/KxSystems/embedpy/raw/master/test.q;
-    q test.q fresh/tests/ util/tests/ xval/tests/ -q;
+    q test.q fresh/tests/ util/tests/ xval/tests clust/tests/ -q;
 
   else
     echo No kdb+, no tests;
@@ -56,7 +58,7 @@ deploy:
 jobs:
   include:
     - stage: docker
-      sudo: required
+      sudo : required
       services:
         - docker
       install: skip
