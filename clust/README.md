@@ -8,11 +8,6 @@ Each algorithm works by iteratively joining, separating or reassigning points un
 
 The clustering library contains the aforementioned clustering algorithms which can be used to cluster kdb+/q data. Additionally, there are scripts to create a k-d (k dimensional) tree, used for the CURE, single and centroid implementations and scoring and optimization functions which can be applied to the clustering algorithms.
 
-## Requirements
-
-- embedPy
-- Matplotlib 2.1.1
-
 ## Installation
 
 Place the `ml` library in `$QHOME` and load into a q instance using `ml/ml.q`
