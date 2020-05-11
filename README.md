@@ -49,10 +49,12 @@ Examples showing implementations of several components of this toolkit can be fo
 
 ## Documentation
 
-Documentation for all sections of the machine learning toolkit are available [here](https://code.kx.com/v2/ml/toolkit/).
+Documentation for all sections of the machine learning toolkit are available [here](https://code.kx.com/q/ml/toolkit/).
 
 ## Status
 
-The machine learning toolkit is still in development and is available here as a beta release. Further functionality and improvements will be made to the library in the coming months.
+The machine learning toolkit is provided here under an Apache 2.0 license.
 
-If you have any issues, questions or suggestions, please write to ai@kx.com.
+If you find issues with the interface or have feature requests, please consider raising an issue [here](https://github.com/KxSystems/ml/issues).
+
+If you wish to contribute to this project, please follow the contributing guide [here](CONTRIBUTING.md).
