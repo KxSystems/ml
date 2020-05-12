@@ -1,6 +1,6 @@
-version: 1.0.{build}
+version: '1.0.{build}'
 image:
-- Visual Studio 2015
+- Visual Studio 2017
 clone_depth: 1
 
 artifacts:
@@ -18,7 +18,6 @@ build_script:
 after_build:
 - cmd: >-
     build\package.bat
-
 deploy:
  release: $(appveyor_repo_tag_name)
  provider: GitHub

@@ -1,8 +1,5 @@
 # Cross-Validation
 
-
-## Introduction
-
 The functions contained in this folder surround the implementation of various cross-validation procedures both time-series and non time-series in nature. The goal of this is to make such procedures available using a q-like syntax.
 
 ## Functionality
@@ -20,11 +17,12 @@ The Python dependencies for the FRESH library can be installed by following the 
 
 ## Installation
 
-To test that all the requirements have been installed correctly and the library is ready for use, run the following in console provided the folder `ml` is placed in `$QHOME` using the syntax:
+Place the `ml` library in `$QHOME` and load into a q instance using `ml/ml.q`
 
+### Load
+
+The following will load cross-validation functionality into the `.ml` namespace  
 ```q
-$ q
-
 q)\l ml/ml.q
 q).ml.loadfile`:xval/init.q
 ```
@@ -35,6 +33,6 @@ Documentation is available on the [Cross-Validation](https://code.kx.com/v2/ml/t
 
 ## Status
 
-The cross-validation library is still in development and is available here as a beta release, further functionality and improvements will be made to the library in the coming months.
+The cross-validation library is still in development and is available here as a beta release. Further functionality and improvements will be made to the library in the coming months.
 
 If you have any issues, questions or suggestions, please write to ai@kx.com.
