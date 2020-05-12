@@ -1,7 +1,5 @@
 # Utilities
 
-
-
 The machine-learning utilities library contains a range of functions to aid kdb+/q users in applying machine-learning techniques to their datasets.
 
 Functions are divided into three scripts, dealing with different aspects of machine learning
@@ -14,30 +12,27 @@ Functions are divided into three scripts, dealing with different aspects of mach
   
 The functions contained in these scripts will be added to on an ongoing basis.
 
-
 ## Requirements
 
 - embedPy
 
 The Python dependencies for the FRESH library can be installed by following the instructions laid out in the ML-Toolkit level of this library.
 
-
 ## Installation
 
-Place the library file in `$QHOME` and load the utils files into a q instance.
+Place the `ml` library in `$QHOME` and load into a q instance using `ml/ml.q`
 
+### Load
+
+The following will load utility functionality into the `.ml` namespace  
 ```q
-$ q
-
 q)\l ml/ml.q
 q).ml.loadfile`:util/init.q
 ```
 
-
 ## Documentation
 
 Documentation is available on the [Utilities](https://code.kx.com/v2/ml/toolkit/utils/) homepage.
-
 
 ## Status
   

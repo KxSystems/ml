@@ -45,10 +45,10 @@ not(count[s]~count[yi])&(s:.ml.xv.i.shuffle[yi])~yi
 not(count[s]~count[yb])&(s:.ml.xv.i.shuffle[yb])~yb
 not(count[s]~count[yc])&(s:.ml.xv.i.shuffle[yc])~yc
 
-.ml.xv.i.splitidx[2;yf]~reverse first(.p.list kfsplit[yf;2])`
-.ml.xv.i.splitidx[2;yi]~reverse first(.p.list kfsplit[yi;2])`
-.ml.xv.i.splitidx[2;yb]~reverse first(.p.list kfsplit[yb;2])`
-.ml.xv.i.splitidx[2;yc]~reverse first(.p.list kfsplit[yc;2])`
+(`int$.ml.xv.i.splitidx[2;yf])~`int$reverse first(.p.list kfsplit[yf;2])`
+(`int$.ml.xv.i.splitidx[2;yi])~`int$reverse first(.p.list kfsplit[yi;2])`
+(`int$.ml.xv.i.splitidx[2;yb])~`int$reverse first(.p.list kfsplit[yb;2])`
+(`int$.ml.xv.i.splitidx[2;yc])~`int$reverse first(.p.list kfsplit[yc;2])`
 
 (.ml.shape .ml.xv.i.shuffidx[k;yf])~3 333
 (.ml.shape .ml.xv.i.shuffidx[5;yi])~5 200
