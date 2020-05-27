@@ -1,15 +1,20 @@
 # ARG usage in FROMs has to go up here in global
 
 ARG embedpy_img=kxsys/embedpy:latest
+ARG ml_img=kxsys/ml:latest
 
 ####
 
 FROM $embedpy_img AS embedpy
+FROM $ml_img AS ml
 
 FROM embedpy AS automl
 
 COPY requirements.txt *.q README.md LICENSE /opt/kx/automl/
 COPY code /opt/kx/automl/code
+
+COPY --from=ml /opt/kx/ml/ /opt/kx/ml/
+COPY --from=ml /opt/kx/q/ml/ /opt/kx/q/ml/
 
 ARG VCS_REF=dev
 ARG BUILD_DATE=dev
@@ -35,10 +40,11 @@ USER kx
 
 RUN . /opt/conda/etc/profile.d/conda.sh \
 	&& conda activate kx \
+	&& conda install --file /opt/kx/ml/requirements.txt \
 	&& conda install --file /opt/kx/automl/requirements.txt \
 	&& conda clean -y --all 
 
 USER root
 
 ENTRYPOINT ["/init"]
-CMD ["q", "auto/init.q"]
+CMD ["q", "automl/automl.q"]

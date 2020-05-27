@@ -12,7 +12,7 @@ Check out a copy of the project with:
 
 To build the project locally you run:
 
-    docker build -t ml -f docker/Dockerfile .
+    docker build -t automl -f docker/Dockerfile .
 
 Once built, you should have a local `automl` image, you can run the following to use it:
 
