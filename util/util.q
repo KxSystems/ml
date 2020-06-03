@@ -42,7 +42,6 @@ float32_convert:{$[(y~0b)|x~()!();x;?[0.000001>x;"F"$string x;0.000001*floor 0.5
 tz_convert:{$[y~0b;dt_convert;{"P"$neg[6]_/:'x[`:astype;`str][`:to_dict;<;`list]}]x}
 / Convert datetime/datetimetz to timestamp
 dt_convert:{
-  `e+1;
   $[count nulCols:where any each x[`:isnull;::][`:to_dict;<;`list];
     [c:`$x[`:columns.to_numpy][]`;
      //string the columns with NaT and cast to timestamp. Usual conversion for the others
