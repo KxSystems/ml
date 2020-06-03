@@ -41,7 +41,14 @@ float32_convert:{$[(y~0b)|x~()!();x;?[0.000001>x;"F"$string x;0.000001*floor 0.5
 / Convert time zone data (0b -> UTC time; 1b -> local time)
 tz_convert:{$[y~0b;dt_convert;{"P"$neg[6]_/:'x[`:astype;`str][`:to_dict;<;`list]}]x}
 / Convert datetime/datetimetz to timestamp
-dt_convert:{"p"$dt_dict[x]+1970.01.01D0}
+dt_convert:{
+  `e+1;
+  $[count nulCols:where any each x[`:isnull;::][`:to_dict;<;`list];
+    [c:`$x[`:columns.to_numpy][]`;
+     //string the columns with NaT and cast to timestamp. Usual conversion for the others
+     ("P"$x[`:drop;c except nulCols;`axis pykw 1][`:astype;`str][`:to_dict;<;`list]),dt_dict[x[`:drop;nulCols;`axis pykw 1]]+1970.01.01D0];
+    //No null datetime columns found so convert to int64 and do the conversion
+    "p"$dt_dict[x]+1970.01.01D0]}
 / Convert data to integer representation and return as a dict
 dt_dict:{x[`:astype;`int64][`:to_dict;<;`list]}
 / Convert datetime.date/time types to kdb+ date/time
