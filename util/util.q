@@ -44,9 +44,9 @@ tz_convert:{$[y~0b;dt_convert;{"P"$neg[6]_/:'x[`:astype;`str][`:to_dict;<;`list]
 dt_convert:{
   $[count nulCols:where any each x[`:isnull;::][`:to_dict;<;`list];
     [c:`$x[`:columns.to_numpy][]`;
-     //string the columns with NaT and cast to timestamp. Usual conversion for the others
-     ("P"$x[`:drop;c except nulCols;`axis pykw 1][`:astype;`str][`:to_dict;<;`list]),dt_dict[x[`:drop;nulCols;`axis pykw 1]]+1970.01.01D0];
-    //No null datetime columns found so convert to int64 and do the conversion
+     null_data:"P"$x[`:drop;c except nulCols;`axis pykw 1][`:astype;`str][`:to_dict;<;`list];
+     non_null_data:dt_dict x[`:drop;nulCols;`axis pykw 1];
+     null_data,non_null_data+1970.01.01D0];
     "p"$dt_dict[x]+1970.01.01D0]}
 / Convert data to integer representation and return as a dict
 dt_dict:{x[`:astype;`int64][`:to_dict;<;`list]}
