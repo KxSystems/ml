@@ -130,7 +130,7 @@ seq[`management`report]>seq[`report`june]
 ascii["This is ä senteñcê"]~"This is  sentec"
 rmv_list   :("http*";"*,";"*&*";"*[0-9]*")
 rmv_custom["https//:google.com & https//:bing.com are 2 search engines!";rmv_list]~"are search engines!"
-rmv_master["https//:google.com & https//:bing.com are 2 search engines!";",.:?!/@'\n";""]~"httpsgooglecom & httpsbingcom are 2 search engines"
+rmv_main["https//:google.com & https//:bing.com are 2 search engines!";",.:?!/@'\n";""]~"httpsgooglecom & httpsbingcom are 2 search engines"
 loadDir:loadTextFromDir["tests/data/test.mbox"]
 `fileName`path`text~cols loadDir
 loadDir[`fileName]~enlist `test.mbox

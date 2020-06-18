@@ -1,4 +1,4 @@
-\l nlp.q
+\l nlp.q 
 \l init.q
 \d .nlp
 all(i.findRuns[where 000000000b]~();i.findRuns[where 100000000b]~();i.findRuns[where 100000001b]~();i.findRuns[where 101010101b]~();i.findRuns[where 100100100b]~())

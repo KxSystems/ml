@@ -143,7 +143,7 @@ ascii:{x where x within (0;127)}
 rmv_custom:{rtrim raze(l where{not(max ,'/)x like/:y}[;y]each l:" "vs x),'" "}
 
 // Remove and replace certain characters from a string of text
-rmv_master:{{x:ssr[x;y;z];x}[;;z]/[x;y]}
+rmv_main:{{x:ssr[x;y;z];x}[;;z]/[x;y]}
 
 // Detect language from text
 detectLang:{[text]`$.p.import[`langdetect][`:detect;<][text]}
