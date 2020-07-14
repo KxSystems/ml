@@ -13,7 +13,7 @@ regex.patterns.url:             "((https?|ftps?)://(www\\d{0,3}\\.)?|www\\d{0,3}
 regex.patterns.zipCode:         "\\b\\d{5}\\b"
 regex.patterns.postalCode:      "\\b[a-z]\\d[a-z] ?\\d[a-z]\\d\\b"
 regex.patterns.postalOrZipCode: "\\b(\\d{5}|[a-z]\\d[a-z] ?\\d[a-z]\\d)\\b"
-regex.patterns.dtsep:           "[\\t .,-/\\\\]+"
+regex.patterns.dtsep:           "[\\b(of |in )\\b\\t .,-/\\\\]+"
 regex.patterns.day:             "\\b[0-3]?[0-9](st|nd|rd|th)?\\b"
 regex.patterns.month:           "\\b([01]?[0-9]|jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|jun(e)?|jul(y)?|aug(ust)?|sep(tember)?|oct(ober)?|nov(ember)?|dec(ember)?)\\b"
 regex.patterns.year:            "\\b([12][0-9])?[0-9]{2}\\b"
