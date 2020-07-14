@@ -45,9 +45,9 @@ gs:1_{[gs;k;n;x;y;f;p;t]
 
 // Utilities for functions to be added to the toolkit
 i.infrep:{
- t:i.inftyp[]first string y;
- {[n;x;y;z]@[x;i;:;z@[x;i:where x=y;:;n]]}[t 0]/[x;t 1 2;(min;max)]}
-i.inftyp:{
-  typ:("5";"8";"9";"6";"7";"12";"16";"17";"18");
-  rep:(0N -32767 32767;0N -0w 0w;0n -0w 0w),6#enlist 0N -0W 0W;
-  typ!rep}
+  // Character representing the type
+  typ:.Q.t@abs y;
+  // the relevant null+infs for type
+  t:typ$(0N;-0w;0W);
+  {[n;x;y;z]@[x;i;:;z@[x;i:where x=y;:;n]]}[t 0]/[x;t 1 2;(min;max)]}
+
