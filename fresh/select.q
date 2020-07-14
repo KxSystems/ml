@@ -1,7 +1,8 @@
 \d .ml
 
 / py utils
-fresh.i.ksdistrib:  .p.import[`scipy.stats]`:kstwo.sf
+sci_ver:1.5<="F"$3#.p.import[`scipy][`:__version__]`
+fresh.i.ksdistrib:  .p.import[`scipy.stats][$[sci_ver;`:kstwo.sf;`:kstwobign.sf];<]
 fresh.i.kendalltau: .p.import[`scipy.stats]`:kendalltau
 fresh.i.fisherexact:.p.import[`scipy.stats]`:fisher_exact
 
@@ -12,7 +13,8 @@ fresh.i.fisher:{fresh.i.fisherexact[<;count@''@\:[group@'x value group y]distinc
 / Function change due to scipy update https://github.com/scipy/scipy/commit/aa319bcfeb38b90f3c4b46c9477f02618583570d
 fresh.i.ks:{
  k:max abs(-). value(1+d bin\:raze d)%n:count each d:asc each y group x;
- fresh.i.ksdistrib[k;ceiling en:prd[n]%sum n]`}
+ en:prd[n]%sum n;
+ fresh.i.ksdistrib .$[sci_ver;(k;ceiling en);enlist k*sqrt en]}
 fresh.i.ksyx:{fresh.i.ks[y;x]}
 
 / feature significance
