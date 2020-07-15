@@ -67,7 +67,8 @@ post.i.impactplot:{[im;mdl;dt;fpath]
   ax[`:set_title]"Feature Impact: ",string mdl;
   ax[`:set_ylabel]"Columns";
   ax[`:set_xlabel]"Relative feature impact";
-  plt[`:savefig][fpath[0][`images],sv["_";string(`Impact_Plot;mdl)],".png";`bbox_inches pykw"tight"];}
+  plt[`:savefig][fpath[0][`images],sv["_";string(`Impact_Plot;mdl)],".png";`bbox_inches pykw"tight"];
+  plt[`:close][];}
 
 post.i.displayCM:{[cm;classes;title;cmap;mdl;fpath]
   if[cmap~();cmap:plt`:cm.Blues];
@@ -88,7 +89,8 @@ post.i.displayCM:{[cm;classes;title;cmap;mdl;fpath]
     }[cm;thresh;;]. 'cross[til shape 0;til shape 1];
   plt[`:xlabel]["Predicted Label";`fontsize pykw 12];
   plt[`:ylabel]["Actual label";`fontsize pykw 12];
-  plt[`:savefig][fpath[0][`images],sv["_";string(`Confusion_Matrix;mdl)],".png";`bbox_inches pykw"tight"];}
+  plt[`:savefig][fpath[0][`images],sv["_";string(`Confusion_Matrix;mdl)],".png";`bbox_inches pykw"tight"];
+  plt[`:close][];}
 
 // Utilities for report generation
 
