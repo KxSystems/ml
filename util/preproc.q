@@ -4,22 +4,15 @@
 
 /* x = simple table/dictionary
 dropconstant:{
-  typ:type x;
-  if[not typ in 98 99h;'"Data must be simple table or dictionary"];
-  if[99h=typ;if[98h~type value x;'"Data cannot be a keyed table"]];
-  // find keys/cols that contain non-numeric data
-  fc:$[typ=99h;i.fndkey[x;];i.fndcols[x;]]"csg ",upper .Q.t;
-  // store instructions to flip table and execute this
-  fdata:$[99=typ;;flip];
-  dt:fdata x;
-  // retrieve numeric and non numeric data from tab/dict
-  num:fc _ dt;
-  other:(key[dt]except fc)_dt;
-  // drop constant numeric and non numeric cols/keys
-  dcnum:i.dropconst.num[num];
-  dcother:i.dropconst.other[other];
-  fdata dcnum,dcother
-  }
+ if[not(typ:type x)in 98 99h;'"Data must be simple table or dictionary"];
+ if[99h=typ;if[98h~type value x;'"Data cannot be a keyed table"]];
+ // find keys/cols that contain non-numeric data
+ fc:$[typ=99h;i.fndkey;i.fndcols].(x;"csg ",upper .Q.t);
+ // store instructions to flip table and execute this
+ dt:(fdata:$[99=typ;;flip])x;
+ // drop constant numeric and non numeric cols/keys
+ fdata i.dropconst.num[fc _ dt],i.dropconst.other(key[dt]except fc)_dt
+ }
 // logic to find numeric and drop constant columns
 i.dropconst.num:{(where 0=0^var each x)_x}
 i.dropconst.other:{(where 1=count each distinct each x)_x}
