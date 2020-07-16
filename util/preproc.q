@@ -11,13 +11,14 @@ dropconstant:{
  // store instructions to flip table and execute this
  dt:(fdata:$[99=typ;;flip])x;
  // drop constant numeric and non numeric cols/keys
- fdata i.dropconst.num[fc _ dt],i.dropconst.other(key[dt]except fc)_dt
+ fdata i.dropconst.num[fc _ dt],i.dropconst.other fc#dt
  }
+
 // logic to find numeric and drop constant columns
 i.dropconst.num:{(where 0=0^var each x)_x}
-i.dropconst.other:{(where 1=count each distinct each x)_x}
+i.dropconst.other:{(where{all 1_(~':)x}each x)_x}
 // Find keys relating to a specific type
-i.fndkey:{key[x]where({.Q.t abs type x}each value x)in y}
+i.fndkey:{where({.Q.t abs type x}each x)in y}
 
 
 minmaxscaler:i.ap{(x-mnx)%max[x]-mnx:min x}
