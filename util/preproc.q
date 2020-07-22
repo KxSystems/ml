@@ -1,7 +1,26 @@
 \d .ml
 
 / data preprocessing
-dropconstant:{f(where 0=0^var each k)_k:(f:$[tp:99=type x;;flip])x}
+
+/* x = simple table/dictionary
+dropconstant:{
+ if[not(typ:type x)in 98 99h;'"Data must be simple table or dictionary"];
+ if[99h=typ;if[98h~type value x;'"Data cannot be a keyed table"]];
+ // find keys/cols that contain non-numeric data
+ fc:$[typ=99h;i.fndkey;i.fndcols].(x;"csg ",upper .Q.t);
+ // store instructions to flip table and execute this
+ dt:(fdata:$[99=typ;;flip])x;
+ // drop constant numeric and non numeric cols/keys
+ fdata i.dropconst.num[fc _ dt],i.dropconst.other fc#dt
+ }
+
+// logic to find numeric and drop constant columns
+i.dropconst.num:{(where 0=0^var each x)_x}
+i.dropconst.other:{(where{all 1_(~':)x}each x)_x}
+// Find keys relating to a specific type
+i.fndkey:{where({.Q.t abs type x}each x)in y}
+
+
 minmaxscaler:i.ap{(x-mnx)%max[x]-mnx:min x}
 stdscaler   :i.ap{(x-avg x)%dev x}
 / replace +/- 0w with max/min vals
