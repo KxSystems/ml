@@ -29,11 +29,16 @@ xv.fitscore:{[f;p;d].[.[f[][p]`:fit;d 0]`:score;d 1]`}
 
 hp.hpgen:{
   if[(::)~n:x`n;n:16];
+  if[(`sobol=x`typ)&k<>floor k:xlog[2]n;'"trials must equal 2^n for sobol search"];
   num:where any`uniform`loguniform=\:first each p:x`p;
   system"S ",string$[(::)~x`random_state;42;x`random_state];
   pysobol:.p.import[`sobol_seq;`:i4_sobol_generate;<];
   genpts:$[`sobol~typ:x`typ;enlist each flip pysobol[count num;n];`random~typ;n;'"hyperparam type not supported"];
-  flip hp.i.hpgen[typ;n]each p,:num!p[num],'genpts}
+  prms:distinct flip hp.i.hpgen[typ;n]each p,:num!p[num],'genpts;
+  if[n>dst:count prms;
+    if[`sobol=x`typ;dst:"j"$xexp[2]floor xlog[2]dst;prms:neg[dst]?prms];
+    -1"Number of distinct hp sets less than n, returning ",string[dst]," sets."];
+  prms}
 hp.i.hpgen:{[ns;n;p]
   p:@[;0;first](0;1)_p,();
   $[(typ:p 0)~`boolean;n?0b;
