@@ -35,9 +35,7 @@ hp.hpgen:{
   pysobol:.p.import[`sobol_seq;`:i4_sobol_generate;<];
   genpts:$[`sobol~typ:x`typ;enlist each flip pysobol[count num;n];`random~typ;n;'"hyperparam type not supported"];
   prms:distinct flip hp.i.hpgen[typ;n]each p,:num!p[num],'genpts;
-  if[n>dst:count prms;
-    if[`sobol=x`typ;dst:"j"$xexp[2]floor xlog[2]dst;prms:neg[dst]?prms];
-    -1"Number of distinct hp sets less than n, returning ",string[dst]," sets."];
+  if[n>dst:count prms;-1"Number of distinct hp sets less than n, returning ",string[dst]," sets."];
   prms}
 hp.i.hpgen:{[ns;n;p]
   p:@[;0;first](0;1)_p,();
