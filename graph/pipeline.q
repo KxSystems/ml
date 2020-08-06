@@ -2,7 +2,7 @@
 
 // Execution of a pipeline will not default to enter q debug mode but should be possible to overwrite
 graphDebug:0b
-changeDebug:{[x]graphDebug::$[graphDebug;0b;1b]}
+updDebug:{[x]graphDebug::not graphDebug}
 
 createPipeline:{[graph]
   if[not all exec 1_valid from graph`edges;'"disconnected edges"];
@@ -30,7 +30,7 @@ i.execNext:{[pipeline]
   node:first 0!select from pipeline where not complete;
   -1"Executing node: ",string node`nodeId;
   if[not count inputs:node[`inputs]node[`inputorder];inputs:1#(::)];
-  res:`complete`error`outputs!$[i.debug;
+  res:`complete`error`outputs!$[graphDebug;
       .[(1b;`;)node[`function]::;inputs];
       .[(1b;`;)node[`function]::;inputs;{[err](0b;`$err;::)}]
   ];
