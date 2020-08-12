@@ -1,4 +1,4 @@
-\d .auto
+\d .ml
   
 i.loadfname:{[cfg]
   file:hsym`$$[`dir in key cfg;cfg`key;"."],"/",cfg fname;
