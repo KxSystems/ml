@@ -12,8 +12,9 @@ Within this folder are two scripts that constitutes the cross-validation procedu
 ## Requirements
 
 - embedPy
+- [sobol-seq](https://pypi.org/project/sobol-seq/)
 
-The Python dependencies for the FRESH library can be installed by following the instructions laid out in the ML-Toolkit level of this library.
+The Python dependencies for the FRESH library can be installed by following the instructions laid out in the ML-Toolkit level of this library. **Note** that `sobol-seq` must be installed using pip.
 
 ## Installation
 
