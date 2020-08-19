@@ -48,6 +48,6 @@ i.infrep:{
   // Character representing the type
   typ:.Q.t@abs y;
   // the relevant null+infs for type
-  t:typ$(0N;-0w;0W);
+  t:typ$(0N;-0w;0w);
   {[n;x;y;z]@[x;i;:;z@[x;i:where x=y;:;n]]}[t 0]/[x;t 1 2;(min;max)]}
 
