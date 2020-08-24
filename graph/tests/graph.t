@@ -28,34 +28,50 @@ passingTest:{[function;data;applyType;expectedReturn]
   }
 
 
+// Generate a graph with a number of basic nodes
 g:.ml.createGraph[]
 g:.ml.addCfg[g;`cfg1]`test`config!(til 10;5000)
 g:.ml.addNode[g;`node1]`function`inputs`outputs!({x};"f";"!")
 
+// Valid node configuration
+nodeConfig:`function`inputs`outputs!({x};"f";"!")
+
+// Configuration nodes with various issues
+extraKey:`function`inputs`outputs`extrakey!({x};"f";"!";1f)
+inputType:`function`inputs`outputs!({x};enlist 1f;"!")
+outputType:`function`inputs`outputs!({x};"f";enlist 1f)
+
+
 -1"\nTesting addNode/addCfg";
 
 // Attempt to add a configuration with a non unique name
-nodeConfig:`a`b!1 2
-failingTest[.ml.addCfg;(g;`cfg1;nodeConfig);0b;"invalid nodeId"]
+failingTest[.ml.addCfg;(g;`cfg1;`a`b!1 2);0b;"invalid nodeId"]
 
 // Attempt to add a node with a non unique name
-nodeConfig:`function`inputs`outputs!({x};"f";"!")
 failingTest[.ml.addNode;(g;`node1;nodeConfig);0b;"invalid nodeId"]
 
 // Attempt to add a node with an addition node configuration key
-nodeConfig:`function`inputs`outputs`extrakey!({x};"f";"!";1f)
-failingTest[.ml.addNode;(g;`failingNode;nodeConfig);0b;"invalid node"]
+failingTest[.ml.addNode;(g;`failingNode;extraKey);0b;"invalid node"]
 
 // Attempt to add a node with an unsuitable configuration input
-nodeConfig:`function`inputs`outputs!({x};enlist 1f;"!")
-failingTest[.ml.addNode;(g;`failingNode;nodeConfig);0b;"invalid inputs"]
+failingTest[.ml.addNode;(g;`failingNode;inputType);0b;"invalid inputs"]
 
 // Attempt to add a node with an unsuitable configuration output
-nodeConfig:`function`inputs`outputs!({x};"f";enlist 1f)
-failingTest[.ml.addNode;(g;`failingNode;nodeConfig);0b;"invalid outputs"]
+failingTest[.ml.addNode;(g;`failingNode;outputType);0b;"invalid outputs"]
+
 
 -1"\nTesting updNode/updCfg";
-// Attempt to update 
+// Attempt to update a node which does not exist
+failingTest[.ml.updNode;(g;`notanode;nodeConfig);0b;"invalid nodeId"]
+
+// Attempt to update a node with an additional node configuration key
+failingTest[.ml.updNode;(g;`node1;extraKey);0b;"invalid node"]
+
+// Attempt to update a node with an unsuitable configuration input
+failingTest[.ml.updNode;(g;`node1;inputType);0b;"invalid inputs"]
+
+// Attempt to update a nodee with an unsuitable configuration output
+failingTest[.ml.updNode;(g;`node1;outputType);0b;"invalid outputs"]
 
 
 -1"\nTesting connectEdge/disconnectEdge";
