@@ -60,6 +60,9 @@ lexiencode:{[x;c]
   if[(::)~c;c:i.fndcols[x;"s"]];
   flip(c _ flip x),(`$string[c],\:"_lexi")!{(asc distinct x)?x}each x c,:()}
 
+// Encode the target data to be integer values which are computer readable
+labelencode:{(asc distinct x)?x}
+
 / split temporal types into constituents
 i.timesplit.d:{update wd:1<dow from update dow:dow mod 7,qtr:1+(mm-1)div 3 from`dow`year`mm`dd!`date`year`mm`dd$/:\:x}
 i.timesplit.m:{update qtr:1+(mm-1)div 3 from k!(k:`year`mm)$/:\:x}
