@@ -20,7 +20,8 @@ traintestsplit:{[x;y;sz]`xtrain`ytrain`xtest`ytest!raze(x;y)@\:/:(0,floor n*1-sz
 i.q2npdt:{.p.import[`numpy;`:array;("p"$@[4#+["d"$0];-16+type x]x)-"p"$1970.01m;"datetime64[ns]"]`.}
 / q tab to pandas dataframe
 tab2df:{
- r:.p.import[`pandas;`:DataFrame;@[flip 0!x;i.fndcols[x]"pmdznuvt";i.q2npdt]][@;cols x];
+ updx:@[flip 0!x;i.fndcols[x;"c"];enlist each];
+ r:.p.import[`pandas;`:DataFrame;@[updx;i.fndcols[x]"pmdznuvt";i.q2npdt]][@;cols x];
  $[count k:keys x;r[`:set_index]k;r]}
 / pandas dataframe to q tab
 df2tab_tz:{
