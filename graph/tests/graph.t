@@ -61,6 +61,7 @@ failingTest[.ml.addNode;(g;`failingNode;outputType);0b;"invalid outputs"]
 
 
 -1"\nTesting updNode/updCfg";
+
 // Attempt to update a node which does not exist
 failingTest[.ml.updNode;(g;`notanode;nodeConfig);0b;"invalid nodeId"]
 
@@ -75,6 +76,7 @@ failingTest[.ml.updNode;(g;`node1;outputType);0b;"invalid outputs"]
 
 
 -1"\nTesting connectEdge/disconnectEdge";
+
 // Connect an invalid edge between 2 nodes and check that this is not valid
 g:.ml.connectEdge[g;`cfg1;`output;`node1;`input]
 0b~first exec valid from g[`edges] where dstNode=`node1,dstName=`input
