@@ -104,11 +104,21 @@ StdScaler[`:fit][flip plainmat];
 .ml.lexiencode[symtn;::]~([] x1:til 5;x_lexi:1 2 2 0 1)
 .ml.lexiencode[symm;::]~([]x1:til 5;x_lexi: 0 1 1 0 0;x2_lexi:0 1 0 0 1)
 
-.ml.labelencode[symtf]~0 3 4 1 2
-.ml.labelencode[symti]~0 3 4 1 2
-.ml.labelencode[symtb]~1 3 2 0 1
-.ml.labelencode[symtn]~1 3 4 0 2
-.ml.labelencode[symm] ~0 3 4 1 2
+guidList :asc 5?0Ng
+symList  :`b`a`d`c
+floatList:1.2 2 2.5 0.1
+
+guidReturn:`mapping`encoding!(((asc distinct guidList)!til count distinct guidList);til 5)
+.ml.labelencode[guidList] ~guidReturn
+.ml.labelencode[symList]  ~`mapping`encoding!((`a`b`c`d!til 4);1 0 3 2)
+.ml.labelencode[floatList]~`mapping`encoding!((0.1 1.2 2 2.5!til 4);1 2 3 0)
+
+.ml.applylabelencode[0 0 2 3 4  ;.ml.labelencode floatList]~(0.1;0.1;2f;2.5;0n)
+.ml.applylabelencode[1 1 2 5 3 0;.ml.labelencode symList  ]~`b`b`c``d`a
+.ml.applylabelencode[0 0 0 1 6  ;.ml.labelencode guidList ]~(3#guidList 0),(guidList 1),`guid$0Ng
+.ml.applylabelencode[0 0 2 3 4  ;.ml.labelencode[floatList]`mapping]~(0.1;0.1;2f;2.5;0n)
+.ml.applylabelencode[1 1 2 5 3 0;.ml.labelencode[symList]`mapping]~`b`b`c``d`a
+.ml.applylabelencode[0 0 0 1 6  ;.ml.labelencode[guidList]`mapping]~(3#guidList 0),(guidList 1),`guid$0Ng
 
 .ml.timesplit[timetab;::]~(delete x from timetab),'flip`x_dow`x_year`x_mm`x_dd`x_qtr`x_wd`x_hh`x_uu`x_ss!(0 1 2i;2000 2000 2000i;1 1 1i;1 2 3i;1 1 1j;001b;0 0 0i;0 0 0i;0 0 0i)
 .ml.timesplit[timetab;`x]~(delete x from timetab),'flip`x_dow`x_year`x_mm`x_dd`x_qtr`x_wd`x_hh`x_uu`x_ss!(0 1 2i;2000 2000 2000i;1 1 1i;1 2 3i;1 1 1j;001b;0 0 0i;0 0 0i;0 0 0i)
