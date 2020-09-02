@@ -41,14 +41,14 @@ clust.kd.i.tree:{[data;leafsz;node]
   if[leafsz<=.5*count node`idxs;
     chk:xdata<med xdata@:ax:imax dvar:var each xdata:data[;node`idxs];
     if[all leafsz<=count each(lIdxs:where chk;rIdxs:where not chk);
-	  lnode:update left:1b,parent:self,self+1,idxs:idxs lIdxs from node;
+      lnode:update left:1b,parent:self,self+1,idxs:idxs lIdxs from node;
       n:count lTree:.z.s[data;leafsz]lnode;
-	  rnode:update left:0b,parent:self,self+1+n,idxs:idxs rIdxs from node;
+      rnode:update left:0b,parent:self,self+1+n,idxs:idxs rIdxs from node;
       rTree:.z.s[data;leafsz]rnode;
       node:select leaf,left,self,parent,children:self+1+(0;n),axis:ax,
-	    midval:"f"$min xdata rIdxs,idxs:0#0 from node;
+        midval:"f"$min xdata rIdxs,idxs:0#0 from node;
       :enlist[node],lTree,rTree
-	]
+    ]
   ];
   enlist select leaf:1b,left,self,parent,children:0#0,axis:0N,midval:0n,idxs from node
   }

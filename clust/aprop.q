@@ -4,22 +4,57 @@
 
 // @kind function
 // @category clust
-// @fileoverview Affinity propagation algorithm
+// @fileoverview Fit affinity propagation algorithm
 // @param data {float[][]} Points in `value flip` format
 // @param df   {fn}        Distance function
 // @param dmp  {float}     Damping coefficient
 // @param diag {fn}        Similarity matrix diagonal value function
 // @return     {long[]}    List of clusters
-clust.ap:{[data;df;dmp;diag]
-  // check distance function and diagonal value
+clust.ap.fit:{[data;df;dmp;diag]
+  clust.i.runap[data;df;dmp;diag;til count data 0;(::)]
+  }
+
+// @kind function
+// @category clust
+// @fileoverview Predict clusters using AP config
+// @param data {float[][]} Points in `value flip` format
+// @param cfg  {dict}      `data`df`reppts`clt returned from kmeans 
+//   clustered training data
+// @return     {long[]}    List of predicted clusters
+clust.ap.predict:{[data;cfg]
+  neg[count data 0]#clust.ap.update[data;cfg]`clt
+  }
+
+// @kind function
+// @category clust
+// @fileoverview Update AP config including new data points
+// @param data {float[][]} Points in `value flip` format
+// @param cfg  {dict}      `data`df`reppts`clt returned from kmeans 
+//   clustered on training data
+// @return     {dict}      Updated model config
+clust.ap.update:{[data;cfg]
+  clust.ap.fit[cfg[`data],'data]. cfg`df`dmp`diag
+  }
+
+// @kind function
+// @category private
+// @fileoverview Run affinity propagation algorithm
+// @param data {float[][]} Points in `value flip` format
+// @param df   {fn}        Distance function
+// @param dmp  {float}     Damping coefficient
+// @param diag {fn}        Similarity matrix diagonal value function
+// @param idxs {long[]}    List of indicies to find distances for
+// @param s0   {float[][]} Old similarity matrix (can be (::) for new run)
+// @return     {long[]}    List of clusters
+clust.i.runap:{[data;df;dmp;diag;idxs;s0]
+  // check valid distance function has been given
   if[not df in key clust.i.dd;clust.i.err.dd[]];
-  // create initial table with exemplars/matches and similarity, availability
-  //   and responsibility matrices
-  info0:clust.i.apinit["f"$data;df;diag];
-  // run AP algo until there is no change in results over `0.1*count data` runs
-  info1:{[iter;info]iter>info`matches}[.1*count data]clust.i.apalgo[dmp]/info0;
-  // return list of clusters
-  clust.i.reindex info1`exemplars
+  // calculate distances, availability and responsibility 
+  info0:clust.i.apinit[data;df;diag;idxs;s0];
+  // update info to find clusters
+  info1:{[iter;info]iter>info`matches}[.2*count data]clust.i.apalgo[dmp]/info0;
+  // return config
+  `data`df`dmp`diag`info0`info1`clt!(data;df;dmp;diag;info0;info1;clust.i.reindex info1`exemplars)
   }
 
 // @kind function
@@ -30,10 +65,13 @@ clust.ap:{[data;df;dmp;diag]
 // @param diag {fn}        Similarity matrix diagonal value function
 // @return     {dict}      Similarity, availability and responsibility matrices
 //   and keys for matches and exemplars to be filled during further iterations
-clust.i.apinit:{[data;df;diag]
+clust.i.apinit:{[data;df;diag;idxs;s0]
   // calculate similarity matrix values
-  s:clust.i.dists[data;df;data]each k:til n:count data 0;
-  s:@[;;:;diag raze s]'[s;k];
+  s:clust.i.dists[data;df;data]each idxs;
+  // if adding new points, add new similarity onto old
+  if[not s0~(::);s:(s0,'count[s0]#flip s),s];
+  // update diagonal
+  s:@[;;:;diag raze s]'[s;k:til n:count data 0];
   // create lists/matrices of zeros for other variables
   `matches`exemplars`s`a`r!(0;0#0;s),(2;n;n)#0f
   }

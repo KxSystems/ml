@@ -87,7 +87,7 @@ clust.i.closest:{[data;df;pt;idxs]
 // @fileoverview Reindex exemplars
 // @param  data {#any[]} Data points
 // @return      {long[]} List of indices
-clust.i.reindex:{
+clust.i.reindex:{[data]
   distinct[data]?data
   }
 
