@@ -3,4 +3,5 @@
 .ml.loadfile`:clust/init.q
 .ml.loadfile`:xval/init.q
 .ml.loadfile`:graph/init.q
-
+.ml.loadfile`:optimize/init.q
+.ml.loadfile`:timeseries/init.q
