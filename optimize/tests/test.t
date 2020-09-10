@@ -13,7 +13,7 @@ failingTest:{[function;data;applyType;expectedError]
 
 // Load in data saved as golden copy for this analysis
 // Load files
-fileList:`quadx0`quadx1`sinex0`sinex1`multix0`multix1`multix1Gtol`multiargs0`multiargs1
+fileList:`quadx0`quadx1`sinex1`multix0`multix1`multix1Gtol`multiargs0`multiargs1
 {load hsym`$":optimize/tests/data/",string x}each fileList;
 
 -1"Testing examples of optimization functionality expected to fail";
@@ -34,9 +34,9 @@ x1quad:enlist[`x]!enlist -2f
 
 -1"Testing of 1-D Sine function with multiple minima";
 sineFunc:{sin x 0}
-x0sine:enlist 7f
-x1sine:enlist[`x]!enlist 8.5
-.ml.optimize.BFGS[sineFunc;x0sine;();::]~sinex0
+x0sine:enlist 8.5
+x1sine:enlist[`x]!x0
+.ml.optimize.BFGS[sineFunc;x0sine;();::]~sinex1
 .ml.optimize.BFGS[sineFunc;x1sine;();::]~sinex1
 
 -1"Testing of 2-D parabolas with single global minima";
