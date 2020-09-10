@@ -14,7 +14,7 @@ failingTest:{[function;data;applyType;expectedError]
 // Load in data saved as golden copy for this analysis
 // Load files
 fileList:`quadx0`quadx1`sinex0`sinex1`multix0`multix1`multix1Gtol`multiargs0`multiargs1
-{load hsym`$":data/",string x}each fileList;
+{load hsym`$":optimize/tests/data/",string x}each fileList;
 
 -1"Testing examples of optimization functionality expected to fail";
 c1c2Fail:"When evaluating Wolfe conditions the following must hold 0 < c1 < c2 < 1"
