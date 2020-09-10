@@ -15,9 +15,9 @@
 //   are the associated clusters
 clust.kmeans.fit:{[data;df;k;iter;kpp]
   // fit algo to data
-  r:clust.i.kmeans[data;df;k;iter;kpp];
+  r:clust.i.kmeans[data:"f"$data;df;k;iter;kpp];
   // return config with new clusters
-  r,`data`df!(data;df)
+  r,`data`inputs!(data;`df`k`iter`kpp!(df;k;iter;kpp))
   }
 
 // @kind function
@@ -29,7 +29,7 @@ clust.kmeans.fit:{[data;df;k;iter;kpp]
 // @return     {long[]}    List of predicted clusters
 clust.kmeans.predict:{[data;cfg]
   // get new clusters based on latest config
-  clust.i.getclust[data]. cfg`df`reppts
+  clust.i.getclust["f"$data;cfg[`inputs]`df;cfg`reppts]
   }
 
 // @kind function
@@ -41,11 +41,11 @@ clust.kmeans.predict:{[data;cfg]
 // @return     {dict}      Updated model config
 clust.kmeans.update:{[data;cfg]
   // update data to include new points
-  cfg[`data]:cfg[`data],'data;
+  cfg[`data]:cfg[`data],'"f"$data;
   // update k means
-  cfg[`reppts]:clust.i.updcentres . cfg`data`df`reppts;
+  cfg[`reppts]:clust.i.updcentres[cfg`data;cfg[`inputs]`df;cfg`reppts];
   // get updated clusters based on new means
-  cfg[`clt]:clust.i.getclust . cfg`data`df`reppts;
+  cfg[`clt]:clust.i.getclust[cfg`data;cfg[`inputs]`df;cfg`reppts];
   // return updated config
   cfg
   }

@@ -12,8 +12,8 @@
 // @return     {table}     Dendrogram
 clust.cure.fit:{[data;df;n;c]
   if[not df in key clust.i.dd;clust.i.err.dd[]];
-  r:clust.hcscc["f"$data;df;`cure;1;n;c;1b];
-  r,`data`df`n`c!(data;df;n;c)
+  dgram:clust.hcscc[data:"f"$data;df;`cure;1;n;c;1b];
+  `data`inputs`dgram!(data;`df`n`c!(df;n;c);dgram)
   }
 
 // @kind function
@@ -27,27 +27,27 @@ clust.hc.fit:{[data;df;lf]
   // check distance and linkage functions
   if[not df in key clust.i.dd;clust.i.err.dd[]];
   if[not lf in key clust.i.ld;clust.i.err.ld[]];
-  if[lf in`complete`average`ward;r:clust.hccaw["f"$data;df;lf;2;1b]];
-  if[lf in`single`centroid;r:clust.hcscc["f"$data;df;lf;1;::;::;1b]];
-  r,`data`df`lf!(data;df;lf)
+  if[lf in`complete`average`ward;dgram:clust.hccaw[data:"f"$data;df;lf;2;1b]];
+  if[lf in`single`centroid;dgram:clust.hcscc[data:"f"$data;df;lf;1;::;::;1b]];
+  `data`inputs`dgram!(data;`df`lf!(df;lf);dgram)
   }
 
 // @kind function
 // @category clust
-// @fileoverview Convert CURE dendrogram table to k clusters
-// @param dgram {table}  Dendrogram
-// @param k     {long}   Number of clusters
-// @return      {long[]} List of clusters
+// @fileoverview Convert CURE cfg to k clusters
+// @param cfg {dict} Output of .ml.clust.cure.fit
+// @param k   {long} Number of clusters
+// @return    {dict} Updated config with clusters added
 clust.cure.cutk:{[cfg;k]
   cfg,enlist[`clt]!enlist clust.i.cutdgram[cfg`dgram;k-1]
   }
 
 // @kind function
 // @category clust
-// @fileoverview Convert hierarchical dendrogram table to k clusters
-// @param dgram {table}  Dendrogram
-// @param k     {long}   Number of clusters
-// @return      {long[]} List of clusters
+// @fileoverview Convert hierarchical cfg to k clusters
+// @param cfg {dict} Output of .ml.clust.hc.fit
+// @param k   {long} Number of clusters
+// @return    {dict} Updated config with clusters added
 clust.hc.cutk:clust.cure.cutk
 
 // @kind function
@@ -56,7 +56,7 @@ clust.hc.cutk:clust.cure.cutk
 // @param dgram   {table}  Dendrogram
 // @param dthresh {float}  Cutting distance threshold
 // @return        {long[]} List of clusters
-clust.cure.cutdist:{[dgram;dthresh]
+clust.cure.cutdist:{[cfg;dthresh]
   dgram:cfg`dgram;
   k:0|count[dgram]-exec first i from dgram where dist>dthresh;
   cfg,enlist[`clt]!enlist clust.i.cutdgram[dgram;k]
@@ -64,7 +64,7 @@ clust.cure.cutdist:{[dgram;dthresh]
 
 // @kind function
 // @category clust
-// @fileoverview Convert CURE dendrogram to clusters based on distance threshold
+// @fileoverview Convert hierarchical dendrogram to clusters based on distance threshold
 // @param dgram   {table}  Dendrogram
 // @param dthresh {float}  Cutting distance threshold
 // @return        {long[]} List of clusters
@@ -73,9 +73,9 @@ clust.hc.cutdist:clust.cure.cutdist
 // @kind function
 // @category private
 // @fileoverview Predict clusters using hierarchical or CURE config
-// @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      dict output of .ml.clust.(hc/CURE).(cutk/cutdist)
 // @param ns   {symbol}    Namespace to use - `hc or `cure
+// @param data {float[][]} Points in `value flip` format
+// @param cfg  {dict}      dict output of .ml.clust.(cutk/cutdist)
 // @return     {long[]}    List of predicted clusters
 clust.i.hccpred:{[ns;data;cfg]
   // check correct namespace and clusters given
@@ -85,25 +85,26 @@ clust.i.hccpred:{[ns;data;cfg]
     '"Clusters must be contained within cfg - please run .ml.clust.",
     $[ns~`hc;"hc";"cure"],".(cutk/cutdist)"];
   // add namespace and linkage to config dictionary for cure
-  if[ns~`cure;cfg,:`ns`lf!(ns;`single)];
+  if[ns~`cure;cfg[`inputs],:`ns`lf!(ns;`single)];
   // recalculate reppts for training clusters
   reppt:clust.i.getrep[cfg]each value group cfg`clt;
   // training indicies
   idxs:til each c:count each reppt[;0];
   // return closest clusters to testing points
-  clust.i.predclosest[data;cfg;reppt;c;idxs]each til count data 0
+  clust.i.predclosest["f"$data;cfg;reppt;c;idxs]each til count data 0
   }
 
 // @kind function
 // @category private
 // @fileoverview Recalculate representative points from training clusters
-// @param cfg  {dict}      Dict output of .ml.clust.(hc/CURE).(cutk/cutdist)
+// @param cfg  {dict}      Dict output of .ml.clust.(cutk/cutdist)
 // @param idxs {long[][]}  Training data indices
 // @return     {float[][]} Training data points
 clust.i.getrep:{[cfg;idxs]
-  $[cfg[`ns]~`cure;
-      flip(clust.i.curerep . cfg`df`n`c)::;
-    cfg[`lf]in`ward`centroid;
+  `e+1;
+  $[cfg[`inputs;`ns]~`cure;
+      flip(clust.i.curerep . cfg[`inputs]`df`n`c)::;
+    cfg[`inputs;`lf]in`ward`centroid;
       enlist each avg each;]cfg[`data][;idxs]
   }
 
@@ -111,7 +112,7 @@ clust.i.getrep:{[cfg;idxs]
 // @category private
 // @fileoverview Predict new cluster for given data point
 // @param data   {float[][]} Points in `value flip` format
-// @param cfg    {dict}      dict output of .ml.clust.(hc/CURE).(cutk/cutdist)
+// @param cfg    {dict}      dict output of .ml.clust.(cutk/cutdist)
 // @param reppt  {float[][]} Representative points in matrix format
 // @param c      {long}      Number of points in training clusters
 // @param cltidx {long[][]}  Training data indices 
@@ -119,11 +120,12 @@ clust.i.getrep:{[cfg;idxs]
 // @return       {long[]}    List of predicted clusters
 clust.i.predclosest:{[data;cfg;reppt;c;cltidx;ptidx]
   // intra cluster distances
-  dist:.ml.clust.i.dists[;cfg`df;data[;ptidx];]'[reppt;cltidx];
+  dist:.ml.clust.i.dists[;cfg[`inputs]`df;data[;ptidx];]'[reppt;cltidx];
   // apply linkage
-  dist:$[`ward~cfg`lf;
-    2*clust.i.ld[cfg`lf][1]'[c;dist];
-    clust.i.ld[cfg`lf]each dist];
+  dist:$[`ward~lf:cfg[`inputs]`lf;
+    2*clust.i.ld[lf][1]'[c;dist];
+    clust.i.ld[lf]each dist];
+  `e+1;
   // find closest cluster
   dist?ndst:min dist
   }
@@ -132,7 +134,7 @@ clust.i.predclosest:{[data;cfg;reppt;c;cltidx;ptidx]
 // @category clust
 // @fileoverview Predict clusters using CURE config
 // @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      `data`df`n`c`clt returned from .ml.clust.cure.cutk/cutdist 
+// @param cfg  {dict}      `data`df`n`c`clt returned from .ml.clust.(cutk/cutdist)
 // @return     {long[]}    List of predicted clusters
 clust.cure.predict:clust.i.hccpred[`cure]
 
@@ -140,7 +142,7 @@ clust.cure.predict:clust.i.hccpred[`cure]
 // @category clust
 // @fileoverview Predict clusters using hierarchical config
 // @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      `data`df`lf`clt returned from .ml.clust.hc.cutk/cutdist 
+// @param cfg  {dict}      `data`df`lf`clt returned from .ml.clust.(cutk/cutdist)
 // @return     {long[]}    List of predicted clusters
 clust.hc.predict:clust.i.hccpred[`hc]
 
@@ -163,9 +165,7 @@ clust.hccaw:{[data;df;lf;k;dgram]
   // merge clusters based on chosen algorithm
   r:{[k;r]k<count distinct r[0]`clt}[k]clust.i.algocaw[data;df;lf]/(t0;m);
   // return dendrogram or list of clusters
-  $[dgram;
-    enlist[`dgram]!enlist clust.i.upddgram[r 0;r 1];
-    enlist[`clt]!enlist clust.i.reindex r[0]`clt]
+  $[dgram;clust.i.upddgram[r 0;r 1];clust.i.reindex r[0]`clt]
   }
 
 // @kind function
@@ -185,8 +185,8 @@ clust.hcscc:{[data;df;lf;k;n;c;dgram]
   r:(count[data 0]-k).[clust.i.algoscc[data;df;lf]]/clustinit;
   vres:select from r[1]where valid;
   $[dgram;
-    `dgram`tree!(clust.i.dgramidx last[r]0;r 3);
-    enlist[`clt]!enlist @[;;:;]/[count[data 0]#0N;vres`points;til count vres]]
+    clust.i.dgramidx last[r]0;
+    enlist @[;;:;]/[count[data 0]#0N;vres`points;til count vres]]
   }
 
 // Utilities

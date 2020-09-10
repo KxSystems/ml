@@ -99,3 +99,4 @@ clust.i.err.ld:{'`$"invalid linkage"}
 clust.i.err.ward:{'`$"ward must be used with e2dist"}
 clust.i.err.centroid:{'`$"centroid must be used with edist/e2dist"}
 clust.i.err.kmeans:{'`$"kmeans must be used with edist/e2dist"}
+clust.i.err.ap:{'`$"AP must be used with nege2dist"}

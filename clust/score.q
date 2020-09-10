@@ -75,7 +75,7 @@ clust.homogeneity:{[pred;true]
 // @return     {float[]}   Score for each k value - plot to find elbow
 clust.elbow:{[data;df;k]
   {[data;df;k]
-    clt:clust.kmeans[data;df;k;100;1b];
+    clt:clust.kmeans.fit[data;df;k;100;1b]`clt;
     sum raze clust.i.dists[;df;;::]'[p;a:avg@''p:{x[;y]}[data]each group clt]
     }[data;df]each 2+til k-1
   }

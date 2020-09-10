@@ -14,11 +14,11 @@ clust.dbscan.fit:{[data;df;minpts;eps]
   // check distance function
   if[not df in key clust.i.dd;clust.i.err.dd[]];
   // create neighbourhood table
-  t:clust.i.nbhoodtab[data;df;minpts;eps;til count data 0];
+  t:clust.i.nbhoodtab[data:"f"$data;df;minpts;eps;til count data 0];
   // find cluster for remaining points and return list of clusters
   clt:-1^exec cluster from t:{[t]any t`corepoint}clust.i.dbalgo/t;
   // return config dict
-  `data`df`minpts`eps`clt`t!(data;df;minpts;eps;clt;t)
+  `data`inputs`clt`t!(data;`df`minpts`eps!(df;minpts;eps);clt;t)
   }
 
 // @kind function
@@ -30,19 +30,19 @@ clust.dbscan.fit:{[data;df;minpts;eps]
 // @return     {long[]}    List of predicted clusters
 clust.dbscan.predict:{[data;cfg]
   // predict new clusters
-  -1^exec cluster from clust.i.dbscanpredict[data;cfg]
+  -1^exec cluster from clust.i.dbscanpredict["f"$data;cfg]
   }
 
 // @kind function
 // @category clust
 // @fileoverview Update DBSCAN config including new data points
 // @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      `data`df`minpts`eps`clt`nbh returned from DBSCAN 
+// @param cfg  {dict}      `data`inputs`clt`nbh returned from DBSCAN 
 //   clustered training data
 // @return     {dict}      Updated model config
 clust.dbscan.update:{[data;cfg]
   // predict new clusters
-  rtst:clust.i.dbscanpredict[data;cfg];
+  rtst:clust.i.dbscanpredict[data:"f"$data;cfg];
   rtrn:update corepoint:1b from cfg[`t]where cluster<>0N;
   // include test points in training neighbourhood
   rtrn:{[trn;tst;idx]
@@ -60,13 +60,13 @@ clust.dbscan.update:{[data;cfg]
 // @category private
 // @fileoverview Predict clusters using DBSCAN config
 // @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      `data`df`minpts`eps`clt returned from DBSCAN 
+// @param cfg  {dict}      `data`inputs`clt returned from DBSCAN 
 //   clustered training data
 // @return     {long[]}    Cluster table
 clust.i.dbscanpredict:{[data;cfg]
   idx:count[cfg[`data]0]+til count data 0;
   // create neighbourhood table
-  t:clust.i.nbhoodtab[cfg[`data],'data;;;;idx]. cfg`df`minpts`eps;
+  t:clust.i.nbhoodtab[cfg[`data],'data;;;;idx]. cfg[`inputs]`df`minpts`eps;
   // find which existing clusters new data belongs to
   update cluster:{x[`clt]first y}[cfg]each nbhood from t where corepoint
   }

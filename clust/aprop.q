@@ -9,9 +9,12 @@
 // @param df   {fn}        Distance function
 // @param dmp  {float}     Damping coefficient
 // @param diag {fn}        Similarity matrix diagonal value function
+// @param iter {dict}      Max number of overall iterations and iterations without a change in clusters. (::) can be used where the defaults of (`total`nochange!200 15) will be used
 // @return     {long[]}    List of clusters
-clust.ap.fit:{[data;df;dmp;diag]
-  clust.i.runap[data;df;dmp;diag;til count data 0;(::)]
+clust.ap.fit:{[data;df;dmp;diag;iter]
+  // update iteration dictionary with user changes
+  iter:(`run`maxrun`maxmatch!0 200 15),$[iter~(::);();iter];
+  clust.i.runap["f"$data;df;dmp;diag;til count data 0;iter]
   }
 
 // @kind function
@@ -22,18 +25,19 @@ clust.ap.fit:{[data;df;dmp;diag]
 //   clustered training data
 // @return     {long[]}    List of predicted clusters
 clust.ap.predict:{[data;cfg]
-  neg[count data 0]#clust.ap.update[data;cfg]`clt
+  ex:cfg[`data][;distinct cfg`exemplars];
+  clust.i.apPredDist[ex;cfg[`inputs]`df]each flip data
   }
 
 // @kind function
-// @category clust
-// @fileoverview Update AP config including new data points
-// @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      `data`df`reppts`clt returned from kmeans 
-//   clustered on training data
-// @return     {dict}      Updated model config
-clust.ap.update:{[data;cfg]
-  clust.ap.fit[cfg[`data],'data]. cfg`df`dmp`diag
+// @category private
+// @fileoverview Predict clusters using AP training exemplars
+// @param ex {float[][]} Training cluster centres in `value flip` format
+// @param df {fn}        Distance function
+// @param pt {float[]}   Current data point
+// @return   {long[]}    Predicted clusters
+clust.i.apPredDist:{[ex;df;pt]
+  d?max d:clust.i.dists[ex;df;pt]each til count ex 0
   }
 
 // @kind function
@@ -46,15 +50,25 @@ clust.ap.update:{[data;cfg]
 // @param idxs {long[]}    List of indicies to find distances for
 // @param s0   {float[][]} Old similarity matrix (can be (::) for new run)
 // @return     {long[]}    List of clusters
-clust.i.runap:{[data;df;dmp;diag;idxs;s0]
-  // check valid distance function has been given
-  if[not df in key clust.i.dd;clust.i.err.dd[]];
+clust.i.runap:{[data;df;dmp;diag;idxs;iter]
+  // check negative euclidean distance has been given
+  if[not df~`nege2dist;clust.i.err.ap[]];
   // calculate distances, availability and responsibility 
-  info0:clust.i.apinit[data;df;diag;idxs;s0];
+  info0:clust.i.apinit[data;df;diag;idxs;iter];
   // update info to find clusters
-  info1:{[iter;info]iter>info`matches}[.2*count data]clust.i.apalgo[dmp]/info0;
+  info1:clust.i.apstop clust.i.apalgo[dmp]/info0;
   // return config
-  `data`df`dmp`diag`info0`info1`clt!(data;df;dmp;diag;info0;info1;clust.i.reindex info1`exemplars)
+  `data`inputs`clt`exemplars!
+    (data;`df`dmp`diag`iter!(df;dmp;diag;iter);clust.i.reindex info1`exemplars;info1`exemplars)
+  }
+
+clust.i.apstop:{[info]
+  iter:info`iter;
+  /-1"Run: ",string iter`run;  // check -remove when fixed
+  /-1"Check 1: ",string chk1:iter[`maxrun]>iter`run;
+  /-1"Check 2: ",string chk2:iter[`maxmatch]>info`matches;
+  /chk1&chk2
+  (iter[`maxrun]>iter`run)&iter[`maxmatch]>info`matches
   }
 
 // @kind function
@@ -65,15 +79,13 @@ clust.i.runap:{[data;df;dmp;diag;idxs;s0]
 // @param diag {fn}        Similarity matrix diagonal value function
 // @return     {dict}      Similarity, availability and responsibility matrices
 //   and keys for matches and exemplars to be filled during further iterations
-clust.i.apinit:{[data;df;diag;idxs;s0]
+clust.i.apinit:{[data;df;diag;idxs;iter]
   // calculate similarity matrix values
   s:clust.i.dists[data;df;data]each idxs;
-  // if adding new points, add new similarity onto old
-  if[not s0~(::);s:(s0,'count[s0]#flip s),s];
   // update diagonal
   s:@[;;:;diag raze s]'[s;k:til n:count data 0];
   // create lists/matrices of zeros for other variables
-  `matches`exemplars`s`a`r!(0;0#0;s),(2;n;n)#0f
+  `matches`exemplars`s`a`r`iter!(0;0#0;s),((2;n;n)#0f),enlist iter
   }
 
 // @kind function
@@ -90,8 +102,12 @@ clust.i.apalgo:{[dmp;info]
   info[`a]:clust.i.upda[dmp;info];
   // find new exemplars
   ex:imax each sum info`a`r;
-  // return updated `info` with new exemplars/matches
-  update exemplars:ex,matches:?[exemplars~ex;matches+1;0]from info
+  // update `info` with new exemplars/matches
+  info:update exemplars:ex,matches:?[exemplars~ex;matches+1;0]from info;
+  // update iter dictionary
+  info[`iter;`run]+:1;
+  // return updated info
+  info
   }
 
 // @kind function
