@@ -60,6 +60,22 @@ lexiencode:{[x;c]
   if[(::)~c;c:i.fndcols[x;"s"]];
   flip(c _ flip x),(`$string[c],\:"_lexi")!{(asc distinct x)?x}each x c,:()}
 
+// Encode the a dataset to a list of integers, and provide a mapping allowing a user to
+// revert new integer lists to the original version
+/* x = data to be encoded and mapped
+labelencode:{[x]
+  adx:asc distinct x;
+  `mapping`encoding!(adx!til count adx;adx?x)
+  }
+
+// Map a list of integers to their true representation based on a label encoding schema
+/* x = data to be revert to true representation based on 
+/* y = label encoding map either labelencode[x]`mapping or labelencode[x]
+applylabelencode:{[x;y]
+  if[99h<>type y;'"Input must be a dictionary"];
+  $[`mapping`encoding~key y;y[`mapping]?;y?]x
+  }
+
 / split temporal types into constituents
 i.timesplit.d:{update wd:1<dow from update dow:dow mod 7,qtr:1+(mm-1)div 3 from`dow`year`mm`dd!`date`year`mm`dd$/:\:x}
 i.timesplit.m:{update qtr:1+(mm-1)div 3 from k!(k:`year`mm)$/:\:x}
