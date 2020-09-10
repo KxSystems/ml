@@ -30,13 +30,6 @@ or via conda:
 conda install --file requirements.txt
 ```
 
-**Note:** 
-
-In order to use the Sobol sequence hyperparameter tuning a user must install the `sobol-seq` python package via:
-```bash
-pip install sobol-seq
-```
-
 ## Installation
 
 Place the `ml` library in `$QHOME` and load into a q instance using `ml/ml.q`
