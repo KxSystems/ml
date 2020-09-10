@@ -13,6 +13,8 @@ COPY fresh /opt/kx/ml/fresh
 COPY util /opt/kx/ml/util
 COPY xval /opt/kx/ml/xval
 COPY clust /opt/kx/ml/clust
+COPY timeseries /opt/kx/ml/timeseries
+COPY optimize /opt/kx/ml/optimize
 
 ARG VCS_REF=dev
 ARG BUILD_DATE=dev
@@ -32,7 +34,8 @@ LABEL	org.label-schema.schema-version="0.1" \
 RUN chown -R kx:kx /opt/kx/ml 
 RUN mkdir /opt/kx/q/ml
 RUN find /opt/kx/ml -maxdepth 1 -type f -name '*.q' | xargs ln -s -t /opt/kx/q/ml \
-        && ln -s -t /opt/kx/q/ml /opt/kx/ml/fresh /opt/kx/ml/utils /opt/kx/ml/xval /opt/kx/ml/clust
+        && ln -s -t /opt/kx/q/ml /opt/kx/ml/fresh /opt/kx/ml/utils /opt/kx/ml/xval /opt/kx/ml/clust \
+        /opt/kx/ml/timeseries /opt/kx/ml/optimize
 
 USER kx
 
