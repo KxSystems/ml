@@ -6,13 +6,13 @@
 
 // @kind function
 // @category misc
-// @fileoverview Summary of the stationality of each vector of a multivariate time series 
+// @fileoverview Summary of the stationarity of each vector of a multivariate time series 
 //   or a single vector
 // @param dset {dict/tab/num[]} a time series of interest, the entries should 
 //   in each case be numeric data types.
 // @return {keytab} informative outputs from the python adfuller test indicating
-//   the stationality of each vector entry of the relevant dataset
-ts.stationality:{[dset]
+//   the stationarity of each vector entry of the relevant dataset
+ts.stationarity:{[dset]
   dtype:type dset;
   // Names to be provided to form the key for the return table
   keyNames:$[99h=dtype;key dset;
