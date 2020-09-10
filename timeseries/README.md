@@ -14,8 +14,7 @@ In addition, this library includes feature engineering techniques to create lagg
 ## Requirements
 
 - embedPy
-
-The python dependencies for the Time Series library can be installed by following the instructions laid out in the ML-Toolkit level of this library.
+The python dependencies for the time series library can be installed by following the instructions laid out in the ML-Toolkit level of this library.
 
 ## Installation
 
@@ -23,7 +22,7 @@ Place the `ml` library in `$QHOME` and load into a q instance using `ml/ml.q`
 
 ### Load
 
-The following will load the Time Series functionality into the `.ml` namespace  
+The following will load the time series functionality into the `.ml` namespace  
 ```q
 q)\l ml/ml.q
 q).ml.loadfile`:timeseries/init.q
@@ -35,6 +34,6 @@ Documentation is available on the [timeseries](https://code.kx.com/v2/ml/toolkit
 
 ## Status
   
-The Time Series library is still in development and is available here as a beta release. Further functionality and improvements will be made to the library in the coming months.
+The time series library is still in development and is available here as a beta release. Further functionality and improvements will be made to the library in the coming months.
 
 If you have any issues, questions or suggestions, please write to ai@kx.com.
