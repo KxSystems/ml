@@ -35,7 +35,7 @@ x1quad:enlist[`x]!enlist -2f
 -1"Testing of 1-D Sine function with multiple minima";
 sineFunc:{sin x 0}
 x0sine:enlist 8.5
-x1sine:enlist[`x]!x0
+x1sine:enlist[`x]!x0sine
 .ml.optimize.BFGS[sineFunc;x0sine;();::]~sinex1
 .ml.optimize.BFGS[sineFunc;x1sine;();::]~sinex1
 

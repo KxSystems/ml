@@ -66,4 +66,14 @@ failingTest[.ml.ts.SARIMA.predict;(SARIMA2;-1_'exogFloatFuture;1000);0b;"Test ex
 failingTest[.ml.ts.SARIMA.predict;(SARIMA3;-1_'exogIntFuture  ;1000);0b;"Test exog length does not match train exog length"]
 failingTest[.ml.ts.SARIMA.predict;(ARIMA2 ;exogFloatFuture    ;1000);0b;"The following required dictionary keys for 'mdl' are not provided: origs, P_param, Q_param"]
 
+// dictCheck functionality testing
+typeCheck:"test1 must be a dictionary input"
+keyCheck1:"The following required dictionary keys of 'dict1' are not provided: key1"
+keyCheck2:"The following required dictionary keys of 'dict2' are not provided: key1, key2"
+test1:til 10
+dict1:`key`key2!1 2
+dict2:enlist[`key]!enlist 1
+failingTest[.ml.ts.i.dictCheck;(test1;`key1`key2;"test1");0b;typeCheck]
+failingTest[.ml.ts.i.dictCheck;(dict1;`key`key1`key2;"dict1");0b;keyCheck1]
+failingTest[.ml.ts.i.dictCheck;(dict2;`key`key1`key2;"dict2");0b;keyCheck2]
 
