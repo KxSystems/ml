@@ -87,7 +87,7 @@ clust.i.hccpred:{[ns;data;cfg]
   // add namespace and linkage to config dictionary for cure
   if[ns~`cure;cfg[`inputs],:`ns`lf!(ns;`single)];
   // recalculate reppts for training clusters
-  reppt:clust.i.getrep[cfg]each value group cfg`clt;
+  reppt:clust.i.getrep[cfg]each gc kc:asc key gc:group cfg`clt;
   // training indicies
   idxs:til each c:count each reppt[;0];
   // return closest clusters to testing points
@@ -101,7 +101,6 @@ clust.i.hccpred:{[ns;data;cfg]
 // @param idxs {long[][]}  Training data indices
 // @return     {float[][]} Training data points
 clust.i.getrep:{[cfg;idxs]
-  `e+1;
   $[cfg[`inputs;`ns]~`cure;
       flip(clust.i.curerep . cfg[`inputs]`df`n`c)::;
     cfg[`inputs;`lf]in`ward`centroid;
@@ -125,7 +124,6 @@ clust.i.predclosest:{[data;cfg;reppt;c;cltidx;ptidx]
   dist:$[`ward~lf:cfg[`inputs]`lf;
     2*clust.i.ld[lf][1]'[c;dist];
     clust.i.ld[lf]each dist];
-  `e+1;
   // find closest cluster
   dist?ndst:min dist
   }
