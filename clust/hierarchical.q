@@ -86,7 +86,7 @@ clust.i.hccpred:{[ns;data;cfg]
     $[ns~`hc;"hc";"cure"],".(cutk/cutdist)"];
   // add namespace and linkage to config dictionary for cure
   if[ns~`cure;cfg[`inputs],:`ns`lf!(ns;`single)];
-  // recalculate reppts for training clusters
+  // recalculate reppts for training clusters in asc order to ensure correct labels
   reppt:clust.i.getrep[cfg]each gc kc:asc key gc:group cfg`clt;
   // training indicies
   idxs:til each c:count each reppt[;0];
