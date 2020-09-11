@@ -95,9 +95,10 @@ ts.laggedFeatures:{[tab;colNames;lags]
 // @category misc
 // @fileoverview Plot and display an autocorrelation plot
 // @param data {num[]} dataset from which to generate the autocorrelation plot
+// @param n    {int} number of lags to include in the graph
 // @return {graph} display to standard out the autocorrelation bar plot
-ts.acfPlot:{[data]
-  acf:ts.i.autoCorrFunction[data;]each m:1_til 11&count[data];
+ts.acfPlot:{[data;n]
+  acf:ts.i.autoCorrFunction[data;]each m:1_til n&count[data];
   ts.i.plotFunction[data;acf;m;"AutoCorrelation"];
   }
 
@@ -105,9 +106,10 @@ ts.acfPlot:{[data]
 // @category misc
 // @fileoverview Plot and display an autocorrelation plot
 // @param data {num[]} dataset from which to generate the partial autocorrelation plot
+// @param n    {int} number of lags to include in the graph
 // @return {graph} display to standard out the partial autocorrelation bar plot
-ts.pacfPlot:{[data]
-  pacf:.ml.fresh.i.pacf[data;neg[1]+m:11&count data]`;
+ts.pacfPlot:{[data;n]
+  pacf:.ml.fresh.i.pacf[data;neg[1]+m:n&count data]`;
   ts.i.plotFunction[data;1_pacf;1_til m;"Partial AutoCorrelation"];
   }
 
