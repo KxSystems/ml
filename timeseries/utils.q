@@ -740,7 +740,7 @@ ts.i.differ:{[endog;d;s]
 // @return {num[]} result of the application of the function on each of the sliding window
 //   components over the data vector
 ts.i.slidingWindowFunction:{[func;win;data]
-  func each{ 1_x,y }\[win#0f;data]
+  0f,-1_func each{ 1_x,y }\[win#0f;data]
   }
 
 
@@ -758,11 +758,14 @@ ts.i.slidingWindowFunction:{[func;win;data]
 // @return {graph} presents a plot to screen associated with relevant analysis
 ts.i.plotFunction:{[data;vals;m;title]
   plt:.p.import[`matplotlib.pyplot];
-  conf:10#1.95%sqrt count data;
+  conf:count[m]#1.95%sqrt count data;
   plt[`:bar][m;vals;`width pykw 0.5];
   cfgkeys:`linewidth`linestyle`color`label;
   cfgvals:3,`dashed`red`conf_interval;
   plt[`:plot][m;conf;pykwargs cfgkeys!cfgvals];
+  if[0>min vals;
+    plt[`:plot][m;neg conf;pykwargs -1_cfgkeys!cfgvals]
+    ];
   plt[`:legend][];
   plt[`:xlabel][`lags];
   plt[`:ylabel][`acf];
