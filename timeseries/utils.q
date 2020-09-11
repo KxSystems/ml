@@ -705,7 +705,7 @@ ts.i.predDataCheck:{[mdl;exog]
 // @kind function
 // @category dataCheckUtility
 // @fileoverview Apply seasonal and non-seasonal time-series differencing,
-// error checking stationality of the dataset following application of differencing
+//   error checking stationarity of the dataset following application of differencing
 // @param endog {num[]}   endogenous dataset
 // @param diff  {integer} non seasonal differencing component (integer)
 // @param sdict {dict}    dictionary containing relevant seasonal differencing components
@@ -716,7 +716,7 @@ ts.i.differ:{[endog;d;s]
   I:ts.i.diff[endog;d];
   // Apply seasonal differencing if appropriate
   if[s[`D];I:s[`D]ts.i.seasonDiff[s`m]/I];
-  // Check stationality
+  // Check stationarity
   if[not ts.i.stationary[I];ts.i.err.stat[]];
   // Return integrated data
   I
