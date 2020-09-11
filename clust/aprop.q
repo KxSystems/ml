@@ -28,6 +28,8 @@ clust.ap.fit:{[data;df;dmp;diag;iter]
 // @param cfg  {dict}      `data`inputs`clt`exemplars returned by clust.ap.fit
 // @return     {long[]}    List of predicted clusters
 clust.ap.predict:{[data;cfg]
+  if[-1~first cfg`clt;
+    '"Clusters = -1. AP fit did not converge. Not possible to predict clusters."];
   // retrieve cluster centres from training data
   ex:cfg[`data][;distinct cfg`exemplars];
   // predict testing data clusters
@@ -57,7 +59,7 @@ clust.i.runap:{[data;df;dmp;diag;idxs;iter]
   info1:clust.i.apstop clust.i.apalgo[dmp]/info0;
   // return data, inputs, clusters and exemplars
   inputs:`df`dmp`diag`iter!(df;dmp;diag;iter);
-  clt:clust.i.reindex ex:info1`exemplars;
+  clt:$[info1`conv;clust.i.reindex ex:info1`exemplars;count[data 0]#-1];
   `data`inputs`clt`exemplars!(data;inputs;clt;ex)
   }
 
