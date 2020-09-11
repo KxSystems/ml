@@ -9,7 +9,8 @@
 // @param df     {fn}        Distance function
 // @param minpts {long}      Minimum number of points in epsilon radius
 // @param eps    {float}     Epsilon radius to search
-// @return       {long[]}    List of clusters
+// @return       {dict}      Data, inputs, clusters and cluster table 
+//   (`data`inputs`clt`t) required for predict and update methods
 clust.dbscan.fit:{[data;df;minpts;eps]
   // check distance function
   if[not df in key clust.i.dd;clust.i.err.dd[]];
@@ -79,7 +80,8 @@ clust.i.dbscanpredict:{[data;cfg]
 // @param minpts {long}      Minimum number of points in epsilon radius
 // @param eps    {float}     Epsilon radius to search
 // @param idx    {long[]}    Data indices to find neighbourhood for
-// @return       {table}     Neighbourhood table with `nbhood`cluster`corepoint
+// @return       {table}     Neighbourhood table with columns
+//   `nbhood`cluster`corepoint
 clust.i.nbhoodtab:{[data;df;minpts;eps;idx]
   // calculate distances and find all points which are not outliers
   nbhood:clust.i.nbhood[data;df;eps]each idx;

@@ -102,9 +102,9 @@ clust.i.apalgo:{[dmp;info]
 // @kind function
 // @category private
 // @fileoverview Check affinity propagation algorithm for convergence
-// @param inputs {dict} Info dict, no_conv boolean and iter dict
-// @param info   {dict} Current info dictionary
-// @return       {dict} Updated inputs
+// @param info {dict} Similarity, availability, responsibility, exemplars,
+//   matches, iter dictionary, no_conv boolean and iter dict
+// @return     {dict} Updated info dictionary
 clust.i.apconv:{[info]
   // iteration dictionary
   iter:info`iter;
@@ -134,8 +134,8 @@ clust.i.diag:{[m]
 // @category private
 // @fileoverview Update responsibility matrix
 // @param dmp  {float}     Damping coefficient
-// @param info {dict}      Exemplars and matches, similarity, availability and
-//   responsibility matrices
+// @param info {dict}      Similarity, availability, responsibility, exemplars,
+//   matches, iter dictionary, no_conv boolean and iter dict
 // @return     {float[][]} Updated responsibility matrix
 clust.i.updr:{[dmp;info]
   // create matrix with every points max responsibility
@@ -150,8 +150,8 @@ clust.i.updr:{[dmp;info]
 // @category private
 // @fileoverview Update availability matrix
 // @param dmp  {float}     Damping coefficient
-// @param info {dict}      Exemplars and matches, similarity, availability and
-//   responsibility matrices
+// @param info {dict}      Similarity, availability, responsibility, exemplars,
+//   matches, iter dictionary, no_conv boolean and iter dict
 // @return     {float[][]} Returns updated availability matrix
 clust.i.upda:{[dmp;info]
   // sum values in positive availability matrix
@@ -166,8 +166,9 @@ clust.i.upda:{[dmp;info]
 // @kind function
 // @category private
 // @fileoverview Stopping condition for affinity propagation algorithm
-// @param inputs {dict} Info dict, no_conv boolean and iter dict
-// @return       {bool} Indicates whether to continue or stop running AP (1/0b)
+// @param info {dict} Similarity, availability, responsibility, exemplars,
+//   matches, iter dictionary, no_conv boolean and iter dict
+// @return     {bool} Indicates whether to continue or stop running AP (1/0b)
 clust.i.apstop:{[info]
   (info[`iter;`maxrun]>info[`iter]`run)&not 1b~info`conv
   }
