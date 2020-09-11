@@ -9,11 +9,15 @@
 // @param df   {fn}        Distance function
 // @param dmp  {float}     Damping coefficient
 // @param diag {fn}        Similarity matrix diagonal value function
-// @param iter {dict}      Max number of overall iterations and iterations without a change in clusters. (::) can be used where the defaults of (`total`nochange!200 15) will be used
-// @return     {long[]}    List of clusters
+// @param iter {dict}      Max number of overall iterations and iterations 
+//   without a change in clusters. (::) can be passed in where the defaults
+//   of (`total`nochange!200 15) will be used
+// @return     {dict}      Data, input variables, clusters and exemplars 
+//   (`data`inputs`clt`exemplars) required for the predict method
 clust.ap.fit:{[data;df;dmp;diag;iter]
   // update iteration dictionary with user changes
   iter:(`run`maxrun`maxmatch!0 200 15),$[iter~(::);();iter];
+  // cluster data using AP algo
   clust.i.runap["f"$data;df;dmp;diag;til count data 0;iter]
   }
 
@@ -21,23 +25,13 @@ clust.ap.fit:{[data;df;dmp;diag;iter]
 // @category clust
 // @fileoverview Predict clusters using AP config
 // @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      `data`df`reppts`clt returned from kmeans 
-//   clustered training data
+// @param cfg  {dict}      `data`inputs`clt`exemplars returned by clust.ap.fit
 // @return     {long[]}    List of predicted clusters
 clust.ap.predict:{[data;cfg]
+  // retrieve cluster centres from training data
   ex:cfg[`data][;distinct cfg`exemplars];
-  clust.i.apPredDist[ex;cfg[`inputs]`df]each flip data
-  }
-
-// @kind function
-// @category private
-// @fileoverview Predict clusters using AP training exemplars
-// @param ex {float[][]} Training cluster centres in `value flip` format
-// @param df {fn}        Distance function
-// @param pt {float[]}   Current data point
-// @return   {long[]}    Predicted clusters
-clust.i.apPredDist:{[ex;df;pt]
-  d?max d:clust.i.dists[ex;df;pt]each til count ex 0
+  // predict testing data clusters
+  clust.i.appreddist[ex;cfg[`inputs]`df]each flip data
   }
 
 // @kind function
@@ -48,27 +42,23 @@ clust.i.apPredDist:{[ex;df;pt]
 // @param dmp  {float}     Damping coefficient
 // @param diag {fn}        Similarity matrix diagonal value function
 // @param idxs {long[]}    List of indicies to find distances for
-// @param s0   {float[][]} Old similarity matrix (can be (::) for new run)
+// @param iter {dict}      Max number of overall iterations and iterations 
+//   without a change in clusters. (::) can be passed in where the defaults
+//   of (`total`nochange!200 15) will be used
 // @return     {long[]}    List of clusters
 clust.i.runap:{[data;df;dmp;diag;idxs;iter]
   // check negative euclidean distance has been given
   if[not df~`nege2dist;clust.i.err.ap[]];
-  // calculate distances, availability and responsibility 
-  info0:clust.i.apinit[data;df;diag;idxs;iter];
-  // update info to find clusters
+  // calculate distances, availability and responsibility
+  info0:clust.i.apinit[data;df;diag;idxs];
+  // initialize exemplar matrix and convergence boolean
+  info0,:`emat`conv`iter!((count data 0;iter`maxmatch)#0b;0b;iter);
+  // run ap algo until maxrun or convergence
   info1:clust.i.apstop clust.i.apalgo[dmp]/info0;
-  // return config
-  `data`inputs`clt`exemplars!
-    (data;`df`dmp`diag`iter!(df;dmp;diag;iter);clust.i.reindex info1`exemplars;info1`exemplars)
-  }
-
-clust.i.apstop:{[info]
-  iter:info`iter;
-  /-1"Run: ",string iter`run;  // check -remove when fixed
-  /-1"Check 1: ",string chk1:iter[`maxrun]>iter`run;
-  /-1"Check 2: ",string chk2:iter[`maxmatch]>info`matches;
-  /chk1&chk2
-  (iter[`maxrun]>iter`run)&iter[`maxmatch]>info`matches
+  // return data, inputs, clusters and exemplars
+  inputs:`df`dmp`diag`iter!(df;dmp;diag;iter);
+  clt:clust.i.reindex ex:info1`exemplars;
+  `data`inputs`clt`exemplars!(data;inputs;clt;ex)
   }
 
 // @kind function
@@ -77,24 +67,25 @@ clust.i.apstop:{[info]
 // @param data {float[][]} Points in `value flip` format
 // @param df   {fn}        Distance function
 // @param diag {fn}        Similarity matrix diagonal value function
+// @param idxs {long[]}    List of point indices
 // @return     {dict}      Similarity, availability and responsibility matrices
 //   and keys for matches and exemplars to be filled during further iterations
-clust.i.apinit:{[data;df;diag;idxs;iter]
+clust.i.apinit:{[data;df;diag;idxs]
   // calculate similarity matrix values
   s:clust.i.dists[data;df;data]each idxs;
   // update diagonal
   s:@[;;:;diag raze s]'[s;k:til n:count data 0];
   // create lists/matrices of zeros for other variables
-  `matches`exemplars`s`a`r`iter!(0;0#0;s),((2;n;n)#0f),enlist iter
+  `matches`exemplars`s`a`r!(0;0#0;s),(2;n;n)#0f
   }
 
 // @kind function
 // @category private
 // @fileoverview Run affinity propagation algorithm
 // @param dmp  {float} Damping coefficient
-// @param info {dict}  Exemplars and matches, similarity, availability and
-//   responsibility matrices
-// @return     {dict}  Updated info
+// @param info {dict}  Similarity, availability, responsibility, exemplars,
+//   matches, iter dictionary, no_conv boolean and iter dict
+// @return     {dict}  Updated inputs
 clust.i.apalgo:{[dmp;info]
   // update responsibility matrix
   info[`r]:clust.i.updr[dmp;info];
@@ -105,9 +96,38 @@ clust.i.apalgo:{[dmp;info]
   // update `info` with new exemplars/matches
   info:update exemplars:ex,matches:?[exemplars~ex;matches+1;0]from info;
   // update iter dictionary
-  info[`iter;`run]+:1;
+  .[;(`iter;`run);+[1]]clust.i.apconv info
+  }
+
+// @kind function
+// @category private
+// @fileoverview Check affinity propagation algorithm for convergence
+// @param inputs {dict} Info dict, no_conv boolean and iter dict
+// @param info   {dict} Current info dictionary
+// @return       {dict} Updated inputs
+clust.i.apconv:{[info]
+  // iteration dictionary
+  iter:info`iter;
+  // exemplar matrix
+  emat:info`emat;
+  // existing exemplars
+  ediag:0<sum clust.i.diag each info`a`r;
+  emat[;iter[`run]mod iter`maxmatch]:ediag;
+  // check for convergence
+  if[iter[`maxmatch]<=iter`run;
+    unconv:count[info`s]<>sum(se=iter`maxmatch)+0=se:sum each emat;
+    conv:$[(iter[`maxrun]=iter`run)|not[unconv]&sum[ediag]>0;1b;0b]];
   // return updated info
-  info
+  info,`emat`conv!(emat;conv)
+  }
+
+// @kind function
+// @category private
+// @fileoverview Retrieve diagonal of square matrix
+// @param m {any[][]} Square matrix
+// @return  {any[]}   Diagonal
+clust.i.diag:{[m]
+  {x y}'[m;til count m]
   }
 
 // @kind function
@@ -141,4 +161,24 @@ clust.i.upda:{[dmp;info]
   a:@[;;:;]'[0&(s+info[`r]@'k)-/:pv;k;s];
   // calculate new availability
   (dmp*info`a)+a*1-dmp
+  }
+
+// @kind function
+// @category private
+// @fileoverview Stopping condition for affinity propagation algorithm
+// @param inputs {dict} Info dict, no_conv boolean and iter dict
+// @return       {bool} Indicates whether to continue or stop running AP (1/0b)
+clust.i.apstop:{[info]
+  (info[`iter;`maxrun]>info[`iter]`run)&not 1b~info`conv
+  }
+
+// @kind function
+// @category private
+// @fileoverview Predict clusters using AP training exemplars
+// @param ex {float[][]} Training cluster centres in `value flip` format
+// @param df {fn}        Distance function
+// @param pt {float[]}   Current data point
+// @return   {long[]}    Predicted clusters
+clust.i.appreddist:{[ex;df;pt]
+  d?max d:clust.i.dists[ex;df;pt]each til count ex 0
   }
