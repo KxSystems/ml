@@ -32,10 +32,8 @@ value[group .ml.clust.ap.fit[d1;`nege2dist;0.9;med;(::)]`clt]~d1clt
 key[group .ml.clust.ap.fit[d2;`nege2dist;0.95;{[x] -20000.};enlist[`maxsame]!enlist 150]`clt]~til 5
 key[group .ml.clust.ap.fit[d2;`nege2dist;0.5;min;(::)]`clt]~til 5
 asc[key .ml.clust.ap.fit[d2;`nege2dist;0.5;min;(::)]]~`clt`data`exemplars`inputs
-
-
-// use this as a trap for outliers
-/()~.ml.clust.ap.fit[d1tts 0;`nege2dist;0.3;min;`maxrun`maxmatch!100 10]`exemplars
+.ml.clust.ap.fit[d2;`nege2dist;0.01;{[x] -10.};(::)][`clt]~200#-1
+.ml.clust.ap.fit[d1tts 0;`nege2dist;0.3;min;`maxrun`maxmatch!100 10][`clt]~45#-1
 
 // Predict
 .ml.clust.ap.predict[d1tts 1;.ml.clust.ap.fit[d1tts 0;`nege2dist;0.7;min;(::)]]~2 2 2 2 2 2 0 2 0 0 0 2 2 2 2
@@ -44,20 +42,18 @@ asc[key .ml.clust.ap.fit[d2;`nege2dist;0.5;min;(::)]]~`clt`data`exemplars`inputs
 // K-Means
 
 // Fit
+.[.ml.clust.kmeans.fit;(d1;`mdist;4;2;1b);1b]
 value[group .ml.clust.kmeans.fit[d1;`e2dist;4;2;1b]`clt]~d1clt
 value[group .ml.clust.kmeans.fit[d1;`edist ;4;2;1b]`clt]~d1clt
-value[group .ml.clust.kmeans.fit[d2;`e2dist;4;3;1b]`clt]~(til[122]except 41;41 122,.ml.arange[123;180;2];.ml.arange[124;199;2];.ml.arange[181;200;2])
+asc[key .ml.clust.kmeans.fit[d2;`edist ;4;2;1b]]~`clt`data`inputs`reppts
 
 // Predict
-
-.ml.clust.kmeans.predict[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;2;1b]]~2 0 0 3 3 0 0 0 0 0 3 0 3 3
-.ml.clust.kmeans.predict[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`edist;4;2;1b]]~0 2 0 0 2 2 0 0 0 0 0 2 0 2 2
+count[.ml.clust.kmeans.predict[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;2;1b]]]~15
+count[.ml.clust.kmeans.predict[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`edist;4;2;1b]]]~15
 
 // Update
-
 value[group .ml.clust.kmeans.update[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;2;1b]]`clt]~d1clt
-value[group .ml.clust.kmeans.update[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`edist;4;2;1b]]`clt]~d1clt
-`clt`data`inputs`reppts~.ml.clust.kmeans.update[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`edist;4;2;1b]]
+`clt`data`inputs`reppts~asc key .ml.clust.kmeans.update[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`edist;4;2;1b]]
 
 // DBSCAN
 
@@ -70,13 +66,11 @@ value[group .ml.clust.dbscan.fit[d2;`edist;4;17.2]`clt]~(til[197],198;197 199)
 value[group .ml.clust.dbscan.fit[d2;`mdist;7;24]`clt]~(til 196;196 197 198 199)
 
 // Predict
-
 .ml.clust.dbscan.predict[d1tts 1;.ml.clust.dbscan.fit[d1tts 0;`e2dist;5;5]]~15#-1
 .ml.clust.dbscan.predict[d1tts 1;.ml.clust.dbscan.fit[d1tts 0;`edist;5;5]]~15#-1
 .ml.clust.dbscan.predict[d1tts 1;.ml.clust.dbscan.fit[d1tts 0;`mdist;5;5]]~15#-1
 
 // Update
-
 value[group .ml.clust.dbscan.update[d1tts 1;.ml.clust.dbscan.fit[d1tts 0;`e2dist;5;5]]`clt]~d1clt
 value[group .ml.clust.dbscan.update[d1tts 1;.ml.clust.dbscan.fit[d1tts 0;`edist;5;5]]`clt]~d1clt
 value[group .ml.clust.dbscan.update[d1tts 1;.ml.clust.dbscan.fit[d1tts 0;`mdist;5;5]]`clt]~d1clt
@@ -93,10 +87,9 @@ value[group .ml.clust.cure.cutk[.ml.clust.cure.fit[d2;`edist;20;0.2];4]`clt]~(0 
 value[group .ml.clust.cure.cutk[.ml.clust.cure.fit[d2;`mdist;10;0.1];4]`clt]~(til[122],.ml.arange[122;191;2];.ml.arange[123;194;2];192 194 196 198;195 197 199)
 
 // Predict
-
-.ml.clust.cure.predict[d1tts 1;.ml.clust.cure.cutk[.ml.clust.cure.fit[d1tts 0;`e2dist;5;0];4]]~0 3 0 0 3 3 0 0 0 0 0 3 0 3 3
+.ml.clust.cure.predict[d1tts 1;.ml.clust.cure.cutk[.ml.clust.cure.fit[d1tts 0;`e2dist;5;0];4]]~1 2 1 1 2 2 1 1 1 1 1 2 1 2 2
 .ml.clust.cure.predict[d1tts 1;.ml.clust.cure.cutk[.ml.clust.cure.fit[d1tts 0;`edist;10;0.2];4]]~0 3 0 0 3 3 0 0 0 0 0 3 0 3 3
-.ml.clust.cure.predict[d1tts 1;.ml.clust.cure.cutk[.ml.clust.cure.fit[d1tts 0;`mdist;3;0.15];4]]~0 3 0 3 3 3 0 0 0 0 0 3 0 3 3
+.ml.clust.cure.predict[d1tts 1;.ml.clust.cure.cutk[.ml.clust.cure.fit[d1tts 0;`mdist;3;0.15];4]]~1 3 1 3 3 3 1 1 1 1 1 3 1 3 3
 
 // Hierarchical 
 
@@ -123,7 +116,6 @@ value[group .ml.clust.hc.cutdist[tab3;500]`clt]~value group fclust[mat tab3`dgra
 value[group .ml.clust.hc.cutdist[tab4;30]`clt]~value group fclust[mat tab4`dgram;30;`distance]`
 
 // Predict
-
-.ml.clust.hc.predict[d1tts 1;.ml.clust.hc.cutk[.ml.clust.hc.fit[d1tts 0;`e2dist;`single];4]]~hcpred:0 3 0 0 3 3 0 0 0 0 0 3 0 3 3
-.ml.clust.hc.predict[d1tts 1;.ml.clust.hc.cutk[.ml.clust.hc.fit[d1tts 0;`e2dist;`ward];4]]~hcpred
-.ml.clust.hc.predict[d1tts 1;.ml.clust.hc.cutk[.ml.clust.hc.fit[d1tts 0;`edist;`centroid];4]]~hcpred
+.ml.clust.hc.predict[d1tts 1;.ml.clust.hc.cutk[.ml.clust.hc.fit[d1tts 0;`e2dist;`single];4]]~1 2 1 1 2 2 1 1 1 1 1 2 1 2 2
+.ml.clust.hc.predict[d1tts 1;.ml.clust.hc.cutk[.ml.clust.hc.fit[d1tts 0;`e2dist;`ward];4]]~1 3 1 1 3 3 1 1 1 1 1 3 1 3 3
+.ml.clust.hc.predict[d1tts 1;.ml.clust.hc.cutk[.ml.clust.hc.fit[d1tts 0;`edist;`centroid];4]]~1 3 1 1 3 3 1 1 1 1 1 3 1 3 3
