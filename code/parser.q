@@ -1,7 +1,5 @@
 \d .nlp
 
-.p.import[`sys;:;`:argv;()]; / spacy expects python be the main process
-
 p)def spell(doc,model):
   lst=[]
   for s in doc:
