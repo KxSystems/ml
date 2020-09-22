@@ -756,10 +756,10 @@ ts.i.slidingWindowFunction:{[func;win;data]
 // @param m     {num[]} bar plot indices
 // @param title {string} title to be given to the plot
 // @return {graph} presents a plot to screen associated with relevant analysis
-ts.i.plotFunction:{[data;vals;m;title]
+ts.i.plotFunction:{[data;vals;m;width;title]
   plt:.p.import[`matplotlib.pyplot];
   conf:count[m]#1.95%sqrt count data;
-  plt[`:bar][m;vals;`width pykw 0.5];
+  plt[`:bar][m;vals;`width pykw width%2];
   cfgkeys:`linewidth`linestyle`color`label;
   cfgvals:3,`dashed`red`conf_interval;
   plt[`:plot][m;conf;pykwargs cfgkeys!cfgvals];
