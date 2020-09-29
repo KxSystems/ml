@@ -16,6 +16,11 @@ failingTest:{[function;data;applyType;expectedError]
 fileList:`quadx0`quadx1`sinex1`multix0`multix1`multix1Gtol`multiargs0`multiargs1
 {load hsym`$":optimize/tests/data/",string x}each fileList;
 
+-1"Warning: These tests may cause varying results for Linux vs Windows users";
+os:$[.z.o like "w*";"windows/";"linux/"];
+fileList2:`rosenx0`rosenx1
+{load hsym`$":optimize/tests/data/",x,string y}[os]each fileList2;
+
 -1"Testing examples of optimization functionality expected to fail";
 c1c2Fail:"When evaluating Wolfe conditions the following must hold 0 < c1 < c2 < 1"
 normFail:"ord must be +/- infinity or a long atom"
@@ -57,4 +62,13 @@ args0:enlist 5f
 args1:enlist[`args0]!args0
 .ml.optimize.BFGS[multiFuncArgList;x0multi;args0;::]~multiargs0
 .ml.optimize.BFGS[multiFuncArgDict;x1multi;args1;::]~multiargs1
+
+/S 42
+precisionFunc:{all 1e-5>abs x-y}
+-1"Testing of Rosenbrock function of N variables";
+rosenFunc:{(sum(100*(_[1;x] - _[-1;x]xexp 2.0)xexp 2) + (1 - _[-1;x])xexp 2)}
+x0rosen:10?10
+x1rosen:enlist[`x]!enlist 10?10f
+precisionFunc[.ml.optimize.BFGS[rosenFunc;x0rosen;();::]`xVals;rosenx0`xVals]
+precisionFunc[.ml.optimize.BFGS[rosenFunc;x1rosen;();::]`xVals;rosenx1`xVals]
 

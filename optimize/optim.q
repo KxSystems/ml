@@ -547,7 +547,7 @@ i.wolfeParamCheck:{[dict]
 // @param x0 {dict/num/num[]} initial values of x to be optimized
 // @returns {num[]} the initial values of x converted into a suitable numerical list format
 i.dataFormat:{[x0]
-  $[99h=type x0;value x0;0h >type x0;enlist x0; x0]
+  "f"$$[99h=type x0;raze value x0;0h >type x0;enlist x0; x0]
   }
 
 
