@@ -13,7 +13,7 @@ failingTest:{[function;data;applyType;expectedError]
 
 // Load in data saved as golden copy for this analysis
 // Load files
-fileList:`quadx0`quadx1`sinex1`multix0`multix1`multix1Gtol`multiargs0`multiargs1
+fileList:`quadx0`quadx1`sinex1`multix0`multix1`multix1Gtol`multiargs0`multiargs1`x0rosen`x1rosen
 {load hsym`$":optimize/tests/data/",string x}each fileList;
 
 -1"Warning: These tests may cause varying results for Linux vs Windows users";
@@ -67,8 +67,6 @@ args1:enlist[`args0]!args0
 precisionFunc:{all 1e-5>abs x-y}
 -1"Testing of Rosenbrock function of N variables";
 rosenFunc:{(sum(100*(_[1;x] - _[-1;x]xexp 2.0)xexp 2) + (1 - _[-1;x])xexp 2)}
-x0rosen:10?10
-x1rosen:enlist[`x]!enlist 10?10f
 precisionFunc[.ml.optimize.BFGS[rosenFunc;x0rosen;();::]`xVals;rosenx0`xVals]
 precisionFunc[.ml.optimize.BFGS[rosenFunc;x1rosen;();::]`xVals;rosenx1`xVals]
 
