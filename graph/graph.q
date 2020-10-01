@@ -1,13 +1,14 @@
 \d .ml
 
 createGraph:{[]
-  nodes:1!enlist`nodeId`function`inputs`outputs!(`;::;::;::);
+  nodes:1!enlist`nodeId``function`inputs`outputs!(`;::;::;::;::);
   edges:2!enlist`dstNode`dstName`srcNode`srcName`valid!(`;`;`;`;0b);
   `nodes`edges!(nodes;edges)}
 
 addNode:{[graph;nodeId;node]
+  node,:(1#`)!1#(::);
   if[nodeId in exec nodeId from graph`nodes;'"invalid nodeId"];
-  if[not`function`inputs`outputs~asc key node;'"invalid node"];
+  if[not``function`inputs`outputs~asc key node;'"invalid node"];
   if[(::)~node`inputs;node[`inputs]:(0#`)!""];
   if[-10h=type node`inputs;node[`inputs]:(1#`input)!enlist node`inputs];
   if[99h<>type node`inputs;'"invalid inputs"];
@@ -22,8 +23,9 @@ addNode:{[graph;nodeId;node]
   graph}
 
 updNode:{[graph;nodeId;node]
+  node,:(1#`)!1#(::);
   if[not nodeId in 1_exec nodeId from graph`nodes;'"invalid nodeId"];
-  if[count key[node]except`function`inputs`outputs;'"invalid node"];
+  if[count key[node]except``function`inputs`outputs;'"invalid node"];
   oldnode:graph[`nodes]nodeId;
   if[`inputs in key node;
     if[(::)~node`inputs;node[`inputs]:(0#`)!""];
@@ -63,7 +65,7 @@ delNode:{[graph;nodeId]
   graph:@[graph;`edges;,;update srcNode:`,srcName:`,valid:0b from outputEdges];
   graph}
 
-addCfg:{[graph;nodeId;cfg]addNode[graph;nodeId]`function`inputs`outputs!(@[;cfg];::;"!")}
+addCfg:{[graph;nodeId;cfg]addNode[graph;nodeId]``function`inputs`outputs!(::;@[;cfg];::;"!")}
 updCfg:{[graph;nodeId;cfg]updNode[graph;nodeId](1#`function)!enlist cfg}
 delCfg:delNode
 
