@@ -4,22 +4,13 @@
 \l optimize/optim.q
 
 // Function for the capturing of expected errors
-failingTest:{[function;data;applyType;expectedError]
-  applyType:$[applyType;@;.];
-  failureFunction:{[err;ret](`TestFailing;ret;err~ret)}[expectedError;];
-  functionReturn:applyType[function;data;failureFunction];
-  $[`TestFailing~first functionReturn;last functionReturn;0b]
-  }
+failingTest:{[function;data;applyType;expectedError]  applyType:$[applyType;@;.];  failureFunction:{[err;ret](`TestFailing;ret;err~ret)}[expectedError;];  functionReturn:applyType[function;data;failureFunction];  $[`TestFailing~first functionReturn;last functionReturn;0b]  }
 
 // Load in data saved as golden copy for this analysis
 // Load files
-fileList:`quadx0`quadx1`sinex1`multix0`multix1`multix1Gtol`multiargs0`multiargs1`x0rosen`x1rosen
-{load hsym`$":optimize/tests/data/",string x}each fileList;
-
--1"Warning: These tests may cause varying results for Linux vs Windows users";
 os:$[.z.o like "w*";"windows/";"linux/"];
-fileList2:`rosenx0`rosenx1
-{load hsym`$":optimize/tests/data/",x,string y}[os]each fileList2;
+fileList:`quadx0`quadx1`sinex1`multix0`multix1`multix1Gtol`multiargs0`multiargs1`x0rosen`x1rosen`rosenx0`rosenx1
+{load hsym`$":optimize/tests/data/",x,string y}[os]each fileList;
 
 -1"Testing examples of optimization functionality expected to fail";
 c1c2Fail:"When evaluating Wolfe conditions the following must hold 0 < c1 < c2 < 1"
