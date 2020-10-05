@@ -5,32 +5,37 @@
 // @kind function
 // @category clust
 // @fileoverview Fit CURE algorithm to data
-// @param data {float[][]} Points in `value flip` format
-// @param df   {fn}        Distance function
+// @param data {float[][]} Data in matrix format, each column is an individual datapoint
+// @param df   {symbol}    Distance function name within '.ml.clust.df' 
 // @param n    {long}      Number of representative points per cluster
 // @param c    {float}     Compression factor for representative points
 // @return     {dict}      Data, input variables and dendrogram 
 //   (`data`inputs`dgram) required for predict method
 clust.cure.fit:{[data;df;n;c]
-  if[not df in key clust.i.dd;clust.i.err.dd[]];
-  dgram:clust.hcscc[data:"f"$data;df;`cure;1;n;c;1b];
+  data:clust.i.floatConversion[data];
+  if[not df in key clust.i.df;clust.i.err.df[]];
+  dgram:clust.i.hcscc[data;df;`cure;1;n;c;1b];
   `data`inputs`dgram!(data;`df`n`c!(df;n;c);dgram)
   }
 
 // @kind function
 // @category clust
-// @fileoverview Fit Hierarchical algorithms to data
-// @param data {float[][]} Points in `value flip` format
-// @param df   {fn}        Distance function
-// @param lf   {fn}        Linkage function
+// @fileoverview Fit Hierarchical algorithm to data
+// @param data {float[][]} Data in matrix format, each column is an individual datapoint
+// @param df   {symbol}    Distance function name within '.ml.clust.df' 
+// @param lf   {symbol}    Linkage function name within '.ml.clust.lf' 
 // @return     {dict}      Data, input variables and dendrogram 
 //   (`data`inputs`dgram) required for predict method
 clust.hc.fit:{[data;df;lf]
   // check distance and linkage functions
-  if[not df in key clust.i.dd;clust.i.err.dd[]];
-  if[not lf in key clust.i.ld;clust.i.err.ld[]];
-  if[lf in`complete`average`ward;dgram:clust.hccaw[data:"f"$data;df;lf;2;1b]];
-  if[lf in`single`centroid;dgram:clust.hcscc[data:"f"$data;df;lf;1;::;::;1b]];
+  data:clust.i.floatConversion[data];
+  if[not df in key clust.i.df;clust.i.err.df[]];
+  dgram:$[lf in`complete`average`ward;
+    clust.i.hccaw[data;df;lf;2;1b];
+    lf in`single`centroid;
+    clust.i.hcscc[data;df;lf;1;::;::;1b];
+    clust.i.err.lf[]
+    ];
   `data`inputs`dgram!(data;`df`lf!(df;lf);dgram)
   }
 
@@ -39,7 +44,7 @@ clust.hc.fit:{[data;df;lf]
 // @fileoverview Convert CURE cfg to k clusters
 // @param cfg {dict} Output of .ml.clust.cure.fit
 // @param k   {long} Number of clusters
-// @return    {dict} Updated config with clusters added
+// @return    {dict} Updated config with clusters labels added
 clust.cure.cutk:{[cfg;k]
   cfg,enlist[`clt]!enlist clust.i.cutdgram[cfg`dgram;k-1]
   }
@@ -75,91 +80,38 @@ clust.cure.cutdist:{[cfg;dthresh]
 clust.hc.cutdist:clust.cure.cutdist
 
 // @kind function
-// @category private
-// @fileoverview Predict clusters using hierarchical or CURE config
-// @param ns   {symbol}    Namespace to use - `hc or `cure
-// @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      dict output of .ml.clust.(cutk/cutdist)
-// @return     {long[]}    List of predicted clusters
-clust.i.hccpred:{[ns;data;cfg]
-  // check correct namespace and clusters given
-  if[not ns in`hc`cure;
-    '"Incorrect namespace - please use `hc or `cure"];
-  if[not`clt in key cfg;
-    '"Clusters must be contained within cfg - please run .ml.clust.",
-    $[ns~`hc;"hc";"cure"],".(cutk/cutdist)"];
-  // add namespace and linkage to config dictionary for cure
-  if[ns~`cure;cfg[`inputs],:`ns`lf!(ns;`single)];
-  // recalc reppts for training clusters in asc order to ensure correct labels
-  reppt:clust.i.getrep[cfg]each gc kc:asc key gc:group cfg`clt;
-  // training indicies
-  idxs:til each c:count each reppt[;0];
-  // return closest clusters to testing points
-  clust.i.predclosest["f"$data;cfg;reppt;c;idxs]each til count data 0
-  }
-
-// @kind function
-// @category private
-// @fileoverview Recalculate representative points from training clusters
-// @param cfg  {dict}      Dict output of .ml.clust.(cutk/cutdist)
-// @param idxs {long[][]}  Training data indices
-// @return     {float[][]} Training data points
-clust.i.getrep:{[cfg;idxs]
-  $[cfg[`inputs;`ns]~`cure;
-      flip(clust.i.curerep . cfg[`inputs]`df`n`c)::;
-    cfg[`inputs;`lf]in`ward`centroid;
-      enlist each avg each;]cfg[`data][;idxs]
-  }
-
-// @kind function
-// @category private
-// @fileoverview Predict new cluster for given data point
-// @param data   {float[][]} Points in `value flip` format
-// @param cfg    {dict}      dict output of .ml.clust.(cutk/cutdist)
-// @param reppt  {float[][]} Representative points in matrix format
-// @param c      {long}      Number of points in training clusters
-// @param cltidx {long[][]}  Training data indices 
-// @param ptidx  {long[][]}  Index of current data point
-// @return       {long[]}    List of predicted clusters
-clust.i.predclosest:{[data;cfg;reppt;c;cltidx;ptidx]
-  // intra cluster distances
-  dist:.ml.clust.i.dists[;cfg[`inputs]`df;data[;ptidx];]'[reppt;cltidx];
-  // apply linkage
-  dist:$[`ward~lf:cfg[`inputs]`lf;
-    2*clust.i.ld[lf][1]'[c;dist];
-    clust.i.ld[lf]each dist];
-  // find closest cluster
-  dist?ndst:min dist
-  }
-
-// @kind function
 // @category clust
 // @fileoverview Predict clusters using CURE config
-// @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      `data`df`n`c`clt returned from 
-//   .ml.clust.(cutk/cutdist)
+// @param data {float[][]} Data in matrix format, each column is an individual datapoint
+// @param cfg  {dict}      `data`df`n`c`clt returned from .ml.clust.(cutk/cutdist)
 // @return     {long[]}    List of predicted clusters
-clust.cure.predict:clust.i.hccpred[`cure]
+clust.cure.predict:{[data;cfg]
+  clust.i.hccpred[`cure;data;cfg]
+  }
 
 // @kind function
 // @category clust
 // @fileoverview Predict clusters using hierarchical config
-// @param data {float[][]} Points in `value flip` format
-// @param cfg  {dict}      `data`df`lf`clt returned from 
-//   .ml.clust.(cutk/cutdist)
+// @param data {float[][]} Data in matrix format, each column is an individual datapoint
+// @param cfg  {dict}      `data`df`lf`clt returned from .ml.clust.(cutk/cutdist)
 // @return     {long[]}    List of predicted clusters
-clust.hc.predict:clust.i.hccpred[`hc]
+clust.hc.predict:{[data;cfg]
+  clust.i.hccpred[`hc;data;cfg]
+  }
+
+
+// Utilities
 
 // @kind function
-// @category clust
+// @category private
 // @fileoverview Complete, Average, Ward (CAW) Linkage
-// @param data  {float[][]}    Points in `value flip` format
-// @param df    {fn}           Distance function
-// @param lf    {fn}           Linkage function
+// @param data  {float[][]}    Data in matrix format, each column is an individual datapoint
+// @param df    {symbol}       Distance function name within '.ml.clust.df'
+// @param lf    {symbol}       Linkage function name within '.ml.clust.lf'
 // @param k     {long}         Number of clusters
 // @param dgram {bool}         Generate dendrogram or not (1b/0b)
 // @return      {table/long[]} Dendrogram or list of clusters
-clust.hccaw:{[data;df;lf;k;dgram]
+clust.i.hccaw:{[data;df;lf;k;dgram]
   // check distance function for ward
   if[(not df~`e2dist)&lf=`ward;clust.i.err.ward[]];
   // create initial cluster table
@@ -173,27 +125,26 @@ clust.hccaw:{[data;df;lf;k;dgram]
   }
 
 // @kind function
-// @category clust
+// @category private
 // @fileoverview Single, Centroid, Cure (SCC) Linkage
-// @param data  {float[][]} Points in `value flip` format
-// @param df    {fn}        Distance function
+// @param data  {float[][]} Data in matrix format, each column is an individual datapoint
+// @param df    {symbol}    Distance function name within '.ml.clust.df'
 // @param lf    {fn}        Linkage function
 // @param k     {long}      Number of clusters
 // @param n     {long}      Number of representative points per cluster
 // @param c     {float}     Compression factor for representative points
 // @param dgram {bool}      Generate dendrogram or not (1b/0b)
 // @return      {long[]}    List of clusters
-clust.hcscc:{[data;df;lf;k;n;c;dgram]
+clust.i.hcscc:{[data;df;lf;k;n;c;dgram]
   if[(not df in`edist`e2dist)&lf=`centroid;clust.i.err.centroid[]];
   clustinit:clust.i.initscc[data;df;k;n;c;dgram];
   r:(count[data 0]-k).[clust.i.algoscc[data;df;lf]]/clustinit;
   vres:select from r[1]where valid;
   $[dgram;
     clust.i.dgramidx last[r]0;
-    enlist @[;;:;]/[count[data 0]#0N;vres`points;til count vres]]
+    enlist @[;;:;]/[count[data 0]#0N;vres`points;til count vres]
+  ]
   }
-
-// Utilities
 
 // @kind function
 // @category private
@@ -208,9 +159,67 @@ clust.i.upddgram:{[t;m]
 
 // @kind function
 // @category private
+// @fileoverview Predict clusters using hierarchical or CURE config
+// @param ns   {symbol}    Namespace to use - `hc or `cure
+// @param data {float[][]} Data in matrix format, each column is an individual datapoint
+// @param cfg  {dict}      dict output of .ml.clust.(cutk/cutdist)
+// @return     {long[]}    List of predicted clusters
+clust.i.hccpred:{[ns;data;cfg]
+  data:clust.i.floatConversion[data];
+  // check correct namespace and clusters given
+  if[not ns in`hc`cure;'"Incorrect namespace - please use `hc or `cure"];
+  if[not`clt in key cfg;
+    '"Clusters must be contained within cfg - please run .ml.clust.",
+    $[ns~`hc;"hc";"cure"],".(cutk/cutdist)"];
+  // add namespace and linkage to config dictionary for cure
+  if[ns~`cure;cfg[`inputs],:`ns`lf!(ns;`single)];
+  // recalc reppts for training clusters in asc order to ensure correct labels
+  reppt:clust.i.getrep[cfg]each gc kc:asc key gc:group cfg`clt;
+  // training indicies
+  idxs:til each c:count each reppt[;0];
+  // return closest clusters to testing points
+  clust.i.predclosest[data;cfg;reppt;c;idxs]each til count data 0
+  }
+
+// @kind function
+// @category private
+// @fileoverview Recalculate representative points from training clusters
+// @param cfg  {dict}      Dict output of .ml.clust.(cutk/cutdist)
+// @param idxs {long[][]}  Training data indices
+// @return     {float[][]} Training data points
+clust.i.getrep:{[cfg;idxs]
+  $[cfg[`inputs;`ns]~`cure;
+      flip(clust.i.curerep . cfg[`inputs;`df`n`c])::;
+    cfg[`inputs;`lf]in`ward`centroid;
+      enlist each avg each;]cfg[`data][;idxs]
+  }
+
+// @kind function
+// @category private
+// @fileoverview Predict new cluster for given data point
+// @param data   {float[][]} Data in matrix format, each column is an individual datapoint
+// @param cfg    {dict}      dict output of .ml.clust.(cutk/cutdist)
+// @param reppt  {float[][]} Representative points in matrix format
+// @param c      {long}      Number of points in training clusters
+// @param cltidx {long[][]}  Training data indices
+// @param ptidx  {long[][]}  Index of current data point
+// @return       {long[]}    List of predicted clusters
+clust.i.predclosest:{[data;cfg;reppt;c;cltidx;ptidx]
+  // intra cluster distances
+  dist:.ml.clust.i.dists[;cfg[`inputs]`df;data[;ptidx];]'[reppt;cltidx];
+  // apply linkage
+  dist:$[`ward~lf:cfg[`inputs]`lf;
+    2*clust.i.lf[lf][1]'[c;dist];
+    clust.i.lf[lf]each dist];
+  // find closest cluster
+  dist?ndst:min dist
+  }
+
+// @kind function
+// @category private
 // @fileoverview Initialize cluster table
-// @param data {float[][]} Points in `value flip` format
-// @param df   {fn}        Distance function
+// @param data {float[][]} Data in matrix format, each column is an individual datapoint
+// @param df   {symbol}    Distance function name within '.ml.clust.df' 
 // @return     {table}     Distances, neighbors, clusters and representatives
 clust.i.initcaw:{[data;df]
   // create table with distances and nearest neighhbors noted
@@ -222,11 +231,11 @@ clust.i.initcaw:{[data;df]
 // @kind function
 // @category private
 // @fileoverview Find nearest neighbour index and distance
-// @param data {float[][]} Points in `value flip` format
-// @param df   {fn}        Distance function
+// @param data {float[][]} Data in matrix format, each column is an individual datapoint
+// @param df   {symbol}    Distance function name within '.ml.clust.df' 
 // @param pt   {float[][]} Points in `value flip` format
-// @param idxs {long}      Index of point in pt to find nn for
-// @return     {dict}      Index of and distance to nn
+// @param idxs {long}      Index of point in 'pt' to find nearest neighbour for
+// @return     {dict}      Index of and distance to nearest neighbour
 clust.i.nncaw:{[data;df;pt;idxs]
   `nni`nnd!(d?m;m:min d:@[;idxs;:;0w]clust.i.dists[data;df;pt;idxs])
   }
@@ -234,9 +243,9 @@ clust.i.nncaw:{[data;df;pt;idxs]
 // @kind function
 // @category private
 // @fileoverview CAW algo
-// @param data {float[][]}         Points in `value flip` format
-// @param df   {fn}                Distance function
-// @param lf   {fn}                Linkage function
+// @param data {float[][]}         Data in matrix format, each column is an individual datapoint
+// @param df   {symbol}            Distance function name within '.ml.clust.df'
+// @param lf   {symbol}            Linkage function name within '.ml.clust.lf' 
 // @param l    {(table;float[][])} List with cluster table and linkage matrix
 // @return     {(table;float[][])} Updated l
 clust.i.algocaw:{[data;df;lf;l]
@@ -261,16 +270,14 @@ clust.i.algocaw:{[data;df;lf;l]
 // @category private
 // @fileoverview Complete linkage
 // @param cpts {float[][]} Points in each cluster
-// @param df   {fn}        Distance function
-// @param lf   {fn}        Linkage function
+// @param df   {symbol}    Distance function name within '.ml.clust.df' 
+// @param lf   {symbol}    Linkage function name within '.ml.clust.lf' 
 // @param t    {table}     Cluster table
 // @param chk  {long[]}    Points to check
 // @return     {table}     Updated cluster table
 clust.i.hcupd.complete:{[cpts;df;lf;t;chk]
   // calculate cluster distances using complete method
-  dsts:{[df;lf;x;y]
-    clust.i.ld[lf]raze clust.i.dd[df]x[`pts]-\:'y`pts
-    }[df;lf;cpts chk]each cpts _ chk;
+  dsts:clust.i.completedist[df;lf;cpts;chk];
   // find nearest neighbors
   nidx:dsts?ndst:min dsts;
   // update cluster table
@@ -281,8 +288,8 @@ clust.i.hcupd.complete:{[cpts;df;lf;t;chk]
 // @category private
 // @fileoverview Average linkage
 // @param cpts {float[][]} Points in each cluster
-// @param df   {fn}        Distance function
-// @param lf   {fn}        Linkage function
+// @param df   {symbol}    Distance function name within '.ml.clust.df' 
+// @param lf   {symbol}    Linkage function name within '.ml.clust.lf' 
 // @param t    {table}     Cluster table
 // @param chk  {long[]}    Points to check
 // @return     {table}     Updated cluster table
@@ -292,16 +299,14 @@ clust.i.hcupd.average:clust.i.hcupd.complete
 // @category private
 // @fileoverview Ward linkage
 // @param cpts {float[][]} Points in each cluster
-// @param df   {fn}        Distance function
-// @param lf   {fn}        Linkage function
+// @param df   {symbol}    Distance function name within '.ml.clust.df' 
+// @param lf   {symbol}    Linkage function name within '.ml.clust.lf'
 // @param t    {table}     Cluster table
 // @param chk  {long[]}    Points to check
 // @return     {table}     Updated cluster table
 clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
  // calculate distances using ward method
- dsts:{[df;lf;x;y]
-   2*clust.i.ld[lf][x`n;y`n]clust.i.dd[df]x[`reppt]-y`reppt
-   }[df;lf;cpts chk]each cpts _ chk;
+ dsts:clust.i.warddist[df;lf;cpts;chk];
  // find nearest neighbors
  nidx:dsts?ndst:min dsts;
  // update cluster table and rep pts
@@ -309,23 +314,49 @@ clust.i.hcupd.ward:{[cpts;df;lf;t;chk]
 
 // @kind function
 // @category private
+// @fileoverview Calculate distances between points based on specified
+//   linkage and distance functions
+// @param df   {symbol}    Distance function name within '.ml.clust.df'
+// @param lf   {symbol}    Linkage function name within '.ml.clust.lf'
+// @param data {float[][]} Points in each cluster
+// @param idxs {long[]}    Indices for which to produce distances
+// @return     {float[]}   list of distances between all data points and those in idxs
+clust.i.completedist:{[df;lf;data;idxs]
+  {[df;lf;xdata;ydata]
+    dists:raze clust.i.df[df]xdata[`pts]-\:'ydata`pts;
+    clust.i.lf[lf]dists}[df;lf;data idxs]each data _ idxs
+  }
+
+// @kind function
+// @category private
+// @fileoverview Calculate distances between points based on ward linkage and
+//   specified distance function
+// @param df   {symbol}    Distance function name within '.ml.clust.df'
+// @param lf   {symbol}    Linkage function name within '.ml.clust.lf'
+// @param data {float[][]} Points in each cluster
+// @param idxs {long[]}    Indices for which to produce distances
+// @return     {float[]}   list of distances between all data points and those in idxs
+clust.i.warddist:{[df;lf;data;idxs]
+  {[df;lf;xdata;ydata]
+   dists:clust.i.df[df]xdata[`reppt]-ydata`reppt;
+   2*clust.i.lf[lf][xdata`n;ydata`n;dists]}[df;lf;data idxs]each data _ idxs
+  }
+
+// @kind function
+// @category private
 // @fileoverview Initialize SCC clusters
-// @param data {float[][]}                 Points in `value flip` format
-// @param df   {fn}                        Distance function
-// @param k    {long}                      Number of clusters
-// @param n    {long}                      Number of representative points per 
-//   cluster
-// @param c    {float}                     Compression factor for 
-//   representative points
+// @param data {float[][]}  Data in matrix format, each column is an individual datapoint
+// @param df   {symbol}     Distance function name within '.ml.clust.df' 
+// @param k    {long}       Number of clusters
+// @param n    {long}       Number of representative points per cluster
+// @param c    {float}      Compression factor for representative points
 // @return     {(dict;long[];table;table)} Parameters, clusters, representative
 //   points and the kdtree
 clust.i.initscc:{[data;df;k;n;c;dgram]
   // build kdtree
   kdtree:clust.kd.newtree[data]1000&ceiling .01*nd:count data 0;
-  // create distance table with closest clusters identified
-  dists:update closestClust:closestPoint from{[kdtree;data;df;i]
-    clust.kd.nn[kdtree;data;df;i;data[;i]]
-    }[kdtree;data;df]each til nd;
+  // generate distance table with closest clusters identified
+  dists:clust.i.gendisttab[kdtree;data;df;nd];
   lidx:select raze idxs,self:self where count each idxs from kdtree where leaf;
   r2l:exec self idxs?til count i from lidx;
   // create cluster table 
@@ -341,6 +372,24 @@ clust.i.initscc:{[data;df;k;n;c;dgram]
   (params;clusts;reppts;kdtree;(lnkmat;dgram))
   }
 
+
+// @kind function
+// @category private
+// @fileoverview Generate distance table indicating closest cluster
+// @param kdtree {tab}       initial representation of the k-d tree
+// @param data   {float[][]} Data in matrix format, each column is an individual datapoint
+// @param df     {symbol}    Distance function name within '.ml.clust.df'
+// @param npts   {long}      Number of points in the dataset 
+// @return       {tab}       Distance table containing an indication of the closest cluster
+clust.i.gendisttab:{[kdtree;data;df;npts]
+  // generate the distance table
+  gentab:{[kdtree;data;df;idx]
+    clust.kd.nn[kdtree;data;df;idx;data[;idx]]
+    }[kdtree;data;df]each til npts;
+  // update naming convention
+  update closestClust:closestPoint from gentab
+  }
+
 // @kind function
 // @category private
 // @fileoverview Representative points for Centroid linkage
@@ -353,14 +402,14 @@ clust.i.centrep:{[p]
 // @kind function
 // @category private
 // @fileoverview Representative points for CURE
-// @param df {fn}        Distance function
+// @param df {symbol}    Distance function name within '.ml.clust.df' 
 // @param n  {long}      Number of representative points per cluster
 // @param c  {float}     Compression factor for representative points
 // @param p  {float[][]} List of data points
 // @return   {float[][]} List of representative points
 clust.i.curerep:{[df;n;c;p]
   rpts:1_first(n&count p 0).[{[df;rpts;p]
-    i:imax min clust.i.dd[df]each p-/:neg[1|-1+count rpts]#rpts;
+    i:imax min clust.i.df[df]each p-/:neg[1|-1+count rpts]#rpts;
     rpts,:enlist p[;i];
     (rpts;.[p;(::;i);:;0n])
     }[df]]/(enlist avgpt:avg each p;p);
@@ -420,74 +469,77 @@ clust.i.extractclt:{[clts;cntt;inds]
 // @kind function
 // @category private
 // @fileoverview SCC algo
-// @param data   {float[][]}                     Points in `value flip` format
-// @param df     {fn}                            Distance function
-// @param lf     {fn}                            Linkage function
-// @param params {dict}                          Parameters - k (no. clusts), n
-//   (no. reppts per clust), reppts, kdtree
-// @param clusts {table}                         Cluster table
-// @param reppts {float[][]}                     Representative points and 
-//   associated info
-// @param kdtree {table}                         k-dimensional tree storing 
-//   points and distances
+// @param data {float[][]} Data in matrix format, each column is 
+//   an individual datapoint
+// @param df   {symbol}      Distance function name within '.ml.clust.df'
+// @param lf   {symbol}      Linkage function name within '.ml.clust.lf' 
+// @param params {dict}      Parameters - k (no. clusts), n (no. reppts per clust), reppts, kdtree
+// @param clusts {table}     Cluster table
+// @param reppts {float[][]} Representative points and associated info
+// @param kdtree {table}     k-dimensional tree storing points and distances
 // @return       {(dict;long[];float[][];table)} Parameters dict, clusters, 
 //   representative points and kdtree tables
 clust.i.algoscc:{[data;df;lf;params;clusts;reppts;kdtree;lnkmat]
-
   // merge closest clusters
   clust0:exec clust{x?min x}closestDist from clusts where valid;
   newmrg:clusts clust0,clust1:clusts[clust0]`closestClust;
   newmrg:update valid:10b,reppts:(raze reppts;0#0),points:(raze points;0#0)from newmrg;
-
   // make dendrogram if required
   if[lnkmat 1;
     m:lnkmat 0;
     m,:newmrg[`clusti],fnew[`closestDist],count(fnew:first newmrg)`points;
-    lnkmat[0]:m];
-
+    lnkmat[0]:m
+  ];
   // keep track of old reppts
   oldrep:reppts newmrg[0]`reppts;
   // find reps in new cluster
   $[sgl:lf~`single;
     // for single new reps=old reps -> no new points calculated 
     newrep:select reppt,clust:clust0 from oldrep;
-    // if centroid reps=avg, if cure=calc reps
-   [newrep:flip params[`rpcols]!flip$[lf~`centroid;clust.i.centrep;clust.i.curerep[df;params`n;params`c]]data[;newmrg[0]`points];
+    [
+    // generate new representative points table (centroid -> reps=avg; cure -> calc reps)
+    newrepfunc:$[lf~`centroid;clust.i.centrep;clust.i.curerep[df;params`n;params`c]];
+    newrepkeys:params[`rpcols];
+    newrepvals:flip newrepfunc[data[;newmrg[0]`points]];
+    newrep:flip newrepkeys!newrepvals;
     newrep:update clust:clust0,reppt:count[i]#newmrg[0]`reppts from newrep;
     // new rep leaves
     newrep[`leaf]:(clust.kd.findleaf[kdtree;;kdtree 0]each flip newrep params`rpcols)`self;
     newmrg[0;`reppts]:newrep`reppt;
     // delete old points from leaf and update new point to new rep leaf
     kdtree:.[kdtree;(oldrep`leaf;`idxs);except;oldrep`reppt];
-    kdtree:.[kdtree;(newrep`leaf;`idxs);union ;newrep`reppt]]];
+    kdtree:.[kdtree;(newrep`leaf;`idxs);union ;newrep`reppt]
+    ]
+  ];
   // update clusters and reppts
   clusts:@[clusts;newmrg`clust;,;delete clust from newmrg];
   reppts:@[reppts;newrep`reppt;,;delete reppt from newrep];
- 
   updrep:reppts newrep`reppt;
   // nneighbour to clust
   if[sgl;updrep:select from updrep where closestClust in newmrg`clust];
-  updrep:updrep,'clust.kd.nn[kdtree;reppts params`rpcols;df;newmrg[0]`points]each flip updrep params`rpcols;
+  // calculate and append to representative point table the nearest neighbours
+  // of columns containing representative points
+  updrepdata:flip updrep params`rpcols;
+  updrepdatann:clust.kd.nn[kdtree;reppts params`rpcols;df;newmrg[0]`points] each updrepdata;
+  updrep:updrep,'updrepdatann;
   updrep:update closestClust:reppts[closestPoint;`clust]from updrep;
-
   if[sgl;
     reppts:@[reppts;updrep`reppt;,;select closestDist,closestClust from updrep];
     updrep:reppts newrep`reppt];
   // update nneighbour of new clust  
   updrep@:raze imin updrep`closestDist;
   clusts:@[clusts;updrep`clust;,;`closestDist`closestClust#updrep];
-
   $[sgl;
     // single - nneighbour=new clust
-   [clusts:update closestClust:clust0 from clusts where valid,closestClust=clust1;
-    reppts:update closestClust:clust0 from reppts where       closestClust=clust1];
+    [clusts:update closestClust:clust0 from clusts where valid,closestClust=clust1;
+     reppts:update closestClust:clust0 from reppts where       closestClust=clust1];
     // else do nneighbour search
     if[count updcls:select from clusts where valid,closestClust in(clust0;clust1);
-    updcls:updcls,'{x imin x`closestDist}each clust.kd.nn[kdtree;reppts params`rpcols;df]/:'
-      [updcls`reppts;flip each reppts[updcls`reppts]@\:params`rpcols];
-    updcls[`closestClust]:reppts[updcls`closestPoint]`clust;
-    clusts:@[clusts;updcls`clust;,;select closestDist,closestClust from updcls]]];
-
+      updcls:updcls,'{x imin x`closestDist}each clust.kd.nn[kdtree;reppts params`rpcols;df]/:'
+        [updcls`reppts;flip each reppts[updcls`reppts]@\:params`rpcols];
+      updcls[`closestClust]:reppts[updcls`closestPoint]`clust;
+      clusts:@[clusts;updcls`clust;,;select closestDist,closestClust from updcls]
+    ]
+  ];
   (params;clusts;reppts;kdtree;lnkmat)
-
   }

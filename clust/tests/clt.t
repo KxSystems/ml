@@ -42,18 +42,19 @@ asc[key .ml.clust.ap.fit[d2;`nege2dist;0.5;min;(::)]]~`clt`data`exemplars`inputs
 // K-Means
 
 // Fit
-.[.ml.clust.kmeans.fit;(d1;`mdist;4;2;1b);1b]
-value[group .ml.clust.kmeans.fit[d1;`e2dist;4;2;1b]`clt]~d1clt
-value[group .ml.clust.kmeans.fit[d1;`edist ;4;2;1b]`clt]~d1clt
-asc[key .ml.clust.kmeans.fit[d2;`edist ;4;2;1b]]~`clt`data`inputs`reppts
+kMeansCfg:enlist[`iter]!enlist 2
+.[.ml.clust.kmeans.fit;(d1;`mdist;4;kMeansCfg);1b]
+value[group .ml.clust.kmeans.fit[d1;`e2dist;4;kMeansCfg]`clt]~d1clt
+value[group .ml.clust.kmeans.fit[d1;`edist ;4;kMeansCfg]`clt]~d1clt
+asc[key .ml.clust.kmeans.fit[d2;`edist ;4;kMeansCfg]]~`clt`data`inputs`reppts
 
 // Predict
-count[.ml.clust.kmeans.predict[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;2;1b]]]~15
-count[.ml.clust.kmeans.predict[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`edist;4;2;1b]]]~15
+count[.ml.clust.kmeans.predict[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;kMeansCfg]]]~15
+count[.ml.clust.kmeans.predict[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`edist;4;kMeansCfg]]]~15
 
 // Update
-value[group .ml.clust.kmeans.update[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;2;1b]]`clt]~d1clt
-`clt`data`inputs`reppts~asc key .ml.clust.kmeans.update[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`edist;4;2;1b]]
+value[group .ml.clust.kmeans.update[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;kMeansCfg]]`clt]~d1clt
+`clt`data`inputs`reppts~asc key .ml.clust.kmeans.update[d1tts 1;.ml.clust.kmeans.fit[d1tts 0;`edist;4;kMeansCfg]]
 
 // DBSCAN
 
@@ -76,7 +77,7 @@ value[group .ml.clust.dbscan.update[d1tts 1;.ml.clust.dbscan.fit[d1tts 0;`edist;
 value[group .ml.clust.dbscan.update[d1tts 1;.ml.clust.dbscan.fit[d1tts 0;`mdist;5;5]]`clt]~d1clt
 `clt`data`inputs`t~asc key .ml.clust.dbscan.update[d1tts 1;.ml.clust.dbscan.fit[d1tts 0;`mdist;5;5]]
 
-// CURE 
+// CURE
 
 // Fit
 value[group .ml.clust.cure.cutk[.ml.clust.cure.fit[d1;`e2dist;5;0];4]`clt]~d1clt
@@ -91,7 +92,7 @@ value[group .ml.clust.cure.cutk[.ml.clust.cure.fit[d2;`mdist;10;0.1];4]`clt]~(ti
 .ml.clust.cure.predict[d1tts 1;.ml.clust.cure.cutk[.ml.clust.cure.fit[d1tts 0;`edist;10;0.2];4]]~0 3 0 0 3 3 0 0 0 0 0 3 0 3 3
 .ml.clust.cure.predict[d1tts 1;.ml.clust.cure.cutk[.ml.clust.cure.fit[d1tts 0;`mdist;3;0.15];4]]~1 3 1 3 3 3 1 1 1 1 1 3 1 3 3
 
-// Hierarchical 
+// Hierarchical
 
 // Fit
 (asc each mat .ml.clust.hc.fit[d1;`e2dist;`single]`dgram)~asc each lnk[flip d1;`single;`sqeuclidean]`
@@ -119,3 +120,4 @@ value[group .ml.clust.hc.cutdist[tab4;30]`clt]~value group fclust[mat tab4`dgram
 .ml.clust.hc.predict[d1tts 1;.ml.clust.hc.cutk[.ml.clust.hc.fit[d1tts 0;`e2dist;`single];4]]~1 2 1 1 2 2 1 1 1 1 1 2 1 2 2
 .ml.clust.hc.predict[d1tts 1;.ml.clust.hc.cutk[.ml.clust.hc.fit[d1tts 0;`e2dist;`ward];4]]~1 3 1 1 3 3 1 1 1 1 1 3 1 3 3
 .ml.clust.hc.predict[d1tts 1;.ml.clust.hc.cutk[.ml.clust.hc.fit[d1tts 0;`edist;`centroid];4]]~1 3 1 1 3 3 1 1 1 1 1 3 1 3 3
+
