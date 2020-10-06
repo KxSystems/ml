@@ -40,7 +40,35 @@ or via conda:
 conda install --file requirements.txt
 ```
 
-**Note**: Tensorflow and Keras are required for the application of the deep learning models within this platform. However given the large memory requirements of tensorflow the platform will operate without tensorflow by not running the deep learning models. In order to access the full functionality of the interface keras and tensorflow will need to be installed separately by a user.
+### Optional requirements for advanced modules
+
+The above requirements allow users to access the base functionality provided within AutoML. Additional modules are available - including Sobol sequence hyperparameter search, LaTeX report generation and Keras, PyTorch and NLP models. However, given the large memory requirement for the dependencies of these modules, they are not included in the base functionality and must be installed by the user themself.
+
+**Sobol search** - via pip (see package details [here](https://pypi.org/project/sobol-seq/)):
+```bash
+sobol-seq
+```
+
+**LaTeX** - via conda or pip:
+```bash
+pylatex
+```
+
+**Keras** - via conda or pip:
+```bash
+keras
+tensorflow
+```
+
+**PyTorch** - via conda or pip:
+```bash
+torch
+```
+
+**NLP**
+
+The NLP functionality contained within AutoML requires the [Kx NLP library](https://github.com/KxSystems/nlp) along with `gensim` which can be installed using conda or pip.
+
 
 ## Installation
 

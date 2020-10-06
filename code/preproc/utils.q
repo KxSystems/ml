@@ -25,6 +25,9 @@ prep.i.autotype:{[t;typ;p]
       // restore the aggregating columns 
       tb:flip(l!t l,:()),cls!t cls;
       prep.i.errcol[cols t;cols tb;typ]];
+    typ=`nlp;
+    [cls:.ml.i.fndcols[t;"sfihjbepmdznuvtC"];
+      tb:flip cls!t cls;prep.i.errcol[cols t;cls;typ]];
     '`$"This form of feature extraction is not currently supported"];
   tb}
 
@@ -36,12 +39,13 @@ prep.i.describe:{[t]
   timecols:.ml.i.fndcols[t;"pmdznuvt"];
   boolcols:.ml.i.fndcols[t;"b"];
   catcols :.ml.i.fndcols[t;"s"];
-  textcols:.ml.i.fndcols[t;"c"];
+  textcols:.ml.i.fndcols[t;"C"];
   num  :prep.i.metafn[t;numcols ;(count;{count distinct x};avg;sdev;min;max;{`numeric})];
   symb :prep.i.metafn[t;catcols ;prep.i.nonnumeric[{`categorical}]];
   times:prep.i.metafn[t;timecols;prep.i.nonnumeric[{`time}]];
   bool :prep.i.metafn[t;boolcols;prep.i.nonnumeric[{`boolean}]];
-  flip columns!flip num,symb,times,bool
+  text :prep.i.metafn[t;textcols;prep.i.nonnumeric[{`text}]];
+  flip columns!flip num,symb,times,bool,text
   }
 
 // Length checking to ensure that the table and target are appropriate for the task being performed
@@ -52,7 +56,7 @@ prep.i.lencheck:{[t;tgt;typ;p]
       // Check that the number of unique aggregating sets is the same as number of targets
       if[count[tgt]<>count distinct $[1=count p`aggcols;t[p`aggcols];(,'/)t p`aggcols];
          '`$"Target count must equal count of unique agg values for fresh"];
-      typ in`tseries`normal;
+      typ in`tseries`normal`nlp;
       if[count[tgt]<>count t;
          '`$"Must have the same number of targets as values in table"];
     '`$"Input for typ must be a supported type"];
@@ -91,7 +95,7 @@ prep.i.symencode:{[t;n;b;p;enc]
           // frequency encode if ohe is empty
           ` in enc`ohe;raze .ml.freqencode[;enc`freq]each flip each 0!p[`aggcols]xgroup t;
           t];
-        `normal~p`typ;
+        p[`typ]in`nlp`normal;
         $[all {not ` in x}each value enc;
           .ml.onehot[.ml.freqencode[t;enc`freq];enc`ohe];
           ` in enc`freq;.ml.onehot[t;enc`ohe];
@@ -113,42 +117,6 @@ prep.i.symencode:{[t;n;b;p;enc]
   r}
 
 
-// Utilities for feat_extract.q
-
-// Perform bulk transformations of hij columns for all unique linear combinations of such columns
-/. r > table with bulk transformtions applied appropriately
-prep.i.bulktransform:{[t]
-  c:.ml.i.fndcols[t;"hij"];
-  // Name the columns based on the unique combinations
-  n:raze(,'/)`$(raze each string c@:.ml.combs[count c;2]),\:/:("_multi";"_sum";"_div";"_sub");
-  // Apply transforms based on naming conventions chosen and re-form the table with these appended
-  flip flip[t],n!(,/)(prd;sum;{first(%)x};{last deltas x})@/:\:t c}
-
-// Used for the recursive application of functions to a kdb+ table
-/* t  = table
-/* fn = function to be applied to the table
-/. table with the desired transforms applied recursively
-prep.i.applyfn:{[t;fn]typ:type fn;@[;t]$[-11h=typ;get[fn];100h=typ;fn;.automl.prep.i.default]}
-
-// Perform a truncated single value decomposition on unique linear combinations of float columns
-// https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html
-prep.i.truncsvd:{[t]
-  c:.ml.i.fndcols[t;"f"];
-  c@:.ml.combs[count c,:();2];
-  svd:.p.import[`sklearn.decomposition;`:TruncatedSVD;`n_components pykw 1];
-  flip flip[t],(`$(raze each string c),\:"_trsvd")!{raze x[`:fit_transform][flip y]`}[svd]each t c}
-
-// Default behaviour for the system is to pass through the table without the application of
-// any feature extraction procedures, this is for computational efficiency in initial builds
-// of the system and may be augmented with a more intelligent system moving forward
-prep.i.default:{[t]t}
-
-// Error message related to the 'refusal' of the feature significance tests to 
-// find appropriate columns to explain the data from those produced
-prep.i.freshsigerr:"The feature significance extraction process deemed none of the features",
-  "to be important continuing anyway with all features"
-
-
 // Utils.q utilities
 
 // Error flag for removal of inappropriate columms
@@ -167,3 +135,4 @@ prep.i.metafn:{[t;sl;fl]$[0<count sl;fl@\:/:flip(sl)#t;()]}
 
 // Default list of functions to be applied in metadata function for non-numeric data
 prep.i.nonnumeric:{[t](count;{count distinct x};{};{};{};{};t)}
+

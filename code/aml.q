@@ -16,10 +16,14 @@ run:{[tb;tgt;ftype;ptype;p]
   dict:i.updparam[tb;p;ftype],enlist[`typ]!enlist ftype;
   // Check that the functions to overwrite default behaviour exist in process
   i.checkfuncs[dict];
+  // Check that the hyperparameter method to be applied is suitable
+  i.checkxvhp[dict];
+  // Check that if nlp is being run the correct packages are all available
+  if[ftype~`nlp;i.nlpcheck[]];
   // update the seed based on time of day if user does not specify the seed in p
   if[`rand_val~dict[`seed];dict[`seed]:"j"$.z.t];
   // if required to save data construct the appropriate folders
-  if[dict[`saveopt]in 1 2;spaths:i.pathconstruct[dtdict;dict`saveopt]];
+  if[savemdl:dict[`saveopt]in 1 2;spaths:i.pathconstruct[dtdict;dict`saveopt]];
   // dictionaries allowing parameters and values to be assigned throughout this function
   // this ensures that the number of local variables does not exceed allowed levels
   params:()!();
@@ -38,7 +42,7 @@ run:{[tb;tgt;ftype;ptype;p]
   tb:prep`table;
   params[`describe]:prep`describe;
   -1 i.runout`pre;
-  tb:prep.create[tb;dict;ftype];
+  tb:prep.create[tb;dict;ftype;spaths];
   // assign the returned values from the feature extraction phase
   vals[`feat_tab]:tb`preptab;
   params[`feat_time]:tb`preptime;
@@ -53,7 +57,7 @@ run:{[tb;tgt;ftype;ptype;p]
   vals[`ytrn]:tts`ytrain;vals[`ytst]:tts`ytest;
   params[`mdls]:i.kerascheck[params`mdls;tts;tgt];
   // Check if Tensorflow/Keras not available for use, NN models removed
-  if[1~checkimport[];params[`mdls]:?[params`mdls;enlist(<>;`lib;enlist `keras);0b;()]];
+  if[1~checkimport[0];params[`mdls]:?[params`mdls;enlist(<>;`lib;enlist `keras);0b;()]];
   -1 i.runout`sig;-1 i.runout`slct;
   -1 i.runout[`tot],string[params[`cnt_feats]:count cols tab];
   // Set numpy random seed if multiple prcoesses
@@ -96,7 +100,7 @@ new:{[t;dt;tm]
   fp:dt_tm[0],"/run_",dt_tm 1;
   // Relevant python functionality for loading of models
   skload:.p.import[`joblib][`:load];
-  if[0~checkimport[];krload:.p.import[`keras.models][`:load_model]];
+  if[0~checkimport[0];krload:.p.import[`keras.models][`:load_model]];
   // Retrieve the metadata from a file path based on the run date/time
   metadata:i.getmeta[i.ssrwin[path,"/outputs/",fp,"/config/metadata"]];
   typ:metadata`typ;
@@ -104,6 +108,8 @@ new:{[t;dt;tm]
     i.normalproc[t;metadata];
     `fresh=typ;
     i.freshproc[t;metadata];
+    `nlp=typ;
+    i.nlpproc[t;metadata;fp];
     '`$"This form of operation is not currently supported"
     ];
   $[(mp:metadata[`pylib])in `sklearn`keras;
@@ -127,13 +133,14 @@ savedefault:{[fn;ftype]
   fn:$[10h~typf:type fn;fn;
       -11h~typf;$[":"~first strf;1_;]strf:string typf;
       '`$"filename must be string, symbol or hsym"];
-  fp:hsym`$i.ssrwin[raze[path],"/code/models/",fn];
+  fp:hsym`$i.ssrwin[raze[path],"/code/models/flat_parameters/",fn];
   if[not ()~key fp;'"This file already exists."];
   // Open handle to file fn
   h:hopen fp;
   // Set d to default dictionary for feat_typ
   d:$[`fresh ~ftype;i.freshdefault[];
       `normal~ftype;i.normaldefault[];
+      `nlp   ~ftype;i.nlpdefault[];
       '`$"feature extraction type not supported"];
   // String values for file
   vals:{$[1=count x;

@@ -35,7 +35,7 @@ post.report:{[dict;dt;fname;ptype]
  f:cell[pdf;f;30;"Breakdown of Pre-Processing"];
 
  font[pdf;"Helvetica";11];
- f:cell[pdf;f;30;"Following the extraction of features a total of ",string[dict`cnt_feats]," were produced."];
+ f:cell[pdf;f;30;string[dict[`typ]]," feature extraction was performed with a total of ",string[dict`cnt_feats]," features produced."];
 
  f:cell[pdf;f;30;"Feature extraction took ",string[dict`feat_time]," time in total."];
 
@@ -80,23 +80,26 @@ post.report:{[dict;dt;fname;ptype]
 
  f:cell[pdf;f;30;"The total time to complete the running of this model on the validation set was: ",string[dict`val_time],"."];
 
+ hptyp:@[;0;upper]string srch:dict`hp;
+ hptyp:enlist[hptyp],$[srch=`grid;`gs;srch in`random`sobol;`rs];
+
  if[not bst_mdl in i.excludelist;
    font[pdf;"Helvetica-Bold";13];
-   gstitle:"Grid search for a ",string[bst_mdl]," model.";
-   f:cell[pdf;f;30;"Grid search for a ",string[bst_mdl]," model."];
+   hptitle:hptyp[0]," search for a ",string[bst_mdl]," model.";
+   f:cell[pdf;f;30;hptyp[0]," search for a ",string[bst_mdl]," model."];
    
    font[pdf;"Helvetica";11];
-   f:cell[pdf;f;30;]$[(dict[`gs]0)in `mcsplit`pcsplit;
-           "The grid search was completed using .ml.gs.",string[dict[`gs]0],
-             " with a percentage of ",string[dict[`gs]1],"% of training data used for validation";
-           "A ",string[dict[`gs]1],"-fold grid-search was performed on the training + validation set",
-             " to find the best model using, ",string[dict[`gs]0],"."];
+   f:cell[pdf;f;30;]$[(dict[hptyp 1]0)in `mcsplit`pcsplit;
+           "The hyperparameter search was completed using .ml.",string[hptyp 1],".",string[dict[hptyp 1]0],
+             " with a percentage of ",string[dict[hptyp 1]1],"% of training data used for validation";
+           "A ",string[dict[hptyp 1]1],"-fold ",lower[hptyp 0],"-search was performed on the training + validation set",
+             " to find the best model using, ",string[dict[hptyp 1]0],"."];
    
    font[pdf;"Helvetica";11];
    f:cell[pdf;f;30;"The following are the hyperparameters which have been deemed optimal for the model"];
    
-   dgs:{(,'/)string(key x;count[x]#" ";count[x]#"=";count[x]#" ";value x)}dict`hyper_params;
-   cntf:first [count dgs]{[m;h;s]ff:cell[m;h[0];15;s[h[1]]];(ff;1+h[1])}[pdf;;dgs]/(f-5;0);
+   dhp:{(,'/)string(key x;count[x]#" ";count[x]#"=";count[x]#" ";value x)}dict`hyper_params;
+   cntf:first [count dhp]{[m;h;s]ff:cell[m;h[0];15;s[h[1]]];(ff;1+h[1])}[pdf;;dhp]/(f-5;0);
    f:first cntf];
   
   f:cell[pdf;f;30;"The score for the best model fit on the entire training set and scored on the test set was = ",string[dict`test_score]];

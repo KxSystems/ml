@@ -8,18 +8,26 @@
 // Utilities for proc.q
 
 // Text files that can be parsed from within the models folder
-proc.i.files:`class`reg`score!("classmodels.txt";"regmodels.txt";"scoring.txt")
+proc.i.files:`class`reg`score!("models/classmodels.txt";"models/regmodels.txt";"scoring/scoring.txt")
 
 // Build up the model to be applied based on naming convention
 /* lib = library which forms the basis for the definition
 /* fnc = function name if keras or module from which model is derived for keras
 /. r   > the appropriate function or projection in the case of sklearn
 proc.i.mdlfunc:{[lib;fnc;mdl]
-  $[`keras~lib;
+  $[lib in `keras`pytorch;
     // retrieve keras model from the .automl namespace eg '.automl.regfitscore'
-    get` sv``automl,`fitscore;
+    proc.i.fitscore;
     // construct the projection used for sklearn models eg '.p.import[`sklearn.svm][`:SVC]'
     {[x;y;z].p.import[x]y}[` sv lib,fnc;hsym mdl]]}
+
+proc.i.fitscore:{[d;s;mtype]
+  // encode multi-class labels appropriately
+  if[mtype~`multi;
+    d[;1]:npa@'flip@'./:[;((::;0);(::;1))](0,count d[0]1)_/:value .ml.i.onehot1(,/)d[;1]];
+  m:get[".automl.",string[mtype],"mdl"][d;s;mtype];
+  m:get[".automl.",string[mtype],"fit"][d;m];
+    get[".automl.",string[mtype],"predict"][d;m]}
 
 // Update models available for use based on the number of rows in the data set
 /* mdls = table defining models which are to be applied to the dataset
@@ -31,7 +39,6 @@ proc.i.updmodels:{[mdls;tgt]
     -1"No longer running neural nets or svms\n";
     select from mdls where(lib<>`keras),not fnc in`neural_network`svm];mdls]}
 
-
 // Utilities for xvgs.q
 
 // parse the hyperparameter flatfile
@@ -41,9 +48,12 @@ proc.i.paramparse:{[fn;fp]key[k]!(value@){(!).("S=;")0:x}each k:(!).("S*";"|")0:
 // The following two functions together extract the hyperparameter dictionaries
 // based on the applied model
 /. r   > the hyperparameters appropriate for the model being used
-proc.i.edict:{[fn;fp;mdl]key[k]!value each value k:proc.i.paramparse[fn;fp]mdl}
-proc.i.extractdict:proc.i.edict["hyperparams.txt";"/code/models/";]
-
+proc.i.extractdict:{[bm;p]
+  // get grid/random hyperparameter file name
+  fn:$[`grid=p`hp;[hptyp:`gs;"grid"];p[`hp]in`random`sobol;[hptyp:`rs;"random"];'"unsupported hyperparameter generation method"];
+  // load in table of hyperparameters to dictionary with (hyperparameter!values)
+  system"l ",path,"/code/models/hyper_parameters/",fn,"_hyperparameters.q";
+  (hptyp;h[`hyperparams]!(h:hyperparams bm)`values)}
 
 // Utilities for both scripts
 

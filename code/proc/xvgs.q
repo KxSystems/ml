@@ -27,39 +27,43 @@ proc.xv.seed:{[xtrn;ytrn;p;mdls]
     get[p[`xv]0][p[`xv]1;1;xtrn;ytrn;p[`prf][mdls`minit;s]]]}
 
 
-// Grid search over the set of all hyperparameters outlined in code/models/hyperparams.txt
+// Hyperparameter search over the set of all hyperparameters outlined in code/models/hyperparams.txt
 /* xtst = Testing features (matrix)
 /* ytst = Testing target (vector)
-/* bm   = name of the best model as on which a grid search should be completed as a symbol
+/* bm   = name of the best model as on which a hyperparameter search should be completed as a symbol
 /*        derived from initial cross validation
 /* typ  = type of the problem being solved, this can be either `class or `reg
 /. r    > a dictionary containing:
 /.        1. the score achieved for the best model; 2. the hyperparameters from the best model
 /.        3. the fitted best model; 4. predicted values based on testing set
-proc.gs.psearch:{[xtrn;ytrn;xtst;ytst;bm;p;typ;mdls]
-  dict:proc.i.extractdict[bm];
+proc.hp.psearch:{[xtrn;ytrn;xtst;ytst;bm;p;typ;mdls]
+  dict:proc.i.extractdict[bm;p];
+  hptyp:dict 0;dict:dict 1;
   // Extract the required sklearn module name
   module:` sv 2#proc.i.txtparse[typ;"/code/models/"]bm;
   fn:i.scfn[p;mdls];
   o :proc.i.ord fn;
   // Import the required embedPy module
   epymdl:.p.import[module][hsym bm];
-  // Projection for fitting and prediction grid search
-  fitpred:gs.fitpredict[get fn]{y;x}[epymdl;];
-  // Split the training data into a representation of the breakdown of data for the grid search.
-  // This is used to ensure that if a grid search is done on KNN that there are sufficient,
+  // Projection for fitting and prediction hyperparameter search
+  fitpred:hp.fitpredict[get fn]{y;x}[epymdl;];
+  // Split the training data into a representation of the breakdown of data for the hyperparameter search.
+  // This is used to ensure that if a hyperparameter search is done on KNN that there are sufficient,
   // data points in the validation set for all hyperparameter nearest neighbour calculations.
-  spltcnt:$[p[`gs;0]in`mcsplit`pcsplit;1-p[`gs]1;(p[`gs;1]-1)%p[`gs]1]*count[xtrn]*1-p`hld;
-  if[bm in `KNeighborsClassifier`KNeighborsRegressor;
-    if[0<count where n:spltcnt<dict`n_neighbors;
-      dict[`n_neighbors]@:where not n]];
+  spltcnt:$[p[hptyp;0]in`mcsplit`pcsplit;1-p[hptyp]1;(p[hptyp;1]-1)%p[hptyp]1]*count[xtrn]*1-p`hld;
+  if[(hptyp=`gs)&kncr:bm in`KNeighborsClassifier`KNeighborsRegressor;
+    if[0<count where n:spltcnt<dict`n_neighbors;dict[`n_neighbors]@:where not n]];
+  if[(hptyp=`rs)&kncr;
+    if[spltcnt<dict[`n_neighbors]2;dict[`n_neighbors;2]:"j"$spltcnt]];
+  // if random add extra parameters
+  if[hptyp=`rs;dict:`typ`random_state`n`p!(p`hp;p`seed;p`trials;dict)];
   // Complete an appropriate grid search, returning scores for each validation fold
   bm:first exec minit from mdls where model=bm;
   // modification of final grid search parameter required to allow modified
   // results ordering and function definition to take place
-  gsprms:get[p[`gs]0][p[`gs]1;1;xtrn;ytrn;p[`prf]bm;dict;`val`ord`scf!(p`hld;o;fn)];
+  hpprms:get[p[hptyp]0][p[hptyp]1;1;xtrn;ytrn;p[`prf]bm;dict;`val`ord`scf!(p`hld;o;fn)];
   // Extract the best hyperparameter set based on scoring function
-  hyp:first key first gsprms;
+  hyp:first key first hpprms;
   bmdl:epymdl[pykwargs hyp][`:fit][xtrn;ytrn];
   pred:bmdl[`:predict][xtst]`;
   score:fn[pred;ytst];
@@ -80,4 +84,4 @@ xv.fitpredict:{[f;hp;d]($[0h~type hp;f[d;hp[0];hp[1]];@[.[f[][hp]`:fit;d 0]`:pre
 
 /* fn = The scoring function which is to be used for evaluating the performance of the grid search
 /. r  > The score achieved for each cross validation set based on the user defined scoring function
-gs.fitpredict:{[fn;f;hp;d]fn . xv.fitpredict[f;hp;d]}
+hp.fitpredict:{[fn;f;hp;d]fn . xv.fitpredict[f;hp;d]}
