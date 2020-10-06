@@ -45,8 +45,10 @@ passingTest[applyScoring[.ml.clust.dunn;100];(d2;`mdist;clt3`clt);1b;10]
 passingTest[applyScoring[.ml.clust.elbow;1];(d1;`e2dist;2);1b;enlist 548]
 passingTest[applyScoring[.ml.clust.elbow;1];(d2;`e2dist;2);1b;enlist 183654]
 passingTest[applyScoring[.ml.clust.elbow;1];(d2;`e2dist;2);1b;enlist 186363]
+failingTest[.ml.clust.elbow;(d2;`mdist;3);0b;"kmeans must be used with edist/e2dist"]
 
 // Homogeneity Score
 passingTest[.ml.clust.homogeneity;(clt1`clt;rnd1);0b;hscore[rnd1;clt1`clt]`]
 passingTest[.ml.clust.homogeneity;(clt2`clt;rnd2);0b;hscore[rnd2;clt2`clt]`]
 passingTest[.ml.clust.homogeneity;(clt3`clt;rnd2);0b;hscore[rnd2;clt3`clt]`]
+failingTest[.ml.clust.homogeneity;(100?0b;10?0b);0b;"pred and true must have equal lengths"]

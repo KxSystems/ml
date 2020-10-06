@@ -53,7 +53,7 @@ clust.silhouette:{[data;df;clt;isavg]
 // @return     {float}  Homogeneity score for true
 clust.homogeneity:{[pred;true]
   if[count[pred]<>n:count true;
-    '`$"distinct lengths - lenght of lists has to be the same"];
+    '`$"pred and true must have equal lengths"];
   if[not e:clust.i.entropy true;:1.];
   cm:value confmat[pred;true];
   nm:(*\:/:).((count each group@)each(pred;true))@\:til count cm;
