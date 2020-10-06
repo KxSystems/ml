@@ -38,7 +38,7 @@ clust.ap.predict:{[data;cfg]
   // retrieve cluster centres from training data
   ex:cfg[`data][;distinct cfg`exemplars];
   // predict testing data clusters
-  clust.i.appreddist[ex;cfg[`inputs]`df]each $[0h=type data;flip;enlist]data
+  clust.i.appreddist[ex;cfg[`inputs]`df]each$[0h=type data;flip;enlist]data
   }
 
 
