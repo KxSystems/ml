@@ -73,6 +73,7 @@ StdScaler[`:fit][flip plainmat];
 .ml.filltab[tab;`sym;`time;::]~flip`sym`time`x`x1`x_null`x1_null!(`a`a`a`b`b;00:00:00.000 00:00:00.001 00:00:00.002 00:00:00.003 00:00:00.004;1 1 1 1 1f;0 1 2 3 3f;11010b;00001b)
 (select x4,x5,x1_null,x3_null from .ml.filltab[nulltab;`x2;x;`x1`x3!`median`mean])~([]x4:5#0;x5:5#0n;x1_null:00100b;x3_null:11000b)
 .ml.filltab[tab,'flip (enlist `x2)!enlist 5#0n;`sym;`time;`x1`x`x2!`median`mean`max]~flip`sym`time`x`x1`x2`x1_null`x_null`x2_null!(`a`a`a`b`b;00:00:00.000 00:00:00.001 00:00:00.002 00:00:00.003 00:00:00.004;1 1 1 1 1f;0 1 2 3 3f;5#0n;00001b;11010b;11111b)
+
 .ml.onehot[symtf;`x] ~"f"$([] x1:til 5;x_a:1 0 0 1 1;x_b: 0 1 1 0 0)
 .ml.onehot[symtf;::] ~"f"$([] x1:til 5;x_a:1 0 0 1 1;x_b: 0 1 1 0 0)
 .ml.onehot[symti;`x] ~([] x1:til 5;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
@@ -82,6 +83,7 @@ StdScaler[`:fit][flip plainmat];
 .ml.onehot[symtn;`x]~([]x1:til 5;x_:0 0 0 1 0f;x_a:1 0 0 0 1f;x_b:0 1 1 0 0f)
 .ml.onehot[symtn;::]~([]x1:til 5;x_:0 0 0 1 0f;x_a:1 0 0 0 1f;x_b:0 1 1 0 0f)
 .ml.onehot[symm;::]~([]x1:til 5;x_a:1 0 0 1 1f;x_b:0 1 1 0 0f;x2_q:1 0 1 1 0f;x2_w:0 1 0 0 1f) 
+
 .ml.freqencode[symtf;`x]~(delete x from symtf),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
 .ml.freqencode[symtf;::]~(delete x from symtf),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
 .ml.freqencode[symti;`x]~(delete x from symti),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
@@ -91,6 +93,7 @@ StdScaler[`:fit][flip plainmat];
 .ml.freqencode[symtn;`x]~([] x1:til 5;x_freq:0.4 0.4 0.4 0.2 0.4)
 .ml.freqencode[symtn;::]~([] x1:til 5;x_freq:0.4 0.4 0.4 0.2 0.4)
 .ml.freqencode[symm;::]~([]x1:til 5;x_freq:0.6 0.4 0.4 0.6 0.6;x2_freq:0.6 0.4 0.6 0.6 0.4)
+
 .ml.lexiencode[symtf;`x]~(delete x from symtf),'([]x_lexi:0 1 1 0 0)
 .ml.lexiencode[symtf;::]~(delete x from symtf),'([]x_lexi:0 1 1 0 0)
 .ml.lexiencode[symti;`x]~(delete x from symti),'([]x_lexi:0 1 1 0 0)
@@ -100,6 +103,23 @@ StdScaler[`:fit][flip plainmat];
 .ml.lexiencode[symtn;`x]~([] x1:til 5;x_lexi:1 2 2 0 1)
 .ml.lexiencode[symtn;::]~([] x1:til 5;x_lexi:1 2 2 0 1)
 .ml.lexiencode[symm;::]~([]x1:til 5;x_lexi: 0 1 1 0 0;x2_lexi:0 1 0 0 1)
+
+guidList :asc 5?0Ng
+symList  :`b`a`d`c
+floatList:1.2 2 2.5 0.1
+
+guidReturn:`mapping`encoding!(((asc distinct guidList)!til count distinct guidList);til 5)
+.ml.labelencode[guidList] ~guidReturn
+.ml.labelencode[symList]  ~`mapping`encoding!((`a`b`c`d!til 4);1 0 3 2)
+.ml.labelencode[floatList]~`mapping`encoding!((0.1 1.2 2 2.5!til 4);1 2 3 0)
+
+.ml.applylabelencode[0 0 2 3 4  ;.ml.labelencode floatList]~(0.1;0.1;2f;2.5;0n)
+.ml.applylabelencode[1 1 2 5 3 0;.ml.labelencode symList  ]~`b`b`c``d`a
+.ml.applylabelencode[0 0 0 1 6  ;.ml.labelencode guidList ]~(3#guidList 0),(guidList 1),`guid$0Ng
+.ml.applylabelencode[0 0 2 3 4  ;.ml.labelencode[floatList]`mapping]~(0.1;0.1;2f;2.5;0n)
+.ml.applylabelencode[1 1 2 5 3 0;.ml.labelencode[symList]`mapping]~`b`b`c``d`a
+.ml.applylabelencode[0 0 0 1 6  ;.ml.labelencode[guidList]`mapping]~(3#guidList 0),(guidList 1),`guid$0Ng
+
 .ml.timesplit[timetab;::]~(delete x from timetab),'flip`x_dow`x_year`x_mm`x_dd`x_qtr`x_wd`x_hh`x_uu`x_ss!(0 1 2i;2000 2000 2000i;1 1 1i;1 2 3i;1 1 1j;001b;0 0 0i;0 0 0i;0 0 0i)
 .ml.timesplit[timetab;`x]~(delete x from timetab),'flip`x_dow`x_year`x_mm`x_dd`x_qtr`x_wd`x_hh`x_uu`x_ss!(0 1 2i;2000 2000 2000i;1 1 1i;1 2 3i;1 1 1j;001b;0 0 0i;0 0 0i;0 0 0i)
 .ml.timesplit[timetabn;::]~(delete x from timetabn),'flip`x_dow`x_year`x_mm`x_dd`x_qtr`x_wd`x_hh`x_uu`x_ss!(`int$(0 1 2 0n);`int$(2000 2000 2000 0n);`int$(1 1 1 0n);`int$(1 2 3 0n);"j"$(1 1 1 0n);0010b;`int$(0 0 0 0n);`int$(0 0 0 0n);`int$(0 0 0 0n))
