@@ -5,17 +5,21 @@
 \l timeseries/predict.q
 \l timeseries/tests/failMessage.q
 
+-1"Warning: These tests may cause varying results for Linux vs Windows users";
+
 \S 42
 exogIntFuture   :1000 50#5000?1000
 exogFloatFuture :1000 50#5000?1000f
 exogMixedFuture :(1000 20#20000?1000),'(1000 20#20000?1000f),'(1000 10#10000?0b)
 
+os:$[.z.o like "w*";"windows/";"linux/"];
+
 // Load files
 fileList:`AR1`AR2`AR3`AR4`ARCH1`ARCH2`ARMA1`ARMA2`ARMA3`ARMA4`ARIMA1`ARIMA2,
          `ARIMA3`ARIMA4`SARIMA1`SARIMA2`SARIMA3`SARIMA4
-loadFunc:{load hsym`$":timeseries/tests/data/",x,string y}
-loadFunc["fit/"]each fileList;
-loadFunc["pred/pred"]each fileList;
+loadFunc:{load hsym`$":timeseries/tests/data/",x,y,string z}
+loadFunc[os;"fit/"]each fileList;
+loadFunc[os;"pred/pred"]each fileList;
 
 
 // AR tests
