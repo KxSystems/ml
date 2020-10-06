@@ -6,9 +6,13 @@
 
 d1:(til 5;3 2 5 1 4)
 d2:(2#"F";",")0:`:clust/tests/data/sample1.csv
+idxs1:til count d1 0
+idxs2:til count d2 0
 tree:.ml.clust.kd.newtree[d1;1]
 tree2:.ml.clust.kd.newtree[d2;2]
-info:.ml.clust.i.apinit[d1;`e2dist;max]
+iter:`run`total`nochange!0 200 15
+info:.ml.clust.i.apinit[d1;`e2dist;max;idxs1]
+info,:`emat`conv`iter!((count d1 0;iter`nochange)#0b;0b;iter)
 
 // k-d Tree using C 
 
@@ -66,10 +70,10 @@ all .ml.clust.kd.nn[tree;d1;`mdist;1 2 3 4;d1[;1]][`closestPoint`closestDist]=(0
 
 // Affinity Propagation
 
-.ml.clust.i.apinit[d2;`e2dist;med][`matches]~0
-.ml.clust.i.apinit[d1;`e2dist;min][`s]~(0 2 8 13 17;2 0 10 5 13;8 10 0 17 5 ;13 5 17 0 10;17 13 5 10 0)
-.ml.clust.i.apinit[d1;`e2dist;min][`a]~5 5#0f
-.ml.clust.i.apinit[d1;`e2dist;max][`r]~5 5#0f
+.ml.clust.i.apinit[d2;`e2dist;med;idxs2][`matches]~0
+.ml.clust.i.apinit[d1;`e2dist;min;idxs1][`s]~(0 2 8 13 17;2 0 10 5 13;8 10 0 17 5 ;13 5 17 0 10;17 13 5 10 0)
+.ml.clust.i.apinit[d1;`e2dist;min;idxs1][`a]~5 5#0f
+.ml.clust.i.apinit[d1;`e2dist;max;idxs1][`r]~5 5#0f
 .ml.clust.i.apalgo[0.1;info][`exemplars]~0 1 2 2 0
 .ml.clust.i.apalgo[0.1;info][`s]~(17 2 8 13 17;2 17 10 5 13;8 10 17 17 5;13 5 17 17 10;17 13 5 10 17)
 .ml.clust.i.apalgo[0.1;info][`a]~"f"$(3.24 0 0 0 0;0 0 0 0 0;0 0 3.24 0 0;0 0 0 0 0;0 0 0 0 0)
