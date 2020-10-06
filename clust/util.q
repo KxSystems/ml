@@ -9,7 +9,7 @@
 // @fileoverview Euclidean distance calculation
 // @param data {float[][]} Points
 // @return     {float[]}   Euclidean distances for data 
-clust.i.dd.edist:{[data]
+clust.i.df.edist:{[data]
   sqrt data wsum data
   }
 
@@ -18,7 +18,7 @@ clust.i.dd.edist:{[data]
 // @fileoverview distance calculation
 // @param data {float[][]} Points
 // @return     {float[]}   Euclidean squared distances for data 
-clust.i.dd.e2dist:{[data]
+clust.i.df.e2dist:{[data]
   data wsum data
   }
 
@@ -27,7 +27,7 @@ clust.i.dd.e2dist:{[data]
 // @fileoverview Manhattan distance calculation
 // @param data {float[][]} Points
 // @return     {float[]}   Manhattan distances for data 
-clust.i.dd.mdist:{[data]
+clust.i.df.mdist:{[data]
   sum abs data
   }
 
@@ -36,7 +36,7 @@ clust.i.dd.mdist:{[data]
 // @fileoverview Chebyshev distance calculation
 // @param data {float[][]} Points
 // @return     {float[]}   Chebyshev distances for data 
-clust.i.dd.cshev:{[data]
+clust.i.df.cshev:{[data]
   min abs data
   }
 
@@ -45,18 +45,18 @@ clust.i.dd.cshev:{[data]
 // @fileoverview Negative euclidean squared distance calculation
 // @param data {float[][]} Points
 // @return     {float[]}   Negative euclidean squared distances for data 
-clust.i.dd.nege2dist:{[data]
+clust.i.df.nege2dist:{[data]
   neg data wsum data
   }
 
 // @kind dictionary
 // @category private
 // @fileoverview Linkage dictionary
-clust.i.ld.single:min
-clust.i.ld.complete:max
-clust.i.ld.average:avg
-clust.i.ld.centroid:raze
-clust.i.ld.ward:{z*x*y%x+y}
+clust.i.lf.single:min
+clust.i.lf.complete:max
+clust.i.lf.average:avg
+clust.i.lf.centroid:raze
+clust.i.lf.ward:{z*x*y%x+y}
 
 // Distance calculations
 
@@ -68,7 +68,7 @@ clust.i.ld.ward:{z*x*y%x+y}
 // @param idxs {long[]}    Indices from data
 // @return     {float[]}   Distances for data and pt
 clust.i.dists:{[data;df;pt;idxs]
-  clust.i.dd[df]pt-data[;idxs]
+  clust.i.df[df]pt-data[;idxs]
   }
 
 // @kind function
@@ -91,11 +91,15 @@ clust.i.reindex:{[data]
   distinct[data]?data
   }
 
+clust.i.floatConversion:{[data]
+  @[{"f"$x};data;{'"Dataset not suitable for clustering. Must be convertible to floats."}]
+  }
+
 // @kind dictionary
 // @category private
 // @fileoverview Error dictionary
-clust.i.err.dd:{'`$"invalid distance metric"}
-clust.i.err.ld:{'`$"invalid linkage"}
+clust.i.err.df:{'`$"invalid distance metric"}
+clust.i.err.lf:{'`$"invalid linkage"}
 clust.i.err.ward:{'`$"ward must be used with e2dist"}
 clust.i.err.centroid:{'`$"centroid must be used with edist/e2dist"}
 clust.i.err.kmeans:{'`$"kmeans must be used with edist/e2dist"}

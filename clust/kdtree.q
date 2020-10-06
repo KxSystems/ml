@@ -5,7 +5,7 @@
 // @kind function
 // @category clust
 // @fileoverview Create new k-d tree
-// @param data   {float[][]} Points in `value flip` format
+// @param data   {float[][]} Data in matrix format, each column is an individual datapoint
 // @param leafsz {long}      Number of points per leaf (<2*number of reppts)
 // @return       {table}     k-d tree
 clust.kd.newtree:{[data;leafsz]
@@ -17,8 +17,8 @@ clust.kd.newtree:{[data;leafsz]
 // @category clust
 // @fileoverview Find nearest neighhbors in k-d tree
 // @param tree  {table}     k-d tree
-// @param data  {float[][]} Points in `value flip` format
-// @param df    {fn}        Distance function
+// @param data  {float[][]} Data in matrix format, each column is an individual datapoint
+// @param df    {symbol}    Distance function name within '.ml.clust.df'
 // @param xidxs {long[][]}  Points to exclude in search
 // @param pt    {long[]}    Point to find nearest neighbor for
 // @return      {dict}      Nearest neighbor dictionary with closest point,
@@ -71,7 +71,7 @@ clust.kd.i.nncheck:{[tree;data;df;xidxs;pt;nninfo]
     ]
   ];
   if[not null childidx:first nninfo[`node;`children]except nninfo`xnodes;
-    nndist:clust.i.dd[df]pt[nninfo[`node]`axis]-nninfo[`node]`midval;
+    nndist:clust.i.df[df]pt[nninfo[`node]`axis]-nninfo[`node]`midval;
     childidx:$[(nninfo`closestDist)<nndist;
       0N;
 	  clust.kd.findleaf[tree;pt;tree childidx]`self
@@ -113,11 +113,14 @@ clust.kd.qC:{[b]
   clust.kd.c.nn:.[2:;(`:kdnn;(`kd_nn;5));::];
   clust.kd.c.findleaf:.[2:;(`:kdnn;(`kd_findleaf;3));::];
   cnn:{[tree;data;df;xidxs;pt]
-    args:(tree;"f"$data;(1_key clust.i.dd)?df;@[count[data 0]#0b;xidxs;:;1b];"f"$pt);
+    data:clust.i.floatConversion[data];
+    pt  :clust.i.floatConversion[pt];
+    args:(tree;data;(1_key clust.i.df)?df;@[count[data 0]#0b;xidxs;:;1b];pt);
     `closestPoint`closestDist!clust.kd.c.nn . args
     };
   cfl:{[tree;point;node]
-    tree clust.kd.c.findleaf[tree;"f"$point;node`self]
+    point:clust.i.floatConversion[point];
+    tree clust.kd.c.findleaf[tree;point;node`self]
     };
   fntyp:not(112=type clust.kd.c.nn)&112=type clust.kd.c.findleaf;
   clust.kd[`nn`findleaf]:$[b|fntyp;(clust.kd.q.nn;clust.kd.q.findleaf);(cnn;cfl)]

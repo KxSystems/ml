@@ -705,7 +705,7 @@ ts.i.predDataCheck:{[mdl;exog]
 // @kind function
 // @category dataCheckUtility
 // @fileoverview Apply seasonal and non-seasonal time-series differencing,
-// error checking stationality of the dataset following application of differencing
+//   error checking stationarity of the dataset following application of differencing
 // @param endog {num[]}   endogenous dataset
 // @param diff  {integer} non seasonal differencing component (integer)
 // @param sdict {dict}    dictionary containing relevant seasonal differencing components
@@ -716,7 +716,7 @@ ts.i.differ:{[endog;d;s]
   I:ts.i.diff[endog;d];
   // Apply seasonal differencing if appropriate
   if[s[`D];I:s[`D]ts.i.seasonDiff[s`m]/I];
-  // Check stationality
+  // Check stationarity
   if[not ts.i.stationary[I];ts.i.err.stat[]];
   // Return integrated data
   I
@@ -740,7 +740,7 @@ ts.i.differ:{[endog;d;s]
 // @return {num[]} result of the application of the function on each of the sliding window
 //   components over the data vector
 ts.i.slidingWindowFunction:{[func;win;data]
-  func each{ 1_x,y }\[win#0f;data]
+  0f,-1_func each{ 1_x,y }\[win#0f;data]
   }
 
 
@@ -756,13 +756,16 @@ ts.i.slidingWindowFunction:{[func;win;data]
 // @param m     {num[]} bar plot indices
 // @param title {string} title to be given to the plot
 // @return {graph} presents a plot to screen associated with relevant analysis
-ts.i.plotFunction:{[data;vals;m;title]
+ts.i.plotFunction:{[data;vals;m;width;title]
   plt:.p.import[`matplotlib.pyplot];
-  conf:10#1.95%sqrt count data;
-  plt[`:bar][m;vals;`width pykw 0.5];
+  conf:count[m]#1.95%sqrt count data;
+  plt[`:bar][m;vals;`width pykw width%2];
   cfgkeys:`linewidth`linestyle`color`label;
   cfgvals:3,`dashed`red`conf_interval;
   plt[`:plot][m;conf;pykwargs cfgkeys!cfgvals];
+  if[0>min vals;
+    plt[`:plot][m;neg conf;pykwargs -1_cfgkeys!cfgvals]
+    ];
   plt[`:legend][];
   plt[`:xlabel][`lags];
   plt[`:ylabel][`acf];

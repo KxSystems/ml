@@ -25,15 +25,15 @@ exogMixedFuture :(1000 20#20000?1000),'(1000 20#20000?1000f),'(1000 10#10000?0b)
 
 
 // Load files
-fileList:`stationalityTab1`stationalityTab2`aicScore1`aicScore2`aicScore3`aicScore4,
+fileList:`stationarityTab1`stationarityTab2`aicScore1`aicScore2`aicScore3`aicScore4,
          `windowTab1`windowTab2`lagTab1`lagTab2
 {load hsym`$":timeseries/tests/data/misc/",string x}each fileList;
 
 
 // Stationality
 
-.ml.ts.stationality[endogInt  ]~stationalityTab1
-.ml.ts.stationality[endogFloat]~stationalityTab2
+.ml.ts.stationarity[endogInt  ]~stationarityTab1
+.ml.ts.stationarity[endogFloat]~stationarityTab2
 
 // aicparam 
 

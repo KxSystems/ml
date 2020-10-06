@@ -6,13 +6,13 @@
 
 // @kind function
 // @category misc
-// @fileoverview Summary of the stationality of each vector of a multivariate time series 
+// @fileoverview Summary of the stationarity of each vector of a multivariate time series 
 //   or a single vector
 // @param dset {dict/tab/num[]} a time series of interest, the entries should 
 //   in each case be numeric data types.
 // @return {keytab} informative outputs from the python adfuller test indicating
-//   the stationality of each vector entry of the relevant dataset
-ts.stationality:{[dset]
+//   the stationarity of each vector entry of the relevant dataset
+ts.stationarity:{[dset]
   dtype:type dset;
   // Names to be provided to form the key for the return table
   keyNames:$[99h=dtype;key dset;
@@ -95,19 +95,21 @@ ts.laggedFeatures:{[tab;colNames;lags]
 // @category misc
 // @fileoverview Plot and display an autocorrelation plot
 // @param data {num[]} dataset from which to generate the autocorrelation plot
+// @param n    {int} number of lags to include in the graph
 // @return {graph} display to standard out the autocorrelation bar plot
-ts.acfPlot:{[data]
-  acf:ts.i.autoCorrFunction[data;]each m:1_til 11&count[data];
-  ts.i.plotFunction[data;acf;m;"AutoCorrelation"];
+ts.acfPlot:{[data;n;width]
+  acf:ts.i.autoCorrFunction[data;]each n;
+  ts.i.plotFunction[data;acf;n;width;"AutoCorrelation"];
   }
 
 // @kind function
 // @category misc
 // @fileoverview Plot and display an autocorrelation plot
 // @param data {num[]} dataset from which to generate the partial autocorrelation plot
+// @param n    {int} number of lags to include in the graph
 // @return {graph} display to standard out the partial autocorrelation bar plot
-ts.pacfPlot:{[data]
-  pacf:.ml.fresh.i.pacf[data;neg[1]+m:11&count data]`;
-  ts.i.plotFunction[data;1_pacf;1_til m;"Partial AutoCorrelation"];
+ts.pacfPlot:{[data;n]
+  pacf:.ml.fresh.i.pacf[data;neg[1]+m:n&count data]`;
+  ts.i.plotFunction[data;1_pacf;1_til m;1;"Partial AutoCorrelation"];
   }
 
