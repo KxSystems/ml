@@ -5,7 +5,7 @@
 
 // Initialize datasets
 
-\S 10
+\S 42
 
 // Python imports
 lnk   :.p.import[`scipy.cluster.hierarchy]`:linkage
