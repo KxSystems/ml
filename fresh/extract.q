@@ -10,7 +10,7 @@ fresh.feat.agglintrend:{
  t:fresh.feat.lintrend each(max;min;var;avg)@/:\:y cut x;
  (`$"_"sv'string cols[t]cross`max`min`var`avg)!raze value flip t}
 fresh.feat.augfuller:{`teststat`pvalue`usedlag!3#"f"$@[{fresh.i.adfuller[x]`};x;0n]}
-fresh.feat.autocorr:{(avg(x-m)*xprev[y;x]-m:avg x)%var x}
+fresh.feat.autocorr:{$[y=0;1f;(avg(x-m)*xprev[y;x]-m:avg x)%var x]}
 fresh.feat.binnedentropy:{neg sum p*log p:(count each group(y-1)&floor y*x%max x-:min x)%count x}
 / t-series non-linearity - Schreiber, T. and Schmitz, A. (1997). PHYSICAL REVIEW E, VOLUME 55, NUMBER 5
 fresh.feat.c3:{avg x*/xprev\:[-1 -2*y]x}
