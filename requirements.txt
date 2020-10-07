@@ -3,4 +3,5 @@ scipy
 scikit-learn
 statsmodels
 matplotlib
+sobol-seq
 pandas>=1.0
