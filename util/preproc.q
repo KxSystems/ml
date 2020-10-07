@@ -1,7 +1,26 @@
 \d .ml
 
 / data preprocessing
-dropconstant:{f(where 0=0^var each k)_k:(f:$[tp:99=type x;;flip])x}
+
+/* x = simple table/dictionary
+dropconstant:{
+ if[not(typ:type x)in 98 99h;'"Data must be simple table or dictionary"];
+ if[99h=typ;if[98h~type value x;'"Data cannot be a keyed table"]];
+ // find keys/cols that contain non-numeric data
+ fc:$[typ=99h;i.fndkey;i.fndcols].(x;"csg ",upper .Q.t);
+ // store instructions to flip table and execute this
+ dt:(fdata:$[99=typ;;flip])x;
+ // drop constant numeric and non numeric cols/keys
+ fdata i.dropconst.num[fc _ dt],i.dropconst.other fc#dt
+ }
+
+// logic to find numeric and drop constant columns
+i.dropconst.num:{(where 0=0^var each x)_x}
+i.dropconst.other:{(where{all 1_(~':)x}each x)_x}
+// Find keys relating to a specific type
+i.fndkey:{where({.Q.t abs type x}each x)in y}
+
+
 minmaxscaler:i.ap{(x-mnx)%max[x]-mnx:min x}
 stdscaler   :i.ap{(x-avg x)%dev x}
 / replace +/- 0w with max/min vals
@@ -40,6 +59,22 @@ freqencode:{[x;c]
 lexiencode:{[x;c]
   if[(::)~c;c:i.fndcols[x;"s"]];
   flip(c _ flip x),(`$string[c],\:"_lexi")!{(asc distinct x)?x}each x c,:()}
+
+// Encode the a dataset to a list of integers, and provide a mapping allowing a user to
+// revert new integer lists to the original version
+/* x = data to be encoded and mapped
+labelencode:{[x]
+  adx:asc distinct x;
+  `mapping`encoding!(adx!til count adx;adx?x)
+  }
+
+// Map a list of integers to their true representation based on a label encoding schema
+/* x = data to be revert to true representation based on 
+/* y = label encoding map either labelencode[x]`mapping or labelencode[x]
+applylabelencode:{[x;y]
+  if[99h<>type y;'"Input must be a dictionary"];
+  $[`mapping`encoding~key y;y[`mapping]?;y?]x
+  }
 
 / split temporal types into constituents
 i.timesplit.d:{update wd:1<dow from update dow:dow mod 7,qtr:1+(mm-1)div 3 from`dow`year`mm`dd!`date`year`mm`dd$/:\:x}

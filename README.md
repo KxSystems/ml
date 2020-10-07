@@ -7,9 +7,12 @@ The machine learning toolkit is at the core of kdb+/q centered machine learning 
 *  An implementation of the FRESH (FeatuRe Extraction and Scalable Hypothesis testing) algorithm for use in the extraction of features from time series data and the reduction in the number of features through statistical testing. 
 *  Cross validation and grid-search functions allowing for testing of the stability of models to changes in the volume of data or the specific subsets of data used in training.
 *  Clustering algorithms used to group data points and to identify patterns in their distributions. The algorithms make use of a k-dimensional tree to store points and scoring functions to analyze how well they performed.
+*  Statistical time series models and feature extraction techniques used for the application of machine learning to time series problems. These models allow for the forecasting of the future behaviour of a system under various conditions.
+*  Numerical optimization techniques used for calculating the optimal parameters for an objective function.
+*  A graphing and pipeline library for the creation of modularized executable workflow based on a structure described by a mathematical directed graph.
 *  Utility functions relating to areas including statistical analysis, data preprocessing and array manipulation.
 
-These sections are explained in greater depth within the [FRESH](https://code.kx.com/v2/ml/toolkit/fresh/), [Cross Validation](https://code.kx.com/v2/ml/toolkit/xval), [Clustering](https://code.kx.com/v2/ml/toolkit/clustering/algos/) and [Utilities](https://code.kx.com/v2/ml/toolkit/utilities/metric) documentation.
+These sections are explained in greater depth within the [FRESH](https://code.kx.com/v2/ml/toolkit/fresh/), [cross validation](https://code.kx.com/v2/ml/toolkit/xval), [clustering](https://code.kx.com/v2/ml/toolkit/clustering/algos/), [time series](https://code.kx.com/v2/ml/toolkit/timeseries), [optimization](https://code.kx.com/v2/ml/toolkit/optimize/), [graph/pipeline](https://code.kx.com/v2/ml/toolkit/graph) and [utilities](https://code.kx.com/v2/ml/toolkit/utilities/metric) documentation.
 
 ## Requirements
 
@@ -26,6 +29,7 @@ or via conda:
 ```bash
 conda install --file requirements.txt
 ```
+
 
 ## Installation
 
@@ -46,6 +50,7 @@ Examples showing implementations of several components of this toolkit can be fo
 *  Cross validation and grid search capabilities
 *  Results Scoring functionality
 *  Clustering methods applied to datasets
+*  Time series modeling examples
 
 ## Documentation
 

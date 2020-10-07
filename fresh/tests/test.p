@@ -52,6 +52,7 @@ p)def< percentage_recurring_all_val(x):
         x = pd.Series(x)
         if len(x) == 0:
                 return np.nan
+        x = x.copy()
         value_counts = x.value_counts()
         return value_counts[value_counts > 1].sum() / len(x)
 
