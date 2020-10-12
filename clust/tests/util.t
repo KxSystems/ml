@@ -78,7 +78,6 @@ kdRes8:kdKey!(1b;1b;2;1;0#0;0N;0n;0 2)
 passingTest[nnRes`closestPoint;(tree;d1;`edist;0;d2[;2]);1b;2]
 passingTest[nnRes`closestPoint;(tree2;d2;`edist;1 2 3;d1[;1]);1b;0]
 passingTest[nnRes`closestPoint;(tree2;d2;`edist;1 5 2;d1[;3]);1b;3]
-passingTest[nnRes`closestPoint`closestDist;(tree;d1;`mdist;1 2 3 4;d1[;1]);1b;(0;2f)]
 passingTest[nnRes`closestPoint`closestDist;(tree;d1;`mdist;1;7 9f);1b;(4;8f)]
 passingTest[nnRes`closestPoint`closestDist;(tree2;d2;`edist;0;d2[;2]);1b;(2;0f)]
 passingTest[.ml.clust.kd.findleaf;(tree;d1[;1];tree 0);0b;kdRes5]
