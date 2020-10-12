@@ -18,6 +18,7 @@ idxs2:til count d2 0
 // K-D trees
 tree:.ml.clust.kd.newtree[d1;1]
 tree2:.ml.clust.kd.newtree[d2;2]
+<<<<<<< HEAD
 
 // Configurations
 iter:`run`total`nochange!0 200 15
