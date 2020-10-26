@@ -25,7 +25,10 @@ xv.i.xvpf:{[pf;xv;k;n;x;y;f;p]p!(xv[k;n;x;y]f pykwargs@)@'p:pf p}
 gs:1_xv.i.search@'xv.i.xvpf[{[p]key[p]!/:1_'(::)cross/value p}]@'xv.j
 rs:1_xv.i.search@'xv.i.xvpf[{[p]hp.hpgen p}]@'xv.j
 
-xv.fitscore:{[f;p;d].[.[f[][p]`:fit;d 0]`:score;d 1]`}
+npa:.p.import[`numpy]`:array
+xv.fitscore:{[f;p;d]
+  .[.[f[][p]`:fit;npa each d 0]`:score;npa each d 1]`
+  }
 
 hp.hpgen:{
   if[(::)~n:x`n;n:16];
