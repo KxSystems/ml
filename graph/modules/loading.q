@@ -1,7 +1,7 @@
 \d .ml
   
 i.loadfname:{[cfg]
-  file:hsym`$$[(not ""~cfg`directory)&`directory in key cfg;cfg`directory;"."],"/",cfg`file_name;
+  file:hsym`$$[(not ""~cfg`directory)&`directory in key cfg;cfg`directory;"."],"/",cfg`fileName;
   if[()~key file;'"file does not exist"];
   file}
 
