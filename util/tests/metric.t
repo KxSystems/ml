@@ -138,9 +138,9 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.smape[xm;ym]~{smape[x;y]}'[flip xm;flip ym]
 .ml.smape[x;x]~0f
 .ml.smape[1 0n 4 2 0n;1 2 4 3 1]~6.666666666666666667
-.ml.r2score[xf;yf] ~ r2[xf;yf]`
+.ml.r2score[xf;yf] ~ r2[yf;xf]`
 .ml.r2score[xf;xf] ~ r2[xf;xf]`
-.ml.r2score[1 2 3;2 2 2] ~ r2[1 2 3;2 2 2]`
+.ml.r2score[2 2 2;1 2 3] ~ r2[1 2 3;2 2 2]`
 .ml.r2score[x;x]~1f
 .ml.r2score[1 0n 4 2 0n;1 2 4 2 1]~1f
 .ml.tscore[x;y] ~first stats[`:ttest_1samp][x;y]`
