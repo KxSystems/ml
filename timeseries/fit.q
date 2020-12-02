@@ -69,7 +69,7 @@ ts.ARMA.fit:{[endog;exog;lags;resid;trend]
 ts.ARIMA.fit:{[endog;exog;lags;diff;resid;trend]
   exog:ts.i.fitDataCheck[endog;exog];
   // Apply integration (non seasonal)
-  I:ts.i.differ[endog;diff;()!()];
+  I:ts.i.differ[endog;diff;()!()]`final;
   // Fit an ARMA model on the differenced time series
   mdl:ts.ARMA.fit[I;diff _exog;lags;resid;trend];
   // Retrieve the original data to be used when fitting on new data
@@ -107,9 +107,9 @@ ts.SARIMA.fit:{[endog;exog;lags;diff;resid;trend;seas]
   // add additional seasonal components
   dict[`seas_add_P`seas_add_Q]:(raze'){1+til[x]+/:y}'[(lags;resid);dict`P`Q];
   // Generate data for regenerate data following differencing
-  origDiffSeason:`origd`origs!(diff{deltas x}/neg[diff]#endog;neg[prd seas`D`m]#endog);
+  origDiffSeason:`origd`origs!(diff{deltas x}/neg[diff]#endog;neg[prd seas`D`m]#I`init);
   // Apply SARMA model and postpend differenced original data
-  ts.i.SARMA.model[I;exog;dict],origDiffSeason
+  ts.i.SARMA.model[I`final;exog;dict],origDiffSeason
   }
 
 // @kind function
