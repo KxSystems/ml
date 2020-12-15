@@ -5,7 +5,7 @@ i.loadfname:{[cfg]
   if[()~key file;'"file does not exist"];
   file}
 
-i.loadfunc.splay:loadfunc.binary:{[cfg]get i.loadfname cfg}
+i.loadfunc.splay:i.loadfunc.binary:{[cfg]get i.loadfname cfg}
 i.loadfunc.csv:{[cfg](cfg`schema;cfg`separator)0: i.loadfname cfg}
 i.loadfunc.json:{[cfg].j.k first read0 i.loadfname cfg}
 i.loadfunc.hdf5:{[cfg]
