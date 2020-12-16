@@ -37,7 +37,7 @@ rmsle:{rmse . log(x;y)+1}
 mae:{avg abs x-y}
 mape:{100*avg abs 1-x%y}
 smape:{100*avg abs[y-x]%abs[x]+abs y}
-r2score:{1-sse[x;y]%sse[x]avg x}
+r2score:{1-sse[y;x]%sse[y]avg y}
 
 / t-score for a test (one sample)
 tscore:{[x;mu](avg[x]-mu)%sdev[x]%sqrt count x}
