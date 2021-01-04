@@ -25,6 +25,6 @@ fresh.sigfeat:{[t;y]
 / feature selection
 fresh.benjhoch:{[v;d]where d<=v*s%k*sums 1%s:1+til k:count d:asc d}
 fresh.ksigfeat:{[k;d]key k sublist asc d}
-fresh.percentile:{[p;d]where d<fresh.feat.quantile[value d]p}
+fresh.percentile:{[p;d]where d<=fresh.feat.quantile[value d]p}
 
 fresh.significantfeatures:{[t;y;f]f fresh.sigfeat[t;y]}
