@@ -1,7 +1,6 @@
 # Automated machine learning in kdb+
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/automl)](https://github.com/kxsystems/automl/releases) [![Travis (.org) branch](https://img.shields.io/travis/kxsystems/automl/master?label=travis%20build)](https://travis-ci.org/kxsystems/automl/branches)
-
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/automl)](https://github.com/kxsystems/automl/releases) [![Build Status](https://travis-ci.com/KxSystems/automl.svg?branch=master)](https://travis-ci.com/KxSystems/automl)
 ## Introduction
 
 The automated machine learning library described here is built largely on the tools available within the machine learning toolkit available [here](https://github.com/kxsystems/ml). The purpose of this framework is to provide users with the ability to automate the process of applying machine learning techniques to real-world problems. In the absence of expert machine learning engineers this handles the following processes within a traditional workflow.
