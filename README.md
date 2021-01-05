@@ -1,6 +1,6 @@
 # Machine learning toolkit
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/ml?include_prereleases)](https://github.com/kxsystems/ml/releases) [![![Build Status](https://travis-ci.com/KxSystems/ml.svg?branch=master)](https://travis-ci.com/KxSystems/ml)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/ml?include_prereleases)](https://github.com/kxsystems/ml/releases) [![Build Status](https://travis-ci.com/KxSystems/ml.svg?branch=master)](https://travis-ci.com/KxSystems/ml)
 
 ## Introduction
 The machine learning toolkit is at the core of kdb+/q centered machine learning functionality. This library contains functions that cover the following areas:
