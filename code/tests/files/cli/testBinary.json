@@ -1,0 +1,176 @@
+{
+  "problemDetails":{
+    "featureExtractionType":"normal",
+    "problemType"          :"class",
+    "modelName"            :"",
+    "dataRetrievalMethod"  :{
+      "featureData":"binary",
+      "targetData" :"binary"
+    }
+  },
+  "retrievalMethods":{
+    "ipc":{
+      "featureData":{
+        "port"  :"",
+        "select":""
+      },
+      "targetData":{
+        "port"  :"",
+        "select":"",
+        "targetColumn":""
+      }
+    },
+    "csv":{
+      "featureData":{
+        "schema"   :"",
+        "separator":"",
+        "directory":"",
+        "fileName" :""
+      },
+      "targetData":{
+        "schema"      :"",
+        "separator"   :"",
+        "directory"   :"",
+        "fileName"    :"",
+        "targetColumn":""
+      }
+    },
+    "binary":{
+      "featureData":{
+       "directory":"code/tests/files/cli",
+       "fileName" :"testBinaryFeatures"
+      },
+      "targetData":{
+        "directory"   :"code/tests/files/cli",
+        "fileName"    :"testBinaryTarget",
+        "targetColumn":""
+      }
+    }
+  },
+  "problemParameters":{
+    "general":{
+      "saveOption":{
+        "value":2,
+        "type" :"long"
+      },
+      "seed":{
+        "value":inf,
+        "type" :"long"
+      },
+      "crossValidationFunction":{
+        "value":".ml.xv.kfshuff",
+        "type" :"symbol"
+      },
+      "crossValidationArgument":{
+        "value":5,
+        "type" :"long"
+      },
+      "gridSearchFunction":{
+        "value":".automl.gs.kfshuff",
+        "type" :"symbol"
+      },
+      "gridSearchArgument":{
+        "value":5,
+        "type" :"long"
+      },
+      "randomSearchFunction":{
+        "value":".automl.rs.kfshuff",
+        "type" :"symbol"
+      },
+      "randomSearchArgument":{
+        "value":5,
+        "type" :"long"
+      },
+      "hyperparameterSearchType":{
+        "value":"grid",
+        "type" :"symbol"
+      },
+      "holdoutSize":{
+        "value":0.2,
+        "type" :"float"
+      },
+      "testingSize":{
+        "value":0.2,
+        "type" :"float"
+      },
+      "numberTrials":{
+        "value":256,
+        "type" :"long"
+      },
+      "significantFeatures":{
+        "value":".automl.featureSignificance.significance",
+        "type" :"symbol"
+      },
+      "predictionFunction":{
+        "value":".automl.utils.fitPredict",
+        "type" :"symbol"
+      },
+      "scoringFunctionClassification":{
+        "value":".ml.accuracy",
+        "type" :"symbol"
+      },
+      "scoringFunctionRegression":{
+        "value":".ml.mse",
+        "type" :"symbol"
+      },
+      "loggingDir":{
+        "value":"",
+        "type" :"symbol"
+      },
+      "loggingFile":{
+        "value":"",
+        "type" :"symbol"
+      },
+      "pythonWarning":{
+        "value":0,
+        "type" :"long"
+      },
+      "overWriteFiles":{
+        "value":0,
+        "type" :"long"
+      },
+      "targetLimit":{
+        "value":10000,
+        "type" :"long"
+      }
+    },
+    "fresh":{
+      "functions":{
+        "value":".ml.fresh.params",
+        "type" :"symbol"
+      },
+      "trainTestSplit":{
+        "value":".automl.utils.ttsNonShuff",
+        "type" :"symbol"
+      },
+      "aggregationColumns":{
+        "value":"{first cols x}",
+        "type" :"lambda"
+      }
+    },
+    "normal":{
+      "functions":{
+        "value":[".automl.featureCreation.normal.default"],
+        "type" :"symbol"
+      },
+      "trainTestSplit":{
+        "value":".ml.traintestsplit",
+        "type" :"symbol"
+      }
+    },
+    "nlp":{
+      "functions":{
+        "value":[".automl.featureCreation.normal.default"],
+        "type" :"symbol"
+      },
+      "trainTestSplit":{
+        "value":".ml.traintestsplit",
+        "type" :"symbol"
+      },
+      "w2v":{
+        "value":0,
+        "type":"long"
+      }
+    }
+  }
+}

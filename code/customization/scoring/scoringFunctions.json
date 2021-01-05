@@ -1,0 +1,32 @@
+{
+  ".ml.accuracy":{
+    "orderFunc":"desc"
+    },
+  ".ml.matcorr":{
+    "orderFunc":"desc"
+    },
+  ".ml.mse":{
+    "orderFunc":"asc"
+    },
+  ".ml.sse":{
+    "orderFunc":"asc"
+    },
+  ".ml.rmse":{
+    "orderFunc":"asc"
+    },
+  ".ml.rmsle":{
+    "orderFunc":"asc"
+    },
+  ".ml.mae":{
+    "orderFunc":"desc"
+    },
+  ".ml.smape":{
+    "orderFunc":"desc"
+    },
+  ".ml.mape":{
+    "orderFunc":"desc"
+    },
+  ".ml.r2score":{
+    "orderFunc":"desc"
+    }
+}

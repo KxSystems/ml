@@ -18,6 +18,7 @@ At present the machine learning frameworks supported for this are based on:
 
 1. One-to-one feature to target non time-series
 2. FRESH based feature extraction and model production
+3. NLP-based feature creation and word2vec transformation.
 
 The problems which can be solved by this framework will be expanded over time as will the available functionality.
 
@@ -63,6 +64,11 @@ tensorflow
 **PyTorch** - via conda or pip:
 ```bash
 torch
+```
+
+**Theano** - via conda or pip:
+```bash
+theano
 ```
 
 **NLP**

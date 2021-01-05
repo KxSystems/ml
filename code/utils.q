@@ -1,333 +1,582 @@
 
 \d .automl
 
-// The following aspects of the parameter naming are used throughout this file
-/* t   = data as table
-/* p   = dictionary of parameters (type of feature extract dependant)
-/* typ = type of feature extraction (FRESH/normal/tseries ...)
-/* tgt  = target vector
-/* mdls = table denoting all the models with associated information used in this repository
+// The purpose of this file is to house utilities that are useful across more
+// than one node or as part of the AutoML fit functionality and graph.
 
+// @kind function
+// @category utility
+// @fileoverview List of models to exclude
+utils.excludeList:`GaussianNB`LinearRegression
 
-// Utilities for run.q
-
-// This function checks that functions a user is attempting to overwrite
-// default behaviour with are valid, this can be expanded as required
-/. r > null or error if a function to be applied is not valid
-i.checkfuncs:{[dict]
-  fns:raze dict[`funcs`prf`tts`sigfeats],value[dict`scf],first each dict`xv`gs`rs;
-  if[0<cnt:sum locs:@[{$[not type[get[x]]in(99h;100h;104h);'err;0b]};;{[err]err;1b}]each fns;
-     funclst:{$[2<x;" ",y;"s ",sv[", ";y]]}[cnt]string fns where locs;
-    '"The function",/funclst," are not defined in your process\n"]
+// @kind function
+// @category utility
+// @fileoverview Defaulted fitting and prediction functions for AutoML cross
+//   validation and hyperparameter search. Both models fit on a training set
+//   and return the predicted scores based on supplied scoring function.
+// @param func {<} Scoring function that takes parameters and data as input, 
+//   returns appropriate score
+// @param hyperParam {dict} Hyperparameters to be searched
+// @param data {float[]} Data split into training and testing sets of format
+//   ((xtrn;ytrn);(xval;yval))
+// @return {(bool[];float[])} Predicted and true validation values
+utils.fitPredict:{[func;hyperParam;data]
+  predicts:$[0h~type hyperParam;
+    func[data;hyperParam 0;hyperParam 1];
+    @[.[func[][hyperParam]`:fit;data 0]`:predict;data[1]0]`
+    ];
+  (predicts;data[1]1)
   }
 
-i.checkxvhp:{[dict]
-  typ:dict`hp;
-  if[not typ in`grid`sobol`random;
-    '"Form of hyperparameter '",string[typ],"' optimization not possible"];
-  if[not[i.usesobol]&`sobol~typ;'"Sobol hyperparameter optimization not available"];
+// @kind function
+// @category utility
+// @fileoverview Load function from q. If function not found, try Python.
+// @param funcName {sym} Name of function to retrieve
+// @return {<} Loaded function
+utils.qpyFuncSearch:{[funcName]
+  func:@[get;funcName;()];
+  $[()~func;.p.get[funcName;<];func]
   }
 
-// This function ensures that a user that is attempting to use the NLP
-// functionality is passing in appropriate data (i.e. the data contains a char based column)
-i.validnlp:{[t]
-  if[0~count .ml.i.fndcols[t;"C"];
-    '`$"User wishing to apply nlp functionality must pass a table containing a character column."];
+// @kind function
+// @category utility
+// @fileoverview Load NLP library if requirements met
+// This function takes no arguments and returns nothing. Its purpose is to load
+//   the NLP library if requirements are met. If not, a statement printed to 
+//   terminal.
+utils.loadNLP:{
+  notSatisfied:"Requirements for NLP models are not satisfied. gensim must be",
+    " installed. NLP module will not be available.";
+  $[(0~checkimport 3)&(::)~@[{system"l ",x};"nlp/nlp.q";{0b}];
+    .nlp.loadfile`:init.q;
+    -1 notSatisfied;
+    ];
   }
 
-i.w2vseedchk:{
- if[""~getenv`PYTHONHASHSEED;
-   -1"\nFor full reproducibility between q processes of the NLP word2vec implementation, the PYTHONHASHSEED",
-   " environment variable must be set upon initializing q. See https://code.kx.com/q/ml/automl/ug/options/#seed",
-   " for more details"];
-   }
-
-// This function sets or updates the default parameter dictionary as appropriate
-/. r > dictionary with default parameters updated as required
-i.updparam:{[t;p;typ]
-    $[typ=`fresh;
-      {[t;p]d:i.freshdefault[];
-       d:$[(ty:type p)in 10 -11 99h;
-	   [if[10h~ty;p:.automl.i.getdict p];
-	    if[-11h~ty;p:.automl.i.getdict$[":"~first p;1_;]p:string p];
-	    $[min key[p]in key d;d,p;'`$"You can only pass appropriate keys to fresh"]];
-           p~(::);d;
-             '`$"p must be passed the identity `(::)`, a filepath to a parameter flatfile",
-                " or a dictionary with appropriate key/value pairs"];
-	   d[`aggcols]:$[100h~typagg:type d`aggcols;
-                         d[`aggcols]t;
-                         11h~abs typagg;d`aggcols;
-                         '`$"aggcols must be passed function or list of columns"];
-	   d,enlist[`tf]!enlist 1~checkimport[0]}[t;p];
-      typ=`normal;
-      {[t;p]d:i.normaldefault[];
-       d:$[(ty:type p)in 10 -11 99h;
-	   [if[10h~ty;p:.automl.i.getdict p];
-            if[-11h~ty;p:.automl.i.getdict$[":"~first p;1_;]p:string p];
-            $[min key[p]in key d;d,p;
-	      '`$"You can only pass appropriate keys to normal"]];
-           p~(::);d;
-	   '`$"p must be passed the identity `(::)`, a filepath to a parameter flatfile",
-              " or a dictionary with appropriate key/value pairs"];
-	   d,enlist[`tf]!enlist 1~checkimport[0]}[t;p];
-       typ=`nlp;
-       {[t;p]i.validnlp[t];
-        i.w2vseedchk[];
-        d:i.nlpdefault[];
-         d:$[(ty:type p)in 10 -11 99h;
-           [if[10h~ty;p:.automl.i.getdict p];
-            if[-11h~ty;p:.automl.i.getdict$[":"~first p;1_;]p:string p];
-            $[min key[p]in key d;d,p;
-              '`$"You can only pass appropriate keys to nlp"]];
-           p~(::);d;
-           '`$"p must be passed the identity `(::)`, a filepath to a parameter flatfile",
-              " or a dictionary with appropriate key/value pairs"];
-           d,enlist[`tf]!enlist 1~checkimport[0]}[t;p];
-      typ=`tseries;
-      '`$"This will need to be added once the time-series recipe is in place";
-    '`$"Incorrect input type"]}
-
-//  Function takes in a string which is the name of a parameter flatfile
-/* nm = name of the file from which the dictionary is being extracted
-/. r  > the dictionary as defined in a float file in models
-i.getdict:{[nm]
-  d:proc.i.paramparse[nm;"/code/models/flat_parameters/"];
-  idx:(k except`scf;
-    k except`xv`gs`rs`hp`scf`seed;
-    $[`xv in k;`xv;()],$[`gs in k;`gs;()],$[`rs in k;`rs;()];
-    $[`scf in k;`scf;()];
-    $[`seed in k;`seed;()],$[`hp in k:key d;`hp;()]);
-  fnc:(key;
-    {get string first x};
-    {(x 0;get string x 1)};
-    {key[x]!`$value x};
-    {$[first[x]in`rand_val`grid`sobol`random;first x;get string first x]});
-  // Addition of empty dictionary entry needed as parsing
-  // of file behaves oddly if only a single entry is given to the system
-  if[sgl:1=count d;d:(enlist[`]!enlist""),d];
-  d:{$[0<count y;@[x;y;z];x]}/[d;idx;fnc];
-  if[sgl;d:1_d];
-  d}
-
-// Default parameters used in the population of parameters at the start of a run
-// or in the creation of a new initialisation parameter flat file
-/* Neither of these function take a parameter as input
-/. r > default dictionaries which will be used by the automl
-i.freshdefault:{`aggcols`funcs`xv`gs`rs`hp`trials`prf`scf`seed`saveopt`hld`tts`sz`sigfeats!
-  ({first cols x};`.ml.fresh.params;(`.ml.xv.kfshuff;5);(`.ml.gs.kfshuff;5);(`.ml.rs.kfshuff;5);`grid;256;`.automl.xv.fitpredict;
-   `class`reg!(`.ml.accuracy;`.ml.mse);`rand_val;2;0.2;`.ml.ttsnonshuff;0.2;`.automl.prep.freshsignificance)}
-i.normaldefault:{`xv`gs`rs`hp`trials`funcs`prf`scf`seed`saveopt`hld`tts`sz`sigfeats!
-  ((`.ml.xv.kfshuff;5);(`.ml.gs.kfshuff;5);(`.ml.rs.kfshuff;5);`grid;256;`.automl.prep.i.default;`.automl.xv.fitpredict;
-   `class`reg!(`.ml.accuracy;`.ml.mse);`rand_val;2;0.2;`.ml.traintestsplit;0.2;`.automl.prep.freshsignificance)}
-i.nlpdefault:{`xv`gs`rs`hp`trials`funcs`prf`scf`seed`saveopt`hld`tts`sz`sigfeats`w2v!
-  ((`.ml.xv.kfshuff;5);(`.ml.gs.kfshuff;5);(`.ml.rs.kfshuff;5);`grid;256;`.automl.prep.i.default;`.automl.xv.fitpredict;
-   `class`reg!(`.ml.accuracy;`.ml.mse);`rand_val;2;0.2;`.ml.traintestsplit;0.2;`.automl.prep.freshsignificance;0)}
-
-// Apply an appropriate scoring function to predictions from a model
-/* data = testing dataset (xtrain;ytrain;xtest;ytest)
-/* mdl  = fitted embedPy model object/function to be applied
-/* bmn  = best model name (symbol)
-/* scf  = scoring function which determines best model
-/* fnm  = name of the base representation of the function to be applied (reg/multi/bin)
-/. r    > dictionary outlining model score and predicted values
-i.scorepred:{[data;bmn;mdl;scf;fnm]
-  pred:$[bmn in i.nnlist;
-         // Formatting of first param is a result of previous implementation choices
-         get[".automl.",fnm,"predict"][(0n;(data 2;0n));mdl];
-         mdl[`:predict][data 2]`];
-  `score`preds!(scf[;data 3]pred;pred)
+// @kind function
+// @category utility
+// @fileoverview Used throughout the library to convert linux/mac file names to
+//   windows equivalent
+// @param path {str} Linux style path
+// @return {str} Path modified to be suitable for windows systems
+utils.ssrWindows:{[path]
+  $[.z.o like "w*";ssr[;"/";"\\"];]path
   }
 
-/  save down the best model
-/* dt = date-time of model start (dict)
-/* bmn = best model name (`symbol)
-/* bmo = best model object (embedPy)
-/* fpath = dictionary of file paths for saving
-/. r   > saved model to disk at "outputs/2020.03.09/run_16.34.22.262/models"
-i.savemdl:{[bmn;bmo;mdls;fpath]
-  fname:fpath[0]`models;mo:i.ssrsv[fpath[1]`models];
-  joblib:.p.import[`joblib];
-  $[(`sklearn=?[mdls;enlist(=;`model;bmn,());();`lib])0;
-      (joblib[`:dump][bmo;fname,"/",string[bmn]];-1"Saving down ",string[bmn]," model to ",mo);
-    (`keras=?[mdls;enlist(=;`model;bmn,());();`lib])0;
-      (bmo[`:save][fname,"/",string[bmn],".h5"];-1"Saving down ",string[bmn]," model to ",mo);
-    -1"Saving of non keras/sklearn models types is not currently supported"];
+// Python plot functionality
+utils.plt:.p.import`matplotlib.pyplot;
+
+// @kind function
+// @category utility
+// @fileoverview Split data into training and testing sets without shuffling
+// @param features {tab} Unkeyed tabular feature data
+// @param target {num[]} Numerical target vector
+// @param size {float} Percentage of data in testing set
+// @return {dict} Data separated into training and testing sets
+utils.ttsNonShuff:{[features;target;size]
+  `xtrain`ytrain`xtest`ytest!
+    raze(features;target)@\:/:(0,floor n*1-size)_til n:count features
   }
 
-// Table of models appropriate for the problem type being solved
-/* ptyp = problem type as a symbol, either `class or `reg
-/. r   > table with all information needed for appropriate models to be applied to data
-i.models:{[ptyp;tgt;p]
-  if[not ptyp in key proc.i.files;'`$"text file not found"];
-  d:proc.i.txtparse[ptyp;"/code/models/"];
-  if[1b~p`tf;
-    d:l!d l:key[d]where not `keras=first each value d];
-  m:flip`model`lib`fnc`seed`typ!flip key[d],'value d;
-  if[ptyp=`class;
-    // For classification tasks remove inappropriate classification models
-    m:$[2<count distinct tgt;
-        delete from m where typ=`binary;
-        delete from m where model=`multikeras]];
-  // Add a column with appropriate initialized models for each row
-  m:update minit:.automl.proc.i.mdlfunc .'flip(lib;fnc;model)from m;
-  // Threshold models used based on unique target values
-  i.updmodels[m;tgt]}
-
-// Update models available for use based on the number of rows in the data set
-/. r    > model table with appropriate models removed if needed and model removal highlighted
-i.updmodels:{[mdls;tgt]
- $[10000<count tgt;
-   [-1"\nLimiting the models being applied due to number targets>10,000";
-    -1"No longer running neural nets or svms\n";
-    select from mdls where(lib<>`keras),not fnc in`neural_network`svm];mdls]}
-
-// These are a list of models which are deterministic and thus which do not need to be grid-searched
-// at present this should include the Keras models as a sufficient tuning method
-// has yet to be implemented
-if[1~checkimport[0];i.keraslist:`null];
-if[1~checkimport[1];i.torchlist:`null];
-i.nnlist:i.keraslist,i.torchlist;
-i.excludelist:i.nnlist,`GaussianNB`LinearRegression;
-
-// Dictionary with mappings for console printing to reduce clutter in .automl.runexample
-i.runout:`col`pre`sig`nosig`slct`tot`ex`hp`sco`cnf`save!
- ("\nThe following is a breakdown of information for each of the relevant columns in the dataset\n";
-  "\nData preprocessing complete, starting feature creation";
-  "\nFeature creation and significance testing complete";
-  "Feature significance extraction deemed none of the features to be important. Continuing with all features.";
-  "Starting initial model selection - allow ample time for large datasets";
-  "\nTotal features being passed to the models = ";
-  "Continuing to final model fitting on testing set";
-  "Continuing to hyperparameter search and final model fitting on testing set";
-  "\nBest model fitting now complete - final score on testing set = ";
-  "Confusion matrix for testing set:\n";
-  "\nSaving down procedure report to ")
-
-
-// Save down the metadata dictionary as a binary file which can be retrieved by a user or
-// is to be used in running of the models on new data
-/* d     = dictionary of parameters to be saved
-/* dt    = dictionary with the date and time that a run was started, required for naming of save path
-/* fpath = dictionary of file paths for saving
-/. r     > the location that the metadata was saved to
-i.savemeta:{[d;dt;fpath]
-  `:metadata set d;
-  // move the metadata information to the appropriate location based on OS
-  $[first[string .z.o]in "lm";
-    system"mv metadata ",;
-    system"move metadata ",]fpath[0]`config;
-  -1"Saving down model parameters to ",i.ssrsv[fpath[1]`config];}
-
-// Retrieve the metadata information from a specified path
-/* fp = full file path denoting the location of the metadata to be retrieved
-/. r  > returns the parameter dictionary
-i.getmeta:{[fp]
-  fp:`$":",fp;
-  $[()~key fp;'`$"metadata file doesn't exist";get fp]
+// @kind function
+// @category utility
+// @fileoverview Return column value based on best model
+// @param modelTab {tab} Models to apply to feature data
+// @param modelName {sym} Name of current model
+// @param col {sym} Column to search
+// @return {sym} Column value
+utils.bestModelDef:{[modelTab;modelName;col]
+  first?[modelTab;enlist(=;`model;enlist modelName);();col]
   }
 
-
-// Apply feature creation and encoding procedures for 'normal' on new data
-/. r > table with feature creation and encodings applied appropriately
-i.normalproc:{[t;p]
-  prep.i.autotype[t;p`typ;p];
-  // symbol encoding completed based on encoding applied in a previous 'run'
-  t:prep.i.symencode[t;10;0;p;p`symencode];
-  t:prep.i.nullencode[t;med];
-  t:.ml.infreplace[t];
-  t:prep.normalcreate[t;p]`preptab;
-  pfeat:p`features;
-  // It is not guaranteed that all features will be created on new data
-  // no nulls -> no encode -> no feature, as such we may need to augment additional data
-  if[not all ftc:pfeat in cols t;
-     newcols:pfeat where not ftc;
-     t:pfeat xcols flip flip[t],newcols!((count newcols;count t)#0f),()];
-  flip value flip pfeat#"f"$0^t}
-
-// Apply feature creation and encoding procedures for FRESH on new data
-/. r > table with feature creation and encodings applied appropriately
-i.freshproc:{[t;p]
-  t:prep.i.autotype[t;p`typ;p];
-  agg:p`aggcols;pfeat:p`features;
-  // extract relevant functions based on the significant features determined by the model
-  funcs:raze `$distinct{("_" vs string x)1}each p`features;
-  // ensures that many calculations that are irrelevant are not run
-  appfns:1!select from 0!.ml.fresh.params where f in funcs;
-  // apply symbol encoding based on a previous run of automl
-  t:prep.i.symencode[t;10;0;p;p`symencode];
-  cols2use:k where not (k:cols t)in agg;
-  t:prep.i.nullencode[value .ml.fresh.createfeatures[t;agg;cols2use;appfns];med];
-  t:.ml.infreplace t;
-  // It is not guaranteed that new feature creation will produce the all requisite features
-  // if this is not the case dummy features are added to the data
-  if[not all ftc:pfeat in cols t;
-    newcols:pfeat where not ftc;
-    t:pfeat xcols flip flip[t],newcols!((count newcols;count t)#0f),()];
-  flip value flip pfeat#"f"$0^t}
-
-// Apply feature creation and encoding procedures for nlp on new data
-/. r > table with feature creation and encodings applied appropriately
-i.nlpproc:{[t;p;fp]
-  r:prep.i.nlp_proc[t;p;0b;fp];
-  strcol:r`strcol;tb:r`tb;
-  if[0<count cols[t]except strcol;tb:tb,'first prep.normalcreate[strcol_t;p]];
-  tt:tb[p`features];
-  flip tt}
-
-
-// Create the folders that are required for the saving of the config,models, images and reports
-/* dt  = date and time dictionary denoting the start of a run
-/* svo = save option defined by the user, this can only be 1/2, 0 never reached in functions
-/. r   > the file paths in its full format or truncated for use in outputs to terminal
-i.pathconstruct:{[dt;svo]
-  names:`config`models;
-  if[svo=2;names:names,`images`report]
-  pname:{"/",ssr["outputs/",string[x`stdate],"/run_",string[x`sttime],"/",y,"/";":";"."]};
-  paths:path,/:pname[dt]each string names;
-  paths:i.ssrwin each paths;
-  {[fnm]system"mkdir",$[.z.o like "w*";" ";" -p "],fnm}each paths;
-  (names!paths;names!{count[path]_x}each paths)
+// @kind function
+// @category automl
+// @fileoverview Retrieve feature and target data using information contained
+//   in user-defined JSON file
+// @param method {dict} Retrieval methods for command line data. i.e.
+//   `featureData`targetData!("csv";"ipc")
+// @return {dict} Feature and target data retrieved based on user instructions
+utils.getCommandLineData:{[method]
+  methodSpecification:cli.input`retrievalMethods;
+  dict:key[method]!methodSpecification'[value method;key method];
+  if[count idx:where`ipc=method;dict[idx]:("J";"c";"c")$/:3#'dict idx];
+  dict:dict,'([]typ:value method);
+  featureData:.ml.i.loaddset dict`featureData;
+  featurePath:dict[`featureData]utils.dataType method`featureData;
+  targetPath:dict[`targetData]utils.dataType method`targetData;
+  targetName:`$dict[`targetData]`targetColumn;
+  // If data retrieval methods are the same for both feature and target data, 
+  // only load data once and retrieve the target from the table. Otherwise,
+  // retrieve target data using .ml.i.loaddset
+  data:$[featurePath~targetPath;
+    (flip targetName _ flip featureData;featureData targetName);
+    (featureData;.ml.i.loaddset[dict`targetData]$[`~targetName;::;targetName])
+    ];
+  `features`target!data
   }
 
-// Util for .automl.new
+// @kind function
+// @category utility
+// @fileoverview Create a prediction function to be used when applying a 
+//   previously fit model to new data. The function calls the predict method
+//   of the defined model and passes in new feature data to make predictions.
+// @param config {dict} Information about a previous run of AutoML including
+//   the feature extraction procedure used and the best model produced
+// @param features {tab} Tabular feature data to make predictions on
+// @returns {num[]} Predictions
+utils.generatePredict:{[config;features]
+  original_print:utils.printing;
+  utils.printing:0b;
+  bestModel:config`bestModel;
+  features:utils.featureCreation[config;features];
+  modelLibrary:config`modelLib;
+  utils.printing:original_print;
+  $[`sklearn~modelLibrary;
+      bestModel[`:predict;<]features;
+    modelLibrary in`keras`torch`theano;
+      [features:enlist[`xtest]!enlist features;
+       customName:"." sv string config`modelLib`modelFunc;
+       get[".automl.models.",customName,".predict"][features;bestModel]
+	   ];
+    '"NotYetImplemented"
+	]
+  }
 
-// Convert date and time inputs to correct format for filepath
-/* dt = run date as date (yyyy.mm.dd) or string (format "yyyy.mm.dd")
-/* tm = run timestamp as timestamp (hh:mm:ss.xxx) or string (format "hh:mm:ss.xxx"/"hh.mm.ss.xxx")
-/. r  > string list with date and time of format ("2001.01.01";"12:00:00.000")
-i.new_datetime:{[dt;tm]
-  dt:$[-14h=td:type dt;string dt;(td=10h)&10=count dt;dt;
-    '"dt must be date or string with format yyyy.mm.dd"];
-  tm:ssr[;":";"."]$[-19h=tt:type tm;string tm;(tt=10h)&12=count tm;tm;
-    '"tm must be timestamp or string with format hh:mm:ss.xxx or hh.mm.ss.xxx"];
-  (dt;tm)}
+// @kind function
+// @category utility
+// @fileoverview Apply feature extraction/creation and selection on provided 
+//   data based on a previous run
+// @param config {dict} Information about a previous run of AutoML including
+//   the feature extraction procedure used and the best model produced
+// @param features {tab} Tabular feature data to make predictions on
+// @returns {tab} Features produced using config feature extraction procedures
+utils.featureCreation:{[config;features]
+  sigFeats:config`sigFeats;
+  extractType:config`featureExtractionType;
+  if[`nlp~extractType;config[`savedWord2Vec]:1b];
+  if[`fresh~extractType;
+    relevantFuncs:raze`$distinct{("_" vs string x)1}each sigFeats;
+    appropriateFuncs:1!select from 0!.ml.fresh.params where f in relevantFuncs;
+    config[`functions]:appropriateFuncs
+	];
+  features:dataPreprocessing.node.function[config;features;config`symEncode];
+  features:featureCreation.node.function[config;features]`features;
+  if[not all newFeats:sigFeats in cols features;
+    n:count newColumns:sigFeats where not newFeats;
+    features:flip flip[features],newColumns!((n;count features)#0f),()];
+  flip value flip sigFeats#"f"$0^features
+  }
 
-// Util functions used in multiple util files
+// @kind function
+// @category utility
+// @fileoverview Retrieve previous generated model from disk
+// @param config {dict} Information about a previous run of AutoML including
+//   the feature extraction procedure used and the best model produced
+// @returns {tab} Features produced using config feature extraction procedures
+utils.loadModel:{[config]
+  modelLibrary:config`modelLib;
+  loadFunction:$[modelLibrary~`sklearn;
+      .p.import[`joblib][`:load];
+    modelLibrary~`keras;
+      $[check.keras[];
+        .p.import[`keras.models][`:load_model];
+        '"Keras model could not be loaded"
+        ];
+    modelLibrary~`torch;
+      $[0~checkimport 1;
+       .p.import[`torch][`:load];
+       '"Torch model could not be loaded"
+       ];
+    modelLibrary~`theano;
+      $[0~checkimport 5;
+        .p.import[`joblib][`:load];
+        '"Theano model could not be loaded"
+        ];
+    '"Model Library must be one of 'sklearn', 'keras' or 'torch'"
+    ];
+  modelPath:config[`modelsSavePath],string config`modelName;
+  modelFile:$[modelLibrary in`sklearn`theano;
+      modelPath;
+    modelLibrary in`keras;
+      modelPath,".h5";
+    modelLibrary~`torch;
+      modelPath,".pt";
+    '"Unsupported model type provided"
+    ];
+  loadFunction modelFile
+  }
 
-// Error flag if test set is not appropriate for multikeras model
-/. r    > the models table with the multikeras model removed
-i.errtgt:{[mdls]
-  -1 "\n Test set does not contain examples of each class. Removed multikeras from models";
-  delete from mdls where model=`multikeras}
+// @kind function
+// @category utility
+// @fileoverview Generate the path to a model based on user-defined dictionary
+//   input. This assumes no knowledge of the configuration, rather this is the 
+//   gateway to retrieve the configuration and models.
+// @param dict {dict} Configuration detailing where to retrieve the model which
+//   must contain one of the following:
+//     1. Dictionary mapping `startDate`startTime to the date and time 
+//       associated with the model run.
+//     2. Dictionary mapping `savedModelName to a model named for a run 
+//       previously executed.
+// @returns {char[]} Path to the model information
+utils.modelPath:{[dict]
+  pathStem:path,"/outputs/";
+  model:$[all `startDate`startTime in key dict;utils.nearestModel[dict];dict];
+  keyDict:key model;
+  pathStem,$[all `startDate`startTime in keyDict;
+    $[all(-14h;-19h)=type each dict`startDate`startTime;
+      "dateTimeModels/",
+      ssr[string[model`startDate],"/run_",string[model`startTime],"/";":";"."];
+      '"Types provided for date/time retrieval must be a date and",
+      " time respectively"
+      ];
+    `savedModelName in keyDict;
+    $[10h=type model`savedModelName;
+      "namedModels/",model[`savedModelName],"/";
+      '"Types provided for model name based retrieval must be a string"
+      ];
+    '"A user must define model start date/time or model name.";
+    ]
+  }
 
-// Extract the scoring function to be applied for model selection
-/. r    > the scoring function appropriate to the problem being solved
-i.scfn:{[p;mdls]p[`scf]$[`reg in distinct mdls`typ;`reg;`class]}
+// @kind function
+// @category utility
+// @fileoverview Extract model meta while checking that the directory for the
+//    specified model exists
+// @param modelDetails {dict} Details of current model
+// @param pathToMeta {hsym} Path to previous model metadata
+// @returns {dict} Returns either extracted model metadata or errors out
+utils.extractModelMeta:{[modelDetails;pathToMeta]
+  details:raze modelDetails;
+  modelName:$[10h=type raze value modelDetails;;{sv[" - ";string x]}]details;
+  errFunc:{[modelName;err]'"Model ",modelName," does not exist\n"}modelName;
+  @[get;pathToMeta;errFunc]
+  }
 
-// Check if multikeras model is to be applied and each target exists in both training and testing sets
-/* tts  = train-test split dataset
-/. r    > table with multi-class keras model removed if it is not to be applied
-i.kerascheck:{[mdls;tts;tgt]
-  mkcheck :`multikeras in mdls`model;
-  tgtcheck:(count distinct tgt)>min{count distinct x}each tts`ytrain`ytest;
-  $[mkcheck&tgtcheck;i.errtgt;]mdls}
+// @kind function
+// @category utility
+// @fileoverview Dictionary outlining the keys which must be equivalent for 
+//   data retrieval in order for a dataset not to be loaded twice (assumes 
+//   tabular return under equivalence)
+utils.dataType:`ipc`binary`csv!
+  (`port`select;`directory`fileName;`directory`fileName)
 
-// Used throughout the library to convert linux/mac file names to windows equivalent
-/* path = the linux 'like' path
-/. r    > the path modified to be suitable for windows systems
-i.ssrwin:{[path]$[.z.o like "w*";ssr[path;"/";"\\"];path]}
+// @kind function
+// @category utility
+// @fileoverview Dictionary with console print statements to reduce clutter
+utils.printDict:(!) . flip(
+  (`describe;"The following is a breakdown of information for each of the ",
+    "relevant columns in the dataset");
+  (`errColumns;"The following columns were removed due to type restrictions",
+    " for ");
+  (`preproc;"Data preprocessing complete, starting feature creation");
+  (`sigFeat;"Feature creation and significance testing complete");
+  (`totalFeat;"Total number of significant features being passed to the ",
+    "models = ");
+  (`select;"Starting initial model selection - allow ample time for large",
+    " datasets");
+  (`scoreFunc;"Scores for all models using ");
+  (`bestModel;"Best scoring model = ");
+  (`modelFit;"Continuing to final model fitting on testing set");
+  (`hyperParam;"Continuing to hyperparameter search and final model fitting ",
+    "on testing set");
+  (`kerasClass;"Test set does not contain examples of each class removing ",
+    "multi-class keras models");
+  (`torchModels;"Attempting to run Torch models without Torch installed, ",
+    "removing Torch models");
+  (`theanoModels;"Attempting to run Theano models without Theano installed, ",
+    "removing Theano models");
+  (`latexError;"The following error occurred when attempting to run latex",
+     " report generation:\n");
+  (`score;"Best model fitting now complete - final score on testing set = ");
+  (`confMatrix;"Confusion matrix for testing set:");
+  (`graph;"Saving down graphs to ");
+  (`report;"Saving down procedure report to ");
+  (`meta;"Saving down model parameters to ");
+  (`model;"Saving down model to "))
 
-// Used throughout when printing directory of saved objects.
-// this is to keep linux/windows consistent
-i.ssrsv:{[path] ssr[path;"\\";"/"]}
+// @kind function
+// @category utility
+// @fileoverview Dictionary of warning print statements that can be turned 
+//   on/off. If two elements are within a key,first element is the warning 
+//   given when ignoreWarnings=2, the second is the warning given when 
+//   ignoreWarnings=1.
+utils.printWarnings:(!) . flip(
+  (`configExists;("A configuration file of this name already exists";
+     "A configuration file of this name already exists and will be ",
+     "overwritten"));
+  (`savePathExists;("The savePath chosen already exists, this run will be",
+     " exited";
+     "The savePath chosen already exists and will be overwritten"));
+  (`loggingPathExists;("The logging path chosen already exists, this run ", 
+    "will be exited";
+    "The logging path chosen already exists and will be overwritten"));
+  (`printDefault;"If saveOption is 0, logging or printing to screen must be ",
+     "enabled. Defaulting to .automl.utils.printing:1b");
+  (`pythonHashSeed;"For full reproducibility between q processes of the NLP ",
+    "word2vec implementation, the PYTHONHASHSEED environment variable must ",
+    "be set upon initialization of q. See ",
+    "https://code.kx.com/q/ml/automl/ug/options/#seed for details.");
+  (`neuralNetWarning;("Limiting the models being applied. No longer running ",
+     "neural networks or SVMs. Upper limit for number of targets set to: ";
+     "It is advised to remove any neural network or SVM based models from ",
+     "model evaluation. Currently running with in a number of data points in",
+     " excess of: "))
+  )
 
+
+// @kind function
+// @category utility
+// @fileoverview Decide how warning statements should be handles.
+//   0=No warning or action taken
+//   1=Warning given but no action taken.
+//   2=Warning given and appropriate action taken.
+utils.ignoreWarnings:2
+
+// @kind function
+// @category utility
+// @fileoverview Default printing and logging functionality
+utils.printing:1b
+utils.logging :0b
+
+// @kind function
+// @category api
+// @fileoverview
+// @param filename {sym} Filename to apply to log of outputs to file
+// @param val {str} Item that is to be displayed to standard out of any type
+// @param nline1 {int} Number of new line breaks before the text that are 
+//   needed to 'pretty print' the display
+// @param nline2 {int} Number of new line breaks after the text that are needed
+//   to 'pretty print' the display
+utils.printFunction:{[filename;val;nline1;nline2]
+  if[not 10h~type val;val:.Q.s val];
+  newLine1:nline1#"\n";
+  newLine2:nline2#"\n";
+  printString:newLine1,val,newLine2;
+  if[utils.logging;
+    h:hopen hsym`$filename;
+    h printString;
+    hclose h;
+    ];
+  if[utils.printing;-1 printString];
+  }
+
+// @kind function
+// @category utility
+// @fileoverview Retrieve the model which is closest in time to
+//   the user specified `startDate`startTime where nearest is
+//   here defined at the closest preceding model
+// @param dict {dict} information about the start date and
+//   start time of the model to be retrieved mapping `startDate`startTime
+//   to their associated values
+// @returns {dict} The model whose start date and time most closely matches
+//   the input
+utils.nearestModel:{[dict]
+  timeMatch:sum dict`startDate`startTime;
+  datedTimed :utils.getTimes[];
+  namedModels:utils.parseNamedFiles[];
+  if[(();())~(datedTimed;namedModels);
+    '"No named or dated and timed models in outputs folder,",
+    " please generate models prior to model retrieval"
+    ];
+  allTimes:raze datedTimed,key namedModels;
+  binLoc:bin[allTimes;timeMatch];
+  if[-1=binLoc;binLoc:binr[allTimes;timeMatch]];
+  nearestTime:allTimes binLoc;
+  modelName:namedModels nearestTime;
+  if[not (""~modelName)|()~modelName;
+    :enlist[`savedModelName]!enlist neg[1]_2_modelName];
+  `startDate`startTime!("d";"t")$\:nearestTime
+  }
+
+// @kind function
+// @category utility
+// @fileoverview Retrieve the timestamp associated
+//   with all dated/timed models generated historically
+// @return {timestamp[]} The timestamps associated with
+//   each of the previously generated non named models
+utils.getTimes:{
+  dateTimeFiles:key hsym`$path,"/outputs/dateTimeModels/";
+  $[count dateTimeFiles;utils.parseModelTimes each dateTimeFiles;()]
+  }
+
+// @kind function
+// @category utility
+// @fileoverview Generate a timestamp for each timed file within the
+//   outputs folder
+// @param folder {symbol} name of a dated folder within the outputs directory
+// @return {timestamp} an individual timestamp denoting the date+time of a run
+utils.parseModelTimes:{[folder]
+  fileNames:string key hsym`$path,"/outputs/dateTimeModels/",string folder;
+  "P"$string[folder],/:"D",/:{@[;2 5;:;":"] 4_x}each fileNames,\:"000000"
+  }
+
+// @kind function
+// @category utility
+// @fileoverview Retrieve the dictionary mapping timestamp of 
+//   model generation to the name of the associated model
+// @return {dict} A mapping between the timestamp associated with start date/time
+//   and the name of the model produced
+utils.parseNamedFiles:{
+  (!).("P*";"|")0:hsym`$path,"/outputs/timeNameMapping.txt"
+  }
+
+// @kind function
+// @category utility
+// @fileoverview Delete models based on user provided information 
+//   surrounding the date and time of model generation
+// @param config {dict} User provided config containing, start date/time
+//   information these can be date/time types in the former case or a
+//   wildcarded string
+// @param pathStem {string} the start of all paths to be constructed, this
+//   is in the general case .automl.path,"/outputs/"
+// @return {null} returns an error if attempting to delete folders which do
+//   not have a match
+utils.deleteDateTimeModel:{[config;pathStem]
+  dateInfo:config`startDate;
+  timeInfo:config`startTime;
+  pathStem,:"dateTimeModels/";
+  allDates:key hsym`$pathStem;
+  relevantDates:utils.getRelevantDates[dateInfo;allDates];
+  relevantDates:string $[1=count relevantDates;enlist;]relevantDates;
+  datePaths:(pathStem,/:relevantDates),\:"/";
+  fileList:raze{x,/:string key hsym`$x}each datePaths;
+  relevantFiles:utils.getRelevantFiles[timeInfo;fileList];
+  {system"rm -r ",x}each relevantFiles
+  }
+
+// @kind function
+// @category utility
+// @fileoverview Retrieve all files/models which meet the criteria
+//   set out by the date/time information provided by the user
+// @param dateInfo {date|string} user provided string (for wildcarding)
+//   or individual date
+// @param allDates {symbol[]} list of all folders contained within the 
+//   .automl.path,"/outputs/dateTimeModels" folder
+// @return all dates matching the user provided criteria
+utils.getRelevantDates:{[dateInfo;allDates]
+  if[0=count allDates;'"No dated models available"];
+  relevantDates:$[-14h=type dateInfo;
+      $[(`$string dateInfo)in allDates;
+        dateInfo;
+        '"startDate provided was not present within the list of available dates"
+       ];
+    10h=abs type dateInfo;
+      $["*"~dateInfo;
+        allDates;
+        allDates where allDates like dateInfo
+       ];
+    '"startDate provided must be an individual date or regex string"
+    ];
+  if[0=count relevantDates;'"No dates requested matched a presently saved model folder"];
+  relevantDates
+  }
+
+// @kind function
+// @category utility
+// @fileoverview Retrieve all files/models which meet the criteria
+//   set out by the date/time information provided by the user
+// @param timeInfo {time|string} user provided string (for wildcarding)
+//   or individual time
+// @param fileList {string[]} list of all folders matching the requested
+//   dates supplied by the user
+// @return {string[]} all files meeting both the date and time criteria
+//   provided by the user.
+utils.getRelevantFiles:{[timeInfo;fileList]
+  relevantFiles:$[-19h=type timeInfo;
+     $[any timedString:fileList like ("*",ssr[string[timeInfo];":";"."]);
+       fileList where timedString;
+       '"startTime provided was not present within the list of available times"
+       ];
+    10h=abs type timeInfo;
+     $["*"~timeInfo;
+       fileList;
+       fileList where fileList like ("*",ssr[timeInfo;":";"."])
+       ];
+    '"startTime provided must be an individual time or regex string"
+    ];
+  if[0=count relevantFiles;
+    '"No files matching the user provided date and time were found for deletion"
+    ];
+  relevantFiles
+  }
+
+// @kind function
+// @category utility
+// @fileoverview Delete models pased on named input, this may be a direct match
+//   or a regex matching string
+// @param config {dict} User provided config containing, a mapping from 
+//   the save model name to the defined name as a string (direct match/wildcard)
+// @param allFiles {symbol[]} list of all folders contained within the
+//   .automl.path,"/outputs/" folder
+// @param pathStem {string} the start of all paths to be constructed, this
+//   is in the general case .automl.path,"/outputs/"
+// @return {null} returns an error if attempting to delete folders which do
+//   not have a match
+utils.deleteNamedModel:{[config;pathStem]
+  nameInfo:config[`savedModelName];
+  namedPathStem:pathStem,"namedModels/";
+  relevantNames:utils.getRelevantNames[nameInfo;namedPathStem];
+  namedPaths:namedPathStem,/:string relevantNames;
+  utils.deleteFromNameMapping[relevantNames;pathStem];
+  {system "rm -r ",x}each namedPaths
+  }
+
+// @kind function
+// @category utility
+// @fileoverview Retrieve all named models matching the user supplied
+//   string representation of the search
+// @param nameInfo {string} string used to compare all named models to
+//   during a search
+// @param namedPathStem {string} the start of all paths to be constructed,
+//   in this case .automl.path,"/outputs/namedModels"
+// @return {symbol[]} the names of all named models which match the user
+//   provided string pattern
+utils.getRelevantNames:{[nameInfo;namedPathStem]
+  allNamedModels:key hsym`$namedPathStem;
+  if[0=count allNamedModels;'"No named models available"];
+  relevantModels:$[10h=abs type nameInfo;
+    $["*"~nameInfo;
+      allNamedModels;
+      allNamedModels where allNamedModels like nameInfo
+     ];
+    '"savedModelName must be a string"
+    ];
+  if[0=count relevantModels;
+    '"No files matching the user provided savedModelName were found for deletion"
+    ];
+  relevantModels
+  }
+
+// @kind function
+// @category utility
+// @fileoverview In the case that a named model is to be deleted, in order to
+//   facilitate retrieval 'nearest' timed model a text file mapping timestamp
+//   to model name is provided. If a model is to be deleted then this timestamp
+//   also needs to be removed from the mapping. This function is used to
+//   facilitate this by rewriting the timeNameMapping.txt file following
+//   model deletion.
+// @param relevantNames {symbol[]} the names of all named models which match the
+//   user provided string pattern
+// @param pathStem {string} the start of all paths to be constructed,
+//   this is in the general case .automl.path,"/outputs"
+// @return {null} On successful execution will return null, otherwise raises 
+//   an error indicating that the timeNameMapping.txt file contains
+//   no information.
+utils.deleteFromNameMapping:{[relevantNames;pathStem]
+  timeMapping:hsym`$pathStem,"timeNameMapping.txt";
+  fileInfo:("P*";"|")0:timeMapping;
+  if[all 0=count each fileInfo;
+    '"timeNameMapping.txt contains no information"
+    ];
+  originalElements:til count first fileInfo;
+  modelNames:{trim x except ("\"";"\\")}each last fileInfo;
+  relevantNames:string relevantNames;
+  locs:raze{where x like y}[modelNames]each relevantNames;
+  relevantLocs:originalElements except locs;
+  relevantData:(first fileInfo;modelNames)@\:relevantLocs;
+  writeData:$[count relevantData;(!). relevantData;""];
+  hdel timeMapping;
+  h:hopen timeMapping;
+  if[not writeData~"";{x each .Q.s[y]}[h;writeData]];
+  hclose h;
+  }

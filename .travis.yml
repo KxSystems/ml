@@ -28,10 +28,12 @@ install:
   - if [[ "x$QLIC_KC" != "x" ]]; then
       echo -n $QLIC_KC |base64 --decode > q/kc.lic;
       pip -q install -r requirements.txt;
+      pip install tensorflow;
+      pip install keras;
       pip install torch;
+      pip install theano;
       pip install gensim;
       pip install sobol-seq;
-
     fi
 beforescript:
   - IMPLEMENTATION=$(if [[ "x$TRAVIS_TAG" == "x" ]]; then echo $TRAVIS_BRANCH-$TRAVIS_COMMIT; else echo $TRAVIS_TAG; fi;)
@@ -47,12 +49,11 @@ script:
 - echo "Packaged as automl_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip"
 -  if [[ "x$QLIC_KC" != "x" ]]; then
     curl -fsSL -o test.q https://github.com/KxSystems/embedpy/raw/master/test.q;
-    q test.q -q;
+    PYTHONHASHSEED=0 bash code/tests/testFiles.bat
 
   else
     echo No kdb+, no tests;
   fi
-
 
 deploy:
   provider: releases
