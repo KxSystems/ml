@@ -4,6 +4,7 @@
 
 \l p.q
 \l ml.q
+\l graph/utils.q
 \l graph/graph.q
 \l graph/pipeline.q
 
@@ -79,7 +80,7 @@ failingTest[.ml.updNode;(g;`node1;outputType);0b;"invalid outputs"]
 
 // Connect an invalid edge between 2 nodes and check that this is not valid
 g:.ml.connectEdge[g;`cfg1;`output;`node1;`input]
-0b~first exec valid from g[`edges] where dstNode=`node1,dstName=`input
+0b~first exec valid from g[`edges] where destNode=`node1,destName=`input
 g:.ml.disconnectEdge[g;`node1;`input]
 
 // Attempt to disconnect a node that doesn't exist
@@ -95,10 +96,10 @@ failingTest[.ml.connectEdge;(g;`nocfg;`output;`node1;`input);0b;"invalid srcNode
 failingTest[.ml.connectEdge;(g;`cfg1;`nosrcName;`node1;`input);0b;"invalid srcName"]
 
 // Attempt to connect an edge from an non existent destination node
-failingTest[.ml.connectEdge;(g;`cfg1;`output;`nosrcnode;`input);0b;"invalid dstNode"]
+failingTest[.ml.connectEdge;(g;`cfg1;`output;`nosrcnode;`input);0b;"invalid destNode"]
 
 // Attempt to connect an edge from an existent destination node but non existent destination name
-failingTest[.ml.connectEdge;(g;`cfg1;`output;`node1;`noinput);0b;"invalid dstName"]
+failingTest[.ml.connectEdge;(g;`cfg1;`output;`node1;`noinput);0b;"invalid destName"]
 
 
 -1"\nTesting delNode";
@@ -116,7 +117,7 @@ not `tempNode in exec nodeId from g[`nodes]
 // but function errors on execution (for pipeline testing)
 g:.ml.updNode[g;`node1]`function`inputs`outputs!({`e+1};"!";"!")
 g:.ml.connectEdge[g;`cfg1;`output;`node1;`input]
-1b~first exec valid from g[`edges] where dstNode=`node1,dstName=`input
+1b~first exec valid from g[`edges] where destNode=`node1,destName=`input
 
 
 -1"\nTesting failing pipeline execution without debug mode active";
