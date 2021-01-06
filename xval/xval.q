@@ -120,7 +120,7 @@ xv.fitscore:{[function;p;data]
 // @param function {func} Function that takes parameters and data as input 
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -140,7 +140,7 @@ gs.kfsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfsplit]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -160,7 +160,7 @@ gs.kfshuff:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfshuff]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -180,7 +180,7 @@ gs.kfstrat:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfstrat]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -200,7 +200,7 @@ gs.tsrolls:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.tsrolls]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -220,7 +220,7 @@ gs.tschain:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.tschain]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -240,7 +240,7 @@ gs.pcsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.pcsplit]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -264,7 +264,7 @@ gs.mcsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.mcsplit]
 //   (random/sobol), random_state is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -288,7 +288,7 @@ rs.kfsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfsplit]
 //   (random/sobol), random_state is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -312,7 +312,7 @@ rs.kfshuff:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfshuff]
 //   (random/sobol), random_state is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -336,7 +336,7 @@ rs.kfstrat:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfstrat]
 //   (random/sobol), random_state is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -360,7 +360,7 @@ rs.tsrolls:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.tsrolls]
 //   (random/sobol), random_state is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -384,7 +384,7 @@ rs.tschain:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.tschain]
 //   (random/sobol), random_state is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
@@ -409,7 +409,7 @@ rs.pcsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.pcsplit]
 //   (random/sobol), random_state is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
-// @param tsttyp {float} Size of the holdout set used in a fitted grid 
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
