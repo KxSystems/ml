@@ -19,10 +19,10 @@ updDebug:{[]graphDebug::not graphDebug}
 //   required to allow its successful execution 
 createPipeline:{[graph]
   if[not all exec 1_valid from graph`edges;'"disconnected edges"];
-  outputs:ungroup select srcNode:nodeId,srcName:key each outputs 
+  outputs:ungroup select sourceNode:nodeId,sourceName:key each outputs 
     from 1_graph`nodes;
-  srcInfo:select srcNode,srcName from graph`edges;
-  endPoints:exec distinct srcNode from outputs except srcInfo;
+  srcInfo:select sourceNode,sourceName from graph`edges;
+  endPoints:exec distinct sourceNode from outputs except srcInfo;
   paths:i.getOptimalPath[graph]each endPoints;
   optimalPath:distinct raze paths idesc count each paths;
   pipeline:([]nodeId:optimalPath)#graph`nodes;
@@ -31,8 +31,8 @@ createPipeline:{[graph]
     inputOrder:nodeInputs from pipeline;
   pipeline:select nodeId,complete:0b,error:`,function,inputs,outputs:inputs,
      outputTypes,inputOrder from pipeline;
-  pipeline:pipeline lj select outputmap:([]srcName;destNode;destName)by 
-    nodeId:srcNode from graph`edges;
+  pipeline:pipeline lj select outputMap:([]sourceName;destNode;destName)by 
+    nodeId:sourceNode from graph`edges;
   1!pipeline}
 
 // @kind function

@@ -90,10 +90,10 @@ failingTest[.ml.disconnectEdge;(g;`node;`input);0b;"invalid edge"]
 failingTest[.ml.disconnectEdge;(g;`node1;`test);0b;"invalid edge"]
 
 // Attempt to connect an edge with a non existent source node
-failingTest[.ml.connectEdge;(g;`nocfg;`output;`node1;`input);0b;"invalid srcNode"]
+failingTest[.ml.connectEdge;(g;`nocfg;`output;`node1;`input);0b;"invalid sourceNode"]
 
 // Attempt to connect an edge from an existent source node but non existent source name
-failingTest[.ml.connectEdge;(g;`cfg1;`nosrcName;`node1;`input);0b;"invalid srcName"]
+failingTest[.ml.connectEdge;(g;`cfg1;`nosourceName;`node1;`input);0b;"invalid sourceName"]
 
 // Attempt to connect an edge from an non existent destination node
 failingTest[.ml.connectEdge;(g;`cfg1;`output;`nosrcnode;`input);0b;"invalid destNode"]

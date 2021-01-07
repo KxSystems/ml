@@ -7,8 +7,10 @@
 //   This includes a key for information on the nodes present within the graph
 //   and edges outlining how the nodes within the graph are connected. 
 createGraph:{[]
-  nodes:1!enlist`nodeId``function`inputs`outputs!(`;::;::;::;::);
-  edges:2!enlist`destNode`destName`srcNode`srcName`valid!(`;`;`;`;0b);
+  nodeKeys:`nodeId``function`inputs`outputs;
+  nodes:1!enlist nodeKeys!(`;::;::;::;::);
+  edgeKeys:`destNode`destName`sourceNode`sourceName`valid;
+  edges:2!enlist edgeKeys!(`;`;`;`;0b);
   `nodes`edges!(nodes;edges)
   }
 
@@ -30,10 +32,10 @@ addNode:{[graph;nodeId;node]
   if[-10h=type node`outputs;
     node[`outputs]:(1#`output)!enlist node`outputs;
     node[`function]:((1#`output)!enlist@)node[`function]::;
-  ];
+    ];
   if[99h<>type node`outputs;'"invalid outputs"];
   graph:@[graph;`nodes;,;update nodeId from node];
-  edgeKeys:`destNode`destName`srcNode`srcName`valid;
+  edgeKeys:`destNode`destName`sourceNode`sourceName`valid;
   edges:flip edgeKeys!(nodeId;key node`inputs;`;`;0b);
   graph:@[graph;`edges;,;edges];
   graph
@@ -61,26 +63,25 @@ updNode:{[graph;nodeId;node]
     graph:@[graph;`edges;key[inputEdges]_];
     inputEdges:flip[`destNode`destName!(nodeId;key node`inputs)]#inputEdges;
     graph:@[graph;`edges;,;inputEdges];
-    inputEdges:select from inputEdges where not null srcNode;
+    inputEdges:select from inputEdges where not null sourceNode;
     graph:i.connectGraph/[graph;0!inputEdges];
-  ];
+    ];
   if[`outputs in key node;
     if[-10h=type node`outputs;
-      node[`outputs]:(1#`output)!enlist node`outputs;
-    ];
+      node[`outputs]:(1#`output)!enlist node`outputs];
     if[99h<>type node`outputs;'"invalid outputs"];
-    outputEdges:select from graph[`edges]where srcNode=nodeId,
-      srcName in key oldNode`outputs;
+    outputEdges:select from graph[`edges]where sourceNode=nodeId,
+      sourceName in key oldNode`outputs;
     graph:@[graph;`edges;key[outputEdges]_];
-    outputEdges:select from outputEdges where srcName in key node`outputs;
+    outputEdges:select from outputEdges where sourceName in key node`outputs;
     graph:@[graph;`edges;,;outputEdges];
-    outputEdges:select srcNode,srcName,destName,destName from outputEdges;
-    graph:i.connectGraph/[graph;0!outputEdges];
-  ];
+    outputEdge:select sourceNode,sourceName,destName,destName from outputEdges;
+    graph:i.connectGraph/[graph;0!outputEdge];
+    ];
   if[`function in key node;
     if[(1#`output)~key graph[`nodes;nodeId]`outputs;
       node[`function]:((1#`output)!enlist@)node[`function]::];
-  ];
+    ];
   graph:@[graph;`nodes;,;update nodeId from node];
   graph
   }
@@ -97,8 +98,9 @@ delNode:{[graph;nodeId]
   graph:@[graph;`nodes;_;nodeId];
   inputEdges:select from graph[`edges]where destNode=nodeId;
   graph:@[graph;`edges;key[inputEdges]_];
-  outputEdges:select from graph[`edges]where srcNode=nodeId;
-  graph:@[graph;`edges;,;update srcNode:`,srcName:`,valid:0b from outputEdges];
+  outputEdges:select from graph[`edges]where sourceNode=nodeId;
+  graph:@[graph;`edges;,;update sourceNode:`,sourceName:`,
+    valid:0b from outputEdges];
   graph
   }
 
@@ -112,7 +114,8 @@ delNode:{[graph;nodeId]
 // @return {dict} A graph with the the new configuration added to the graph 
 //   structure
 addCfg:{[graph;nodeId;config]
-  addNode[graph;nodeId]``function`inputs`outputs!(::;@[;config];::;"!")
+  nodeKeys:``function`inputs`outputs;
+  addNode[graph;nodeId]nodeKeys!(::;@[;config];::;"!")
   }
 
 
@@ -125,7 +128,9 @@ addCfg:{[graph;nodeId;config]
 //   nodes in the graph
 // @return {dict} The graph with the named configuration node contents 
 //   overwritten
-updCfg:{[graph;nodeId;config] updNode[graph;nodeId](1#`function)!enlist config}
+updCfg:{[graph;nodeId;config]
+  updNode[graph;nodeId](1#`function)!enlist config
+  }
 
 
 // @kind function
@@ -140,21 +145,24 @@ delCfg:delNode
 // @category graph
 // @fileoverview Connect the output of one node to the input to another
 // @param graph {dict} Graph originally generated using .ml.createGraph
-// @param srcName {sym} Denotes the name of the output to be connected to an
+// @param sourceName {sym} Denotes the name of the output to be connected to an
 //   associated input node 
 // @param destNode {sym} Name of a node in the graph which contains the relevant
 //   input to be connected to
 // @param destName {sym} Name of the input which is connected to the output
-//   defined by srcNode and srcName
+//   defined by sourceNode and sourceName
 // @return {dict} The graph with the relevant connection made between the 
 //   inputs and outputs of two nodes
-connectEdge:{[graph;srcNode;srcName;destNode;destName]
-  if[99h<>type srcOutputs:graph[`nodes;srcNode;`outputs];'"invalid srcNode"];
-  if[99h<>type dstInputs:graph[`nodes;destNode;`inputs];'"invalid destNode"];
-  if[not srcName in key srcOutputs;'"invalid srcName"];
+connectEdge:{[graph;sourceNode;sourceName;destNode;destName]
+  srcOutputs:graph[`nodes;sourceNode;`outputs];  
+  dstInputs:graph[`nodes;destNode;`inputs];
+  if[99h<>type srcOutputs;'"invalid sourceNode"];
+  if[99h<>type dstInputs;'"invalid destNode"];
+  if[not sourceName in key srcOutputs;'"invalid sourceName"];
   if[not destName in key dstInputs;'"invalid destName"];
-  edge:(1#`valid)!1#srcOutputs[srcName]~dstInputs[destName];
-  graph:@[graph;`edges;,;update destNode,destName,srcNode,srcName from edge];
+  edge:(1#`valid)!1#srcOutputs[sourceName]~dstInputs[destName];
+  graph:@[graph;`edges;,;update destNode,destName,sourceNode,
+    sourceName from edge];
   graph
   }
 
@@ -166,13 +174,12 @@ connectEdge:{[graph;srcNode;srcName;destNode;destName]
 // @param destNode {sym} Name of the node containing the edge to be deleted
 // @param destName {sym} Name of the edge associated with a specific input to
 //   be disconnected
-// @return {dict} The graph with the edge connected to the destination input 
+// @return {dict} The graph with the edge connected to the destination input
 //   removed from the graph.
 disconnectEdge:{[graph;destNode;destName]
   if[not(destNode;destName)in key graph`edges;'"invalid edge"];
   edge:(1#`valid)!1#0b;
-  graph:@[graph;`edges;,;update destNode,destName,srcName:`,
-    srcNode:` from edge];
+  graph:@[graph;`edges;,;update destNode,destName,sourceName:`,
+    sourceNode:` from edge];
   graph
   }
-

@@ -11,7 +11,8 @@
 // @return {dict} The graph with the relevant connection made between the 
 //   inputs and outputs of two nodes.
 i.connectGraph:{[graph;edge]
-  connectEdge[graph]. edge`srcNode`srcName`destNode`destName
+  edgeKeys:`sourceNode`sourceName`destNode`destName;
+  connectEdge[graph]. edge edgeKeys
   }
 
 // Pipeline creation utilities
@@ -24,7 +25,7 @@ i.connectGraph:{[graph;edge]
 // @param node {sym} Name associated with the functional node
 // @return {sym} Source of the given node
 i.getDeps:{[graph;node]
-   exec distinct srcNode from graph[`edges]where destNode=node
+   exec distinct sourceNode from graph[`edges]where destNode=node
    }
 
 // @kind function
@@ -36,7 +37,8 @@ i.getDeps:{[graph;node]
 //   node
 // @return {sym[]} All sources required for the given node  
 i.getAllDeps:{[graph;node]
-  $[count depNodes:i.getDeps[graph]node;
+  depNodes:i.getDeps[graph]node; 
+  $[count depNodes; 
     distinct node,raze .z.s[graph]each depNodes;
     node]
    }
@@ -50,7 +52,8 @@ i.getAllDeps:{[graph;node]
 //   node
 // @return {sym} All paths required for the given node
 i.getAllPaths:{[graph;node]
-  $[count depNodes:i.getDeps[graph]node;
+  depNodes:i.getDeps[graph]node; 
+  $[count depNodes; 
    node,/:raze .z.s[graph]each depNodes;
    raze node]
    }
@@ -101,24 +104,26 @@ i.updateInputData:{[pipeline;map]
 i.execNext:{[pipeline]
   node:first 0!select from pipeline where not complete;
   -1"Executing node: ",string node`nodeId;
-  if[not count inputs:node[`inputs]node[`inputOrder];inputs:1#(::)];
+  inputs:node[`inputs]node`inputOrder;
+  if[not count inputs;inputs:1#(::)];
   resKeys:`complete`error`outputs;
   resVals:$[graphDebug;
-      .[(1b;`;)node[`function]::;inputs];
-      .[(1b;`;)node[`function]::;inputs;{[err](0b;`$err;::)}]
-      ];
+    .[(1b;`;)node[`function]::;inputs];
+    .[(1b;`;)node[`function]::;inputs;{[err](0b;`$err;::)}]
+    ];
   res:resKeys!resVals;
   / compare outputs to outputtypes ?
   if[not null res`error;-2"Error: ",string res`error];
   if[res`complete;
     res[`inputs]:(1#`)!1#(::);
-    outputMap:update data:res[`outputs]srcName from node`outputmap;
-    res[`outputs]:((1#`)!1#(::)),
-     (exec distinct srcName from outputMap)_ res`outputs;
+    outputMap:update data:res[`outputs]sourceName from node`outputMap;
+    uniqueSource:(exec distinct sourceName from outputMap)_ res`outputs;
+    res[`outputs]:((1#`)!1#(::)),uniqueSource;
     pipeline:i.updateInputData/[pipeline;outputMap];
-  ];
+    ];
   pipeline,:update nodeId:node`nodeId from res;
-  pipeline}
+  pipeline
+  }
 
 // @kind function
 // @category pipelineUtility
@@ -130,4 +135,5 @@ i.execNext:{[pipeline]
 i.execCheck:{[pipeline]
   if[any not null exec error from pipeline;:0b];
   if[all exec complete from pipeline;:0b];
-  1b}
+  1b
+  }
