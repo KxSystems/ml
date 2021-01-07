@@ -2,6 +2,7 @@
 
 // Graphing creation utilities
 
+// @private
 // @kind function
 // @category pipelineUtility
 // @fileoverview Connect the output of one node to the input to another 
@@ -17,6 +18,7 @@ i.connectGraph:{[graph;edge]
 
 // Pipeline creation utilities
 
+// @private
 // @kind function
 // @category pipelineUtility
 // @fileoverview Extract the source of a specific node 
@@ -28,6 +30,8 @@ i.getDeps:{[graph;node]
    exec distinct sourceNode from graph[`edges]where destNode=node
    }
 
+
+// @private
 // @kind function
 // @category pipelineUtility
 // @fileoverview Extract all dependent source nodes needed to run the node
@@ -43,6 +47,8 @@ i.getAllDeps:{[graph;node]
     node]
    }
 
+
+// @private
 // @kind function
 // @category pipelineUtility
 // @fileoverview  Extract all the paths needed to run the node
@@ -58,6 +64,8 @@ i.getAllPaths:{[graph;node]
    raze node]
    }
 
+
+// @private
 // @kind function
 // @category pipelineUtility
 // @fileoverview Get the longest path
@@ -71,6 +79,8 @@ i.getLongestPath:{[graph;node]
   paths first idesc count each paths
   }
 
+
+// @private
 // @kind function
 // @category pipelineUtility
 // @fileoverview Extract the optimal path to run the node
@@ -85,6 +95,7 @@ i.getOptimalPath:{[graph;node]
   }
 
 
+// @private
 // @kind function
 // @category pipelineUtility
 // @fileoverview Update input data information within the pipeline
@@ -96,6 +107,8 @@ i.updateInputData:{[pipeline;map]
   pipeline
   }
 
+
+// @private
 // @kind function
 // @category pipelineUtility
 // @fileoverview Execute the first non completed node in the pipeline
@@ -125,6 +138,8 @@ i.execNext:{[pipeline]
   pipeline
   }
 
+
+// @private
 // @kind function
 // @category pipelineUtility
 // @fileoverview Check if any nodes are left to be executed or if any
