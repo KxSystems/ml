@@ -1,30 +1,66 @@
 \d .ml
 
-/ py utils
-sci_ver:1.5<="F"$3#.p.import[`scipy][`:__version__]`
-fresh.i.ksdistrib:  .p.import[`scipy.stats][$[sci_ver;`:kstwo.sf;`:kstwobign.sf];<]
-fresh.i.kendalltau: .p.import[`scipy.stats]`:kendalltau
-fresh.i.fisherexact:.p.import[`scipy.stats]`:fisher_exact
+// FRESH feature significance
 
-/ q utils
-fresh.i.ktau:{fresh.i.kendalltau[<;x;y]1}
-fresh.i.fisher:{fresh.i.fisherexact[<;count@''@\:[group@'x value group y]distinct x]1}
+// @kind function
+// @category fresh
+// @fileoverview Statistically significant features based on defined selection
+//   procedure
+// @param table {table} Value side of a table of created features
+// @param target {(int;float)[]} Targets corresponding to the rows the table
+// @param func {func} Projection of significant feature function to apply e.g. 
+//   .ml.fresh.ksigfeat[10]
+// @returns {sym[]} Features deemed statistically significant according to 
+//   user-defined func
+fresh.significantfeatures:{[table;target;func]
+  func fresh.sigfeat[table;target]
+  }
 
-/ Function change due to scipy update https://github.com/scipy/scipy/commit/aa319bcfeb38b90f3c4b46c9477f02618583570d
-fresh.i.ks:{
- k:max abs(-). value(1+d bin\:raze d)%n:count each d:asc each y group x;
- en:prd[n]%sum n;
- fresh.i.ksdistrib .$[sci_ver;(k;ceiling en);enlist k*sqrt en]}
-fresh.i.ksyx:{fresh.i.ks[y;x]}
+  // @kind function
+// @category fresh
+// @fileoverview Return p-values for each feature
+// @param table {table} Value side of a table of created features
+// @param target {(int;float)[]} Targets corresponding to the rows the table
+// @return {dict} P-value for each feature to be passed to user-defined 
+//   significance function
+fresh.sigfeat:{[table;target]
+  func:fresh.i$[2<count distinct target;`ktau`ksyx;`ks`fisher];
+  sigCols:where each(2<;2=)@\:(count distinct@)each flip table;
+  raze[sigCols]!(f[where count each sigCols]@\:target)@'table raze sigCols
+  }
 
-/ feature significance
-fresh.sigfeat:{[t;y]
- f:fresh.i$[2<count distinct y;`ktau`ksyx;`ks`fisher];
- raze[c]!(f[where count each c]@\:y)@'t raze c:where each(2<;2=)@\:(count distinct@)each flip t}
+// @kind function
+// @category fresh
+// @fileoverview The Benjamini-Hochberg-Yekutieli (BHY) procedure: determines 
+//   if the feature meets a defined False Discovery Rate (FDR) level. The 
+//   recommended input is 5% (0.05).
+// @param rate {float} False Discovery Rate
+// @param pValues {dict} Output of .ml.fresh.sigfeat
+// @return {sym[]} Significant features
+fresh.benjhoch:{[rate;pValues]
+  idx:1+til n:count pValues:asc pValues;
+  where pValues<=rate*idx%n*sums 1%idx
+  }
 
-/ feature selection
-fresh.benjhoch:{[v;d]where d<=v*s%k*sums 1%s:1+til k:count d:asc d}
-fresh.ksigfeat:{[k;d]key k sublist asc d}
-fresh.percentile:{[p;d]where d<=fresh.feat.quantile[value d]p}
+// @kind function
+// @category fresh
+// @fileoverview K-best features: choose the K features which have the lowest
+//   p-values and thus have been determined to be the most important features 
+//   to allow us to predict the target vector.
+// @param k {long} Number of features to select
+// @param pValues {dict} Output of .ml.fresh.sigfeat
+// @return {sym[]} Significant features
+fresh.ksigfeat:{[k;pValues]
+  key k sublist asc pValues
+  }
 
-fresh.significantfeatures:{[t;y;f]f fresh.sigfeat[t;y]}
+// @kind function
+// @category fresh
+// @fileoverview Percentile based selection: set a percentile threshold for 
+//   p-values below which features are selected.
+// @param percentile {float} Percentile threshold
+// @param pValues {dict} Output of .ml.fresh.sigfeat
+// @return {sym[]} Significant features
+fresh.percentile:{[percentile;pValues]
+  where pValues<=fresh.feat.quantile[value pValues]percentile
+  }
