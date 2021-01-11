@@ -1,8 +1,7 @@
 \d .ml
 
-// Miscellaneous functionality relating to time-series analysis
+// Miscellaneous functionality relating to time series analysis
 // and model generation procedures
-
 
 // @kind function
 // @category misc
@@ -19,7 +18,7 @@ ts.stationarity:{[data]
     98h=dataType;cols data;
     enlist`data
     ];
-  // Column names associated with the returns from the augmented dickey fuller
+  // Column names associated with the returns from the augmented Dickey Fuller
   // test
   criticalVals:`$raze each"CriticalValue_",/:string(1;5;10),\:"%";
   dataCols:`ADFstat`pvalue`stationary,criticalVals;
@@ -39,14 +38,13 @@ ts.stationarity:{[data]
 ts.ARIMA.aicParam:{[train;test;len;params]
   ts.i.dictCheck[;`endog`exog;]'[(train;test);("train";"test")];
   ts.i.dictCheck[params;`p`d`q`trend;"params"];
-  // get aic scores for each set of params
-  scores:ts.i.aicFitScore[train;test;len;]each flip params;
-  // return best value
+  // Get AIC scores for each set of params
+  scores:ts.i.aicFitScore[train;test;len]each flip params;
+  // Return best value
   bestScore:min scores;
   scoreEntry:enlist[`score]!enlist bestScore;
   params[;scores?bestScore],scoreEntry
   }
-
 
 // Time-series feature engineering functionality
 
@@ -62,17 +60,16 @@ ts.ARIMA.aicParam:{[train;test;len;params]
 //   appropriate windows remove the first max[winSize] columns as these are 
 //   produced with insufficient information to be deemed accurate
 ts.windowFeatures:{[tab;colNames;funcs;winSize]
-  // unique combinations of columns/windows and functions to be applied to the 
+  // Unique combinations of columns/windows and functions to be applied to the 
   // dataset
   uniCombs:(cross/)(funcs;winSize;colNames);
-  // column names for windowed functions (remove ".") to ensure that if
+  // Column names for windowed functions (remove ".") to ensure that if
   // namespaced columns exist they dont jeopardize parsing of select statements
   winCols:`$ssr[;".";""]each sv["_"]each string uniCombs;
-  // values from applied functions over associated windows
+  // Values from applied functions over associated windows
   winVals:ts.i.setupWindow[tab]each uniCombs;
   max[winSize]_tab,'flip winCols!winVals
   }
-
 
 // @kind function
 // @category misc
@@ -80,7 +77,7 @@ ts.windowFeatures:{[tab;colNames;funcs;winSize]
 //   sliding windows to a subset of columns within a table
 // @param tab {tab} Dataset from which to generate lagged data
 // @param colNames {sym[]} Names of the columns to retrieve lagged data from
-// @param lags  {int[]} List of lagged values to retrieve from the dataset
+// @param lags {int[]} List of lagged values to retrieve from the dataset
 // @return {tab} Table with columns added associated with the specied lagged
 //   values 
 ts.laggedFeatures:{[tab;colNames;lags]
@@ -90,7 +87,6 @@ ts.laggedFeatures:{[tab;colNames;lags]
   lagVals :raze xprev'[;tab colNames]each lags;
   tab,'flip lagNames!lagVals
   }
-
 
 // Plotting functionality
 
@@ -116,4 +112,3 @@ ts.pacfPlot:{[data;n]
   pacf:.ml.fresh.i.pacf[data;neg[1]+m:n&count data]`;
   ts.i.plotFunction[data;1_pacf;1_til m;1;"Partial AutoCorrelation"];
   }
-

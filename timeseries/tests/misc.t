@@ -5,7 +5,7 @@
 \l timeseries/fit.q
 \l timeseries/predict.q
 \l timeseries/tests/failMessage.q
-\l fresh/extract.q
+\l fresh/init.q
 
 \S 42
 

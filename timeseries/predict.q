@@ -66,20 +66,19 @@ ts.ARIMA.predict:{[model;exog;len]
 ts.SARIMA.predict:{[model;exog;len]
   exog:ts.i.predDataCheck[model;exog];
   // Calculate predictions not accounting for differencing
-  preds:$[count raze model[`paramDict];
+  preds:$[count raze model`paramDict;
     ts.i.predictFunction[model;exog;len;ts.i.SARMA.singlePredict];
     ts.i.AR.predict[model;exog;len]
     ];
   // Order of seasonal differencing originally applied
   dSeasVal:count model`seasonData;
-  // if seasonal differenced, revert to original
+  // If seasonal differenced, revert to original
   if[dSeasVal;preds:ts.i.reverseSeasonDiff[model`seasonData;preds]];
   // Order of differencing originally applied
   dVal:count model`originalData;
   // Revert data to correct scale (remove differencing if previously applied)
   $[dVal;dVal _dVal{sums x}/model[`originalData],preds;preds]
   }
-
 
 // @kind function
 // @category modelPredict
@@ -90,7 +89,6 @@ ts.SARIMA.predict:{[model;exog;len]
 // @param len {int} Number of future values to be predicted
 // @return {float[]} Predicted values
 ts.ARCH.predict:{[model;len]
-  // predict and return future values
   last{x>count y 1}[len;]ts.i.ARCH.singlePredict
     [model`coefficients]/(model`residualVals;())
   }
