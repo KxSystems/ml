@@ -21,71 +21,87 @@ fresh.i.findpeak   :signal`:find_peaks_cwt
 fresh.i.acf        :stattools`:acf
 fresh.i.pacf       :stattools`:pacf
 fresh.i.adfuller   :stattools`:adfuller
-fresh.i.pyfeat     :`aggautocorr`augfuller`fftaggreg`fftcoeff`numcwtpeaks`partautocorrelation`spktwelch
+
+// Python features
+
+fresh.i.pyfeat:`aggautocorr`augfuller`fftaggreg`fftcoeff`numcwtpeaks,
+  `partautocorrelation`spktwelch
 
 // Extract utilities
 
-// @kind private 
+// @private
+// @kind function 
 // @category freshUtility
-// @fileoverview
-// @param x {}
-// @return {}
-fresh.i.getlenseqwhere:{[x]
-  i:where differ x;
-  (1_deltas i,count x)where x i
+// @fileoverview Returns the length of each sequence
+// @param condition {bool} Executed condition, e.g. data>avg data
+// @return {long[]} Sequence length based on condition
+fresh.i.getlenseqwhere:{[condition]
+  idx:where differ condition;
+  (1_deltas idx,count condition)where condition idx
   }
 
-// @kind private 
+// @private
+// @kind function 
 // @category freshUtility
-// @fileoverview
-// @param x {}
-// @param y {}
-// @param z {}
-// @return {}
-fresh.i.peakfind:{[x;y;z]
-  neg[y]_y _min x>/:xprev\:[-1 1*z]x
+// @fileoverview Find peaks within the data
+// @param data {(int;long;float)[]} List of data points
+// @param support {long}
+// @param idx {long}
+// @return {bool[]} 1 where peak exists
+fresh.i.peakfind:{[data;support;idx]
+  neg[support]_support _min data>/:xprev\:[-1 1*idx]data
   }
 
 // Select utilities
 
-// @kind private 
+// @private
+// @kind function
 // @category freshUtility
-// @fileoverview
-// @param x {}
-// @param y {}
-// @return {}
-fresh.i.ktau:{[x;y]
-  fresh.i.kendalltau[<;x;y]1
+// @fileoverview Apply python function for Kendall’s tau
+// @param target {(int;long;float)[]} Target vector
+// @param feature {(int;long;float)[]} Feature table column
+// @return {float} Kendall’s tau - Close to 1 shows strong agreement, close to
+//   -1 shows strong disagreement
+fresh.i.ktau:{[target;feature]
+  fresh.i.kendalltau[<;target;feature]1
   }
 
-// @kind private 
+// @private
+// @kind function
 // @category freshUtility
-// @fileoverview
-// @param x {}
-// @param y {}
-// @return {}
-fresh.i.fisher:{[x;y]
-  fresh.i.fisherexact[<;count@''@\:[group@'x value group y]distinct x]1
+// @fileoverview Perform a Fisher exact test
+// @param target {(int;long;float)[]} Target vector
+// @param feature {(int;long;float)[]} Feature table column
+// @return {float} Results of Fisher exact test
+fresh.i.fisher:{[target;feature]
+  g:group@'target value group feature;
+  fresh.i.fisherexact[<;count@''@\:[g]distinct target]1
   }
 
-// @kind private 
+// @private
+// @kind function
 // @category freshUtility
-// @fileoverview
-// @param x {}
-// @param y {}
-// @return {}
-fresh.i.ks:{[x;y]
-  k:max abs(-). value(1+d bin\:raze d)%n:count each d:asc each y group x;
+// @fileoverview Calculate the Kolmogorov-Smirnov two-sided test statistic
+//   distribution
+// @param feature {(int;long;float)[]} Feature table column
+// @param target {(int;long;float)[]} Target vector
+// @return {float} Kolmogorov-Smirnov two-sided test statistic distribution
+fresh.i.ks:{[feature;target]
+  d:asc each target group feature;
+  n:count each d;
+  k:max abs(-). value(1+d bin\:raze d)%n;
   en:prd[n]%sum n;
   fresh.i.ksdistrib .$[sci_ver;(k;ceiling en);enlist k*sqrt en]
   }
 
-// @kind private 
+// @private
+// @kind function
 // @category freshUtility
-// @fileoverview
-// @param x {}
-// @param y {}
-// @return {}
-fresh.i.ksyx:{[x;y]
-  fresh.i.ks[y;x]
+// @fileoverview Pass data correctly to .ml.fresh.i.ks allowing for projection
+//   in main function
+// @param target {(int;long;float)[]} Target vector
+// @param feature {(int;long;float)[]} Feature table column
+// @return {float} Kolmogorov-Smirnov two-sided test statistic distribution
+fresh.i.ksyx:{[target;feature]
+  fresh.i.ks[feature;target]
   }
