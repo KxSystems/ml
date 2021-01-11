@@ -39,7 +39,7 @@ fileList:`stationarityTab1`stationarityTab2`aicScore1`aicScore2`aicScore3`aicSco
 
 // Set up parameters
 dictKeys :`endog`exog
-paramKeys:`p`d`q`tr
+paramKeys:`p`d`q`trend
 
 trainDict1:dictKeys!(endogInt  ;()       )
 trainDict2:dictKeys!(endogInt  ;exogFloat)
