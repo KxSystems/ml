@@ -26,7 +26,7 @@ fresh.significantfeatures:{[table;target;func]
 fresh.sigfeat:{[table;target]
   func:fresh.i$[2<count distinct target;`ktau`ksyx;`ks`fisher];
   sigCols:where each(2<;2=)@\:(count distinct@)each flip table;
-  raze[sigCols]!(f[where count each sigCols]@\:target)@'table raze sigCols
+  raze[sigCols]!(func[where count each sigCols]@\:target)@'table raze sigCols
   }
 
 // @kind function

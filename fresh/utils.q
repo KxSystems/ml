@@ -52,6 +52,18 @@ fresh.i.peakfind:{[data;support;idx]
   neg[support]_support _min data>/:xprev\:[-1 1*idx]data
   }
 
+// @private
+// @kind function 
+// @category freshUtility
+// @fileoverview Expand results produced by FRESH
+// @param results {table} Table of resulting features
+// @param column {sym} Column of interest
+// @return {tab} Expanded results table
+fresh.i.expandResults:{[results;column]
+  t:(`$"_"sv'string column,'cols t)xcol t:results column;
+  ![results;();0b;enlist column],'t
+  }
+
 // Select utilities
 
 // @private

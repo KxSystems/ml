@@ -38,16 +38,20 @@ fresh.loadparams"/fresh/hyperparameters.json";
 // @return {table} Table keyed by ID column and containing the features 
 //   extracted from the subset of the data identified by the ID column.
 fresh.createfeatures:{[data;idCol;cols2Extract;params]
-  p0:exec f from params where valid,pnum=0;
-  p1:exec f,pnames,pvals from params where valid,pnum>0;
-  calcs:p0,raze p1[`f]cross'p1[`pnames],'/:'(cross/)each p1`pvals;
-  calcs:(cols2Extract:$[n:"j"$abs system"s";$[n<count cols2Extract;(n;0N);(n)]#;enlist]cols2Extract)cross\:calcs;
-  q:{flip[(` sv'`.ml.fresh.feat,'x[;1];x[;0])],'last@''2_'x}each calcs;
-  q:(`$ssr[;".";"o"]@''"_"sv''string raze@''calcs)!'q;
-  r:(uj/).[?[;();idCol!idCol;]]peach flip((cols2Extract,\:idCol:idCol,())#\:data;q);
-  idCol xkey{[r;c]
-    ![r;();0b;enlist c],'(`$"_"sv'string c,'cols t)xcol t:r c
-    }/[0!r;exec c from meta[r]where null t]
+  param0:exec f from params where valid,pnum=0;
+  param1:exec f,pnames,pvals from params where valid,pnum>0;
+  allParams:(cross/)each param1`pvals;
+  calcs:param0,raze param1[`f]cross'param1[`pnames],'/:'allParams;
+  cols2Extract:$[n:"j"$abs system"s";
+    $[n<count cols2Extract;(n;0N);(n)]#;
+    enlist
+    ]cols2Extract;
+  calcs:cols2Extract cross\:calcs;
+  colMapping:{flip[(` sv'`.ml.fresh.feat,'x[;1];x[;0])],'last@''2_'x}each calcs;
+  colMapping:(`$ssr[;".";"o"]@''"_"sv''string raze@''calcs)!'colMapping;
+  toApply:((cols2Extract,\:idCol:idCol,())#\:data;colMapping);
+  res:(uj/).[?[;();idCol!idCol;]]peach flip toApply;
+  idCol xkey fresh.i.expandResults/[0!res;exec c from meta[res]where null t]
   }
 
 // Multi-processing functionality
