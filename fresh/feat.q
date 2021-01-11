@@ -13,23 +13,26 @@ fresh.feat.absenergy:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate the absolute sum of the differences between successive data points
+// @fileoverview Calculate the absolute sum of the differences between 
+//   successive data points
 // @param data {(int;long;float)[]} List of data points
-// @return {(int;long;float)} Absolute sum of the differences between successive data points within data
+// @return {(int;long;float)} Absolute sum of differences
 fresh.feat.abssumchange:{[data]
   sum abs 1_deltas data
   }
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate the aggregation of an auto-correlation over all possible lags (1 - count[x]) 
+// @fileoverview Calculate the aggregation of an auto-correlation over all
+//   possible lags (1 - count[x]) 
 // @param data {(int;long;float)[]} List of data points
-// @return {dict} Aggregation (mean, median, variance and standard deviation) of an auto-correlation
+// @return {dict} Aggregation (mean, median, variance and standard deviation)
+//   of an auto-correlation
 fresh.feat.aggautocorr:{[data]
   n:count data;
-  ac:fresh.i.acf[data;`unbiased pykw 1b;`fft pykw n>1250]`;
-  a:$[(abs[var data]<1e-10)|1=n;0;1_ac];
-  `mean`variance`median`dev!(avg;var;med;dev)@\:a
+  autoCorrFunc:fresh.i.acf[data;`unbiased pykw 1b;`fft pykw n>1250]`;
+  autoCorrFunc:$[(abs[var data]<1e-10)|1=n;0;1_autoCorrFunc];
+  `mean`variance`median`dev!(avg;var;med;dev)@\:autoCorrFunc
   }
 
 // @kind function
@@ -37,10 +40,14 @@ fresh.feat.aggautocorr:{[data]
 // @fileoverview
 // @param data {(int;long;float)[]} List of data points
 // @param chunkLen {long} Size of chunk to apply
-// @return {dict} Slope, intercept and rvalue for the series over aggregated max, min, variance or average for chunks of size chunklen
+// @return {dict} Slope, intercept and rvalue for the series over aggregated
+//   max, min, variance or average for chunks of size chunklen
 fresh.feat.agglintrend:{[data;chunkLen]
-  t:fresh.feat.lintrend each(max;min;var;avg)@/:\:chunkLen cut data;
-  (`$"_"sv'string cols[t]cross`max`min`var`avg)!raze value flip t
+  chunkData:chunkLen cut data;
+  stats:(max;min;var;avg)@/:\:chunkData;
+  trend:fresh.feat.lintrend each stats;
+  statCols:`$"_"sv'string cols[trend]cross`max`min`var`avg;
+  statCols!raze value flip trend
   }
 
 // @kind function
@@ -59,7 +66,8 @@ fresh.feat.augfuller:{[data]
 // @param lag {long} Lag to apply to data
 // @return {float} Auto-correlation over specified lag
 fresh.feat.autocorr:{[data;lag]
-  $[lag=0;1f;(avg(data-m)*xprev[lag;data]-m:avg data)%var data]
+  mean:avg data;
+  $[lag=0;1f;(avg(data-mean)*xprev[lag;data]-mean)%var data]
   }
 
 // @kind function
@@ -69,7 +77,9 @@ fresh.feat.autocorr:{[data;lag]
 // @params numBins {long} Number of bins to apply to data
 // @return {float} Entropy of the series binned into nbins equidistant bins
 fresh.feat.binnedentropy:{[data;numBins]
-  p:(count each group(numBins-1)&floor numBins*data%max data-:min data)%count data;
+  n:count data;
+  data-:min data;
+  p:(count each group(numBins-1)&floor numBins*data%max data)%n;
   neg sum p*log p
   }
 
@@ -79,34 +89,46 @@ fresh.feat.binnedentropy:{[data;numBins]
 // @param data {(int;long;float)[]} List of data points
 // @param lag {long} Lag to apply to data
 // @return {float} Measure of the non-linearity of the series lagged by lag
-// Time series non-linearity: Schreiber, T. and Schmitz, A. (1997). PHYSICAL REVIEW E, VOLUME 55, NUMBER 5
+// Time series non-linearity: Schreiber, T. and Schmitz, A. (1997). PHYSICAL
+//   REVIEW E, VOLUME 55, NUMBER 5
 fresh.feat.c3:{[data;lag]
   avg data*/xprev\:[-1-2*lag]data
   }
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate aggregate value of successive changes within corridor
+// @fileoverview Calculate aggregate value of successive changes within
+//   corridor
 // @param data {(int;long;float)[]} List of data points
 // @param lowerQuant {float} Lower quartile
 // @param upperQuant {float} Upper quartile
 // @param isAbs {boolean} Whether absolute values should be considered
-// @return {dict} Aggregated value of successive changes within corridor specified by lower/upperQuant
+// @return {dict} Aggregated value of successive changes within corridor
+//   specified by lower/upperQuant
 fresh.feat.changequant:{[data;lowerQuant;upperQuant;isAbs]
   quants:fresh.feat.quantile[data]lowerQuant,upperQuant;
   k:($[isAbs;abs;]1_deltas data)where 1_&':[data within quants];
-  `max`min`mean`variance`median`stdev!(max;min;avg;var;med;dev)@\:k
+  statCols:`max`min`mean`variance`median`stdev;
+  statCols!(max;min;avg;var;med;dev)@\:k
   }
 
 // @kind function
 // @category fresh
-// @fileoverview Calculated complexity of time series based on peaks and troughs in the dataset
+// @fileoverview Calculated complexity of time series based on peaks and
+//   troughs in the dataset
 // @param data {(int;long;float)[]} List of data points
 // @param isAbs {boolean} Whether absolute values should be considered
 // @return {float} Measure of series complexity
-// Time series complexity - http://www.cs.ucr.edu/~eamonn/Complexity-Invariant%20Distance%20Measure.pdf
+// Time series complexity:
+//   http://www.cs.ucr.edu/~eamonn/Complexity-Invariant%20Distance%20Measure.pdf
 fresh.feat.cidce:{[data;isAbs]
-  sqrt k$k:"f"$1_deltas$[not isAbs;data;0=s:dev data;:0.;(data-avg data)%s]
+  comp:$[not isAbs;
+      data;
+    0=s:dev data;
+      :0.;
+    (data-avg data)%s
+    ];
+  sqrt k$k:"f"$1_deltas comp
   }
 
 // @kind function
@@ -122,7 +144,7 @@ fresh.feat.count:{[data]
 // @category fresh
 // @fileoverview Values greater than the average value
 // @param data {(int;long;float)[]} List of data points
-// @return {int} Number of values in the series with a value greater than the mean
+// @return {int} Number of values in series with a value greater than the mean
 fresh.feat.countabovemean:{[data]
   sum data>avg data
   }
@@ -131,7 +153,7 @@ fresh.feat.countabovemean:{[data]
 // @category fresh
 // @fileoverview Values less than the average value
 // @param data {(int;long;float)[]} List of data points
-// @return {int} Number of values in the series with a value less than the mean
+// @return {int} Number of values in series with a value less than the mean
 fresh.feat.countbelowmean:{[data]
   sum data<avg data
   }
@@ -141,7 +163,8 @@ fresh.feat.countbelowmean:{[data]
 // @fileoverview Ratio of absolute energy by chunk
 // @param data {(int;long;float)[]} List of data points
 // @param numSeg {long} Number of segments to split data into
-// @return {dict} Sum of squares of each region of the series split into n segments, divided by the absolute energy
+// @return {dict} Sum of squares of each region of the series split into n
+//   segments, divided by the absolute energy
 fresh.feat.eratiobychunk:{[data;numSeg]
   k:((numSeg;0N)#data)%fresh.feat.absenergy data;
   (`$"_"sv'string`chunk,'til[numSeg],'numSeg)!k$'k
@@ -151,7 +174,8 @@ fresh.feat.eratiobychunk:{[data;numSeg]
 // @category fresh
 // @fileoverview Position of first max relative to the series length
 // @param data {(int;long;float)[]} List of data points
-// @return {float} Position of the first occurrence of the maximum value in the series relative to the series length
+// @return {float} Position of the first occurrence of the maximum value in the
+//   series relative to the series length
 fresh.feat.firstmax:{[data]
   (data?max data)%count data
   }
@@ -160,14 +184,16 @@ fresh.feat.firstmax:{[data]
 // @category fresh
 // @fileoverview Position of first min relative to the series length
 // @param data {(int;long;float)[]} List of data points
-// @return {float} Position of the first occurrence of the minimum value in the series relative to the series length
+// @return {float} Position of the first occurrence of the minimum value in the
+//   series relative to the series length
 fresh.feat.firstmin:{[data]
   (data?min data)%count data
   }
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate the mean, variance, skew and kurtosis of the absolute Fourier-transform spectrum of data
+// @fileoverview Calculate the mean, variance, skew and kurtosis of the 
+//   absolute Fourier-transform spectrum of data
 // @param data {(int;long;float)[]} List of data points
 // @return {dict} Spectral centroid, variance, skew and kurtosis
 fresh.feat.fftaggreg:{[data]
@@ -187,7 +213,8 @@ fresh.feat.fftaggreg:{[data]
 // @fileoverview Calculate the fast-fourier transform coefficient of a series
 // @param data {(int;long;float)[]} List of data points
 // @param coeff {}
-// @return {} FFT coefficient given real inputs and extracting real, imaginary, absolute and angular components
+// @return {} FFT coefficient given real inputs and extracting real, imaginary,
+//   absolute and angular components
 fresh.feat.fftcoeff:{[data;coeff]
   r:(fresh.i.angle[fx;`deg pykw 1b]`;
     fresh.i.real[fx]`;
@@ -227,17 +254,20 @@ fresh.feat.hasdupmin:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate the relative index of a dataset such that the chosen quantile of the series' mass lies to the left
+// @fileoverview Calculate the relative index of a dataset such that the chosen
+//   quantile of the series' mass lies to the left
 // @param data {(int;long;float)[]} List of data points
 // @param quantile {float} Quantile to check
 // @return {float} Calculate index
 fresh.feat.indexmassquantile:{[data;quantile]
-  (1+(sums[data]%sum data:abs data)binr quantile)%count data
+  n:count data;
+  data:abs data;
+  (1+(sums[data]%sum data)binr quantile)%n
   }
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate the adjusted G2 Fisher-Pearson kurtosis of the series
+// @fileoverview Calculate the adjusted G2 Fisher-Pearson kurtosis of a series
 // @param data {(int;long;float)[]} List of data points
 // @return {float} Adjusted G2 Fisher-Pearson kurtosis
 fresh.feat.kurtosis:{[data]
@@ -249,17 +279,19 @@ fresh.feat.kurtosis:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Check if the standard deviation of a series is larger than ratio*(max-min) values
+// @fileoverview Check if the standard deviation of a series is larger than 
+//   ratio*(max-min) values
 // @param data {(int;long;float)[]} List of data points
 // @param ratio {float} Ratio to check
-// @return {boolean} Is standard deviation larger than ratio times max - min values
+// @return {boolean} Is standard deviation larger than ratio times max-min
 fresh.feat.largestdev:{[data;ratio]
   dev[data]>ratio*max[data]-min data
   }
 
 // @kind function
 // @category fresh
-// @fileoverview Find the position of the last occurrence of the maximum value in the series relative to the series length
+// @fileoverview Find the position of the last occurrence of the maximum value
+//   in the series relative to the series length
 // @param data {(int;long;float)[]} List of data points
 // @return {float} Last max relative to number of data points
 fresh.feat.lastmax:{[data]
@@ -268,7 +300,8 @@ fresh.feat.lastmax:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Find the position of the last occurrence of the minimum value in the series relative to the series length
+// @fileoverview Find the position of the last occurrence of the minimum value
+//   in the series relative to the series length
 // @param data {(int;long;float)[]} List of data points
 // @return {float} Last min relative to number of data points
 fresh.feat.lastmin:{[data]
@@ -277,7 +310,7 @@ fresh.feat.lastmin:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate the slope, intercept and r-value associated with the series
+// @fileoverview Calculate the slope/intercept/r-value associated with a series
 // @param data {(int;long;float)[]} List of data points
 // @return {dict} Slope, intercept and r-value
 fresh.feat.lintrend:{[data]
@@ -290,7 +323,8 @@ fresh.feat.lintrend:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate if the length of the longest subsequence within a series is greater than the series mean
+// @fileoverview Calculate if the length of the longest subsequence within a 
+//   series is greater than the series mean
 // @param data {(int;long;float)[]} List of data points
 // @return {boolean} Is longest subsequence greater than the mean
 fresh.feat.longstrikegtmean:{[data]
@@ -299,7 +333,8 @@ fresh.feat.longstrikegtmean:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate if the length of the longest subsequence within a series is less than the series mean
+// @fileoverview Calculate if the length of the longest subsequence within a 
+//   series is less than the series mean
 // @param data {(int;long;float)[]} List of data points
 // @return {boolean} Is longest subsequence less than the mean
 fresh.feat.longstrikeltmean:{[data]
@@ -326,7 +361,8 @@ fresh.feat.mean:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate the average over the absolute difference between subsequent series values
+// @fileoverview Calculate the average over the absolute difference between 
+//   subsequent series values
 // @param data {(int;long;float)[]} List of data points
 // @return {float} Mean over the absolute difference between data points
 fresh.feat.meanabschange:{[data]
@@ -335,7 +371,8 @@ fresh.feat.meanabschange:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate the average over the difference between subsequent series values
+// @fileoverview Calculate the average over the difference between subsequent
+//   series values
 // @param data {(int;long;float)[]} List of data points
 // @return {float} Mean over the difference between data points
 fresh.feat.meanchange:{[data]
@@ -345,7 +382,8 @@ fresh.feat.meanchange:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Calculate the average central approximation of the second derivative of a series
+// @fileoverview Calculate the average central approximation of the second 
+//   derivative of a series
 // @param data {(int;long;float)[]} List of data points
 // @return {float} Mean central approximation of the second derivative
 fresh.feat.mean2dercentral:{[data]
@@ -383,7 +421,8 @@ fresh.feat.numcrossingm:{[data;crossVal]
 
 // @kind function
 // @category fresh
-// @fileoverview Number of peaks in a series following data smoothing via application of a Ricker wavelet of defined width
+// @fileoverview Number of peaks in a series following data smoothing via 
+//   application of a Ricker wavelet of defined width
 // @param data {(int;long;float)[]} List of data points
 // @param width {long} Width of wavelet
 // @return {long} Number of peaks
@@ -395,7 +434,7 @@ fresh.feat.numcwtpeaks:{[data;width]
 // @category fresh
 // @fileoverview Number of peaks in the series with a specified support
 // @param data {(int;long;float)[]} List of data points
-// @param support {}
+// @param support {long}
 // @return {int} Number of peaks
 fresh.feat.numpeaks:{[data;support]
   sum all fresh.i.peakfind[data;support]each 1+til support
@@ -417,7 +456,8 @@ fresh.feat.partautocorrelation:{[data;lag]
 
 // @kind function
 // @category fresh
-// @fileoverview Ratio of the number of non-distinct values to the number of possible values
+// @fileoverview Ratio of the number of non-distinct values to the number of 
+//   possible values
 // @param data {(int;long;float)[]} List of data points
 // @return {float} Calculated ratio
 fresh.feat.perrecurtoalldata:{[data]
@@ -437,7 +477,8 @@ fresh.feat.perrecurtoallval:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview The value of a series greater than a user-defined quantile percentage of the ordered series
+// @fileoverview The value of a series greater than a user-defined quantile 
+//   percentage of the ordered series
 // @param data {(int;long;float)[]} List of data points
 // @param quantile {float} Quantile to check
 // @return {float} Value greater than quantile
@@ -450,7 +491,8 @@ fresh.feat.quantile:{[data;quantile]
 
 // @kind function
 // @category fresh
-// @fileoverview The number of values greater than or equal to some minimum and less than some maximum
+// @fileoverview The number of values greater than or equal to some minimum and
+//   less than some maximum
 // @param data {(int;long;float)[]} List of data points
 // @param minVal {(int;long;float)} Min value allowed
 // @param maxVal {(int;long;float)} Max value allowed
@@ -471,7 +513,8 @@ fresh.feat.ratiobeyondrsigma:{[data;r]
 
 // @kind function
 // @category fresh
-// @fileoverview Ratio of the number of unique values to total number of values in a series
+// @fileoverview Ratio of the number of unique values to total number of values
+//   in a series
 // @param data {(int;long;float)[]} List of data points
 // @return {float} Calculated ratio
 fresh.feat.ratiovalnumtserieslength:{[data]
@@ -513,7 +556,7 @@ fresh.feat.stddev:{[data]
 // @category fresh
 // @fileoverview Sum points that appear more than once in a series
 // @param data {(int;long;float)[]} List of data points
-// @return {(int;long;float)} Sum of all points present in the series more than once
+// @return {(int;long;float)} Sum of all points present more than once
 fresh.feat.sumrecurringdatapoint:{[data]
   g:count each group data;
   k:where 1<g;
@@ -524,7 +567,7 @@ fresh.feat.sumrecurringdatapoint:{[data]
 // @category fresh
 // @fileoverview Sum values that appear more than once in a series
 // @param data {(int;long;float)[]} List of data points
-// @return {(int;long;float)} Sum of all the values present within the series more than once
+// @return {(int;long;float)} Sum of all values present more than once
 fresh.feat.sumrecurringval:{[data]
   sum where 1<count each group data
   }
@@ -550,7 +593,7 @@ fresh.feat.symmetriclooking:{[data;ratio]
 
 // @kind function
 // @category fresh
-// @fileoverview Measure the asymmetry of a time series based on a user-defined lag
+// @fileoverview Measure the asymmetry of a series based on a user-defined lag
 // @param data {(int;long;float)[]} List of data points
 // @param lag {long} Size of lag to apply
 // @return {float} Measure of asymmetry of data
@@ -562,7 +605,8 @@ fresh.feat.treverseasymstat:{[data;lag]
 
 // @kind function
 // @category fresh
-// @fileoverview Return the number occurences of a specific value within a dataset
+// @fileoverview Return the number occurrences of a specific value within a 
+//   dataset
 // @param data {(int;long;float)[]} List of data points
 // @param val {(int;long;float)} Value to check
 // @return {int} Number of occurrences of val within the series
@@ -581,7 +625,8 @@ fresh.feat.var:{[data]
 
 // @kind function
 // @category fresh
-// @fileoverview Check if the variance of a dataset is larger than its standard deviation
+// @fileoverview Check if the variance of a dataset is larger than its standard
+//   deviation
 // @param data {(int;long;float)[]} List of data points
 // @return {boolean} Indicates if variance is larger than standard deviation
 fresh.feat.vargtstddev:{[data]
