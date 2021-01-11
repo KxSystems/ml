@@ -14,7 +14,6 @@ createGraph:{[]
   `nodes`edges!(nodes;edges)
   }
 
-
 // @kind function
 // @category graph
 // @fileoverview Add a functional node to a graph
@@ -40,7 +39,6 @@ addNode:{[graph;nodeId;node]
   graph:@[graph;`edges;,;edges];
   graph
   }
-
 
 // @kind function
 // @category graph
@@ -86,7 +84,6 @@ updNode:{[graph;nodeId;node]
   graph
   }
 
-
 // @kind function
 // @category graph
 // @fileoverview Delete a named function node
@@ -118,7 +115,6 @@ addCfg:{[graph;nodeId;config]
   addNode[graph;nodeId]nodeKeys!(::;@[;config];::;"!")
   }
 
-
 // @kind function
 // @category graph
 // @fileoverview Update the contents of a configuration node
@@ -131,7 +127,6 @@ addCfg:{[graph;nodeId;config]
 updCfg:{[graph;nodeId;config]
   updNode[graph;nodeId](1#`function)!enlist config
   }
-
 
 // @kind function
 // @category graph
@@ -165,7 +160,6 @@ connectEdge:{[graph;sourceNode;sourceName;destNode;destName]
     sourceName from edge];
   graph
   }
-
 
 // @kind function
 // @category graph

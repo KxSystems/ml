@@ -1,6 +1,5 @@
 \d .ml
   
-
 // Utility Functions for loading data
 
 // @private
@@ -15,7 +14,6 @@ i.saveFileName:{[cfg]
   if[not ()~key file;'"file exists"];
   file}
 
-
 // @private
 // @kind function
 // @category savingUtility
@@ -28,7 +26,6 @@ i.saveFunc.txt:{[config;data]
   i.saveFileName[config]0:.h.tx[config`typ;data];
   }
 
-
 // @private
 // @kind function
 // @category savingUtility
@@ -38,7 +35,6 @@ i.saveFunc.txt:{[config;data]
 // @param data {tab} Data which is to be saved
 // @return {null} Data is saved as a text file 
 i.saveFunc[`csv`xml`xls]:i.saveFunc.txt
-
 
 // @private
 // @kind function
@@ -51,7 +47,6 @@ i.saveFunc[`csv`xml`xls]:i.saveFunc.txt
 i.saveFunc.binary:{[config;data]
   i.saveFileName[config]set data;
   }
-
 
 // @private
 // @kind function
@@ -67,7 +62,6 @@ i.saveFunc.json:{[config;data]
   hclose h;
   }
 
-
 // @private
 // @kind function
 // @category savingUtility
@@ -82,7 +76,6 @@ i.saveFunc.hdf5:{[config;data]
   .hdf5.writeData[filePath;config`dname;data];
   }
 
-
 // @private
 // @kind function
 // @category savingUtility
@@ -96,7 +89,6 @@ i.saveFunc.splay:{[config;data]
   filePath:` sv filePath,`;
   filePath set .Q.en[dataName]data;
   }
-
 
 // @private
 // @kind function
