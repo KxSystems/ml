@@ -66,10 +66,10 @@ fresh.feat.autocorr:{[data;lag]
 // @category fresh
 // @fileoverview Calculate entropy for data binned into n equi-distant bins
 // @param data {(int;long;float)[]} List of data points
-// @params n {long} Number of bins to apply to data
+// @params numBins {long} Number of bins to apply to data
 // @return {float} Entropy of the series binned into nbins equidistant bins
-fresh.feat.binnedentropy:{[data;n]
-  p:(count each group(n-1)&floor n*data%max data-:min data)%count data;
+fresh.feat.binnedentropy:{[data;numBins]
+  p:(count each group(numBins-1)&floor numBins*data%max data-:min data)%count data;
   neg sum p*log p
   }
 
@@ -140,11 +140,11 @@ fresh.feat.countbelowmean:{[data]
 // @category fresh
 // @fileoverview Ratio of absolute energy by chunk
 // @param data {(int;long;float)[]} List of data points
-// @param n {long} Number of segments to split data into
+// @param numSeg {long} Number of segments to split data into
 // @return {dict} Sum of squares of each region of the series split into n segments, divided by the absolute energy
-fresh.feat.eratiobychunk:{[data;n]
-  k:((n;0N)#data)%fresh.feat.absenergy data;
-  (`$"_"sv'string`chunk,'til[n],'n)!k$'k
+fresh.feat.eratiobychunk:{[data;numSeg]
+  k:((numSeg;0N)#data)%fresh.feat.absenergy data;
+  (`$"_"sv'string`chunk,'til[numSeg],'numSeg)!k$'k
   }
 
 // @kind function
