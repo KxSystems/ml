@@ -86,7 +86,7 @@ ts.i.estimateCoefficients:{[endog;exog;errors;params]
   // How many data points are required
   m:neg min raze(count[endog]-params[`p`P]),count[errors]-params[`q`Q];
   x:(,'/)m#'values;
-  // add seasonality components
+  // Add seasonality components
   if[not 0N~params[`P];x:x,'(m #flip[params[`P]xprev\:endog])];
   if[not 0N~params[`Q];x:x,'(m #flip[params[`Q]xprev\:errors])];
   // If required add a trend line variable
@@ -106,7 +106,6 @@ ts.i.estimateCoefficients:{[endog;exog;errors;params]
 // @param p {int} Order of the AR(p) model being fit
 // @return {float[]} AR(p) coefficients for specified lagged value
 ts.i.durbinLevinson:{[data;p]
-  // cast to float
   data:"f"$data;
   matrix:(1+p;1+p)#0f;
   vector:(1+p)#0f;
@@ -125,22 +124,21 @@ ts.i.durbinLevinson:{[data;p]
 // @param info {num[]} Matrix, vector and n information 
 // @return {float[]} New matrix,vector and n information
 ts.i.durbinLevinsonEstimate:{[data;info]
-  matrix:info[0];vector:info[1];n:info[2];
+  matrix:info 0;vector:info 1;n:info 2;
   k:n+1;
   dVal:sum matrix[n;1+til n]mmu ts.i.lagCovariance[data]each k-1+til n;
-  matrix[k;k]:(ts.i.lagCovariance[data;k]-dVal)%vector[n];
+  matrix[k;k]:(ts.i.lagCovariance[data;k]-dVal)%vector n;
   updateMatrix:ts.i.durbinUpdateMatrix[data;n;matrix]each 1+til n;
   matrix[k;1+til n]:updateMatrix;
   vector[k]:vector[n]*(1-xexp[matrix[k;k];2]);
   (matrix;vector;n+1)
   }
 
-
 // @private
 // @kind function
 // @category fitUtility
 // @fileoverview Update matrix values for calculating AR coefficients using
-//  Durbin Levinson method
+//   Durbin Levinson method
 // @param data {float[]} Dataset from which to estimate the coefficients
 // @param n {int} Number of iterations
 // @param matrix {float[]} Matrix used to caluclate coefficients
@@ -149,7 +147,6 @@ ts.i.durbinLevinsonEstimate:{[data;info]
 ts.i.durbinUpdateMatrix:{[data;n;matrix;j]
   matrix[n;j]-(matrix[n+1;n+1]*matrix[n;1+n-j])
   }
-
 
 // @private
 // @kind function
@@ -173,7 +170,6 @@ ts.i.estimateErrors:{[endog;exog;p]
   `estCoeffs`errorVals!(estCoeffs;errors)
   }
 
-
 // @private
 // @kind function
 // @category fitUtility
@@ -190,31 +186,31 @@ ts.i.estimateErrors:{[endog;exog;p]
 //   accounted for
 // @return {dict} Updated optimized coefficients for SARMA model
 ts.i.SARMA.coefficients:{[endog;exog;residuals;coeffs;params]
-  // data length to use
-  qLen:count[residuals]-max raze params[`q`Q`additionalQ];
-  pLen:count[endog]-max raze params[`p`P`additionalP];
-  // prediction values
+  // Data length to use
+  qLen:count[residuals]-max raze params`q`Q`additionalQ;
+  pLen:count[endog]-max raze params`p`P`additionalP;
+  // Prediction values
   params[`true]:#[m:neg min pLen,qLen;endog];
-  // get lagged values
+  // Get lagged values
   lagVal:ts.i.lagMatrix[endog;params`p];
-  // get seasonal lag values
+  // Get seasonal lag values
   seasLag:flip params[`P]xprev\:endog;
-  // get additional seasonal lag values
+  // Get additional seasonal lag values
   params[`additionalLags]:$[params[`p]&min count params`P;
     m#flip params[`additionalP]xprev\:endog;
     2#0f
     ];
-  // get resid vals
+  // Get resid vals
   residVal:ts.i.lagMatrix[residuals;params`q];
   seasResid:flip params[`Q]xprev\:residuals;
   params[`additionalResiduals]:$[params[`q]&min count params`Q;
     m#flip params[`additionalQ]xprev\:residuals;
     2#0f
     ];
-  // normal arima vals
+  // Normal arima vals
   vals:(exog;lagVal;residVal;seasLag;seasResid);
   params[`matrix]:(,'/)m#'vals;
-  // use optimizer function to improve SARMA coefficients
+  // Use optimizer function to improve SARMA coefficients
   .ml.optimize.BFGS[ts.i.SARMA.maxLikelihood;coeffs;params;::]`xVals
   }
 
@@ -226,11 +222,11 @@ ts.i.SARMA.coefficients:{[endog;exog;residuals;coeffs;params]
 // @param dict {dict} Additional parameters required in calculation
 // @return {float} The square root of the summed, squared errors
 ts.i.SARMA.maxLikelihood:{[coeffs;dict]
-  // get additional seasonal parameters 
+  // Get additional seasonal parameters 
   dict,:ts.i.SARMA.preproc[coeffs;dict];
-  // calculate SARIMA model including the additional seasonal coeffs
+  // Calculate SARIMA model including the additional seasonal coeffs
   preds:ts.i.SARMA.eval[coeffs;dict];
-  // calculate error
+  // Calculate error
   sqrt sum n*n:preds-dict`true
   }
 
@@ -263,7 +259,7 @@ ts.i.ARMA.sortValues:{[endog;coeff;params;errors;n]
 // @param n {int} The number/order of time lags in estimated AR model
 // @return {dict} Information needed for future predictions
 ts.i.SARMA.sortValues:{[endog;coeff;params;errors;n]
-  // number of seasonal components
+  // Number of seasonal components
   seasParams:count raze params`P`Q;
   // Separate coeffs into normal and seasonal componants
   coeffNorm:neg[seasParams]_coeff;
@@ -275,13 +271,11 @@ ts.i.SARMA.sortValues:{[endog;coeff;params;errors;n]
      #[neg max raze params`p`Q`additionalQ;errors`errorVals];errors`estCoeffs);
   // Update dictionary values for seasonality funcs
   paramKeys:`P`Q`additionalP`additionalQ;
-  params[paramKeys]:params[paramKeys]-min params[`m];
+  params[paramKeys]:params[paramKeys]-min params`m;
   SARMAparams,enlist params,`trend`n!params[`trend],n
   }
 
-
 // Prediction function utilities
-
 
 // @private
 // @kind function
@@ -300,7 +294,6 @@ ts.i.predictFunction:{[model;exog;len;predFunc]
   last{x>count y 2}[len;]predFunc
     [model`coefficients;exog;model`paramDict;;model`residualCoeffs]/vals
   }
-
 
 // ARMA/AR model prediction functionality
 
@@ -334,16 +327,16 @@ ts.i.ARMA.predictFunction:{[model;exog;len]
 //   values
 ts.i.ARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs]
   exog:exog count pastPreds 2;
-  matrix:exog,raze#[neg[dict`p];pastPreds[0]],pastPreds[1];
+  matrix:exog,raze#[neg dict`p;pastPreds 0],pastPreds 1;
   preds:$[dict`trend;
     coeffs[0]+matrix mmu 1_coeffs;
     coeffs mmu matrix
     ];
   if[count pastPreds 1;
-    estVals:exog,pastPreds[0];
-    pastPreds[1]:(1_pastPreds[1]),preds-mmu[residualCoeffs;estVals]
+    estVals:exog,pastPreds 0;
+    pastPreds[1]:(1_pastPreds 1),preds-mmu[residualCoeffs;estVals]
     ];
-  ((1_pastPreds[0]),preds;pastPreds[1];pastPreds[2],preds)
+  ((1_pastPreds 0),preds;pastPreds 1;pastPreds[2],preds)
   }
 
 // @private
@@ -366,7 +359,6 @@ ts.i.AR.predictFunction:{[model;exog;len]
 
 // Predict a single AR value
 ts.i.AR.singlePredict:ts.i.ARMA.singlePredict
-
 
 // SARIMA model calculation functionality
 
@@ -406,10 +398,10 @@ ts.i.SARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs];
   preds:ts.i.SARMA.predictVal[coeffs;pastPreds;exog;dict];
   if[count pastPreds 1;
     estVals:exog,neg[dict`n]#pastPreds 0;
-    pastPreds[1]:(1_pastPreds[1]),preds-mmu[residualCoeffs;estVals]
+    pastPreds[1]:(1_pastPreds 1),preds-mmu[residualCoeffs;estVals]
     ];
-  // append new lag values, for next step calculations
-  ((1_pastPreds[0]),preds;pastPreds[1];pastPreds[2],preds)
+  // Append new lag values, for next step calculations
+  ((1_pastPreds 0),preds;pastPreds 1;pastPreds[2],preds)
   }
 
 // @private
@@ -424,11 +416,11 @@ ts.i.SARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs];
 ts.i.SARMA.preproc:{[coeffs;dict]
   // Calculate or retrieve all necessary seasonal lagged values for SARMA 
   // prediction and split up the coefficients to their respective p,q,P,Q parts
-  pVals:(dict[`trend] _coeffs)[til dict`p];
-  qVals:((dict[`trend]+dict`p)_coeffs)[til dict`q];
-  pSeasonVals:((dict[`trend]+sum dict`q`p)_coeffs)[til count[dict`P]];
+  pVals:(dict[`trend] _coeffs)til dict`p;
+  qVals:((dict[`trend]+dict`p)_coeffs)til dict`q;
+  pSeasonVals:((dict[`trend]+sum dict`q`p)_coeffs)til count dict`P;
   qSeasonVals:neg[count dict`Q]#coeffs;
-  // append new lags to original dictionary
+  // Append new lags to original dictionary
   dictKeys:`additionalpCoeff`additionalqCoeff;
   dictVals:(ts.i.SARMA.multiplySeason[`p;pVals;pSeasonVals;dict];
    ts.i.SARMA.multiplySeason[`q;qVals;qSeasonVals;dict]);
@@ -447,9 +439,10 @@ ts.i.SARMA.preproc:{[coeffs;dict]
 // @return {dict} Seasonal coefficients multiplied by non seasonal coefficients
 ts.i.SARMA.multiplySeason:{[dictKey;normVals;seasonVals;dict]
   $[dict[dictKey]&min count dict upper dictKey;
-   (*/)flip normVals cross seasonVals;
-   2#0f]
-   }
+    (*/)flip normVals cross seasonVals;
+    2#0f
+    ]
+  }
 
 // @private
 // @kind function
@@ -465,15 +458,15 @@ ts.i.SARMA.multiplySeason:{[dictKey;normVals;seasonVals;dict]
 //   values
 ts.i.SARMA.predictVal:{[coeffs;pastPreds;exog;dict]
   dict[`additionalResiduals]:$[dict[`q]&min count dict`Q;
-    pastPreds[1]dict[`additionalQ];
+    pastPreds[1]dict`additionalQ;
     2#0f
     ];
   dict[`additionalLags]:$[dict[`p]&min count dict`P;
-    pastPreds[0]dict[`additionalP];
+    pastPreds[0]dict`additionalP;
     2#0f
     ];
   SARMAvals:raze#[neg dict`p;pastPreds 0],#[neg dict`q;pastPreds 1],
-    pastPreds[0][dict`P],pastPreds[1][dict`Q];
+    pastPreds[0][dict`P],pastPreds[1]dict`Q;
   dict[`matrix]:exog,SARMAvals;
   ts.i.SARMA.eval[coeffs;dict]
   }
@@ -493,7 +486,6 @@ ts.i.SARMA.eval:{[coeffs;dict]
   seasLags  :mmu[dict`additionalLags;dict`additionalpCoeff];
   $[dict`trend;coeffs[0]+;]normVals+seasResids+seasLags
   }
-
 
 // @private
 // @kind function
@@ -523,7 +515,7 @@ ts.i.aicScore:{[true;pred;params]
   // Number of parameter
   k:sum params;
   aic:(2*k)+n*log sumSquares;
-  // if k<40 use the altered aic score
+  // If k<40 use the altered aic score
   $[k<40;aic+(2*k*k+1)%n-k-1;aic]
   }
 
@@ -539,13 +531,12 @@ ts.i.aicScore:{[true;pred;params]
 // @return {float} Akaike Information Criterion score
 ts.i.aicFitScore:{[train;test;len;params]
   // Fit an model using the specified parameters
-  model:ts.ARIMA.fit[train`endog;train`exog;;;;]. params`p`d`q`trend;
+  model:ts.ARIMA.fit[train`endog;train`exog]. params`p`d`q`trend;
   // Predict using the fitted model
   preds:model[`predict][test`exog;len];
   // Score the predictions
   ts.i.aicScore[len#test`endog;preds;params]
   }
-
 
 // Autocorrelation functionality
 
@@ -572,7 +563,6 @@ ts.i.lagCovariance:{[data;lag]
 ts.i.autoCorrFunction:{[data;lag]
   ts.i.lagCovariance[data;lag]%var data
   }
-
 
 // Matrix creation/manipulation functionality
 
@@ -601,7 +591,6 @@ ts.i.tabToMatrix:{[data]
   flip value flip data
   }
 
-
 // Stationarity functionality used to test if datasets are suitable for 
 // application of the ARIMA and to facilitate transformation of the data to a
 // more suitable form if relevant
@@ -617,10 +606,14 @@ ts.i.tabToMatrix:{[data]
 ts.i.stationaryScores:{[data;dtype]
   // Calculate the augmented dickey-fuller scores for a dict/tab/vector input
   scores:{.ml.fresh.i.adfuller[x]`}@'
-    $[98h=dtype;flip data;
-      99h=dtype;data;
-      dtype in(6h;7h;8h;9h);enlist data;
-      '"Inappropriate type provided"];
+    $[98h=dtype;
+        flip data;
+      99h=dtype;
+        data;
+      dtype in(6h;7h;8h;9h);
+        enlist data;
+      '"Inappropriate type provided"
+      ];
   flip{x[0 1],(0.05>x 1),value x 4}each$[dtype in 98 99h;value::;]scores
   }
 
@@ -634,7 +627,6 @@ ts.i.stationaryScores:{[data;dtype]
 ts.i.stationary:{[data]
   (all/)ts.i.stationaryScores[data;type data][2]
   }
-
 
 // Differencing utilities
 
@@ -675,7 +667,7 @@ ts.i.seasonDiff:{[d;data]
 ts.i.reverseSeasonDiff:{[originData;diffData]
   seasonData:originData,diffData;
   n:count originData;
-  [n]_first{x[1]<y}[;count[seasonData]]ts.i.revertDiffFunc[n]/(seasonData;n)
+  [n]_first{x[1]<y}[;count seasonData]ts.i.revertDiffFunc[n]/(seasonData;n)
   }
 
 // @private
@@ -689,12 +681,11 @@ ts.i.reverseSeasonDiff:{[originData;diffData]
 // @return {num[]} The updated dataset along with the next index of the list 
 //  that's to be updated next
 ts.i.revertDiffFunc:{[n;diffInfo]
-  seasonDiff:diffInfo[0];
-  i:diffInfo[1];
-  seasonDiff[i]:seasonDiff[i-n]+seasonDiff[i];
+  seasonDiff:diffInfo 0;
+  i:diffInfo 1;
+  seasonDiff[i]:seasonDiff[i-n]+seasonDiff i;
   (seasonDiff;i+1)
   }
-
 
 // Error flags
 
@@ -703,7 +694,6 @@ ts.i.revertDiffFunc:{[n;diffInfo]
 ts.i.err.stat:{'`$"Time series not stationary, try another value of d"}
 ts.i.err.len:{'`$"Endog length less than length"}
 ts.i.err.exog:{'`$"Test exog length does not match train exog length"}
-
 
 // Checks on suitability of datasets for application of time-series analysis
 
@@ -722,7 +712,7 @@ ts.i.fitDataCheck:{[endog;exog]
   // Accept null as input
   if[exog~(::);exog:()];
   // check that exogenous variable length is appropriate
-  if[not[()~exog]&(count[endog])>count exog;ts.i.err.len[]];
+  if[not[()~exog]&count[endog]>count exog;ts.i.err.len[]];
   // convert exon table to matrix
   $[98h~type exog;:"f"$ts.i.tabToMatrix exog;()~exog;:exog;:"f"$exog];
   }
@@ -759,11 +749,11 @@ ts.i.dictCheck:{[dict;keyVals;input]
 //   which may be accounted for to improve the model, if (::)/()
 // @return {num[]} Exogenous data as a matrix
 ts.i.predDataCheck:{[model;exog]
-  // allow null to be provided as exogenous variable
+  // Allow null to be provided as exogenous variable
   if[exog~(::);exog:()];
-  // check that the fit and new params are equivalent
-  if[not count[model`exogCoeff]~count exog[0];ts.i.err.exog[]];
-  // convert exogenous variable to a matrix if required
+  // Check that the fit and new params are equivalent
+  if[not count[model`exogCoeff]~count exog 0;ts.i.err.exog[]];
+  // Convert exogenous variable to a matrix if required
   $[98h~type exog;"f"$ts.i.tabToMatrix exog;()~exog;:exog;"f"$exog]
   }
 
@@ -773,7 +763,7 @@ ts.i.predDataCheck:{[model;exog]
 // @fileoverview Apply seasonal and non-seasonal time-series differencing,error
 //   checking stationarity of the dataset following application of differencing
 // @param endog {num[]} Endogenous variable (time-series) from which to build a
-//    model. This is the target variable from which a value is to be predicted
+//   model. This is the target variable from which a value is to be predicted
 // @param d {int} Non seasonal differencing component
 // @param seasonDict {dict} Dictionary containing relevant seasonal
 //  differencing components
@@ -791,7 +781,6 @@ ts.i.differ:{[endog;d;seasonDict]
   // Return integrated data
   `final`init!(finalDiff;initDiff)
   }
-
 
 // Feature extraction utilities
 
@@ -811,9 +800,8 @@ ts.i.differ:{[endog;d;seasonDict]
 // @return {num[]} Result of the application of the function on each of the 
 //   sliding window components over the data vector
 ts.i.slidingWindowFunction:{[func;winSize;data]
-  0f,-1_func each{ 1_x,y }\[winSize#0f;data]
+  0f,-1_func each{1_x,y}\[winSize#0f;data]
   }
-
 
 // @private
 // @kind function
@@ -841,7 +829,7 @@ ts.i.setupWindow:{[tab;uniCombs]
 // @param title {str} Title to be given to the plot
 // @return {graph} Presents a plot to screen associated with relevant analysis
 ts.i.plotFunction:{[data;vals;m;width;title]
-  plt:.p.import[`matplotlib.pyplot];
+  plt:.p.import`matplotlib.pyplot;
   conf:count[m]#1.95%sqrt count data;
   plt[`:bar][m;vals;`width pykw width%2];
   configKeys:`linewidth`linestyle`color`label;
@@ -851,7 +839,8 @@ ts.i.plotFunction:{[data;vals;m;width;title]
     plt[`:plot][m;neg conf;pykwargs -1_cfgkeys!cfgvals]
     ];
   plt[`:legend][];
-  plt[`:xlabel][`lags];
-  plt[`:ylabel][`acf];
-  plt[`:title][title];
-  plt[`:show][];}
+  plt[`:xlabel]`lags;
+  plt[`:ylabel]`acf;
+  plt[`:title]title;
+  plt[`:show][];
+  }

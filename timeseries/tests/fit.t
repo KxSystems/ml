@@ -5,7 +5,7 @@
 \l timeseries/utils.q
 \l timeseries/fit.q
 \l timeseries/predict.q
-\l fresh/extract.q
+\l fresh/init.q
 \l timeseries/tests/failMessage.q
 
 -1"Warning: These tests may cause varying results for Linux vs Windows users";
