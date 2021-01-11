@@ -12,8 +12,7 @@ equivalent significance tests implemented previously in python.
 \
 
 \l p.q
-\l fresh/extract.q
-\l fresh/select.q
+\l fresh/init.q
 \l fresh/tests/significancetests.p
 
 xf:5000?1000f
