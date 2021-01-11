@@ -1,14 +1,16 @@
 \d .ml
 
 // Execution of a pipeline will not default to enter q debug mode but should 
-//  be possible to overwrite
+//   be possible to overwrite
 graphDebug:0b
 
 // @kind function
 // @category pipeline
 // @fileoverview Update debugging mode
 // @return {null} Debugging is updated
-updDebug:{[]graphDebug::not graphDebug}
+updDebug:{[]
+  graphDebug::not graphDebug
+  }
 
 // @kind function
 // @category pipeline
@@ -41,4 +43,6 @@ createPipeline:{[graph]
 // @param pipeline {dict} Pipeline created by .ml.createPipeline
 // @return {dict} The pipeline with each node executed and appropriate outputs
 //   populated.
-execPipeline:{[pipeline]i.execCheck i.execNext/pipeline}
+execPipeline:{[pipeline]
+  i.execCheck i.execNext/pipeline
+  }

@@ -27,9 +27,8 @@ i.connectGraph:{[graph;edge]
 // @param node {sym} Name associated with the functional node
 // @return {sym} Source of the given node
 i.getDeps:{[graph;node]
-   exec distinct sourceNode from graph[`edges]where destNode=node
-   }
-
+  exec distinct sourceNode from graph[`edges]where destNode=node
+  }
 
 // @private
 // @kind function
@@ -44,9 +43,9 @@ i.getAllDeps:{[graph;node]
   depNodes:i.getDeps[graph]node; 
   $[count depNodes; 
     distinct node,raze .z.s[graph]each depNodes;
-    node]
-   }
-
+    node
+    ]
+  }
 
 // @private
 // @kind function
@@ -60,10 +59,10 @@ i.getAllDeps:{[graph;node]
 i.getAllPaths:{[graph;node]
   depNodes:i.getDeps[graph]node; 
   $[count depNodes; 
-   node,/:raze .z.s[graph]each depNodes;
-   raze node]
-   }
-
+    node,/:raze .z.s[graph]each depNodes;
+    raze node
+    ]
+  }
 
 // @private
 // @kind function
@@ -79,7 +78,6 @@ i.getLongestPath:{[graph;node]
   paths first idesc count each paths
   }
 
-
 // @private
 // @kind function
 // @category pipelineUtility
@@ -94,7 +92,6 @@ i.getOptimalPath:{[graph;node]
   distinct raze reverse each i.getAllDeps[graph]each longestPath
   }
 
-
 // @private
 // @kind function
 // @category pipelineUtility
@@ -106,7 +103,6 @@ i.updateInputData:{[pipeline;map]
   pipeline[map`destNode;`inputs;map`destName]:map`data;
   pipeline
   }
-
 
 // @private
 // @kind function
@@ -125,7 +121,6 @@ i.execNext:{[pipeline]
     .[(1b;`;)node[`function]::;inputs;{[err](0b;`$err;::)}]
     ];
   res:resKeys!resVals;
-  / compare outputs to outputtypes ?
   if[not null res`error;-2"Error: ",string res`error];
   if[res`complete;
     res[`inputs]:(1#`)!1#(::);
@@ -137,7 +132,6 @@ i.execNext:{[pipeline]
   pipeline,:update nodeId:node`nodeId from res;
   pipeline
   }
-
 
 // @private
 // @kind function
