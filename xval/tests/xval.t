@@ -1,5 +1,6 @@
 \l ml.q
 \l util/util.q
+\l xval/utils.q
 \l xval/xval.q
 \l xval/tests/test.p
 
