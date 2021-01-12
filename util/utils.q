@@ -415,3 +415,64 @@ i.oneHotCols:{[tab;colName;val]
   updVals:"f"$tab[colName]='/:val;
   updCols!updVals
   }
+
+// General utility functions
+
+// @private
+// @kind function
+// @category utility
+// @fileoverview Save a model locally
+// @param modelName {str;sym} Name of the model to be saved
+// @param path {str;sym} The path in which to save the model. If ()/(::) is 
+//  used then saves to the current directory 
+// @return {null;err} Saves locally or returns an error
+i.saveModel:{[modelName;path]
+  savePath:i.constructPath[modelName;path];
+  save savePath
+  }
+
+// @private
+// @kind function
+// @category utility
+// @fileoverview Load a model
+// @param modelName {str;sym} Name of the model to be loaded
+// @param path {str;sym} The path in which to load the model from. If ()/(::)
+//   is used then saves to the current directory 
+// @return {null;err} Loads a model or returns an error
+i.loadModel:{[modelName;path]
+  loadPath:i.constructPath[modelName;path];
+  load loadPath
+  }
+
+
+// @private
+// @kind function
+// @category utility
+// @fileoverview Construct a path to save/load a model
+// @param modelName {str;sym} Name of the model to be saved/loaded
+// @param path {str;sym} The path in which to save/load the model. If ()/(::)
+//   is used then saves to the current directory 
+// @return {sym;err} Constructs a path or returns an error
+i.constructPath:{[modelName;path]  
+  pathType:abs type path;
+  modelType:abs type modelName;
+  if[not modelType in 10 11h;i.inputError["modelName"]];
+  if[11h=abs modelType;modelName:string modelName];
+  joinPath:$[(path~())|path~(::);;
+    pathType=10h;
+    path,"/",;
+    pathType=11h;
+    string[path],"/",;
+    i.inputError["path"]
+    ]modelName;
+   hsym`$joinPath
+   }
+
+
+// @private
+// @kind function
+// @category utility
+// @fileoverview Return an error for the wrong input type
+// @param input {str} Name of the input parameter
+// @return {err} Error for the wrong input typr
+i.inputError:{[input]'`$input," must be a string or a symbol"}

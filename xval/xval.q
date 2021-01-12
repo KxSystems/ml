@@ -1,59 +1,429 @@
 \d .ml
 
-xv.i.shuffle:{neg[n]?n:count x}
-xv.i.splitidx:{[k;x](k;0N)#til count x}
-xv.i.shuffidx:{[k;x](k;0N)#xv.i.shuffle x}
-xv.i.stratidx:{[k;x]r@'xv.i.shuffle each r:(,'/)(k;0N)#/:value n@'xv.i.shuffle each n:group x}
-xv.i.groupidx:{[k](0;k-1)_/:rotate[-1]\[til k]}
-xv.i.idx1:{[f;g;k;x;y]{{raze@''y}[;x]}each flip@'((x;y)@/:\:f[k;y])@\:/:g k}
-xv.i.idxR:{[f;g;k;n;x;y]n#enlist xv.i.idx1[f;g;k;x;y]}
-xv.i.idxN:{[f;g;k;n;x;y]xv.i.idx1[f;g;;x;y]@'n#k}
+// Cross validation, grid/random/Sobol-random hyperparameter search and multi-
+//   processing procedures
 
-xv.j.kfsplit:xv.i.idxR . xv.i`splitidx`groupidx
-xv.j.kfshuff:xv.i.idxN . xv.i`shuffidx`groupidx
-xv.j.kfstrat:xv.i.idxN . xv.i`stratidx`groupidx
-xv.j.tsrolls:xv.i.idxR[xv.i.splitidx]{[k]enlist@''0 1+/:til k-1}
-xv.j.tschain:xv.i.idxR[xv.i.splitidx]{[k]flip(til each j;enlist@'j:1+til k-1)}
-xv.j.pcsplit:{[p;n;x;y]n#{[p;x;y;z](x;y)@\:/:(0,floor n*1-p)_til n:count y}[p;x;y]}
-xv.j.mcsplit:{[p;n;x;y]n#{[p;x;y;z](x;y)@\:/:(0,floor count[y]*1-p)_{neg[n]?n:count x}y}[p;x;y]}
-xv,:xv.j,:1_{[idx;k;n;x;y;f]{[f;d]f d[]}[f]peach raze idx[k;n;x;y]}@'xv.j
+// Cross validation
 
-xv.i.search:{[sf;k;n;x;y;f;p;t]
- if[t=0;:sf[k;n;x;y;f;p]];i:(0,floor count[y]*1-abs t)_$[t<0;xv.i.shuffle;til count@]y;
- (r;pr;f[pykwargs pr:first key desc avg each r:sf[k;n;x i 0;y i 0;f;p]](x;y)@\:/:i)}
-xv.i.xvpf:{[pf;xv;k;n;x;y;f;p]p!(xv[k;n;x;y]f pykwargs@)@'p:pf p}
-gs:1_xv.i.search@'xv.i.xvpf[{[p]key[p]!/:1_'(::)cross/value p}]@'xv.j
-rs:1_xv.i.search@'xv.i.xvpf[{[p]hp.hpgen p}]@'xv.j
+// @kind function
+// @category xv
+// @fileoverview Cross validation for ascending indices split into k-folds
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function which takes data as input
+// @return {#any} Output of function applied to each of the k-folds
+xv.kfsplit:xv.i.applyidx xv.i.idxR . xv.i`splitidx`groupidx
 
-npa:.p.import[`numpy]`:array
-xv.fitscore:{[f;p;d]
-  .[.[f[][p]`:fit;npa each d 0]`:score;npa each d 1]`
+// @kind function
+// @category xv
+// @fileoverview Cross validation for randomized non-repeating indices split 
+//   into k-folds
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function which takes data as input
+// @return {#any} Output of function applied to each of the k-folds
+xv.kfshuff:xv.i.applyidx xv.i.idxN . xv.i`shuffidx`groupidx
+
+// @kind function
+// @category xv
+// @fileoverview Stratified k-fold cross validation with an approximately equal
+//   distribution of classes per fold
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function which takes data as input
+// @return {#any} Output of function applied to each of the k-folds
+xv.kfstrat:xv.i.applyidx xv.i.idxN . xv.i`stratidx`groupidx
+
+// @kind function
+// @category xv
+// @fileoverview Roll-forward cross validation procedure
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function which takes data as input
+// @return {#any} Output of function applied to each of the chained 
+//   iterations
+xv.tsrolls:xv.i.applyidx xv.i.idxR . xv.i`splitidx`tsrollsidx
+
+// @kind function
+// @category xv
+// @fileoverview Chain-forward cross validation procedure
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function which takes data as input
+// @return {#any} Output of function applied to each of the chained 
+//   iterations
+xv.tschain:xv.i.applyidx xv.i.idxR . xv.i`splitidx`tschainidx
+
+// @kind function
+// @category xv
+// @fileoverview Percentage split cross validation procedure
+// @param pc {float} (0-1) representing the percentage of validation data
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function which takes data as input
+// @return {#any} Output of function applied to each of the k-folds
+xv.pcsplit:xv.i.applyidx{[pc;n;features;target]
+  split:{[pc;x;y;z](x;y)@\:/:(0,floor n*1-pc)_til n:count y};
+  n#split[pc;features;target]
   }
 
-hp.hpgen:{
-  if[(::)~n:x`n;n:16];
-  if[(`sobol=x`typ)&k<>floor k:xlog[2]n;'"trials must equal 2^n for sobol search"];
-  num:where any`uniform`loguniform=\:first each p:x`p;
-  system"S ",string$[(::)~x`random_state;42;x`random_state];
-  pysobol:.p.import[`sobol_seq;`:i4_sobol_generate;<];
-  genpts:$[`sobol~typ:x`typ;enlist each flip pysobol[count num;n];`random~typ;n;'"hyperparam type not supported"];
-  prms:distinct flip hp.i.hpgen[typ;n]each p,:num!p[num],'genpts;
-  if[n>dst:count prms;-1"Number of distinct hp sets less than n, returning ",string[dst]," sets."];
-  prms}
-hp.i.hpgen:{[ns;n;p]
-  p:@[;0;first](0;1)_p,();
-  $[(typ:p 0)~`boolean;n?0b;
-    typ in`rand`symbol;n?(),p[1]0;
-    typ~`uniform;hp.i.uniform[ns]. p 1;
-    typ~`loguniform;hp.i.loguniform[ns]. p 1;
-    '"please enter a valid type"]}
-hp.i.uniform:{[ns;lo;hi;typ;p]if[hi<lo;'"upper bound must be greater than lower bound"];hp.i[ns][`uniform][lo;hi;typ;p]}
-hp.i.loguniform:xexp[10]hp.i.uniform::
-hp.i.random.uniform:{[lo;hi;typ;n]lo+n?typ$hi-lo}
-hp.i.sobol.uniform:{[lo;hi;typ;seq]typ$lo+(hi-lo)*seq}
+// @kind function
+// @category xv
+// @fileoverview Monte-Carlo cross validation using randomized non-repeating 
+//   indices
+// @param pc {float} (0-1) representing the percentage of validation data
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function which takes data as input
+// @return {#any} Output of function applied to each of the k-folds
+xv.mcsplit:xv.i.applyidx{[pc;n;features;target]
+  split:{[pc;x;y;z](x;y)@\:/:(0,floor count[y]*1-pc)_{neg[n]?n:count x}y};
+  n#split[pc;features;target]
+  }
 
-/ multiprocess
+// @kind function
+// @category xv
+// @fileoverview Default scoring function used in conjunction with .ml.xv/gs/rs
+//   methods
+// @param function {func} Takes empty list, parameters and data as input
+// @param p {dict} Hyperparameters
+// @param data {#any[][]} ((xtrain;xtest);(ytrain;ytest)) format
+// @return {float[]} Scores outputted by function applied to p and data
+xv.fitscore:{[function;p;data]
+  fitFunc:function[][p]`:fit;
+  scoreFunc:.[fitFunc;numpyArray each data 0]`:score;
+  .[scoreFunc;numpyArray each data 1]`
+  }
+
+// Hyperparameter search procedures
+
+// @kind function
+// @category gs
+// @fileoverview Cross validated parameter grid search applied to data with 
+//   ascending split indices
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input 
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+gs.kfsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfsplit]
+
+// @kind function
+// @category gs
+// @fileoverview Cross validated parameter grid search applied to data with 
+//   shuffled split indices
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+gs.kfshuff:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfshuff]
+
+// @kind function
+// @category gs
+// @fileoverview Cross validated parameter grid search applied to data with an 
+//   equi-distributions of targets per fold
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+gs.kfstrat:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfstrat]
+
+// @kind function
+// @category gs
+// @fileoverview Cross validated parameter grid search applied to roll forward 
+//   time-series sets
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+gs.tsrolls:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.tsrolls]
+
+// @kind function
+// @category gs
+// @fileoverview Cross validated parameter grid search applied to chain forward 
+//   time-series sets
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+gs.tschain:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.tschain]
+
+// @kind function
+// @category gs
+// @fileoverview Cross validated parameter grid search applied to percentage 
+//   split dataset
+// @param pc {float} (0-1) representing percentage of validation data
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+gs.pcsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.pcsplit]
+
+// @kind function
+// @category gs
+// @fileoverview Cross validated parameter grid search applied to randomly 
+//   shuffled data and validated on a percentage holdout set
+// @param pc {float} (0-1) representing percentage of validation data
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+gs.mcsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.mcsplit]
+
+// @kind function
+// @category rs
+// @fileoverview Cross validated parameter random search applied to data with
+//   ascending split indices
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters to be searched with 
+//   format `typ`random_state`n`p where typ is the type of search 
+//   (random/sobol), random_state is the seed, n is the number of 
+//   hyperparameter sets and p is a dictionary of parameters - see 
+//   documentation for more info.
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+rs.kfsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfsplit]
+
+// @kind function
+// @category rs
+// @fileoverview Cross validated parameter random search applied to data with 
+//   shuffled split indices
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters to be searched with 
+//   format `typ`random_state`n`p where typ is the type of search 
+//   (random/sobol), random_state is the seed, n is the number of 
+//   hyperparameter sets and p is a dictionary of parameters - see 
+//   documentation for more info.
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+rs.kfshuff:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfshuff]
+
+// @kind function
+// @category rs
+// @fileoverview Cross validated parameter random search applied to data with 
+//   an equi-distributions of targets per fold
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters to be searched with 
+//   format `typ`random_state`n`p where typ is the type of search 
+//   (random/sobol), random_state is the seed, n is the number of 
+//   hyperparameter sets and p is a dictionary of parameters - see 
+//   documentation for more info.
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+rs.kfstrat:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfstrat]
+
+// @kind function
+// @category rs
+// @fileoverview Cross validated parameter random search applied to roll 
+//   forward time-series sets
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters to be searched with 
+//   format `typ`random_state`n`p where typ is the type of search 
+//   (random/sobol), random_state is the seed, n is the number of 
+//   hyperparameter sets and p is a dictionary of parameters - see 
+//   documentation for more info.
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+rs.tsrolls:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.tsrolls]
+
+// @kind function
+// @category rs
+// @fileoverview Cross validated parameter random search applied to chain 
+//   forward time-series sets
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters to be searched with 
+//   format `typ`random_state`n`p where typ is the type of search 
+//   (random/sobol), random_state is the seed, n is the number of 
+//   hyperparameter sets and p is a dictionary of parameters - see 
+//   documentation for more info.
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+rs.tschain:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.tschain]
+
+// @kind function
+// @category rs
+// @fileoverview Cross validated parameter random search applied to percentage 
+//   split dataset
+// @param pc {float} (0-1) representing percentage of validation data
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters to be searched with 
+//   format `typ`random_state`n`p where typ is the type of search 
+//   (random/sobol), random_state is the seed, n is the number of 
+//   hyperparameter sets and p is a dictionary of parameters - see 
+//   documentation for more info.
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+rs.pcsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.pcsplit]
+
+// @kind function
+// @category rs
+// @fileoverview Cross validated parameter random search applied to randomly 
+//   shuffled data and validated on a percentage holdout set
+// @param pc {float} (0-1) representing percentage of validation data
+// @param k {int} Number of folds
+// @param n {int} Number of repetitions
+// @param features {#any[][]} Matrix of features
+// @param target {#any[]} Vector of targets
+// @param function {func} Function that takes parameters and data as input
+//   and returns a score
+// @param p {dict} Dictionary of hyperparameters to be searched with 
+//   format `typ`random_state`n`p where typ is the type of search 
+//   (random/sobol), random_state is the seed, n is the number of 
+//   hyperparameter sets and p is a dictionary of parameters - see 
+//   documentation for more info.
+// @param tstTyp {float} Size of the holdout set used in a fitted grid 
+//   search, where the best model is fit to the holdout set. If 0 the function 
+//   will return scores for each fold for the given hyperparameters. If 
+//   negative the data will be shuffled prior to designation of the holdout set
+// @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
+//   the k folds for all values of h and additionally returns the best 
+//   hyperparameters and score on the holdout set for 0 < h <=1.
+rs.mcsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.mcsplit]
+
+// Multi-processing functionality
+
+//  Load multi-processing modules
 loadfile`:util/mproc.q
 loadfile`:util/pickle.q
+
+//  If multiple processes are available, multi-process cross validation library
 if[0>system"s";mproc.init[abs system"s"]enlist".ml.loadfile`:util/pickle.q"];
 xv.picklewrap:{picklewrap[(0>system"s")&.p.i.isw x]x}

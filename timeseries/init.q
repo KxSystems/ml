@@ -1,7 +1,6 @@
-\d .ml
-loadfile`:optimize/init.q
-loadfile`:timeseries/utils.q
-loadfile`:fresh/extract.q
-loadfile`:timeseries/fit.q
-loadfile`:timeseries/predict.q
-loadfile`:timeseries/misc.q
+.ml.loadfile`:optimize/init.q
+.ml.loadfile`:timeseries/utils.q
+.ml.loadfile`:fresh/extract.q
+.ml.loadfile`:timeseries/fit.q
+.ml.loadfile`:timeseries/predict.q
+.ml.loadfile`:timeseries/misc.q

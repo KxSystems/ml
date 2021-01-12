@@ -5,7 +5,7 @@ that are present in the tsfresh documentation. It should be noted that for large
 
 \l p.q
 \l ml.q
-\l fresh/extract.q
+\l fresh/init.q
 \l fresh/tests/test.p
 
 xj:10000?10000;

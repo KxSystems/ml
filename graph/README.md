@@ -31,6 +31,6 @@ Documentation is available on the [Graph](https://code.kx.com/q/ml/toolkit/graph
 
 ## Status
 
-The graph-pipeline library is still in development and is available here as a beta release. Further functionality and improvements will be made to the library in the coming months.
+The graph-pipeline library is still in development. Further functionality and improvements will be made to the library on an ongoing basis.
 
 If you have any issues, questions or suggestions, please write to ai@kx.com.
