@@ -1,6 +1,6 @@
 \l p.q
 \l ml.q
-\l util/util.q
+\l util/init.q
 \l optimize/optim.q
 \l timeseries/utils.q
 \l timeseries/fit.q
