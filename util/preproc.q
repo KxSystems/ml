@@ -8,10 +8,12 @@
 dropConstant:{[data]
   typeData:type data;
   if[not typeData in 98 99h;
-     '"Data must be simple table or dictionary"
+    '"Data must be simple table or dictionary"
     ];
   if[99h=typeData;
-   if[98h~type value data;'"Data cannot be a keyed table"]
+    if[98h~type value data;
+      '"Data cannot be a keyed table"
+      ]
     ];
   // Find keys/cols that contain non-numeric data
   findFunc:$[typeData=99h;i.findKey;i.findCols];
@@ -23,7 +25,7 @@ dropConstant:{[data]
   dropNum:i.dropConstant.num[findKeys _ dataDict];
   dropOther:i.dropConstant.other findKeys#dataDict;
   flipData dropNum,dropOther
- }
+  }
 
 // @kind function
 // @category preprocessing
@@ -36,7 +38,7 @@ minMaxScaler.fit:{[data]
   maxData:i.ap[max;data];
   scalingInfo:`minData`maxData!(minData;maxData);
   predict:minMaxScaler.predict[;minData;maxData];
-  preds:predict[data];
+  preds:predict data;
   `modelInfo`predict`fitPredict!(scalingInfo;predict;preds)
   }
 
@@ -59,8 +61,8 @@ minMaxScaler.predict:{[data;minData;maxData]
 // @return {tab;dict;num[]} A min-max scaled representation with values
 //   scaled between 0 and 1f
 minMaxScaler.fitPredict:{[data]
-  scaler:minMaxScaler.fit[data];
-  scaler[`predict][data]
+  scaler:minMaxScaler.fit data;
+  scaler[`predict]data
   }
 
 // @kind function
@@ -85,7 +87,9 @@ stdScaler.fit:{[data]
 // @param avgData {num[]} Average of the fitted data
 // @param devData {num[]} Deviation of the fitted data
 // @return {tab;dict;num[]} All data has undergone standard scaling
-stdScaler.predict:{[data;avgData;devData](data-avgData)%devData}
+stdScaler.predict:{[data;avgData;devData]
+  (data-avgData)%devData
+  }
 
 // @kind function
 // @category preprocessing
@@ -93,8 +97,8 @@ stdScaler.predict:{[data;avgData;devData](data-avgData)%devData}
 // @param data {tab;dict;num[]} Numerical data
 // @return {dict} All data has undergone standard scaling
 stdScaler.fitPredict:{[data]
-  scaler:stdScaler.fit[data];
-  scaler[`predict][data]
+  scaler:stdScaler.fit data;
+  scaler[`predict]data
   }
 
 // @kind function
@@ -134,11 +138,11 @@ polyTab:{[tab;n]
 //   to maintain knowledge of the null positions
 fillTab:{[tab;groupCol;timeCol;dict]
  dict:$[0=count dict;
-   :tab;
+     :tab;
    (::)~dict;
-   [fillCols:i.findCols[tab;"ghijefcspmdznuvt"]except groupCol,timeCol;
-   fillCols!(count fillCols)#`forward
-   ];
+     [fillCols:i.findCols[tab;"ghijefcspmdznuvt"]except groupCol,timeCol;
+      fillCols!(count fillCols)#`forward
+      ];
    dict
    ];
   keyDict:key dict;
@@ -188,7 +192,7 @@ oneHot.predict:{[tab;symDict;mapDict]
 // @return {tab} One-hot encoded representation of categorical data
 oneHot.fitPredict:{[tab;symCols]
   encode:oneHot.fit[tab;symCols];
-  map:raze key encode[`modelInfo];
+  map:raze key encode`modelInfo;
   symDict:map!map;
   encode[`predict][tab;symDict]
   }
@@ -202,7 +206,7 @@ oneHot.fitPredict:{[tab;symCols]
 // @return {tab} Frequency of occurrance of individual symbols within a column
 freqEncode:{[tab;symCols]
   if[(::)~symCols;symCols:i.findCols[tab;"s"]];
-  updCols: `$string[symCols],\:"_freq";
+  updCols:`$string[symCols],\:"_freq";
   updVals:i.freqEncode each tab symCols,:();
   updDict:updCols!updVals;
   flip(symCols _ flip tab),updDict
@@ -250,7 +254,7 @@ lexiEncode.predict:{[tab;symDict;mapDict]
 // @return {tab} Addition of lexigraphical order of symbol column
 lexiEncode.fitPredict:{[tab;symCols]
   encode:lexiEncode.fit[tab;symCols];
-  map:raze key encode[`modelInfo];
+  map:raze key encode`modelInfo;
   symDict:map!map;
   encode[`predict][tab;symDict]
   }
@@ -286,8 +290,8 @@ labelEncode.predict:{[data;map]
 // @param data {any[]} Data to encode
 // @return {int[]} List is encoded to an integer representation 
 labelEncode.fitPredict:{[data]
-  encoder:labelEncode.fit[data];
-  encoder.predict[data]
+  encoder:labelEncode.fit data;
+  encoder.predict data
   }
 
 // @kind function

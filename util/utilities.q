@@ -5,7 +5,9 @@
 // @fileoverview Range of values
 // @param array {num[]} A numerical array 
 // @returns {float} Range of its values
-range:{[array]max[array]-min array}
+range:{[array]
+  max[array]-min array
+  }
 
 // @kind function
 // @category utilities
@@ -63,21 +65,27 @@ combs:{[n;degree]
 // @fileoverview Create identity matrix 
 // @param n {int} Width/height of identity matrix
 // @return {int[]} Identity matrix of height/width n
-eye:{[n]@[n#0.;;:;1.]each til n}
+eye:{[n]
+  @[n#0.;;:;1.]each til n
+  }
 
 // @kind function
 // @category utilities
 // @fileoverview Index of maximum element of a list
 // @param array {num[]} Array of values 
 // @return {num} The index of the maximum element of the array
-iMax:{[array]array?max array}
+iMax:{[array]
+  array?max array
+  }
 
 // @kind function
 // @category utilities
 // @fileoverview Index of minimum element of a list
 // @param array {num[]} Array of values 
 // @return {num} The index of the minimum element of the array
-iMin:{[array]array?min array}
+iMin:{[array]
+  array?min array
+  }
 
 // @kind function
 // @category utilities
@@ -95,7 +103,9 @@ linearSpace:{[start;end;n]
 // @fileoverview Shape of a matrix
 // @param matrix {num[]} Matrix of values
 // @return {num[]} Its shape as a list of dimensions
-shape:{[matrix] -1_count each first scan matrix}
+shape:{[matrix]
+  -1_count each first scan matrix
+  }
 
 // @kind function
 // @category utilities
@@ -125,7 +135,7 @@ tab2df:{[tab]
   $[count keyTab:keys tab;
     pandasDF[`:set_index]keyTab;
     pandasDF
-   ]
+    ]
   }
 
 // @kind function
@@ -152,12 +162,12 @@ df2tabTimezone:{[tab;local;qObj]
   dict,:i.timezoneConvert[timezoneData;local];
   float32Data:tab[`:select_dtypes][`include pykw`float32][`:to_dict;`list]`;
   dict,:i.float32Convert[float32Data;local];
-  / check if the first value in columns are foreign
+  // Check if the first value in columns are foreign
   foreign:where 112h=type each first each value dict;
   if[0<count foreign;
-     dictKeys:key[dict]foreign;
-     dictVals:i.dateTimeConvert[;qObj] each dict dictKeys;
-     dict,:dictKeys!dictVals
+    dictKeys:key[dict]foreign;
+    dictVals:i.dateTimeConvert[;qObj] each dict dictKeys;
+    dict,:dictKeys!dictVals
     ];
   index!flip numpyCols#dict
   }

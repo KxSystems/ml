@@ -17,4 +17,6 @@ pickleLoad:.p.import[`pickle;`:loads]
 //   is to be invoked
 // @param obj {<} Python object to be saved/loaded
 // @return {null;<} Object is saved/loaded  
-pickleWrap:{[module;obj]$[module;{.ml.pickleLoad y}[;pickleDump obj];{y}[;obj]]}
+pickleWrap:{[module;obj]
+  $[module;{.ml.pickleLoad y}[;pickleDump obj];{y}[;obj]]
+  }

@@ -40,7 +40,7 @@ i.float32Convert:{[data;local]
   $[(local~0b)|data~()!();
     data;
     ?[0.000001>data;"F"$string data;0.000001*floor 0.5+data*1000000]
-   ]
+    ]
   }
 
 // @private
@@ -53,9 +53,9 @@ i.float32Convert:{[data;local]
 // @return {dict} Datetime objects are converted to kdb date/time objects
 i.timezoneConvert:{[tab;local]
   $[local~0b;
-   i.dateConvert tab;
-   "P"$neg[6]_/:'tab[`:astype;`str][`:to_dict;<;`list]
-   ]
+    i.dateConvert tab;
+    "P"$neg[6]_/:'tab[`:astype;`str][`:to_dict;<;`list]
+    ]
   }
 
 // @private
@@ -99,8 +99,8 @@ i.dateTimeConvert:{[dateTime;qObj]
   $[qObj~0b;
     dateTime;
     [firstVal:.p.wrap first dateTime;
-     / Convert datetime.time/date to iso string format and convert to kdb+
-     / otherwise return foreign
+     // Convert datetime.time/date to iso string format and convert to kdb+
+     // otherwise return foreign
      $[i.isInstance[firstVal;i.dateTime`:time];
        i.isoFormat["N"]each dateTime;
        i.isInstance[firstVal;i.dateTime`:date];
@@ -131,16 +131,16 @@ i.isoFormat:{[cast;dateTime]
 // @return {func} function to apply to data
 i.ap:{[func;data] 
   $[0=type data;
-    func each data;
+      func each data;
     98=type data;
-    flip func each flip data;
+      flip func each flip data;
     99<>type data;
-    func data;
+      func data;
     98=type key data;
-    key[data]!.z.s value data;
+      key[data]!.z.s value data;
     func each data
-   ]
-   }
+    ]
+  }
 
 // @private
 // @kind function
@@ -164,7 +164,7 @@ i.isInstance:.p.import[`builtins][`:isinstance;<]
 // @kind function
 // @category utilitiesUtility
 // @fileoverview Python datetime module
-i.dateTime  :.p.import[`datetime]
+i.dateTime:.p.import`datetime
 
 // @private
 // @kind function
@@ -192,7 +192,9 @@ i.curvePts:{[x;y]
 // @param x {num[]} X coordinate of true positives and false negatives
 // @param y {num[]} Y coorfinate of true positives and false negatives
 // @returns {num[]} Area under the curve
-i.auc:{[x;y]sum 1_deltas[x]*y-.5*deltas y}
+i.auc:{[x;y]
+  sum 1_deltas[x]*y-.5*deltas y
+  }
 
 // Preproc utility functions
 
@@ -202,7 +204,9 @@ i.auc:{[x;y]sum 1_deltas[x]*y-.5*deltas y}
 // @fileoverview Drop any constant numeric values
 // @param data {dict} Numerical data
 // @return {dict} All keys with zero variance are removed
-i.dropConstant.num:{[num](where 0=0^var each num)_num}
+i.dropConstant.num:{[num]
+  (where 0=0^var each num)_num
+  }
 
 // @private
 // @kind function
@@ -231,7 +235,9 @@ i.findKey:{[dict;char]
 // @fileoverview Fill nulls with 0 
 // @param data {tab;num[]} Numerical data
 // @return {tab;num[]} Nulls filled with 0 
-i.fillMap.zero:{[data]0^data}
+i.fillMap.zero:{[data]
+  0^data
+  }
 
 // @private
 // @kind function
@@ -239,7 +245,9 @@ i.fillMap.zero:{[data]0^data}
 // @fileoverview Fill nulls with the median value 
 // @param data {tab;num[]} Numerical data
 // @return {tab;num[]} Nulls filled with the median value
-i.fillMap.median:{[data]med[data]^data}
+i.fillMap.median:{[data]
+  med[data]^data
+  }
 
 // @private
 // @kind function
@@ -247,7 +255,9 @@ i.fillMap.median:{[data]med[data]^data}
 // @fileoverview Fill nulls with the average value
 // @param data {tab;num[]} Numerical data
 // @return {tab;num[]} Nulls filled with the average value
-i.fillMap.mean:{[data]avg[data]^data}
+i.fillMap.mean:{[data]
+  avg[data]^data
+  }
 
 // @private
 // @kind function
@@ -393,8 +403,7 @@ i.mappingCheck:{[tab;symDict;mapDict]
   map:key mapDict;
   if[(::)~symDict;
     symCols:i.findCols[tab;"s"];
-    symDict:@[symCols!;map;
-      {'"Length of mapping and sym keys don't match"}]
+    symDict:@[symCols!;map;{'"Length of mapping and sym keys don't match"}]
     ];
   if[not all value[symDict]in map;
     '"Mapping keys do not match mapping dictionary"
@@ -456,18 +465,18 @@ i.loadModel:{[modelName;path]
 i.constructPath:{[modelName;path]  
   pathType:abs type path;
   modelType:abs type modelName;
-  if[not modelType in 10 11h;i.inputError["modelName"]];
+  if[not modelType in 10 11h;i.inputError"modelName"];
   if[11h=abs modelType;modelName:string modelName];
-  joinPath:$[(path~())|path~(::);;
+  joinPath:$[(path~())|path~(::);
+      ;
     pathType=10h;
-    path,"/",;
+      path,"/",;
     pathType=11h;
-    string[path],"/",;
-    i.inputError["path"]
+      string[path],"/",;
+    i.inputError"path"
     ]modelName;
    hsym`$joinPath
    }
-
 
 // @private
 // @kind function
@@ -475,4 +484,6 @@ i.constructPath:{[modelName;path]
 // @fileoverview Return an error for the wrong input type
 // @param input {str} Name of the input parameter
 // @return {err} Error for the wrong input typr
-i.inputError:{[input]'`$input," must be a string or a symbol"}
+i.inputError:{[input]
+  '`$input," must be a string or a symbol"
+  }
