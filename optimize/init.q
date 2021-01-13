@@ -1,4 +1,5 @@
 \d .ml
-loadfile`:util/util.q
+loadfile`:util/utils.q
+loadfile`:util/utilities.q
 loadfile`:optimize/utils.q
-loadfile`:optimize/optim.q
+loadfile`:optimize/optimize.q
