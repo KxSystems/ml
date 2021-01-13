@@ -1,5 +1,5 @@
 \l ml.q
-\l util/util.q
+\l util/init.q
 \l xval/utils.q
 \l xval/xval.q
 \l xval/tests/test.p
@@ -13,10 +13,10 @@ yb:1000#110011001100b
 xc:flip(1000?100f;asc 1000?100f)
 yc:1000#`A`B`A`C`B`C
 
-df:(2;0N)#value .ml.traintestsplit[xf;yf;.2]
-di:(2;0N)#value .ml.traintestsplit[xi;yi;.2]
-db:(2;0N)#value .ml.traintestsplit[xb;yb;.2]
-dc:(2;0N)#value .ml.traintestsplit[xc;yc;.2]
+df:(2;0N)#value .ml.trainTestSplit[xf;yf;.2]
+di:(2;0N)#value .ml.trainTestSplit[xi;yi;.2]
+db:(2;0N)#value .ml.trainTestSplit[xb;yb;.2]
+dc:(2;0N)#value .ml.trainTestSplit[xc;yc;.2]
 
 net:{.p.import[`sklearn.linear_model]`:ElasticNet}
 lin:{.p.import[`sklearn.linear_model]`:LinearRegression}

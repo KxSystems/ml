@@ -20,6 +20,17 @@ dt1:2019.01.01D01:30:00.000000000 2019.01.02D01:30:00.000000000
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 xm:100 10#1000?100f
 
+.ml.range[til 63] ~ 62
+.ml.range[5] ~ 0
+.ml.range[0 1 3 2f]~3f
+.ml.range[0 1 0n 2]~2f
+.ml.percentile[x;0.75]~np[`:percentile][x;75]`
+.ml.percentile[x;0.02]~np[`:percentile][x;2]`
+.ml.percentile[xf;0.5]~np[`:percentile][xf;50]`
+.ml.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~3.5
+("f"$flip value .ml.describe[plaintab])~flip .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
+("f"$flip value .ml.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
+
 df :.ml.tab2df tt:([]fcol:12?1.;jcol:12?100;scol:12?`aaa`bbb`ccc)
 dfj:.ml.tab2df tj:select by jcol from tt
 dfs:.ml.tab2df ts:select by scol from tt
@@ -45,9 +56,9 @@ tt2:([]date:2005.07.14 2005.07.15;timesp:("N"$"12:10:30.000500000";"N"$"12:13:30
 .ml.arange[2.5;50.2;0.2] ~ np[`:arange][2.5;50.2;0.2]`
 .ml.arange[2f;10f;1f]~2 3 4 5 6 7 8 9f
 
-.ml.linspace[1;10;9] ~ np[`:linspace][1;10;9]`
-.ml.linspace[-0.2;109;62] ~ np[`:linspace][-0.2;109;62]`
-.ml.linspace[-0.2;10.4;20] ~ np[`:linspace][-0.2;10.4;20]`
+.ml.linearSpace[1;10;9] ~ np[`:linspace][1;10;9]`
+.ml.linearSpace[-0.2;109;62] ~ np[`:linspace][-0.2;109;62]`
+.ml.linearSpace[-0.2;10.4;20] ~ np[`:linspace][-0.2;10.4;20]`
 
 .ml.eye[3] ~ "f"$(1 0 0;0 1 0;0 0 1)
 first[.ml.eye[1]] ~ enlist 1f
@@ -57,10 +68,10 @@ first[.ml.eye[1]] ~ enlist 1f
 
 .ml.df2tab[t]~([]fcol:0.1*1+til 5;jcol:10*1+til 5)
 .ml.df2tab[t2]~([]fcol:5#(::);jcol:10101b)
-.ml.df2tab_tz[t3;0b;1b]~([]date:2005.07.14 2005.07.15;time:("N"$"12:10:30.000500000";"N"$"12:13:30.000200000");str:enlist each ("h";"i");ind:1.3 2.5;bool:10b)
-.ml.df2tab_tz[t4;0b;1b]~([]bool:10b;date:"p"$(2005.02.25;2015.12.22);timed:(neg "N"$"05:00:00";"N"$"00:16:40"))
-.ml.df2tab_tz[t5;1b;0b]~([]dt:dt1;dt_with_tz:dt1)
-.ml.df2tab_tz[t5;0b;0b]~([]dt:dt1;dt_with_tz:dt1-"T"$"01:00:00")
+.ml.df2tabTimezone[t3;0b;1b]~([]date:2005.07.14 2005.07.15;time:("N"$"12:10:30.000500000";"N"$"12:13:30.000200000");str:enlist each ("h";"i");ind:1.3 2.5;bool:10b)
+.ml.df2tabTimezone[t4;0b;1b]~([]bool:10b;date:"p"$(2005.02.25;2015.12.22);timed:(neg "N"$"05:00:00";"N"$"00:16:40"))
+.ml.df2tabTimezone[t5;1b;0b]~([]dt:dt1;dt_with_tz:dt1)
+.ml.df2tabTimezone[t5;0b;0b]~([]dt:dt1;dt_with_tz:dt1-"T"$"01:00:00")
 
 tt~update`$scol from .ml.df2tab df
 tj~update`$scol from .ml.df2tab dfj
@@ -71,10 +82,8 @@ tx~update`$scol from`scol`jcol xcol .ml.df2tab dfxj
 tx~update`$scol from`scol`jcol xcol .ml.df2tab dfxx
 
 \S 43
-.ml.traintestsplit[til 10;1+til 10;0.2]~`xtrain`ytrain`xtest`ytest!(2 3 7 1 6 4 9 5;3 4 8 2 7 5 10 6;0 8;1 9)
+.ml.trainTestSplit[til 10;1+til 10;0.2]~`xtrain`ytrain`xtest`ytest!(2 3 7 1 6 4 9 5;3 4 8 2 7 5 10 6;0 8;1 9)
 \S 43
-.ml.traintestsplit["f"$til 10;1+"f"$til 10;0.2]~`xtrain`ytrain`xtest`ytest!(2 3 7 1 6 4 9 5f;3 4 8 2 7 5 10 6f;0 8f;1 9f)
+.ml.trainTestSplit["f"$til 10;1+"f"$til 10;0.2]~`xtrain`ytrain`xtest`ytest!(2 3 7 1 6 4 9 5f;3 4 8 2 7 5 10 6f;0 8f;1 9f)
 \S 22
-.ml.traintestsplit[1010110011b;1001100011b;0.33]~`xtrain`ytrain`xtest`ytest!(110100b;111100b;1011b;0001b)
-
-
+.ml.trainTestSplit[1010110011b;1001100011b;0.33]~`xtrain`ytrain`xtest`ytest!(110100b;111100b;1011b;0001b)
