@@ -6,7 +6,9 @@
 // @param pred {int[];bool[];str[]} A vector/matrix of predicted labels 
 // @param true {int[];bool[];str[]} A vector/matrix of true labels 
 // @returns {float} The accuracy of predictions made
-accuracy:{[pred;true]avg pred=true}
+accuracy:{[pred;true]
+  avg pred=true
+  }
 
 // @kind function
 // @category metric
@@ -148,7 +150,9 @@ crossentropy:logLoss:{[class;prob]
 // @param true {float[]} A vector of true labels
 // @returns {float} The mean squared error between predicted values and
 //   the true values
-mse:{[pred;true]avg diff*diff:pred-true} 
+mse:{[pred;true]
+  avg diff*diff:pred-true
+  } 
 
 // @kind function
 // @category metric
@@ -157,7 +161,9 @@ mse:{[pred;true]avg diff*diff:pred-true}
 // @param true {float[]} A vector of true labels
 // @returns {float} The sum squared error between predicted values and
 //   the true values
-sse:{[pred;true]sum diff*diff:pred-true}
+sse:{[pred;true]
+  sum diff*diff:pred-true
+  }
 
 // @kind function
 // @category metric
@@ -166,7 +172,9 @@ sse:{[pred;true]sum diff*diff:pred-true}
 // @param true {float[]} A vector of true labels
 // @returns {float} The root mean squared error between predicted values 
 //   and the true values
-rmse:{[pred;true]sqrt mse[pred;true]}
+rmse:{[pred;true]
+  sqrt mse[pred;true]
+  }
 
 // @kind function
 // @category metric
@@ -175,7 +183,9 @@ rmse:{[pred;true]sqrt mse[pred;true]}
 // @param true {float[]} A vector of true labels
 // @returns {float} The root mean squared log error between predicted values
 //   and the true values
-rmsle:{[pred;true]rmse . log(pred;true)+1}
+rmsle:{[pred;true]
+  rmse . log(pred;true)+1
+  }
 
 // @kind function
 // @category metric
@@ -184,7 +194,9 @@ rmsle:{[pred;true]rmse . log(pred;true)+1}
 // @param true {float[]} A vector of true labels
 // @returns {float} The mean absolute error between predicted values 
 //   and the true values
-mae:{[pred;true]avg abs pred-true}
+mae:{[pred;true]
+  avg abs pred-true
+  }
 
 // @kind function
 // @category metric
@@ -193,7 +205,9 @@ mae:{[pred;true]avg abs pred-true}
 // @param true {float[]} A vector of true labels
 // @returns {float} The mean absolute percentage error between predicted values
 //   and the true values
-mape:{[pred;true]100*avg abs 1-pred%true}
+mape:{[pred;true]
+  100*avg abs 1-pred%true
+  }
 
 // @kind function
 // @category metric
@@ -223,7 +237,7 @@ r2Score:{[pred;true]
 // @category metric
 // @fileoverview One-sample t-test score
 // @param sample {num[]} A set of samples from a distribution
-// @param my {float} The population mean
+// @param mu {float} The population mean
 // @returns {float} The one sample t-score for a distribution with less than 
 //   30 samples. 
 tScore:{[sample;mu]
