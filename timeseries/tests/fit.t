@@ -1,7 +1,9 @@
 \l p.q
 \l ml.q
-\l util/init.q
-\l optimize/optim.q
+\l util/utils.q
+\l util/utilities.q
+\l optimize/utils.q
+\l optimize/optimize.q
 \l timeseries/utils.q
 \l timeseries/fit.q
 \l timeseries/predict.q
