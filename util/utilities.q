@@ -178,3 +178,9 @@ df2tabTimezone:{[tab;local;qObj]
 // @param tab {<} An embedPy representation of a Pandas dataframe
 // @return {<} a q table
 df2tab:df2tabTimezone[;0b;0b]
+
+// @private
+// @kind function
+// @category utilities
+// @fileoverview Change ignoreWarnings
+updateIgnoreWarning:{[]i.ignoreWarning::not i.ignoreWarning}
