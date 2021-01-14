@@ -36,7 +36,7 @@ i.BFGSFunction:{[func;optimDict;args;params]
   // If null gNew, then get gradient of new x value
   if[any null gNew;gNew:i.grad[func;optimDict`xk;args;params`geps]];
   // Subtract new gradients
-  yk:gNew-optimDict`gk;;
+  yk:gNew-optimDict`gk;
   optimDict[`gk]:gNew;
   // Get new norm of gradient
   optimDict[`gnorm]:i.vecNorm[optimDict`gk;params`norm];
@@ -64,7 +64,7 @@ i.BFGSFunction:{[func;optimDict;args;params]
 //   problem making use of wolfe conditions to constrain the search. The naming
 //   convention for dictionary keys in this implementation is based on the 
 //   python implementation of the same functionality here
-//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L193
+//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L193 // noqa
 // @param fk {float} Function return evaluated at position k
 // @param fkPrev {float} Function return evaluated at position k-1
 // @param gk {float} Gradient at position k
@@ -100,7 +100,7 @@ i.wolfeSearch:{[fk;fkPrev;gk;pk;func;xk;args;params]
   $[not any null raze wolfeDict`alphaStar`phiStar`derPhiStar;
     wolfeDict`alphaStar`phiStar`derPhiStar;
     wolfeDict`alpha1`phia1`derPhia0Fin
-   ]
+    ]
   }
 
 // @private
@@ -108,10 +108,10 @@ i.wolfeSearch:{[fk;fkPrev;gk;pk;func;xk;args;params]
 // @category optimizationUtility
 // @fileoverview Apply a scalar search to find an alpha value that satisfies
 //   strong Wolfe conditions, a python implementation of this is outlined here
-//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L338
-//   This functions defines the bounds between in which the step function can 
-//   be found. When the optimal bound is found, the area is zoomed in on and 
-//   optimal value found
+//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L338  // noqa
+//   This functions defines the bounds between which the step function can 
+//   be found. When the optimal bound is found, the area is zoomed recursively
+//   until the optimal value is found
 // @param derPhiFunc {func} Function to calculate the value of the objective
 //   function derivative at alpha
 // @param phiFunc {func} Function to calculate the value of the objective
@@ -125,7 +125,7 @@ i.wolfeSearch:{[fk;fkPrev;gk;pk;func;xk;args;params]
 i.scalarWolfe:{[derPhiFunc;phiFunc;pk;params;wolfeDict]
   // Set up zoom function constant params
   zoomSetup:i.zoomFunc[derPhiFunc;phiFunc;;;params]. wolfeDict`phi0`derPhi0;
-  // If criteria 1, zoom and break loop
+  // If criteria 1 is met, zoom and break loop
   if[i.wolfeCriteria1[wolfeDict;params];
     wolfeDict[`idx]:0w;
     wolfeVals:wolfeDict`alpha0`alpha1`phia0`phia1`derPhia0;
@@ -138,10 +138,10 @@ i.scalarWolfe:{[derPhiFunc;phiFunc;pk;params;wolfeDict]
   // Update the new derivative function
   wolfeDict[`derPhia1]:derPhiCalc`derval;
   $[i.wolfeCriteria2[wolfeDict;params];
-    [wolfeDict[`alphaStar] :wolfeDict`alpha1;
-     wolfeDict[`phiStar]   :wolfeDict`phia1;
+    [wolfeDict[`alphaStar]:wolfeDict`alpha1;
+     wolfeDict[`phiStar]:wolfeDict`phia1;
      wolfeDict[`derPhiStar]:derPhiCalc`grad;
-     wolfeDict[`idx]       :0w;
+     wolfeDict[`idx]:0w;
      wolfeDict
     ];
     0<=wolfeDict`derPhia1;
@@ -150,11 +150,11 @@ i.scalarWolfe:{[derPhiFunc;phiFunc;pk;params;wolfeDict]
      wolfeDict[i.zoomReturn]:updZoom   
     ];
     // Update dictionary and repeat process until criteria is met
-    [wolfeDict[`alpha0]     :wolfeDict`alpha1;
-     wolfeDict[`alpha1]     :2*wolfeDict`alpha1;
-     wolfeDict[`phia0]      :wolfeDict`phia1;
-     wolfeDict[`phia1]      :phiFunc wolfeDict`alpha1;
-     wolfeDict[`derPhia0]   :wolfeDict`derPhia1;
+    [wolfeDict[`alpha0]:wolfeDict`alpha1;
+     wolfeDict[`alpha1]:2*wolfeDict`alpha1;
+     wolfeDict[`phia0]:wolfeDict`phia1;
+     wolfeDict[`phia1]:phiFunc wolfeDict`alpha1;
+     wolfeDict[`derPhia0]:wolfeDict`derPhia1;
      wolfeDict[`derPhia0Fin]:derPhiCalc`grad;
      wolfeDict[`idx]+:1
     ]
@@ -194,7 +194,7 @@ i.zoomFunc:{[derPhiFunc;phiFunc;phi0;derPhi0;params;cond]
 //   linesearch to find optimal alpha value satisfying strong Wolfe conditions.
 //   An outline of the python implementation of this section of the algorithm 
 //   can be found here
-//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L556
+//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L556   // noqa
 // @param derPhiFunc {func} Function to calculate the value of the objective 
 //   function derivative at alpha
 // @param phiFunc {func} Function to calculate the value of the objective 
@@ -205,7 +205,7 @@ i.zoomFunc:{[derPhiFunc;phiFunc;phi0;derPhi0;params;cond]
 //   behaviour
 // @param zoomDict {dict} Parameters to be updated as 'zoom' procedure is
 //   applied to find the optimal value of alpha
-// @returns {dict} parameters calculated for an individual step in line search
+// @returns {dict} Parameters calculated for an individual step in line search
 //   procedure to find optimal alpha value satisfying strong Wolfe conditions
 i.zoom:{[derPhiFunc;phiFunc;phi0;derPhi0;params;zoomDict]
   alphaDiff:zoomDict[`aHi]-zoomDict`aLo;
@@ -225,7 +225,7 @@ i.zoom:{[derPhiFunc;phiFunc;phi0;derPhi0;params;zoomDict]
       findMin:zoomDict[`aLo]+0.5*alphaDiff
       ]
     ];
-  // Update new values depending on fnd_min
+  // Update new values depending on findMin
   phiMin:phiFunc[findMin];
   // First condition, update and continue loop
   if[i.zoomCriteria1[phi0;derPhi0;phiMin;findMin;zoomDict;params];
@@ -373,7 +373,7 @@ i.derPhi:{[func;eps;pk;alpha;xk;args]
 //   passes through the points (a,fa), (b,fb) and (c,fc) with a derivative of
 //   the objective function calculated as fpa. This follows the python 
 //   implementation outlined here 
-//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L482
+//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L482  // noqa
 // @param a {float} Position a
 // @param fa {float} Objective function evaluated at a
 // @param fpa {float} Derivative of the objective function evaluated at 'a'
@@ -403,7 +403,7 @@ i.cubicMin:{[a;fa;fpa;b;fb;c;fc]
 //   passes through the points (a,fa) and (b,fb) with a derivative of the 
 //   objective function calculated as fpa. This follows the python 
 //   implementation outlined here
-//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L516
+//   https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L516 // noqa
 // @param a {float} Position a
 // @param fa {float} Objective function evaluated at a
 // @param fpa {float} Derivative of the objective function evaluated at a
@@ -470,7 +470,7 @@ i.funcEval:{[func;xk;args]
   $[any args~/:((::);());func xk;func[xk;args]]
   }
 
-// Paramter dictionary
+// Parameter dictionary
 
 // @private
 // @kind function
@@ -494,7 +494,7 @@ i.updDefault:{[dict]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Ensure that the armijo and curvature parameters are consistent
+// @fileoverview Ensure that the Armijo and curvature parameters are consistent
 //   with the expected values for calculation of the strong Wolfe conditions
 // @param dict {dict} Updated parameter dictionary containing default
 //   information and any updated parameter information
@@ -506,7 +506,7 @@ i.wolfeParamCheck:{[dict]
   $[check1 or check2;
     '"When evaluating Wolfe conditions the following must hold 0 < c1 < c2 < 1";
     dict
-   ]
+    ]
   }
 
 // Data Formatting
@@ -568,7 +568,7 @@ i.wolfeCriteria2:{[wolfeDict;params]
 //   applied to find the optimal value of alpha
 // @returns {bool} Indication as to if the value of findMin needs to be updated 
 i.quadCriteria:{[findMin;highLow;cubicCheck;zoomDict]
-  // On initial iteration the minimum has not been calculated
+  // On first iteration the initial minimum has not been calculated
   // as such criteria should exit early to complete the quadratic calculation
   if[findMin~();:1b];
   check1:0=zoomDict`idx;
@@ -603,9 +603,9 @@ i.zoomCriteria1:{[phi0;derPhi0;phiMin;findMin;zoomDict;params]
 // @fileoverview Check if the zoom conditions are sufficient
 // @param derPhi0 {float} Derivative of the objective function evaluated at
 //   index 0
-// @param derPhiMin {float} derivative of the objective function evaluated at
+// @param derPhiMin {float} Derivative of the objective function evaluated at
 //   the current minimum
-// @param params {dict} parameter dictionary containing the updated/default
+// @param params {dict} Parameter dictionary containing the updated/default
 //   information used to modify the behaviour of the system as a whole
 // @returns {bool} Indication as to if further zooming is required
 i.zoomCriteria2:{[derPhi0;derPhiMin;params]

@@ -203,7 +203,8 @@ hp.i.xvpf:{[paramFunc;xvalFunc;k;n;features;target;dataFunc;hyperparams]
 //   hyperparameter search with (full results;best set;testing score)
 hp.i.search:{[scoreFunc;k;n;features;target;dataFunc;hyperparams;testType]
   if[testType=0;:scoreFunc[k;n;features;target;dataFunc;hyperparams]];
-  i:(0,floor count[target]*1-abs testType)_$[testType<0;xv.i.shuffle;til count@]target;
+  dataShuffle:$[testType<0;xv.i.shuffle;til count@]target
+  i:(0,floor count[target]*1-abs testType)_dataShuffle;
   r:scoreFunc[k;n;features i 0;target i 0;dataFunc;hyperparams];
   res:dataFunc[pykwargs pr:first key desc avg each r](features;target)@\:/:i;
   (r;pr;res)
