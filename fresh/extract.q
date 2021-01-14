@@ -31,10 +31,10 @@ fresh.loadparams"/fresh/hyperparameters.json";
 // @fileoverview Extract features using FRESH
 // @param data {table} Input data in the form of a simple table
 // @param idCol {sym[]} ID column(s) name
-// @param cols2Extract {sym[]} Columns on which extracted features will be calculated 
-//   (these columns must be numerical)
-// @param params {table} Functions/parameters to be applied to cols2Extract. This 
-//   should be a modified version of .ml.fresh.params
+// @param cols2Extract {sym[]} Columns on which extracted features will
+//   be calculated (these columns must be numerical)
+// @param params {table} Functions/parameters to be applied to cols2Extract.
+//   This should be a modified version of .ml.fresh.params
 // @return {table} Table keyed by ID column and containing the features 
 //   extracted from the subset of the data identified by the ID column.
 fresh.createfeatures:{[data;idCol;cols2Extract;params]

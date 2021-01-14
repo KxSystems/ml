@@ -10,7 +10,8 @@ stattools:.p.import`statsmodels.tsa.stattools
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Compute the one-dimensional discrete Fourier Transform for real input
+// @fileoverview Compute the one-dimensional
+//   discrete Fourier Transform for real input
 fresh.i.rfft:numpy`:fft.rfft
 
 // @private
@@ -46,7 +47,8 @@ fresh.i.ksdistrib:stats[$[sci_ver;`:kstwo.sf;`:kstwobign.sf];<]
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Calculate Kendall’s tau, a correlation measure for ordinal data
+// @fileoverview Calculate Kendall’s tau, a correlation measure for
+//   ordinal data
 fresh.i.kendalltau:stats`:kendalltau
 
 // @private

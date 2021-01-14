@@ -4,10 +4,11 @@
 // is based on 
 // https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/optimize.py#L1058
 // and is a quasi-Newton hill-climbing optimization technique used to find a
-// preferebly twice continuously differentiable stationary point of a 
+// preferably twice continuously differentiable stationary point of a 
 // function.
+
 // An outline of the algorithm mathematically is provided here:
-// https://en.wikipedia.org/wiki/Broyden-Fletcher-Goldfarb-Shanno_algorithm#Algorithm
+// https://en.wikipedia.org/wiki/Broyden-Fletcher-Goldfarb-Shanno_algorithm#Algorithm  // noqa
 
 // @kind function
 // @category optimization
@@ -21,7 +22,7 @@
 // @param args {list;dict;(::)} Any unchanging parameters to required for 
 //   evaluation of the function, these should be in the order that they are to 
 //   be applied to the function
-// @param params {dict} any modifications to be applied to the optimization 
+// @param params {dict} Any modifications to be applied to the optimization 
 //   procedure e.g.
 //   - display   {bool} Results at each optimization iteration to be printed
 //   - optimIter {int} Maximum number of iterations in optimization procedure
