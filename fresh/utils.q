@@ -10,7 +10,8 @@ stattools:.p.import`statsmodels.tsa.stattools
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Compute the one-dimensional discrete Fourier Transform for real input
+// @fileoverview Compute the one-dimensional
+//   discrete Fourier Transform for real input
 fresh.i.rfft:numpy`:fft.rfft
 
 // @private
@@ -41,19 +42,20 @@ fresh.i.abso:numpy`:abs
 // @kind function 
 // @category freshPythonUtility
 // @fileoverview Kolmogorov-Smirnov two-sided test statistic distribution
-fresh.i.ksdistrib:stats[$[sci_ver;`:kstwo.sf;`:kstwobign.sf];<]
+fresh.i.ksDistrib:stats[$[sci_ver;`:kstwo.sf;`:kstwobign.sf];<]
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Calculate Kendall’s tau, a correlation measure for ordinal data
-fresh.i.kendalltau:stats`:kendalltau
+// @fileoverview Calculate Kendall’s tau, a correlation measure for
+//   ordinal data
+fresh.i.kendallTau:stats`:kendalltau
 
 // @private
 // @kind function 
 // @category freshPythonUtility
 // @fileoverview Perform a Fisher exact test on a 2x2 contingency table
-fresh.i.fisherexact:stats`:fisher_exact
+fresh.i.fisherExact:stats`:fisher_exact
 
 // @private
 // @kind function 
@@ -65,7 +67,7 @@ fresh.i.welch:signal`:welch
 // @kind function 
 // @category freshPythonUtility
 // @fileoverview Find peaks in a 1-D array with wavelet transformation
-fresh.i.findpeak:signal`:find_peaks_cwt
+fresh.i.findPeak:signal`:find_peaks_cwt
 
 // @private
 // @kind function 
@@ -83,13 +85,26 @@ fresh.i.pacf:stattools`:pacf
 // @kind function 
 // @category freshPythonUtility
 // @fileoverview Augmented Dickey-Fuller unit root test
-fresh.i.adfuller:stattools`:adfuller
+fresh.i.adFuller:stattools`:adfuller
 
 // Python features
-fresh.i.pyfeat:`aggautocorr`augfuller`fftaggreg`fftcoeff`numcwtpeaks,
+fresh.i.pyFeat:`aggautocorr`augfuller`fftaggreg`fftcoeff`numcwtpeaks,
   `partautocorrelation`spktwelch
 
 // Extract utilities
+
+// @private
+// @kind function
+// @category freshUtility
+// @fileoverview Create a mapping between the functions and columns in which 
+//   they are to be applied to 
+// @param map {sym[]} Contains functions to be applied along with the column
+//   to apply it to 
+// @return {sym[]} A mapping of the functions to be applied to each column
+fresh.i.colMap:{[map]
+  updFunc:flip (` sv'`.ml.fresh.feat,'map[;1];map[;0]);
+  updFunc,'last@''2_'map
+  }
 
 // @private
 // @kind function 
@@ -97,7 +112,7 @@ fresh.i.pyfeat:`aggautocorr`augfuller`fftaggreg`fftcoeff`numcwtpeaks,
 // @fileoverview Returns the length of each sequence
 // @param condition {bool} Executed condition, e.g. data>avg data
 // @return {long[]} Sequence length based on condition
-fresh.i.getlenseqwhere:{[condition]
+fresh.i.getLenSeqWhere:{[condition]
   idx:where differ condition;
   (1_deltas idx,count condition)where condition idx
   }
@@ -106,11 +121,11 @@ fresh.i.getlenseqwhere:{[condition]
 // @kind function 
 // @category freshUtility
 // @fileoverview Find peaks within the data
-// @param data {(int;long;float)[]} List of data points
+// @param data {num[]} Numerical data points
 // @param support {long}
 // @param idx {long}
 // @return {bool[]} 1 where peak exists
-fresh.i.peakfind:{[data;support;idx]
+fresh.i.peakFind:{[data;support;idx]
   neg[support]_support _min data>/:xprev\:[-1 1*idx]data
   }
 
@@ -132,24 +147,24 @@ fresh.i.expandResults:{[results;column]
 // @kind function
 // @category freshUtility
 // @fileoverview Apply python function for Kendall’s tau
-// @param target {(int;long;float)[]} Target vector
-// @param feature {(int;long;float)[]} Feature table column
+// @param target {num[]} Target vector
+// @param feature {num[]} Feature table column
 // @return {float} Kendall’s tau - Close to 1 shows strong agreement, close to
 //   -1 shows strong disagreement
-fresh.i.ktau:{[target;feature]
-  fresh.i.kendalltau[<;target;feature]1
+fresh.i.kTau:{[target;feature]
+  fresh.i.kendallTau[<;target;feature]1
   }
 
 // @private
 // @kind function
 // @category freshUtility
 // @fileoverview Perform a Fisher exact test
-// @param target {(int;long;float)[]} Target vector
-// @param feature {(int;long;float)[]} Feature table column
+// @param target {num[]} Target vector
+// @param feature {num[]} Feature table column
 // @return {float} Results of Fisher exact test
 fresh.i.fisher:{[target;feature]
   g:group@'target value group feature;
-  fresh.i.fisherexact[<;count@''@\:[g]distinct target]1
+  fresh.i.fisherExact[<;count@''@\:[g]distinct target]1
   }
 
 // @private
@@ -157,15 +172,15 @@ fresh.i.fisher:{[target;feature]
 // @category freshUtility
 // @fileoverview Calculate the Kolmogorov-Smirnov two-sided test statistic
 //   distribution
-// @param feature {(int;long;float)[]} Feature table column
-// @param target {(int;long;float)[]} Target vector
+// @param feature {num[]} Feature table column
+// @param target {num[]} Target vector
 // @return {float} Kolmogorov-Smirnov two-sided test statistic distribution
 fresh.i.ks:{[feature;target]
   d:asc each target group feature;
   n:count each d;
   k:max abs(-). value(1+d bin\:raze d)%n;
   en:prd[n]%sum n;
-  fresh.i.ksdistrib .$[sci_ver;(k;ceiling en);enlist k*sqrt en]
+  fresh.i.ksDistrib .$[sci_ver;(k;ceiling en);enlist k*sqrt en]
   }
 
 // @private
@@ -173,9 +188,9 @@ fresh.i.ks:{[feature;target]
 // @category freshUtility
 // @fileoverview Pass data correctly to .ml.fresh.i.ks allowing for projection
 //   in main function
-// @param target {(int;long;float)[]} Target vector
-// @param feature {(int;long;float)[]} Feature table column
+// @param target {num[]} Target vector
+// @param feature {num[]} Feature table column
 // @return {float} Kolmogorov-Smirnov two-sided test statistic distribution
-fresh.i.ksyx:{[target;feature]
+fresh.i.ksYX:{[target;feature]
   fresh.i.ks[feature;target]
   }

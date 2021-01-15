@@ -1,7 +1,9 @@
 \l p.q
 \l ml.q
-\l util/util.q
-\l optimize/optim.q
+\l util/utils.q
+\l util/utilities.q
+\l optimize/utils.q
+\l optimize/optimize.q
 
 // Function for the capturing of expected errors
 failingTest:{[function;data;applyType;expectedError]

@@ -40,7 +40,7 @@ script:
 - echo "Packaged as ml_$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip"
 -  if [[ "x$QLIC_KC" != "x" ]]; then
     curl -fsSL -o test.q https://github.com/KxSystems/embedpy/raw/master/test.q;
-    q test.q fresh/tests/ util/tests/ xval/tests clust/tests/ graph/tests/ timeseries/tests/ optimize/tests/ -q;
+    bash tests/testFiles.bat;
 
   else
     echo No kdb+, no tests;

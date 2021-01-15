@@ -6,27 +6,27 @@
 // @category fresh
 // @fileoverview Statistically significant features based on defined selection
 //   procedure
-// @param table {table} Value side of a table of created features
+// @param table {tab} Value side of a table of created features
 // @param target {(int;float)[]} Targets corresponding to the rows the table
 // @param func {func} Projection of significant feature function to apply e.g. 
 //   .ml.fresh.ksigfeat[10]
 // @returns {sym[]} Features deemed statistically significant according to 
 //   user-defined func
-fresh.significantfeatures:{[table;target;func]
-  func fresh.sigfeat[table;target]
+fresh.significantFeatures:{[tab;target;func]
+  func fresh.sigfeat[tab;target]
   }
 
   // @kind function
 // @category fresh
 // @fileoverview Return p-values for each feature
-// @param table {table} Value side of a table of created features
+// @param table {tab} Value side of a table of created features
 // @param target {(int;float)[]} Targets corresponding to the rows the table
 // @return {dict} P-value for each feature to be passed to user-defined 
 //   significance function
-fresh.sigfeat:{[table;target]
-  func:fresh.i$[2<count distinct target;`ktau`ksyx;`ks`fisher];
-  sigCols:where each(2<;2=)@\:(count distinct@)each flip table;
-  raze[sigCols]!(func[where count each sigCols]@\:target)@'table raze sigCols
+fresh.sigFeat:{[tab;target]
+  func:fresh.i$[2<count distinct target;`kTau`ksYX;`ks`fisher];
+  sigCols:where each(2<;2=)@\:(count distinct@)each flip tab;
+  raze[sigCols]!(func[where count each sigCols]@\:target)@'tab raze sigCols
   }
 
 // @kind function
@@ -50,7 +50,7 @@ fresh.benjhoch:{[rate;pValues]
 // @param k {long} Number of features to select
 // @param pValues {dict} Output of .ml.fresh.sigfeat
 // @return {sym[]} Significant features
-fresh.ksigfeat:{[k;pValues]
+fresh.kSigFeat:{[k;pValues]
   key k sublist asc pValues
   }
 

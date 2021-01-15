@@ -12,7 +12,8 @@ pickleLoad:.p.import[`pickle;`:loads]
 
 // @kind function
 // @cateogory pickle
-// @fileoverview A wrapper function to load and save python objects using pickle 
+// @fileoverview A wrapper function to load and save python
+//   objects using pickle 
 // @param module {bool} Whether the pickle load module (1b) or dump module (0b) 
 //   is to be invoked
 // @param obj {<} Python object to be saved/loaded

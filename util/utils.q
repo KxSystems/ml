@@ -504,15 +504,15 @@ i.versionMap:.j.k raze read0 hsym`$path,"/util/functionMapping.json"
 // @kind function
 // @category utility
 // @fileoverview Warning function
-i.noLongerSupported:"Deprecation warning: function no longer supported as of",
+i.deprecatedWarning:"Deprecation Warning: function no longer supported as of",
   " version "
 
 // @private
 // @kind function
 // @category utility
 // @fileoverview Warning function
-i.noLongerCallable:"Deprecation warning: function will no longer be callable",
-  " after "
+i.futureWarning:"Future Deprecation Warning: function will no longer be ",
+  "callable after "
 
 // @private
 // @kind function
@@ -526,7 +526,7 @@ i.noLongerCallable:"Deprecation warning: function will no longer be callable",
 // @returns {any} Results from the function
 i.depWarn :{[func;warn;ver;res]
   if[not i.ignoreWarning;
-    -1 get[".ml.i.",warn],ver,". Please use '",func,"'."
+    -1 get[".ml.i.",warn],ver,". Please use '",func,"' instead."
     ];
   res
   }
