@@ -88,8 +88,9 @@ clust.hc.cutDist:clust.cure.cutDist
 // @fileoverview Predict clusters using CURE config
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @param config {dict} Clustering information returned from `fit`
-// @param cutDist {dict} The key defines what cutting algo to use when 
-//   splitting the data into clusters (`k/`cut)
+// @param cutDict {dict} The key defines what cutting algo to use when 
+//   splitting the data into clusters (`k/`cut) and the value defines the
+//   cutting threshold
 // @return {long[]} Predicted clusters
 clust.cure.predict:{[data;config;cutDict]
   updConfig:clust.i.prepPred[config;cutDict];
@@ -101,8 +102,9 @@ clust.cure.predict:{[data;config;cutDict]
 // @fileoverview Predict clusters using hierarchical config
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @param config {dict} Clustering information returned from `fit`
-// @param cutDist {dict} The key defines what cutting algo to use when 
-//   splitting the data into clusters (`k/`cut)
+// @param cutDict {dict} The key defines what cutting algo to use when 
+//   splitting the data into clusters (`k/`cut) and the value defines the
+//   cutting threshold
 // @return {long[]} Predicted clusters
 clust.hc.predict:{[data;config;cutDict]
   updConfig:clust.i.prepPred[config;cutDict];
@@ -116,8 +118,9 @@ clust.hc.predict:{[data;config;cutDict]
 // @param df {sym} Distance function name within '.ml.clust.df' 
 // @param n {long} Number of representative points per cluster
 // @param c {float} Compression factor for representative points
-// @param cutDist {dict} The key defines what cutting algo to use to split the
-//   data into clusters (`k/`cut)
+// @param cutDict {dict} The key defines what cutting algo to use when 
+//   splitting the data into clusters (`k/`cut) and the value defines the
+//   cutting threshold
 // @return {dict} Updated config with clusters added
 clust.cure.fitPredict:{[data;df;n;c;cutDict]
   fitModel:clust.cure.fit[data;df;n;c]`modelInfo;
@@ -131,8 +134,9 @@ clust.cure.fitPredict:{[data;df;n;c;cutDict]
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @param df {sym} Distance function name within '.ml.clust.df' 
 // @param lf {sym} Linkage function name within '.ml.clust.lf' 
-// @param cutDist {dict} The key defines what cutting algo to use to split the
-//   data into clusters (`k/`cut)
+// @param cutDict {dict} The key defines what cutting algo to use when 
+//   splitting the data into clusters (`k/`cut) and the value defines the
+//   cutting threshold
 // @return {dict} Updated config with clusters added
 clust.hc.fitPredict:{[data;df;lf;cutDict]
   fitModel:clust.hc.fit[data;df;lf]`modelInfo;

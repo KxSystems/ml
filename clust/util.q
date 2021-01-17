@@ -133,7 +133,8 @@ clust.i.err.ap:{'`$"AP must be used with nege2dist"}
 // @fileoverview Prepare the config for prediction functionality
 // @param config {dict} Clustering information returned from `fit`
 // @param cutDist {dict} The key defines what cutting algo to use when
-//   splitting the data into clusters (`k/`cut)
+//   splitting the data into clusters (`k/`cut) and the value defines the
+//   cutting threshold
 // @return {dict} `data`df`n`c`clt returned from .ml.clust.(cutk/cutdist)
 clust.i.prepPred:{[config;cutDict]
   cutType:first key cutDict;
