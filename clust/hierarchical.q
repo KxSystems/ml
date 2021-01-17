@@ -50,7 +50,8 @@ clust.hc.fit:{[data;df;lf]
 // @param k {long} Number of clusters
 // @return {dict} Updated config with clusters labels added
 clust.cure.cutK:{[config;k]
-  config,enlist[`clust]!enlist clust.i.cutDgram[config`dgram;k-1]
+  clusts:enlist[`clust]!enlist clust.i.cutDgram[config`dgram;k-1];
+  config,clusts
   }
 
 // @kind function
