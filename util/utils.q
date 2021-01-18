@@ -490,12 +490,6 @@ i.inputError:{[input]
 
 // @private
 // @kind function
-// @category utility
-// @fileoverview If set to `1b` deprecation warnings are ignored
-i.ignoreWarning:0b
-
-// @private
-// @kind function
 // @category deprecation
 // @fileoverview Mapping between old names and new names - can read from file
 i.versionMap:.j.k raze read0 hsym`$path,"/util/functionMapping.json"
@@ -505,14 +499,14 @@ i.versionMap:.j.k raze read0 hsym`$path,"/util/functionMapping.json"
 // @category utility
 // @fileoverview Warning function
 i.deprecatedWarning:"Deprecation Warning: function no longer supported as of",
-  " version "
+  " version '"
 
 // @private
 // @kind function
 // @category utility
 // @fileoverview Warning function
 i.futureWarning:"Future Deprecation Warning: function will no longer be ",
-  "callable after "
+  "callable after version '"
 
 // @private
 // @kind function
@@ -526,7 +520,8 @@ i.futureWarning:"Future Deprecation Warning: function will no longer be ",
 // @returns {any} Results from the function
 i.depWarn :{[func;warn;ver;res]
   if[not i.ignoreWarning;
-    -1 get[".ml.i.",warn],ver,". Please use '",func,"' instead."
+    depFunction:$[warn~"deprecatedWarning";{'x};-1];
+    depFunction get[".ml.i.",warn],ver,"'. Please use '",func,"' instead."
     ];
   res
   }
