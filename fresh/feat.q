@@ -16,7 +16,7 @@ fresh.feat.absEnergy:{[data]
 // @fileoverview Calculate the absolute sum of the differences between 
 //   successive data points
 // @param data {num[]} Numerical data points
-// @return {num} Absolute sum of differences
+// @return {float} Absolute sum of differences
 fresh.feat.absSumChange:{[data]
   sum abs 1_deltas data
   }
@@ -332,7 +332,7 @@ fresh.feat.linTrend:{[data]
 //   series is greater than the series mean
 // @param data {num[]} Numerical data points
 // @return {bool} Is longest subsequence greater than the mean
-fresh.feat.longStrikeAbvMean:{[data]
+fresh.feat.longStrikeAboveMean:{[data]
   max 0,fresh.i.getLenSeqWhere data>avg data
   }
 
@@ -342,7 +342,7 @@ fresh.feat.longStrikeAbvMean:{[data]
 //   series is less than the series mean
 // @param data {num[]} Numerical data points
 // @return {bool} Is longest subsequence less than the mean
-fresh.feat.longStrikeBelMean:{[data]
+fresh.feat.longStrikeBelowMean:{[data]
   max 0,fresh.i.getLenSeqWhere data<avg data
   }
 
@@ -543,7 +543,7 @@ fresh.feat.skewness:{[data]
 // @category freshFeat
 // @fileoverview Calculate the cross power spectral density of a time series
 // @param data {num[]} Numerical data points
-// @param coeff {int} Frequency at which calculation is preformed
+// @param coeff {int} Frequency at which calculation is performed
 // @return {float} Cross power spectral density of data at given coeff
 fresh.feat.spktWelch:{[data;coeff]
   fresh.i.welch[data;`nperseg pykw 256&count data][@;1][`]coeff
@@ -635,6 +635,6 @@ fresh.feat.var:{[data]
 //   deviation
 // @param data {num[]} Numerical data points
 // @return {bool} Indicates if variance is larger than standard deviation
-fresh.feat.varAbvStdDev:{[data]
+fresh.feat.varAboveStdDev:{[data]
   1<var data
   }

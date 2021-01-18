@@ -4,6 +4,6 @@
 .ml.loadfile`:timeseries/fit.q
 .ml.loadfile`:timeseries/predict.q
 .ml.loadfile`:timeseries/misc.q
-.ml.loadfile`:util/utils.q
 
-.ml.i.deprecWarning[`timeSeries]
+.ml.loadfile`:util/utils.q
+.ml.i.deprecWarning`timeSeries

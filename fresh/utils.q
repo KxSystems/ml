@@ -88,18 +88,19 @@ fresh.i.pacf:stattools`:pacf
 fresh.i.adFuller:stattools`:adfuller
 
 // Python features
-fresh.i.pyFeat:`aggautocorr`augfuller`fftaggreg`fftcoeff`numcwtpeaks,
-  `partautocorrelation`spktwelch
+fresh.i.pyFeat:`aggAutoCorr`augFuller`fftAggReg`fftCoeff`numCwtPeaks,
+  `partAutoCorrelation`spktWelch
 
 // Extract utilities
 
 // @private
 // @kind function
 // @category freshUtility
-// @fileoverview Create a mapping between the functions and columns in which 
-//   they are to be applied to 
-// @param map {sym[]} Contains functions to be applied along with the column
-//   to apply it to 
+// @fileoverview Create a mapping between the functions and columns on which
+//   they are to be applied
+// @param map {(sym[];sym[])} Two element list where first element is the
+//   columns to which functions are to be applied and the second element is
+//   the name of the function in the .ml.fresh.feat namespace to be applied
 // @return {sym[]} A mapping of the functions to be applied to each column
 fresh.i.colMap:{[map]
   updFunc:flip (` sv'`.ml.fresh.feat,'map[;1];map[;0]);

@@ -157,7 +157,7 @@ fillTab:{[tab;groupCol;timeCol;dict]
 // @category preprocessing
 // @fileoverview Fit one-hot encoding model to categorical data
 // @param tab {tab} Numerical and non numerical data
-// @param symCols {sym[]} Columns to apply coding to
+// @param symCols {sym[]} Columns to apply encoding to
 // @return {dict} modelInfo containing mapping information and a projection of
 //   the prediction function to be applied to data
 oneHot.fit:{[tab;symCols]
@@ -291,7 +291,7 @@ labelEncode.predict:{[data;map]
 // @return {int[]} List is encoded to an integer representation 
 labelEncode.fitPredict:{[data]
   encoder:labelEncode.fit data;
-  encoder.predict data
+  encoder[`predict]data
   }
 
 // @kind function
