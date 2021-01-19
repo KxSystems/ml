@@ -11,3 +11,5 @@ loadfile`:clust/aprop.q
 loadfile`:clust/dbscan.q
 loadfile`:clust/hierarchical.q
 loadfile`:clust/score.q
+
+.ml.i.deprecWarning`clust
