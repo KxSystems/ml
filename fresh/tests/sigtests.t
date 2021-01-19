@@ -12,7 +12,7 @@ equivalent significance tests implemented previously in python.
 \
 
 \l p.q
-\l ml/ml.q
+\l ml.q
 \l fresh/init.q
 \l fresh/tests/significancetests.p
 
