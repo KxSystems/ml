@@ -3,3 +3,7 @@
 .ml.loadfile`:fresh/feat.q
 .ml.loadfile`:fresh/extract.q
 .ml.loadfile`:fresh/select.q
+.ml.loadfile`:util/utils.q
+.ml.loadfile`:util/utilities.q
+
+.ml.i.deprecWarning[`fresh]

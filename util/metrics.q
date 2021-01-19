@@ -285,6 +285,8 @@ corrMatrix:{[matrix]
   covMatrix[matrix]%devMatrix*/:devMatrix
   }
 
+// not documented
+
 // @kind function
 // @category metric
 // @fileoverview Table-like correlation matrix for a simple table

@@ -487,3 +487,66 @@ i.constructPath:{[modelName;path]
 i.inputError:{[input]
   '`$input," must be a string or a symbol"
   }
+
+// @private
+// @kind function
+// @category deprecation
+// @fileoverview Mapping between old names and new names - can read from file
+i.versionMap:.j.k raze read0 hsym`$path,"/util/functionMapping.json"
+
+// @private
+// @kind function
+// @category utility
+// @fileoverview Warning function
+i.deprecatedWarning:"Deprecation Warning: function no longer supported as of",
+  " version '"
+
+// @private
+// @kind function
+// @category utility
+// @fileoverview Warning function
+i.futureWarning:"Future Deprecation Warning: function will no longer be ",
+  "callable after version '"
+
+// @private
+// @kind function
+// @category utility
+// @fileoverview Give deprecation warning along with returning the result
+//   of the function
+// @param func {str} Name of updated function
+// @pararm warn {str} Warning message to use
+// @param ver {str} Version of the update
+// @param res {any} Result from the updated function
+// @returns {any} Results from the function
+i.depWarn :{[func;warn;ver;res]
+  if[not i.ignoreWarning;
+    depFunction:$[warn~"deprecatedWarning";{'x};-1];
+    depFunction get[".ml.i.",warn],ver,"'. Please use '",func,"' instead."
+    ];
+  res
+  }
+
+// @private
+// @kind function
+// @category utility
+// @fileoverview Run new function and warn user of deprecation of old function
+// @param dict {dict} Contains information pertaining to what the new function
+//   name is along with warning error information needed
+// @returns {any} Results from the updated function 
+i.depApply:{[dict]
+  (i.depWarn . dict`function`warning`version)get[dict`function]::
+  }
+
+// @private
+// @kind function
+// @category utility
+// @fileoverview Run new function and warn user of deprecation of old function
+// @param dict {dict} Contains information pertaining to what the new function
+//   name is along with warning error information needed
+// @returns {any} Results from the updated function 
+i.deprecWarning:{[nameKey;versionMap]
+  mapping:versionMap nameKey;
+  newNames:key mapping;
+  newFunctions:i.depApply each value mapping;
+  {@[x set y]}'[newNames;newFunctions];
+  }[;i.versionMap]

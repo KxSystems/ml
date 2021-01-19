@@ -6,7 +6,7 @@
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Shuffle data point indices
 // @param data {#any} Table, matrix or list
 // @return {long[]} Indices of data shuffled
@@ -16,37 +16,37 @@ xv.i.shuffle:{[data]
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Find indices required to split data into k-folds
 // @param k {int} Number of folds
 // @param data {#any} Table, matrix or list
 // @return {long[][]} Indices required to split data into k sub-sets
-xv.i.splitidx:{[k;data]
+xv.i.splitIdx:{[k;data]
   (k;0N)#til count data
   }
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Find shuffled indices required to split data into k-folds
 // @param k {int} Number of folds
 // @param data {#any} Table, matrix or list
 // @return {long[][]} Shuffled indices required to split data into k 
 //   sub-sets
-xv.i.shuffidx:{[k;data]
+xv.i.shuffIdx:{[k;data]
   (k;0N)#xv.i.shuffle data
   }
 
 // @private
 // @kind function 
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Split target data ensuring that each distinct value appears in
 //   each fold
 // @param k {int} Number of folds
 // @param data {#any} Table, matrix or list
 // @return {long[][]} Data split into k-folds with distinct values 
 //   appearing in each
-xv.i.stratidx:{[k;data]
+xv.i.stratIdx:{[k;data]
   // Find indices for each distinct group
   idx:group data;
   // Shuffle/split groups into folds with distinct groups present in each fold
@@ -57,40 +57,40 @@ xv.i.stratidx:{[k;data]
 
 // @private
 // @kind function 
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Get training and testing indices for each fold
 // @param k {int} Number of folds
 // @return {long[][]} Training and testing indices for each fold
-xv.i.groupidx:{[k]
+xv.i.groupIdx:{[k]
   (0;k-1)_/:rotate[-1]\[til k]
   }
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Get training/testing indices for equi-distanced bins of data 
 //   across k-folds
 // @param k {int} Number of folds
 // @return {long[][]} Indices for equi-distanced bins of data based on k
-xv.i.tsrollsidx:{[k]
+xv.i.tsRollsIdx:{[k]
   enlist@''0 1+/:til k-1
   }
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Get training/testing indices for equi-distanced bins of data 
 //   across k-folds with increasing amounts of data added to the training set 
 //   at each stage
 // @param k {int} Number of folds
 // @return {long[][]} Indices for equi-distanced bins of data based on k
-xv.i.tschainidx:{[k]
+xv.i.tsChainIdx:{[k]
   flip(til each j;enlist@'j:1+til k-1)
   }
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Creates projection contining data split according to k
 //   in ((xtrain;ytrain);(xtest;ytest)) format for each fold
 // @param func1 {func} Function to be applied to x data
@@ -106,7 +106,7 @@ xv.i.idx1:{[func1;func2;k;features;target]
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Creates projection contining data split according to k
 //   in ((xtrain;ytrain);(xtest;ytest)) format for each fold
 // @param func1 {func} Function to be applied to x data
@@ -122,7 +122,7 @@ xv.i.idxR:{[func1;func2;k;n;features;target]
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Creates projection contining data split according to k
 //   in ((xtrain;ytrain);(xtest;ytest)) format for each fold
 // @param func1 {func} Function to be applied to x data
@@ -138,7 +138,7 @@ xv.i.idxN:{[func1;func2;k;n;features;target]
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Apply funct to data split using specified indexing functions
 // @param idx {long[][]} Indicies to apply to data
 // @param k {int} Number of folds
@@ -147,7 +147,7 @@ xv.i.idxN:{[func1;func2;k;n;features;target]
 // @param target {#any[]} Vector of targets
 // @param function {fn} Function which takes data as input
 // @return {#any} Output of func with idx applied to data
-xv.i.applyidx:{[idx;k;n;features;target;function]
+xv.i.applyIdx:{[idx;k;n;features;target;function]
   splitData:raze idx[k;n;features;target];
   {[function;data]function data[]}[function]peach splitData
   }
@@ -156,7 +156,7 @@ xv.i.applyidx:{[idx;k;n;features;target;function]
 
 // @private
 // @kind function
-// @category crossValidationUtility
+// @category xvUtility
 // @fileoverview Convert q list to numpy array
 // @param x {#any[]} q list to be converted
 // @return {<} embedPy object following numpy array conversion
@@ -177,7 +177,7 @@ numpyArray:.p.import[`numpy]`:array
 // @param dataFunc {func} Function which takes data as input
 // @param hyperparams {dict} Hyperparameters
 // @return {table} Cross validation scores for each hyperparameter set
-hp.i.xvpf:{[paramFunc;xvalFunc;k;n;features;target;dataFunc;hyperparams]
+hp.i.xvScore:{[paramFunc;xvalFunc;k;n;features;target;dataFunc;hyperparams]
   // Generate hyperparameter sets
   hyperparams:paramFunc hyperparams;
   // Perform cross validation for each set
@@ -218,7 +218,7 @@ hp.i.search:{[scoreFunc;k;n;features;target;dataFunc;hyperparams;testType]
 //   given parameter specified by the user, e.g.
 //   pdict = `random_state`max_depth!(42 72 84;1 3 4 7)
 // @return {table} All possible hyperparameter sets
-hp.i.gsgen:{[hyperparams]
+hp.i.gsGen:{[hyperparams]
   key[hyperparams]!/:1_'(::)cross/value hyperparams
   }
 
@@ -231,7 +231,7 @@ hp.i.gsgen:{[hyperparams]
 //   (must equal 2^n for sobol), typ is the type of search (random/sobol) and p
 //   is a dictionary of hyperparameter spaces - see documentation for more info
 // @return {tab} Hyperparameters
-hp.i.rsgen:{[params]
+hp.i.rsGen:{[params]
   // Set default number of trials
   if[(::)~n:params`n;n:16];
   // Check sobol trials = 2^n
@@ -243,15 +243,15 @@ hp.i.rsgen:{[params]
   // Set random seed
   system"S ",string$[(::)~params`random_state;42;params`random_state];
   // Import sobol sequence generator and check requirements
-  pysobol:.p.import[`sobol_seq;`:i4_sobol_generate;<];
-  genpts:$[`sobol~typ:params`typ;
-      enlist each flip pysobol[count num;n];
+  pySobol:.p.import[`sobol_seq;`:i4_sobol_generate;<];
+  genPts:$[`sobol~typ:params`typ;
+      enlist each flip pySobol[count num;n];
     `random~typ;
       n;
     '"hyperparam type not supported"
     ];
   // Generate hyperparameters
-  hyperparams:distinct flip hp.i.hpgen[typ;n]each p,:num!p[num],'genpts;
+  hyperparams:distinct flip hp.i.hpGen[typ;n]each p,:num!p[num],'genPts;
   // Take distinct sets
   if[n>dst:count hyperparams;
     -1"Distinct hp sets less than n - returning ",string[dst]," sets."
@@ -267,7 +267,7 @@ hp.i.rsgen:{[params]
 // @param n {long} Number of hyperparameter sets
 // @param params {dict} Parameters
 // @return {#any} Hyperparameters
-hp.i.hpgen:{[randomType;n;params]
+hp.i.hpGen:{[randomType;n;params]
   // Split parameters
   params:@[;0;first](0;1)_params,();
   // Respective parameter generation
@@ -277,7 +277,7 @@ hp.i.hpgen:{[randomType;n;params]
     typ~`uniform;
       hp.i.uniform[randomType]. params 1;
     typ~`loguniform;
-      hp.i.loguniform[randomType]. params 1;
+      hp.i.logUniform[randomType]. params 1;
     '"please enter a valid type"
     ]
   }
@@ -307,7 +307,7 @@ hp.i.uniform:{[randomType;low;high;paramType;params]
 // @param paramType {char} Type of parameter, e.g. "i", "f", etc
 // @param params {num[]} Parameters
 // @return {num[]} Log uniform numbers
-hp.i.loguniform:xexp[10]hp.i.uniform::
+hp.i.logUniform:xexp[10]hp.i.uniform::
 
 // @private
 // @kind function

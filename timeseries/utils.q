@@ -605,7 +605,7 @@ ts.i.tabToMatrix:{[data]
 // @return {num[]} All relevant scores from an augmented dickey fuller test
 ts.i.stationaryScores:{[data;dtype]
   // Calculate the augmented dickey-fuller scores for a dict/tab/vector input
-  scores:{.ml.fresh.i.adfuller[x]`}@'
+  scores:{.ml.fresh.i.adFuller[x]`}@'
     $[98h=dtype;
         flip data;
       99h=dtype;

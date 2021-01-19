@@ -14,7 +14,7 @@
 // @param target {#any[]} Vector of targets
 // @param function {func} Function which takes data as input
 // @return {#any} Output of function applied to each of the k-folds
-xv.kfsplit:xv.i.applyidx xv.i.idxR . xv.i`splitidx`groupidx
+xv.kfSplit:xv.i.applyIdx xv.i.idxR . xv.i`splitIdx`groupIdx
 
 // @kind function
 // @category xv
@@ -26,7 +26,7 @@ xv.kfsplit:xv.i.applyidx xv.i.idxR . xv.i`splitidx`groupidx
 // @param target {#any[]} Vector of targets
 // @param function {func} Function which takes data as input
 // @return {#any} Output of function applied to each of the k-folds
-xv.kfshuff:xv.i.applyidx xv.i.idxN . xv.i`shuffidx`groupidx
+xv.kfShuff:xv.i.applyIdx xv.i.idxN . xv.i`shuffIdx`groupIdx
 
 // @kind function
 // @category xv
@@ -38,7 +38,7 @@ xv.kfshuff:xv.i.applyidx xv.i.idxN . xv.i`shuffidx`groupidx
 // @param target {#any[]} Vector of targets
 // @param function {func} Function which takes data as input
 // @return {#any} Output of function applied to each of the k-folds
-xv.kfstrat:xv.i.applyidx xv.i.idxN . xv.i`stratidx`groupidx
+xv.kfStrat:xv.i.applyIdx xv.i.idxN . xv.i`stratIdx`groupIdx
 
 // @kind function
 // @category xv
@@ -50,7 +50,7 @@ xv.kfstrat:xv.i.applyidx xv.i.idxN . xv.i`stratidx`groupidx
 // @param function {func} Function which takes data as input
 // @return {#any} Output of function applied to each of the chained 
 //   iterations
-xv.tsrolls:xv.i.applyidx xv.i.idxR . xv.i`splitidx`tsrollsidx
+xv.tsRolls:xv.i.applyIdx xv.i.idxR . xv.i`splitIdx`tsRollsIdx
 
 // @kind function
 // @category xv
@@ -62,7 +62,7 @@ xv.tsrolls:xv.i.applyidx xv.i.idxR . xv.i`splitidx`tsrollsidx
 // @param function {func} Function which takes data as input
 // @return {#any} Output of function applied to each of the chained 
 //   iterations
-xv.tschain:xv.i.applyidx xv.i.idxR . xv.i`splitidx`tschainidx
+xv.tsChain:xv.i.applyIdx xv.i.idxR . xv.i`splitIdx`tsChainIdx
 
 // @kind function
 // @category xv
@@ -73,7 +73,7 @@ xv.tschain:xv.i.applyidx xv.i.idxR . xv.i`splitidx`tschainidx
 // @param target {#any[]} Vector of targets
 // @param function {func} Function which takes data as input
 // @return {#any} Output of function applied to each of the k-folds
-xv.pcsplit:xv.i.applyidx{[pc;n;features;target]
+xv.pcSplit:xv.i.applyIdx{[pc;n;features;target]
   split:{[pc;x;y;z](x;y)@\:/:(0,floor n*1-pc)_til n:count y};
   n#split[pc;features;target]
   }
@@ -88,7 +88,7 @@ xv.pcsplit:xv.i.applyidx{[pc;n;features;target]
 // @param target {#any[]} Vector of targets
 // @param function {func} Function which takes data as input
 // @return {#any} Output of function applied to each of the k-folds
-xv.mcsplit:xv.i.applyidx{[pc;n;features;target]
+xv.mcSplit:xv.i.applyIdx{[pc;n;features;target]
   split:{[pc;x;y;z](x;y)@\:/:(0,floor count[y]*1-pc)_{neg[n]?n:count x}y};
   n#split[pc;features;target]
   }
@@ -101,7 +101,7 @@ xv.mcsplit:xv.i.applyidx{[pc;n;features;target]
 // @param p {dict} Hyperparameters
 // @param data {#any[][]} ((xtrain;xtest);(ytrain;ytest)) format
 // @return {float[]} Scores outputted by function applied to p and data
-xv.fitscore:{[function;p;data]
+xv.fitScore:{[function;p;data]
   fitFunc:function[][p]`:fit;
   scoreFunc:.[fitFunc;numpyArray each data 0]`:score;
   .[scoreFunc;numpyArray each data 1]`
@@ -127,7 +127,7 @@ xv.fitscore:{[function;p;data]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-gs.kfsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfsplit]
+gs.kfSplit:hp.i.search hp.i.xvScore[hp.i.gsGen;xv.kfSplit]
 
 // @kind function
 // @category gs
@@ -147,7 +147,7 @@ gs.kfsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfsplit]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-gs.kfshuff:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfshuff]
+gs.kfShuff:hp.i.search hp.i.xvScore[hp.i.gsGen;xv.kfShuff]
 
 // @kind function
 // @category gs
@@ -167,7 +167,7 @@ gs.kfshuff:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfshuff]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-gs.kfstrat:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfstrat]
+gs.kfStrat:hp.i.search hp.i.xvScore[hp.i.gsGen;xv.kfStrat]
 
 // @kind function
 // @category gs
@@ -187,7 +187,7 @@ gs.kfstrat:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.kfstrat]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-gs.tsrolls:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.tsrolls]
+gs.tsRolls:hp.i.search hp.i.xvScore[hp.i.gsGen;xv.tsRolls]
 
 // @kind function
 // @category gs
@@ -207,7 +207,7 @@ gs.tsrolls:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.tsrolls]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-gs.tschain:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.tschain]
+gs.tsChain:hp.i.search hp.i.xvScore[hp.i.gsGen;xv.tsChain]
 
 // @kind function
 // @category gs
@@ -227,7 +227,7 @@ gs.tschain:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.tschain]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-gs.pcsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.pcsplit]
+gs.pcSplit:hp.i.search hp.i.xvScore[hp.i.gsGen;xv.pcSplit]
 
 // @kind function
 // @category gs
@@ -247,7 +247,7 @@ gs.pcsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.pcsplit]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-gs.mcsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.mcsplit]
+gs.mcSplit:hp.i.search hp.i.xvScore[hp.i.gsGen;xv.mcSplit]
 
 // @kind function
 // @category rs
@@ -271,7 +271,7 @@ gs.mcsplit:hp.i.search hp.i.xvpf[hp.i.gsgen;xv.mcsplit]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-rs.kfsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfsplit]
+rs.kfSplit:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.kfSplit]
 
 // @kind function
 // @category rs
@@ -295,7 +295,7 @@ rs.kfsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfsplit]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-rs.kfshuff:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfshuff]
+rs.kfShuff:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.kfShuff]
 
 // @kind function
 // @category rs
@@ -319,7 +319,7 @@ rs.kfshuff:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfshuff]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-rs.kfstrat:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfstrat]
+rs.kfStrat:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.kfStrat]
 
 // @kind function
 // @category rs
@@ -343,7 +343,7 @@ rs.kfstrat:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.kfstrat]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-rs.tsrolls:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.tsrolls]
+rs.tsRolls:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.tsRolls]
 
 // @kind function
 // @category rs
@@ -367,7 +367,7 @@ rs.tsrolls:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.tsrolls]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-rs.tschain:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.tschain]
+rs.tsChain:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.tsChain]
 
 // @kind function
 // @category rs
@@ -391,7 +391,7 @@ rs.tschain:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.tschain]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-rs.pcsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.pcsplit]
+rs.pcSplit:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.pcSplit]
 
 // @kind function
 // @category rs
@@ -416,7 +416,7 @@ rs.pcsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.pcsplit]
 // @return {table/(table;dict;float)} Scores for hyperparameter sets on each of
 //   the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
-rs.mcsplit:hp.i.search hp.i.xvpf[hp.i.rsgen;xv.mcsplit]
+rs.mcSplit:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.mcSplit]
 
 // Multi-processing functionality
 
