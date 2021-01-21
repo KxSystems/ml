@@ -15,13 +15,14 @@ fclust:.p.import[`scipy.cluster.hierarchy]`:fcluster
 mat        :{"f"$flip value flip x}
 clusterIdxs:{value group(x . y)[`modelInfo;`clust]}
 clusterKeys:{key   group(x . y)[`modelInfo;`clust]}
-clusterIdxsUpd:{value group(x . y)`clust}
+clusterIdxsDendro:{value group(x . y)`clust}
+clusterIdxsUpd:{value group(x . y)[`modelInfo;`clust]}
 clusterAdd1:{1+(x . y)`clust}
 qDendrogram:{asc each x(y . z)[`modelInfo;`dgram]}
 algoOutputs:{asc key x . y}
 algoOutputsFit:{asc key first x . y}
 countOutput:{count x y}
-pythonRes  :{[fclust;mat;t;clust;param]value group fclust[mat t`dgram;clust;param]`}[fclust;mat]
+pythonRes  :{[fclust;mat;t;clust;param]value group fclust[mat t[`modelInfo;`dgram];clust;param]`}[fclust;mat]
 pythonDgram:{[lnk;d;lf;df]asc each lnk[flip d;lf;df]`}[lnk]
 qDgramDists:{(x . y)[`modelInfo;`dgram]`dist}
 
@@ -57,7 +58,8 @@ failingTest[.ml.clust.ap.fit;(100?`8;`nege2dist;0.7;min;(::));0b;"Dataset not su
 passingTest[.ml.clust.ap.fit[d1tts 0;`nege2dist;0.7;min;(::)]`predict;d1tts 1;1b;APclt]
 passingTest[.ml.clust.ap.fit[d1tts 0;`nege2dist;0.7;med;`maxrun`maxmatch!100 10]`predict;d1tts 1;1b;APclt]
 failingTest[.ml.clust.ap.fit[d1tts 0;`nege2dist;0.7;min;(::)]`predict;100?`7;1b;"Dataset not suitable for clustering. Must be convertible to floats."]
-failingTest[.ml.clust.ap.predict;(d1tts 1;enlist[`clust]!enlist -1);0b;"'.ml.clust.ap.fit' did not converge, all clusters returned -1. Cannot predict new data."]
+failingTest[.ml.clust.ap.predict;(d1tts 1;enlist[`modelInfo]!enlist enlist[`clust]!enlist -1);
+            0b;"'.ml.clust.ap.fit' did not converge, all clusters returned -1. Cannot predict new data."]
 
 // K-Means
 
@@ -81,7 +83,7 @@ passingTest[countOutput[.ml.clust.kmeans.fit[d1tts 0;`edist;4;kMeansCfg]`predict
 failingTest[.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;kMeansCfg]`predict;100?`4;1b;"Dataset not suitable for clustering. Must be convertible to floats."]
 
 // Update
-passingTest[algoOutputs[.ml.clust.kmeans.fit[d1tts 0;`edist;4;kMeansCfg]`update];enlist d1tts 1;1b;`clust`data`inputs`repPts]
+passingTest[algoOutputs[.ml.clust.kmeans.fit[d1tts 0;`edist;4;kMeansCfg]`update];enlist d1tts 1;1b;`modelInfo`predict`update]
 passingTest[clusterIdxsUpd[.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;kMeansCfg]`update];enlist d1tts 1;1b;d1clt]
 failingTest[.ml.clust.kmeans.update;(1000?`2;()!());0b;"Dataset not suitable for clustering. Must be convertible to floats."]
 
@@ -108,8 +110,8 @@ failingTest[.ml.clust.dbscan.fit[d1tts 0;`e2dist;5;5]`predict;(50?`x`y);1b;"Data
 passingTest[clusterIdxsUpd[.ml.clust.dbscan.fit[d1tts 0;`e2dist;5;5]`update];enlist d1tts 1;1b;d1clt]
 passingTest[clusterIdxsUpd[.ml.clust.dbscan.fit[d1tts 0;`edist;5;5]`update];enlist d1tts 1;1b;d1clt]
 passingTest[clusterIdxsUpd[.ml.clust.dbscan.fit[d1tts 0;`mdist;5;5]`update];enlist d1tts 1;1b;d1clt]
-passingTest[algoOutputs[.ml.clust.dbscan.fit[d1tts 0;`mdist;5;5]`update];enlist d1tts 1;1b;`clust`data`inputs`tab]
-failingTest[.ml.clust.dbscan.update;(50?`x`y;());0b;"Dataset not suitable for clustering. Must be convertible to floats."]
+passingTest[algoOutputs[.ml.clust.dbscan.fit[d1tts 0;`mdist;5;5]`update];enlist d1tts 1;1b;`modelInfo`predict`update]
+failingTest[.ml.clust.dbscan.update;(50?`x`y;()!());0b;"Dataset not suitable for clustering. Must be convertible to floats."]
 
 // CURE
 
@@ -122,23 +124,23 @@ cured1pred2:0 3 0 0 3 3 0 0 0 0 0 3 0 3 3
 cured1pred3:1 3 1 3 3 3 1 1 1 1 1 3 1 3 3
 
 // Fit
-passingTest[clusterIdxsUpd[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d1;`e2dist;5;0]`modelInfo;4);1b;d1clt]
-passingTest[clusterIdxsUpd[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d1;`edist;10;0.2]`modelInfo;4);1b;d1clt]
-passingTest[clusterIdxsUpd[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d1;`mdist;3;0.15]`modelInfo;4);1b;d1clt]
-passingTest[clusterIdxsUpd[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d2;`e2dist;20;0]`modelInfo;4);1b;cured2clt1]
-passingTest[clusterIdxsUpd[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d2;`edist;20;0.2]`modelInfo;4);1b;cured2clt2]
-passingTest[clusterIdxsUpd[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d2;`mdist;10;0.1]`modelInfo;4);1b;cured2clt3]
-passingTest[clusterIdxsUpd[.ml.clust.cure.cutDist];(.ml.clust.cure.fit[d1;`e2dist;5;0]`modelInfo;2.);1b;d1clt]
-passingTest[clusterIdxsUpd[.ml.clust.cure.cutDist];(.ml.clust.cure.fit[d1;`edist;10;0.2]`modelInfo;2.);1b;d1clt]
-passingTest[clusterIdxsUpd[.ml.clust.cure.cutDist];(.ml.clust.cure.fit[d1;`mdist;3;0.15]`modelInfo;2.);1b;d1clt]
+passingTest[clusterIdxsDendro[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d1;`e2dist;5;0];4);1b;d1clt]
+passingTest[clusterIdxsDendro[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d1;`edist;10;0.2];4);1b;d1clt]
+passingTest[clusterIdxsDendro[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d1;`mdist;3;0.15];4);1b;d1clt]
+passingTest[clusterIdxsDendro[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d2;`e2dist;20;0];4);1b;cured2clt1]
+passingTest[clusterIdxsDendro[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d2;`edist;20;0.2];4);1b;cured2clt2]
+passingTest[clusterIdxsDendro[.ml.clust.cure.cutK];(.ml.clust.cure.fit[d2;`mdist;10;0.1];4);1b;cured2clt3]
+passingTest[clusterIdxsDendro[.ml.clust.cure.cutDist];(.ml.clust.cure.fit[d1;`e2dist;5;0];2.);1b;d1clt]
+passingTest[clusterIdxsDendro[.ml.clust.cure.cutDist];(.ml.clust.cure.fit[d1;`edist;10;0.2];2.);1b;d1clt]
+passingTest[clusterIdxsDendro[.ml.clust.cure.cutDist];(.ml.clust.cure.fit[d1;`mdist;3;0.15];2.);1b;d1clt]
 passingTest[algoOutputsFit[.ml.clust.cure.fit];(d1;`e2dist;5;0);1b;`data`dgram`inputs]
 failingTest[.ml.clust.cure.fit;(821?`2;`e2dist;5;0);0b;"Dataset not suitable for clustering. Must be convertible to floats."]
 failingTest[.ml.clust.cure.fit;(d1;`newmetric;5;0);0b;"invalid distance metric"]
 
 // FitPredict
-passingTest[clusterIdxsUpd[.ml.clust.cure.fitPredict];(d1;`e2dist;5;0;enlist[`k]!enlist 4);1b;d1clt]
-passingTest[clusterIdxsUpd[.ml.clust.cure.fitPredict];(d1;`edist;10;0.2;enlist[`k]!enlist 4);1b;d1clt]
-passingTest[clusterIdxsUpd[.ml.clust.cure.fitPredict];(d1;`mdist;3;0.15;enlist[`k]!enlist 4);1b;d1clt]
+passingTest[clusterIdxsDendro[.ml.clust.cure.fitPredict];(d1;`e2dist;5;0;enlist[`k]!enlist 4);1b;d1clt]
+passingTest[clusterIdxsDendro[.ml.clust.cure.fitPredict];(d1;`edist;10;0.2;enlist[`k]!enlist 4);1b;d1clt]
+passingTest[clusterIdxsDendro[.ml.clust.cure.fitPredict];(d1;`mdist;3;0.15;enlist[`k]!enlist 4);1b;d1clt]
 
 // Predict
 passingTest[.ml.clust.cure.fit[d1tts 0;`e2dist;5;0]`predict;(d1tts 1;enlist[`k]!enlist 4);0b;cured1pred1]
@@ -154,11 +156,11 @@ hcResWard:(.ml.arange[0;43;2],(43+(til 80)),124 126 132 142 146 160;(.ml.arange[
 hcResCentroid:((til 123);.ml.arange[123;194;2];.ml.arange[124;199;2];195 197 199)
 hcResComplete:(.ml.arange[0;43;2],(43+(til 80));(.ml.arange[1;43;2]);.ml.arange[123;200;2];.ml.arange[124;200;2])
 hcResAverage:(.ml.arange[0;27;2],27,.ml.arange[28;43;2],43+(til 80);(.ml.arange[1;27;2],.ml.arange[29;42;2]);.ml.arange[123;200;2];.ml.arange[124;200;2])
-tab1:.ml.clust.hc.fit[d1;`mdist ;`single]`modelInfo
-tab2:.ml.clust.hc.fit[d1;`e2dist;`average]`modelInfo
-tab3:.ml.clust.hc.fit[d2;`e2dist;`centroid]`modelInfo
-tab4:.ml.clust.hc.fit[d2;`edist ;`complete]`modelInfo
-hct1fit:"j"$fclust[mat tab1`dgram;4;`maxclust]`
+tab1:.ml.clust.hc.fit[d1;`mdist ;`single]
+tab2:.ml.clust.hc.fit[d1;`e2dist;`average]
+tab3:.ml.clust.hc.fit[d2;`e2dist;`centroid]
+tab4:.ml.clust.hc.fit[d2;`edist ;`complete]
+hct1fit:"j"$fclust[mat tab1[`modelInfo;`dgram];4;`maxclust]`
 hcd1pred1:1 2 1 1 2 2 1 1 1 1 1 2 1 2 2
 hcd1pred2:1 3 1 1 3 3 1 1 1 1 1 3 1 3 3
 hcd1pred3:1 3 1 1 3 3 1 1 1 1 1 3 1 3 3
@@ -166,18 +168,18 @@ pyDgramDists:(lnk[flip d2;`single;`sqeuclidean]`)[;2]
 
 // Fit
 passingTest[clusterAdd1[.ml.clust.hc.cutK   ];(tab1;4);1b;hct1fit]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`e2dist;`single]`modelInfo;4);1b;hcResSingle]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`e2dist;`ward]`modelInfo;4);1b;hcResWard]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`edist;`centroid]`modelInfo;4);1b;hcResCentroid]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`edist;`complete]`modelInfo;4);1b;hcResComplete]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`mdist;`average]`modelInfo;4);1b;hcResAverage]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutK];(tab2;4);1b;pythonRes[tab2;4;`maxclust]]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutK];(tab3;4);1b;pythonRes[tab3;4;`maxclust]]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutK];(tab4;4);1b;pythonRes[tab4;4;`maxclust]]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutDist];(tab1;.45);1b;pythonRes[tab1;.45;`distance]]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutDist];(tab2;4);1b;pythonRes[tab2;34;`distance]]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutDist];(tab3;500);1b;pythonRes[tab3;500;`distance]]
-passingTest[clusterIdxsUpd[.ml.clust.hc.cutDist];(tab4;30);1b;pythonRes[tab4;30;`distance]]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`e2dist;`single];4);1b;hcResSingle]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`e2dist;`ward];4);1b;hcResWard]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`edist;`centroid];4);1b;hcResCentroid]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`edist;`complete];4);1b;hcResComplete]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutK];(.ml.clust.hc.fit[d2;`mdist;`average];4);1b;hcResAverage]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutK];(tab2;4);1b;pythonRes[tab2;4;`maxclust]]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutK];(tab3;4);1b;pythonRes[tab3;4;`maxclust]]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutK];(tab4;4);1b;pythonRes[tab4;4;`maxclust]]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutDist];(tab1;.45);1b;pythonRes[tab1;.45;`distance]]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutDist];(tab2;4);1b;pythonRes[tab2;34;`distance]]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutDist];(tab3;500);1b;pythonRes[tab3;500;`distance]]
+passingTest[clusterIdxsDendro[.ml.clust.hc.cutDist];(tab4;30);1b;pythonRes[tab4;30;`distance]]
 passingTest[qDendrogram[mat;.ml.clust.hc.fit];(d1;`e2dist;`single);1b;pythonDgram[d1;`single;`sqeuclidean]]
 passingTest[qDendrogram[mat;.ml.clust.hc.fit];(d1;`mdist;`complete);1b;pythonDgram[d1;`complete;`cityblock]]
 passingTest[qDendrogram[mat;.ml.clust.hc.fit];(d1;`edist;`centroid);1b;pythonDgram[d1;`centroid;`euclidean]]
@@ -188,9 +190,9 @@ failingTest[.ml.clust.hc.fit;(d1;`mdist;`ward);0b;"ward must be used with e2dist
 failingTest[.ml.clust.hc.fit;(d1;`mdist;`linkage);0b;"invalid linkage"]
 
 // FitPredict
-passingTest[clusterIdxsUpd[.ml.clust.hc.fitPredict];(d2;`e2dist;`single;enlist[`k]!enlist 4);1b;hcResSingle]
-passingTest[clusterIdxsUpd[.ml.clust.hc.fitPredict];(d2;`e2dist;`ward;enlist[`k]!enlist 4);1b;hcResWard]
-passingTest[clusterIdxsUpd[.ml.clust.hc.fitPredict];(d2;`edist;`centroid;enlist[`k]!enlist 4);1b;hcResCentroid]
+passingTest[clusterIdxsDendro[.ml.clust.hc.fitPredict];(d2;`e2dist;`single;enlist[`k]!enlist 4);1b;hcResSingle]
+passingTest[clusterIdxsDendro[.ml.clust.hc.fitPredict];(d2;`e2dist;`ward;enlist[`k]!enlist 4);1b;hcResWard]
+passingTest[clusterIdxsDendro[.ml.clust.hc.fitPredict];(d2;`edist;`centroid;enlist[`k]!enlist 4);1b;hcResCentroid]
 
 // Predict
 passingTest[.ml.clust.hc.fit[d1tts 0;`e2dist;`single]`predict;(d1tts 1;enlist[`k]!enlist 4);0b;hcd1pred1]

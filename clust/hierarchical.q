@@ -6,28 +6,41 @@
 // @category clust
 // @fileoverview Fit CURE algorithm to data
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df' 
+// @param df {sym} Distance function name within '.ml.clust.i.df' 
 // @param n {long} Number of representative points per cluster
 // @param c {float} Compression factor for representative points
-// @return {dict} Data, input variables and dendrogram (`data`inputs`dgram) 
-//   along with a projection of the predict function
+// @return {dict} A dictionary containing:
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`inputs`dgram, where data is the original data, inputs
+//     is are the user defined linkage and distance functions while dgram
+//     is the generated dendrogram
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
 clust.cure.fit:{[data;df;n;c]
   data:clust.i.floatConversion[data];
   if[not df in key clust.i.df;clust.i.err.df[]];
   dgram:clust.i.hcSCC[data;df;`cure;1;n;c;1b];
   modelInfo:`data`inputs`dgram!(data;`df`n`c!(df;n;c);dgram);
-  predictFunc:clust.cure.predict[;modelInfo;];
-  `modelInfo`predict!(modelInfo;predictFunc)
+  returnInfo:enlist[`modelInfo]!enlist modelInfo;
+  predictFunc:clust.cure.predict[;returnInfo;];
+  returnInfo,enlist[`predict]!enlist predictFunc
   }
 
 // @kind function
 // @category clust
 // @fileoverview Fit Hierarchical algorithm to data
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df' 
-// @param lf {sym} Linkage function name within '.ml.clust.lf' 
-// @return {dict} Data, input variables and dendrogram (`data`inputs`dgram) 
-//   along with a projection of the predict functin
+// @param df {sym} Distance function name within '.ml.clust.i.df' 
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf' 
+// @return {dict} A dictionary containing:
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`inputs`dgram, where data is the original data, inputs
+//     is are the user defined linkage and distance functions while dgram
+//     is the generated dendrogram
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
 clust.hc.fit:{[data;df;lf]
   // Check distance and linkage functions
   data:clust.i.floatConversion[data];
@@ -39,25 +52,44 @@ clust.hc.fit:{[data;df;lf]
     clust.i.err.lf[]
     ];
   modelInfo:`data`inputs`dgram!(data;`df`lf!(df;lf);dgram);
-  predictFunc:clust.hc.predict[;modelInfo;];
-  `modelInfo`predict!(modelInfo;predictFunc)
+  returnInfo:enlist[`modelInfo]!enlist modelInfo;
+  predictFunc:clust.hc.predict[;returnInfo;];
+  returnInfo,enlist[`predict]!enlist predictFunc
   }
 
 // @kind function
 // @category clust
 // @fileoverview Convert CURE config to k clusters
-// @param config {dict} Output of .ml.clust.cure.fit
+// @param config {dict} A dictionary returned from '.ml.clust.cure.fit'
+//   containing:
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`inputs`dgram, where data is the original data, inputs
+//     is are the user defined linkage and distance functions while dgram
+//     is the generated dendrogram
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
 // @param k {long} Number of clusters
 // @return {dict} Updated config with clusters labels added
 clust.cure.cutK:{[config;k]
-  clusts:enlist[`clust]!enlist clust.i.cutDgram[config`dgram;k-1];
+  clust.i.checkK[k];
+  clustVal:clust.i.cutDgram[config[`modelInfo;`dgram];k-1];
+  clusts:enlist[`clust]!enlist clustVal;
   config,clusts
   }
 
 // @kind function
 // @category clust
 // @fileoverview Convert hierarchical config to k clusters
-// @param config {dict} Output of .ml.clust.hc.fit
+// @param config {dict} A dictionary returned from '.ml.clust.hc.fit'
+//   containing:
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`inputs`dgram, where data is the original data, inputs
+//     is are the user defined linkage and distance functions while dgram
+//     is the generated dendrogram
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
 // @param k {long} Number of clusters
 // @return {dict} Updated config with clusters added
 clust.hc.cutK:clust.cure.cutK
@@ -66,11 +98,20 @@ clust.hc.cutK:clust.cure.cutK
 // @category clust
 // @fileoverview Convert CURE dendrogram to clusters based on distance 
 //   threshold
-// @param config {dict} Output of .ml.clust.cure.fit
+// @param config {dict} A dictionary returned from '.ml.clust.cure.fit'
+//   containing:
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`inputs`dgram, where data is the original data, inputs
+//     is are the user defined linkage and distance functions while dgram
+//     is the generated dendrogram
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
 // @param distThresh {float} Cutting distance threshold
 // @return {dict} Updated config with clusters added
 clust.cure.cutDist:{[config;distThresh]
-  dgram:config`dgram;
+  clust.i.checkDist[distThresh];
+  dgram:config[`modelInfo;`dgram];
   k:0|count[dgram]-exec first i from dgram where dist>distThresh;
   config,enlist[`clust]!enlist clust.i.cutDgram[dgram;k]
   }
@@ -79,7 +120,15 @@ clust.cure.cutDist:{[config;distThresh]
 // @category clust
 // @fileoverview Convert hierarchical dendrogram to clusters based on distance
 //   threshold
-// @param config {dict} Output of .ml.clust.hc.fit
+// @param config {dict} A dictionary returned from '.ml.clust.cure.fit'
+//   containing:
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`inputs`dgram, where data is the original data, inputs
+//     is are the user defined linkage and distance functions while dgram
+//     is the generated dendrogram
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
 // @param distThresh {float} Cutting distance threshold
 // @return {dict} Updated config with clusters added
 clust.hc.cutDist:clust.cure.cutDist
@@ -88,7 +137,15 @@ clust.hc.cutDist:clust.cure.cutDist
 // @category clust
 // @fileoverview Predict clusters using CURE config
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param config {dict} Clustering information returned from `fit`
+// @param config {dict} A dictionary returned from '.ml.clust.cure.fit'
+//   containing:
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`inputs`dgram, where data is the original data, inputs
+//     is are the user defined linkage and distance functions while dgram
+//     is the generated dendrogram
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
 // @param cutDict {dict} The key defines what cutting algo to use when 
 //   splitting the data into clusters (`k/`cut) and the value defines the
 //   cutting threshold
@@ -102,7 +159,7 @@ clust.cure.predict:{[data;config;cutDict]
 // @category clust
 // @fileoverview Predict clusters using hierarchical config
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param config {dict} Clustering information returned from `fit`
+// @param config
 // @param cutDict {dict} The key defines what cutting algo to use when 
 //   splitting the data into clusters (`k/`cut) and the value defines the
 //   cutting threshold
@@ -116,7 +173,7 @@ clust.hc.predict:{[data;config;cutDict]
 // @category clust
 // @fileoverview Fit CURE algorithm to data and convert dendrogram to clusters
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df' 
+// @param df {sym} Distance function name within '.ml.clust.i.df' 
 // @param n {long} Number of representative points per cluster
 // @param c {float} Compression factor for representative points
 // @param cutDict {dict} The key defines what cutting algo to use when 
@@ -124,7 +181,7 @@ clust.hc.predict:{[data;config;cutDict]
 //   cutting threshold
 // @return {dict} Updated config with clusters added
 clust.cure.fitPredict:{[data;df;n;c;cutDict]
-  fitModel:clust.cure.fit[data;df;n;c]`modelInfo;
+  fitModel:clust.cure.fit[data;df;n;c];
   clust.i.prepPred[fitModel;cutDict]
   }
 
@@ -133,13 +190,13 @@ clust.cure.fitPredict:{[data;df;n;c;cutDict]
 // @fileoverview Fit hierarchial algorithm to data and convert dendrogram 
 //   to clusters
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df' 
-// @param lf {sym} Linkage function name within '.ml.clust.lf' 
+// @param df {sym} Distance function name within '.ml.clust.i.df' 
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf' 
 // @param cutDict {dict} The key defines what cutting algo to use when 
 //   splitting the data into clusters (`k/`cut) and the value defines the
 //   cutting threshold
 // @return {dict} Updated config with clusters added
 clust.hc.fitPredict:{[data;df;lf;cutDict]
-  fitModel:clust.hc.fit[data;df;lf]`modelInfo;
+  fitModel:clust.hc.fit[data;df;lf];
   clust.i.prepPred[fitModel;cutDict]
   }

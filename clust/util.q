@@ -19,7 +19,7 @@ clust.i.df.edist:{[data]
 // @category clustUtility
 // @fileoverview distance calculation
 // @param data {float[][]} Points
-// @return     {float[]}   Euclidean squared distances for data 
+// @return {float[]} Euclidean squared distances for data 
 clust.i.df.e2dist:{[data]
   data wsum data
   }
@@ -96,7 +96,7 @@ clust.i.closest:{[data;df;pt;idxs]
 // @kind function
 // @category clustUtility
 // @fileoverview Reindex exemplars
-// @param  data {#any[]} Data points
+// @param data {#any[]} Data points
 // @return {long[]} List of indices
 clust.i.reIndex:{[data]
   distinct[data]?data
@@ -106,7 +106,7 @@ clust.i.reIndex:{[data]
 // @kind function
 // @category clustUtility
 // @fileoverview Convert data to floating value
-// @param  data {#any[]} Data points
+// @param data {#any[]} Data points
 // @return {err;float[]} Data converted to floating point values or
 //   error if not possible
 clust.i.floatConversion:{[data]
@@ -130,12 +130,38 @@ clust.i.err.ap:{'`$"AP must be used with nege2dist"}
 // @private
 // @kind function
 // @category clustUtility
+// @fileoverview Check validity of inputs for cutting dendrograms
+//   at position K when using .ml.clust.cutK >1
+// @param cutK {int} The user provided number of clusters to be
+//   retrieved when cutting the dendrogram
+// @return {err} Returns nothing on successful invocation, will error
+//   if a user provides an unsupported value
+clust.i.checkK:{[cutK]
+  if[cutK<=1;'"Number of requested clusters must be > 1."];
+  }
+
+// @private
+// @kind function
+// @category clustUtility
+// @fileoverview Check validity of inputs for cutting dendrograms
+//   at a distance. In order to be valid this must be > 0
+// @param cutDist {float} The user provided cutting distance for
+//   the dendrogram
+// @return {err} Returns nothing on successful invocation, will error
+//   if a user provides an unsupported value
+clust.i.checkDist:{[cutDist]
+  if[cutDist<=0;'"Cutting distance must be >= 0."];
+  }
+
+// @private
+// @kind function
+// @category clustUtility
 // @fileoverview Prepare the config for prediction functionality
 // @param config {dict} Clustering information returned from `fit`
 // @param cutDist {dict} The key defines what cutting algo to use when
 //   splitting the data into clusters (`k/`cut) and the value defines the
 //   cutting threshold
-// @return {dict} `data`df`n`c`clt returned from .ml.clust.(cutk/cutdist)
+// @return {dict} `data`df`n`c`clt returned from .ml.clust.(cutK/cutDist)
 clust.i.prepPred:{[config;cutDict]
   cutType:first key cutDict;
   if[not cutType in`k`cut;'"Cutting distance has to be 'k' or 'cut'"];
@@ -151,8 +177,8 @@ clust.i.prepPred:{[config;cutDict]
 // @category clustUtility
 // @fileoverview Complete, Average, Ward (CAW) Linkage
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param lf {sym} Linkage function name within '.ml.clust.lf'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf'
 // @param k {long} Number of clusters
 // @param dgram {bool} Generate dendrogram or not (1b/0b)
 // @return {tab;long[]} Dendrogram or list of clusters
@@ -174,7 +200,7 @@ clust.i.hcCAW:{[data;df;lf;k;dgram]
 // @category clustUtility
 // @fileoverview Single, Centroid, Cure (SCC) Linkage
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param lf {func} Linkage function
 // @param k {long} Number of clusters
 // @param n {long} Number of representative points per cluster
@@ -221,12 +247,13 @@ clust.i.hCCpred:{[name;data;config]
     '"Clusters must be contained within config - please run .ml.clust.",
     $[name~`hc;"hc";"cure"],".(cutK/cutDist)"];
   // Add namespace and linkage to config dictionary for cure
-  if[name~`cure;config[`inputs],:`name`lf!(name;`single)];
-  // Recalc repPts for training clusters in asc order to ensure correct labels
+  if[name~`cure;config[`modelInfo;`inputs],:`name`lf!(name;`single)];
+  // Recalculate representative point for training clusters in asc
+  // order to ensure correct labels
   clusts:group config`clust; 
   clustKey:asc key clusts;
   repPts:clust.i.getRep[config]each clusts clustKey;
-  // Training indicies
+  // Training indices
   idxs:til each numPt:count each repPts[;0];
   // Return closest clusters to testing points
   clust.i.predClosest[data;config;repPts;numPt;idxs]each til count data 0
@@ -240,6 +267,7 @@ clust.i.hCCpred:{[name;data;config]
 // @param idxs {long[][]} Training data indices
 // @return {float[][]} Training data points
 clust.i.getRep:{[config;idxs]
+  config:config[`modelInfo];
   $[config[`inputs;`name]~`cure;
       flip(clust.i.cureRep . config[`inputs;`df`n`c])::;
     config[`inputs;`lf]in`ward`centroid;
@@ -256,9 +284,10 @@ clust.i.getRep:{[config;idxs]
 // @param repPt {float[][]} Representative points in matrix format
 // @param numPts {long} Number of points in training clusters
 // @param clustIdx {long[][]} Training data indices
-// @param ptIdx  {long[][]} Index of current data point
+// @param ptIdx {long[][]} Index of current data point
 // @return {long[]} List of predicted clusters
 clust.i.predClosest:{[data;config;repPt;c;clustIdx;ptIdx]
+  config:config[`modelInfo];
   // Intra cluster distances
   dist:.ml.clust.i.dists[;config[`inputs]`df;data[;ptIdx];]'[repPt;clustIdx];
   // Apply linkage
@@ -275,7 +304,7 @@ clust.i.predClosest:{[data;config;repPt;c;clustIdx;ptIdx]
 // @category clustUtility
 // @fileoverview Initialize cluster table
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df' 
+// @param df {sym} Distance function name within '.ml.clust.i.df' 
 // @return {tab} Distances, neighbors, clusters and representatives
 clust.i.initCAW:{[data;df]
   // Create table with distances and nearest neighhbors noted
@@ -289,7 +318,7 @@ clust.i.initCAW:{[data;df]
 // @category clustUtility
 // @fileoverview Find nearest neighbour index and distance
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df' 
+// @param df {sym} Distance function name within '.ml.clust.i.df' 
 // @param pt {float[][]} Points in `value flip` format
 // @param idxs {long} Index of point in 'pt' to find nearest neighbour for
 // @return {dict} Index of and distance to nearest neighbour
@@ -304,8 +333,8 @@ clust.i.nnCAW:{[data;df;pt;idxs]
 // @category clustUtility
 // @fileoverview CAW algo
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param lf {sym} Linkage function name within '.ml.clust.lf' 
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf' 
 // @param clustInfo {(table;float[][])} List with cluster table and 
 //   linkage matrix
 // @return {(table;float[][])} Updated cluster table and linkage matrix
@@ -336,8 +365,8 @@ clust.i.algoCAW:{[data;df;lf;clustInfo]
 // @category clustUtility
 // @fileoverview Complete linkage
 // @param clustPts {float[][]} Points in each cluster
-// @param df {sym} Distance function name within '.ml.clust.df' 
-// @param lf {sym} Linkage function name within '.ml.clust.lf' 
+// @param df {sym} Distance function name within '.ml.clust.i.df' 
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf' 
 // @param tab {tab} Cluster table
 // @param chkPts {long[]} Points to check
 // @return {tab} Updated cluster table
@@ -355,8 +384,8 @@ clust.i.hcUpd.complete:{[clustPts;df;lf;tab;chkPts]
 // @category clustUtility
 // @fileoverview Average linkage
 // @param clustPts {float[][]} Points in each cluster
-// @param df {sym} Distance function name within '.ml.clust.df' 
-// @param lf {sym} Linkage function name within '.ml.clust.lf' 
+// @param df {sym} Distance function name within '.ml.clust.i.df' 
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf' 
 // @param tab {tab} Cluster table
 // @param chkPts {long[]} Points to check
 // @return {tab} Updated cluster table
@@ -367,8 +396,8 @@ clust.i.hcUpd.average:clust.i.hcUpd.complete
 // @category clustUtility
 // @fileoverview Ward linkage
 // @param clustPts {float[][]} Points in each cluster
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param lf {sym} Linkage function name within '.ml.clust.lf'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf'
 // @param tab {tab} Cluster table
 // @param chkPts {long[]} Points to check
 // @return {tab} Updated cluster table
@@ -386,8 +415,8 @@ clust.i.hcUpd.ward:{[clustPts;df;lf;t;chkPts]
 // @category clustUtility
 // @fileoverview Calculate distances between points based on specified
 //   linkage and distance functions
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param lf {sym} Linkage function name within '.ml.clust.lf'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf'
 // @param data {float[][]} Points in each cluster
 // @param idxs {long[]} Indices for which to produce distances
 // @return {float[]} Distances between all data points and those in idxs
@@ -400,8 +429,8 @@ clust.i.completeDist:{[df;lf;data;idxs]
 // @category clustUtility
 // @fileoverview Calculate distances between points based on specified
 //   linkage and distance functions
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param lf {sym} Linkage function name within '.ml.clust.lf'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf'
 // @param xdata {float[][]} X data points
 // @param ydata {float[][]} Y data points
 // @return {float[]} Distances between data points
@@ -415,8 +444,8 @@ clust.i.completeCalc:{[df;lf;xdata;ydata]
 // @category clustUtility
 // @fileoverview Calculate distances between points based on ward linkage and
 //   specified distance function
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param lf {sym} Linkage function name within '.ml.clust.lf'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf'
 // @param data {float[][]} Points in each cluster
 // @param idxs {long[]} Indices for which to produce distances
 // @return {float[]} Distances between all data points and those in idxs
@@ -429,8 +458,8 @@ clust.i.wardDist:{[df;lf;data;idxs]
 // @category clustUtility
 // @fileoverview Calculate distances between points based on ward linkage and
 //   specified distance function
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param lf {sym} Linkage function name within '.ml.clust.lf'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf'
 // @param xdata {float[][]} X data points
 // @param ydata {float[][]} Y data points
 // @return {float[]} Distances between data points
@@ -444,7 +473,7 @@ clust.i.wardCalc:{[df;lf;xdata;ydata]
 // @category clustUtility
 // @fileoverview Initialize SCC clusters
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df' 
+// @param df {sym} Distance function name within '.ml.clust.i.df' 
 // @param k {long} Number of clusters
 // @param n {long} Number of representative points per cluster
 // @param c {float} Compression factor for representative points
@@ -479,7 +508,7 @@ clust.i.initSCC:{[data;df;k;n;c;dgram]
 // @fileoverview Generate distance table indicating closest cluster
 // @param kdTree {tab} Initial representation of the k-d tree
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param numPts {long} Number of points in the dataset 
 // @return {tab} Distance table containing an indication of the closest cluster
 clust.i.genDistTab:{[kdTree;data;df;numPts]
@@ -505,7 +534,7 @@ clust.i.centRep:{[pts]
 // @kind function
 // @category clustUtility
 // @fileoverview Representative points for CURE
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param n {long} Number of representative points per cluster
 // @param c {float} Compression factor for representative points
 // @param pts {float[][]} Data points
@@ -520,7 +549,7 @@ clust.i.cureRep:{[df;n;c;pts]
 // @kind function
 // @category clustUtility
 // @fileoverview Calculate single representative point
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param repPts {float[]} Representative points of the cluster
 // @param pts {float[][]} Data points
 // @return {float} Representative point
@@ -558,6 +587,10 @@ clust.i.dgramIdx:{[dgram]
 // @param k {long} Define splitting value in dendrogram table
 // @return {long[]} List of clusters
 clust.i.cutDgram:{[tab;k]
+  if[k=0;
+    '"User provided input encapsultes all datapoints, please ",
+     "increase `k or reduce `cut to an appropriate value."
+    ];
   // Get index of cluster made at cutting point k
   idx:(2*cntTab:count tab)-k-1;
   // Exclude any clusters made after point k
@@ -577,7 +610,7 @@ clust.i.cutDgram:{[tab;k]
 // @category clustUtility
 // @fileoverview Extract points within merged cluster
 // @param clusts {long[]} Cluster indices
-// @param cntTab {long} Count of dend table 
+// @param cntTab {long} Count of dendrogram table 
 // @param idxs {long[]} Index in list to search and indices points found within
 //   that cluster
 // @return {long[]} Next index to search, and additional points found 
@@ -596,8 +629,8 @@ clust.i.extractClust:{[clusts;cntTab;idxs]
 // @category clustUtility
 // @fileoverview SCC algo
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param lf {sym} Linkage function name within '.ml.clust.lf'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param lf {sym} Linkage function name within '.ml.clust.i.lf'
 // @param params {dict} Parameters - k (no. clusts), n (no. repPts per clust),
 //   repPts, kdTree
 // @param clustTab {tab} Cluster table
@@ -692,7 +725,7 @@ clust.i.algoSCC:{[data;df;lf;params;clustTab;repPts;kdTree;linkMatrix]
 // @category clustUtility
 // @fileoverview K-Means algorithm
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param k {long} Number of clusters
 // @param config {dict} Configuration information containing the maximum 
 //   iterations `iter, initialisation type `init and threshold for smallest
@@ -739,7 +772,7 @@ clust.i.kMeansConverge:{[config;algoRun]
 // @category clustUtility
 // @fileoverview Update cluster centers
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param config {dict} Configuration information containing the maximum 
 //   iterations `iter, initialisation type `init and threshold for smallest
 //   distance to move between the previous and new run `thresh
@@ -768,7 +801,7 @@ clust.i.updCenters:{[data;df;config;repPts]
 // @fileoverview Calculate new representative points based on new 
 //   data and previous representatives
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param repPts {float[][]} Representative points in matrix format each row 
 //   is an individual datapoint
 // @return {float[][]} New representative points in matrix format each row 
@@ -783,7 +816,7 @@ clust.i.newRepPts:{[data;df;repPts]
 // @category clustUtility
 // @fileoverview Calculate final representative points
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param repPts {float[]} Representative points of each cluster
 // @return {long} List of clusters
 clust.i.getClust:{[data;df;repPts]
@@ -807,7 +840,7 @@ clust.i.initRandom:{[data;k]
 // @kind function
 // @category clustUtility
 // @fileoverview K-Means++ initialization of representative points
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @param k {long} Number of clusters
 // @return {float[][]} k representative points
@@ -822,7 +855,7 @@ clust.i.initKpp:{[df;data;k]
 // @category clustUtility
 // @fileoverview K-Means++ algorithm
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param info {dict} Points and distance info
 // @return {dict} Updated info dictionary
 clust.i.kpp:{[data;df;info]
@@ -872,8 +905,8 @@ clust.i.dbscanPredict:{[data;config]
 // @category clustUtility
 // @fileoverview Create neighbourhood table for points at indices provided
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param minPts {long} Minimum number of points with the epsilon radius
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param minPts {long} Minimum number of points within the epsilon radius
 // @param eps {float} Epsilon radius to search
 // @param idx {long[]} Data indices to find neighbourhood for
 // @return {tab} Neighbourhood table with columns `nbhood`cluster`corepoint
@@ -889,7 +922,7 @@ clust.i.nbhoodTab:{[data;df;minPts;eps;idx]
 // @category clustUtility
 // @fileoverview Find all points which are not outliers
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param eps {float} Epsilon radius to search
 // @param idx {long} Index of current point
 // @return {long[]} Indices of points within the epsilon radius
@@ -927,7 +960,7 @@ clust.i.nbhoodIdxs:{[tab;idxs]
 // @category clustUtility
 // @fileoverview Run affinity propagation algorithm
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param damp {float} Damping coefficient
 // @param diag {func} Function applied to the similarity matrix diagonal
 // @param idxs {long[]} Indicies to find distances for
@@ -956,7 +989,7 @@ clust.i.runAp:{[data;df;damp;diag;idxs;iter]
 // @category clustUtility
 // @fileoverview Initialize matrices
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param diag {func} Function applied to the similarity matrix diagonal
 // @param idxs {long[]} Point indices
 // @return {dict} Similarity, availability and responsibility matrices and 
@@ -974,10 +1007,10 @@ clust.i.apInit:{[data;df;diag;idxs]
 // @kind function
 // @category clustUtility
 // @fileoverview Run affinity propagation algorithm
-// @param damp  {float} Damping coefficient
+// @param damp {float} Damping coefficient
 // @param info {dict} Similarity, availability, responsibility, exemplars,
 //   matches, iter dictionary, no_conv boolean and iter dict
-// @return {dict}  Updated inputs
+// @return {dict} Updated inputs
 clust.i.apAlgo:{[damp;info]
   // Update responsibility matrix
   info[`r]:clust.i.updR[damp;info];
@@ -1042,9 +1075,9 @@ clust.i.updR:{[damp;info]
 // @kind function
 // @category clustUtility
 // @fileoverview Create matrix with every points max responsibility
-// diagonal becomes -inf, current max becomes second max
-// @param data {float[]} Sum of s and availability
-// @param i {dict} Responsibility matrix
+//   diagonal becomes -inf, current max becomes second max
+// @param data {float[]} Sum of similarity and availability matrices
+// @param i {long} Index of responsibility matrix
 // @return {float[][]} Responsibility matrix
 clust.i.maxResp:{[data;i]
   maxData:max data;
@@ -1089,7 +1122,7 @@ clust.i.apStop:{[info]
 // @fileoverview Predict clusters using AP training exemplars
 // @param centre {float[][]} Training cluster centres in matrix format, 
 //   each column is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param pt {float[]} Current data point
 // @return {long[]} Predicted clusters
 clust.i.apPredDist:{[centre;df;pt]
@@ -1190,7 +1223,7 @@ clust.i.entropy:{[d]
 // @kind function
 // @category clustUtility
 // @fileoverview Maximum intra-cluster distance
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @return {float} Max intra-cluster distance
 clust.i.maxIntra:{[df;data]
@@ -1201,7 +1234,7 @@ clust.i.maxIntra:{[df;data]
 // @kind function
 // @category clustUtility
 // @fileoverview Calculate intra-cluster distance
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @param idxs {int[]} All indices of the data
 // @param i {int} Single index within the data 
@@ -1215,10 +1248,10 @@ clust.i.intra:{[df;data;idxs;i]
 // @kind function
 // @category clustUtility
 // @fileoverview Minimum inter-cluster distance
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @param idxs {long[]} Cluster indices
-// @return {float}  Min inter-cluster distance
+// @return {float} Min inter-cluster distance
 clust.i.minInter:{[df;data;idxs]
    clust.i.inter[df;data;first idxs]each 1_idxs
   }
@@ -1227,7 +1260,7 @@ clust.i.minInter:{[df;data;idxs]
 // @kind function
 // @category clustUtility
 // @fileoverview Calculate inter-cluster distance
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @param init {int[]} First index in the data
 // @param i {int} Single index within the data 
@@ -1241,7 +1274,7 @@ clust.i.inter:{[df;data;init;i]
 // @category clustUtility
 // @fileoverview Silhouette coefficient
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param idxs {dict} Point indices grouped by cluster
 // @param k {float} Coefficient to multiply by
 // @param clusts {long} Cluster of current point
@@ -1253,13 +1286,26 @@ clust.i.sil:{[data;df;idxs;k;clusts;pt]
   (%).((-).;max)@\:(min avg each;k[clusts]*sum@)@'split
   }
 
+// @kind function
+// @category clustUtility
+// @fileoverview Davies-Bouldin of a single index
+// @param avgDist {float} Average distance between clusters and average value
+// @param avgClust {float} Average value of each cluster
+// @param idx {int[]} All indices of cluster
+// @param n {int} Single index of the cluster group
+// @return {float} Davies Bouldin index of single point
+clust.i.daviesBouldin:{[avgDist;avgClust;idx;n]
+  dists:clust.i.dists[flip avgClust updIdx:idx _n;`edist;avgClust n;::];
+  max(avgDist[n]+avgDist updIdx)%'dists
+  }
+
 // @private
 // @kind function
 // @category clust
 // @fileoverview Elbow method
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
-// @param k {long} Cluster index
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param k {long} Number of clusters to be fit for k-means
 // @return {float[]} Score for single cluster k value
 clust.i.elbow:{[data;df;k]
   clusts:clust.kmeans.fit[data;df;k;::][`modelInfo;`clust];
