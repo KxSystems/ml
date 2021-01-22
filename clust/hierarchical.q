@@ -15,8 +15,6 @@
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
 //   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
 clust.cure.fit:{[data;df;n;c]
   data:clust.i.floatConversion[data];
   if[not df in key clust.i.df;clust.i.err.df[]];
@@ -39,8 +37,6 @@ clust.cure.fit:{[data;df;n;c]
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
 //   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
 clust.hc.fit:{[data;df;lf]
   // Check distance and linkage functions
   data:clust.i.floatConversion[data];
@@ -67,8 +63,6 @@ clust.hc.fit:{[data;df;lf]
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
 //   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
 // @param k {long} Number of clusters
 // @return {dict} Updated config with clusters labels added
 clust.cure.cutK:{[config;k]
@@ -88,8 +82,6 @@ clust.cure.cutK:{[config;k]
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
 //   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
 // @param k {long} Number of clusters
 // @return {dict} Updated config with clusters added
 clust.hc.cutK:clust.cure.cutK
@@ -105,8 +97,6 @@ clust.hc.cutK:clust.cure.cutK
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
 //   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
 // @param distThresh {float} Cutting distance threshold
 // @return {dict} Updated config with clusters added
 clust.cure.cutDist:{[config;distThresh]
@@ -127,8 +117,6 @@ clust.cure.cutDist:{[config;distThresh]
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
 //   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
 // @param distThresh {float} Cutting distance threshold
 // @return {dict} Updated config with clusters added
 clust.hc.cutDist:clust.cure.cutDist
@@ -144,10 +132,8 @@ clust.hc.cutDist:clust.cure.cutDist
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
 //   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
 // @param cutDict {dict} The key defines what cutting algo to use when 
-//   splitting the data into clusters (`k/`cut) and the value defines the
+//   splitting the data into clusters (`k/`dist) and the value defines the
 //   cutting threshold
 // @return {long[]} Predicted clusters
 clust.cure.predict:{[data;config;cutDict]
@@ -166,10 +152,8 @@ clust.cure.predict:{[data;config;cutDict]
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
 //   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
 // @param cutDict {dict} The key defines what cutting algo to use when 
-//   splitting the data into clusters (`k/`cut) and the value defines the
+//   splitting the data into clusters (`k/`dist) and the value defines the
 //   cutting threshold
 // @return {long[]} Predicted clusters
 clust.hc.predict:{[data;config;cutDict]
@@ -185,7 +169,7 @@ clust.hc.predict:{[data;config;cutDict]
 // @param n {long} Number of representative points per cluster
 // @param c {float} Compression factor for representative points
 // @param cutDict {dict} The key defines what cutting algo to use when 
-//   splitting the data into clusters (`k/`cut) and the value defines the
+//   splitting the data into clusters (`k/`dist) and the value defines the
 //   cutting threshold
 // @return {dict} Updated config with clusters added
 clust.cure.fitPredict:{[data;df;n;c;cutDict]
@@ -201,7 +185,7 @@ clust.cure.fitPredict:{[data;df;n;c;cutDict]
 // @param df {sym} Distance function name within '.ml.clust.i.df' 
 // @param lf {sym} Linkage function name within '.ml.clust.i.lf' 
 // @param cutDict {dict} The key defines what cutting algo to use when 
-//   splitting the data into clusters (`k/`cut) and the value defines the
+//   splitting the data into clusters (`k/`dist) and the value defines the
 //   cutting threshold
 // @return {dict} Updated config with clusters added
 clust.hc.fitPredict:{[data;df;lf;cutDict]

@@ -40,7 +40,7 @@ clust.dunn:{[data;df;clusts]
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param clusts {long[]} Clusters produced by .ml.clust algos
-// @param isAvg {bool} Are all scores(1b) or the average score (0b)
+// @param isAvg {bool} Are all scores (0b) or the average score (1b)
 //   to be returned
 // @return {float} Silhouette score of clusts
 clust.silhouette:{[data;df;clusts;isAvg]

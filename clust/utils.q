@@ -159,12 +159,12 @@ clust.i.checkDist:{[cutDist]
 // @fileoverview Prepare the config for prediction functionality
 // @param config {dict} Clustering information returned from `fit`
 // @param cutDist {dict} The key defines what cutting algo to use when
-//   splitting the data into clusters (`k/`cut) and the value defines the
+//   splitting the data into clusters (`k/`dist) and the value defines the
 //   cutting threshold
 // @return {dict} `data`df`n`c`clt returned from .ml.clust.(cutK/cutDist)
 clust.i.prepPred:{[config;cutDict]
   cutType:first key cutDict;
-  if[not cutType in`k`cut;'"Cutting distance has to be 'k' or 'cut'"];
+  if[not cutType in`k`dist;'"Cutting distance has to be 'k' or 'dist'"];
   $[cutType=`k;
     clust.cure.cutK;
     clust.cure.cutDist

@@ -34,9 +34,9 @@ clust.kd.q.nn:clust.kd.nn:{[tree;data;df;xIdxs;pt]
 // @category kdtree
 // @fileoverview Find the leaf node point belongs to
 // @param tree {tab} k-d tree table
-// @param pt {float[]} Current point to put in tree
-// @param node {dict} Current node to check
-// @return {dict} Leaf node pt belongs to
+// @param pt {float[]} Point to search
+// @param node {dict} Node in the k-d tree to start the search 
+// @return {dict} The index (row) of the kd-tree that the datapoint belongs to
 clust.kd.q.findLeaf:clust.kd.findleaf:{[tree;pt;node]
   {[node]not node`leaf}clust.kd.i.findNext[tree;pt]/node
   }
@@ -72,9 +72,9 @@ clust.kd.c.nn:{[tree;data;df;xIdxs;pt]
 // @category kdtree
 // @fileoverview Find the leaf node point belongs to using C
 // @param tree {tab} k-d tree table
-// @param pt {float[]} Current point to put in tree
-// @param node {dict} Current node to check
-// @return {dict} Leaf node pt belongs to
+// @param pt {float[]} Point to search
+// @param node {dict} Node in the k-d tree to start the search 
+// @return {dict} The index (row) of the kd-tree that the datapoint belongs to
 clust.kd.c.findLeaf:{[tree;point;node]
     point:clust.i.floatConversion[point];
     tree clust.kd.c.findLeafFunc[tree;point;node`self]
