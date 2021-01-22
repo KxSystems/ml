@@ -192,7 +192,7 @@ rmsle:{[pred;true]
 // @fileoverview Mean absolute error
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
-// @returns {float} The mean absolute error between predicted values 
+// @returns {float} The mean absolute error between predicted values
 //   and the true values
 mae:{[pred;true]
   avg abs pred-true

@@ -266,23 +266,23 @@ np:.p.import[`numpy]
 .ml.fresh.feat.kurtosis[x2] ~ 0n
 .ml.fresh.feat.kurtosis[xnull] ~ 0n
 
-.ml.fresh.feat.longStrikeBelMean[xj] ~ longest_strike_below_mean[xj]
-.ml.fresh.feat.longStrikeBelMean[xf] ~ longest_strike_below_mean[xf]
-.ml.fresh.feat.longStrikeBelMean[xb] ~ longest_strike_below_mean[xb]
-.ml.fresh.feat.longStrikeBelMean[xi] ~ longest_strike_below_mean[xi]
-.ml.fresh.feat.longStrikeBelMean[x0] ~ longest_strike_below_mean[x0]
-("f"$.ml.fresh.feat.longStrikeBelMean[x1]) ~ 0f
-.ml.fresh.feat.longStrikeBelMean[x2] ~ longest_strike_below_mean[x2]
-.ml.fresh.feat.longStrikeBelMean[xnull] ~ longest_strike_below_mean[xnull]
+.ml.fresh.feat.longStrikeBelowMean[xj] ~ longest_strike_below_mean[xj]
+.ml.fresh.feat.longStrikeBelowMean[xf] ~ longest_strike_below_mean[xf]
+.ml.fresh.feat.longStrikeBelowMean[xb] ~ longest_strike_below_mean[xb]
+.ml.fresh.feat.longStrikeBelowMean[xi] ~ longest_strike_below_mean[xi]
+.ml.fresh.feat.longStrikeBelowMean[x0] ~ longest_strike_below_mean[x0]
+("f"$.ml.fresh.feat.longStrikeBelowMean[x1]) ~ 0f
+.ml.fresh.feat.longStrikeBelowMean[x2] ~ longest_strike_below_mean[x2]
+.ml.fresh.feat.longStrikeBelowMean[xnull] ~ longest_strike_below_mean[xnull]
 
-.ml.fresh.feat.longStrikeAbvMean[xj] ~ longest_strike_above_mean[xj]
-.ml.fresh.feat.longStrikeAbvMean[xf] ~ longest_strike_above_mean[xf]
-.ml.fresh.feat.longStrikeAbvMean[xb] ~ longest_strike_above_mean[xb]
-.ml.fresh.feat.longStrikeAbvMean[xi] ~ longest_strike_above_mean[xi]
-.ml.fresh.feat.longStrikeAbvMean[x0] ~ longest_strike_above_mean[x0]
-("f"$.ml.fresh.feat.longStrikeAbvMean[x1]) ~ 0f
-.ml.fresh.feat.longStrikeAbvMean[x2] ~ longest_strike_above_mean[x2]
-.ml.fresh.feat.longStrikeAbvMean[xnull] ~ longest_strike_above_mean[xnull]
+.ml.fresh.feat.longStrikeAboveMean[xj] ~ longest_strike_above_mean[xj]
+.ml.fresh.feat.longStrikeAboveMean[xf] ~ longest_strike_above_mean[xf]
+.ml.fresh.feat.longStrikeAboveMean[xb] ~ longest_strike_above_mean[xb]
+.ml.fresh.feat.longStrikeAboveMean[xi] ~ longest_strike_above_mean[xi]
+.ml.fresh.feat.longStrikeAboveMean[x0] ~ longest_strike_above_mean[x0]
+("f"$.ml.fresh.feat.longStrikeAboveMean[x1]) ~ 0f
+.ml.fresh.feat.longStrikeAboveMean[x2] ~ longest_strike_above_mean[x2]
+.ml.fresh.feat.longStrikeAboveMean[xnull] ~ longest_strike_above_mean[xnull]
 
 .ml.fresh.feat.sumRecurringVal[xj] ~ sum_recurring_values[xj]
 .ml.fresh.feat.sumRecurringVal[xf] ~ sum_recurring_values[xf]
@@ -310,14 +310,14 @@ np:.p.import[`numpy]
 .ml.fresh.feat.c3[x2;4] ~ 0n
 .ml.fresh.feat.c3[xnull;4] ~ 0n
 
-.ml.fresh.feat.varAbvStdDev[xj] ~ variance_larger_than_standard_deviation[xj]
-.ml.fresh.feat.varAbvStdDev[xf] ~ variance_larger_than_standard_deviation[xf] 
-.ml.fresh.feat.varAbvStdDev[xb] ~ variance_larger_than_standard_deviation[xb]
-.ml.fresh.feat.varAbvStdDev[xi] ~ variance_larger_than_standard_deviation[xi]
-.ml.fresh.feat.varAbvStdDev[x0] ~ 0b
-.ml.fresh.feat.varAbvStdDev[x1] ~ variance_larger_than_standard_deviation[x1]
-.ml.fresh.feat.varAbvStdDev[x2] ~ variance_larger_than_standard_deviation[x2]
-.ml.fresh.feat.varAbvStdDev[xnull] ~ 0b
+.ml.fresh.feat.varAboveStdDev[xj] ~ variance_larger_than_standard_deviation[xj]
+.ml.fresh.feat.varAboveStdDev[xf] ~ variance_larger_than_standard_deviation[xf] 
+.ml.fresh.feat.varAboveStdDev[xb] ~ variance_larger_than_standard_deviation[xb]
+.ml.fresh.feat.varAboveStdDev[xi] ~ variance_larger_than_standard_deviation[xi]
+.ml.fresh.feat.varAboveStdDev[x0] ~ 0b
+.ml.fresh.feat.varAboveStdDev[x1] ~ variance_larger_than_standard_deviation[x1]
+.ml.fresh.feat.varAboveStdDev[x2] ~ variance_larger_than_standard_deviation[x2]
+.ml.fresh.feat.varAboveStdDev[xnull] ~ 0b
 
 .ml.fresh.feat.numCwtPeaks[xj;3] ~ number_cwt_peaks[xj;3]
 .ml.fresh.feat.numCwtPeaks[xf;3] ~ number_cwt_peaks[xf;3]

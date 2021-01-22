@@ -34,12 +34,12 @@ dropConstant:{[data]
 // @return {dict} modelInfo containing min and max value of fitted data 
 //  along with a predict function projection
 minMaxScaler.fit:{[data]
-  minData:i.ap[min;data];
-  maxData:i.ap[max;data];
+  typData:type[data] in 0 99h;
+  minData:$[typData;min each;min]data;
+  maxData:$[typData;max each;max]data;
   scalingInfo:`minData`maxData!(minData;maxData);
-  predict:minMaxScaler.predict[;minData;maxData];
-  preds:predict data;
-  `modelInfo`predict`fitPredict!(scalingInfo;predict;preds)
+  predict:i.apUpd minMaxScaler.predict[;minData;maxData];
+  `modelInfo`predict!(scalingInfo;predict)
   }
 
 // @kind function
@@ -72,10 +72,12 @@ minMaxScaler.fitPredict:{[data]
 // @return {dict} modelInfo containing avg and dev value of fitted data 
 //  along with a predict function projection
 stdScaler.fit:{[data]
-  avgData:i.ap[avg;data];
-  devData:i.ap[dev;data];
+  typData:type[data];
+  if[typData=98;data:flip data];
+  avgData:$[typData in 0 98 99h;avg each;avg]data;
+  devData:$[typData in 0 98 99h;dev each;dev]data;
   scalingInfo:`avgData`devData!(avgData;devData);
-  predict:stdScaler.predict[;avgData;devData];
+  predict:i.apUpd stdScaler.predict[;avgData;devData];
   `modelInfo`predict!(scalingInfo;predict)
   }
 
@@ -263,8 +265,8 @@ lexiEncode.fitPredict:{[tab;symCols]
 // @category preprocessing
 // @fileoverview Fit a label encoder model
 // @param data {any[]} Data to encode
-// @return {dict} Schema mapping values in the list to associated integers 
-//   and a predict function to be used on new data
+// @return {dict} Schema mapping values and a predict function to be used on 
+//   new data
 labelEncode.fit:{[data]
   uniqueData:asc distinct data;
   map:uniqueData!til count uniqueData;
@@ -276,7 +278,7 @@ labelEncode.fit:{[data]
 // @kind function
 // @category preprocessing
 // @fileoverview Encode categorical data to an integer value representation
-// @param data {int[]} Data to be reverted to original representation
+// @param data {any[]} Data to be reverted to original representation
 // @param map {dict} Maps true representation to associated integer or
 //   the return from .ml.labelencode
 // @return {int[]} List transformed to integer value 

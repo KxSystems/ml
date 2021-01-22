@@ -145,6 +145,26 @@ i.ap:{[func;data]
 // @private
 // @kind function
 // @category utilitiesUtility
+// @fileoverview Apply function to data of various types
+// @param func {func} Function to apply to data
+// @param data {any} Data of various types
+// @return {func} function to apply to data
+i.apUpd:{[func;data] 
+  $[0=type data;
+      func data;
+    98=type data;
+      func each data;
+    99<>type data;
+      func data;
+    98=type key data;
+      key[data]!.z.s value data;
+    func data
+    ]
+  }
+
+// @private
+// @kind function
+// @category utilitiesUtility
 // @fileoverview Find columns of certain types
 // @param tab {tab} Data in tabular format
 // @param char {char[]} Type of column to find  

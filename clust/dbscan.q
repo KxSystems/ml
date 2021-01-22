@@ -5,134 +5,95 @@
 // @kind function
 // @category clust
 // @fileoverview Fit DBSCAN algorithm to data
-// @param data   {float[][]} Data in matrix format, each column is an individual datapoint
-// @param df     {symbol}    Distance function name within '.ml.clust.df'
-// @param minpts {long}      Minimum number of points with the epsilon radius
-// @param eps    {float}     Epsilon radius to search
-// @return       {dict}      Data, inputs, clusters and cluster table 
-//   (`data`inputs`clt`t) required for predict and update methods
-clust.dbscan.fit:{[data;df;minpts;eps]
+// @param data {float[][]} Each column of the data is an individual datapoint
+// @param df {sym} Distance function name within '.ml.clust.df'
+// @param minPts {long} Minimum number of points with the epsilon radius
+// @param eps {float} Epsilon radius to search
+// @return {dict} A dictionary containing:
+//   - modelInfo which encapsulates all relevant infromation needed to fit
+//     the model `data`inputs`clust`tab, where data is the original data,
+//     inputs are the user defined minPts and eps, clust are the cluster
+//     assignments and tab is the neighbourhood table defining items in the
+//     clusters.
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
+clust.dbscan.fit:{[data;df;minPts;eps]
   data:clust.i.floatConversion[data];
-  // check distance function
+  // Check distance function
   if[not df in key clust.i.df;clust.i.err.df[]];
-  // create neighbourhood table
-  t:clust.i.nbhoodtab[data;df;minpts;eps;til count data 0];
-  // apply the density based clustering algorithm over the neighbourhood table
-  t:{[t]any t`corepoint}clust.i.dbalgo/t;
-  // find cluster for remaining points and return list of clusters
-  clt:-1^exec cluster from t;
-  // return config dict
-  `data`inputs`clt`t!(data;`df`minpts`eps!(df;minpts;eps);clt;t)
+  // Create neighbourhood table
+  tab:clust.i.nbhoodTab[data;df;minPts;eps;til count data 0];
+  // Apply the density based clustering algorithm over the neighbourhood table
+  tab:{[t]any t`corePoint}clust.i.dbAlgo/tab;
+  // Find cluster for remaining points and return list of clusters
+  clust:-1^exec cluster from tab;
+  // Return config dict
+  inputDict:`df`minPts`eps!(df;minPts;eps);
+  modelInfo:`data`inputs`clust`tab!(data;inputDict;clust;tab);
+  returnInfo:enlist[`modelInfo]!enlist modelInfo;
+  predictFunc:clust.dbscan.predict[;returnInfo];
+  updFunc:clust.dbscan.update[;returnInfo];
+  returnInfo,`predict`update!(predictFunc;updFunc)
   }
 
 // @kind function
 // @category clust
 // @fileoverview Predict clusters using DBSCAN config
-// @param data {float[][]} Data in matrix format, each column is an individual datapoint
-// @param cfg  {dict}      `data`df`minpts`eps`clt returned from DBSCAN 
-//   clustered training data
-// @return     {long[]}    List of predicted clusters
-clust.dbscan.predict:{[data;cfg]
+// @param data {float[][]} Each column of the data is an individual datapoint
+// @param config {dict} A dictionary returned from '.ml.clust.dbscan.fit'
+//   containing:
+//   - modelInfo which encapsulates all relevant infromation needed to fit
+//     the model `data`inputs`clust`tab, where data is the original data,
+//     inputs are the user defined minPts and eps, clust are the cluster
+//     assignments and tab is the neighbourhood table defining items in the 
+//     clusters.
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
+// @return {long[]} Predicted clusters
+clust.dbscan.predict:{[data;config]
+  config:config[`modelInfo];
   data:clust.i.floatConversion[data];
-  // predict new clusters
-  -1^exec cluster from clust.i.dbscanpredict[data;cfg]
+  // Predict new clusters
+  -1^exec cluster from clust.i.dbscanPredict[data;config]
   }
 
 // @kind function
 // @category clust
 // @fileoverview Update DBSCAN config including new data points
-// @param data {float[][]} Data in matrix format, each column is an individual datapoint
-// @param cfg  {dict}      `data`inputs`clt`nbh returned from DBSCAN clustered training data
-// @return     {dict}      Updated model config
-clust.dbscan.update:{[data;cfg]
+// @param data {float[][]} Each column of the data is an individual datapoint
+// @param config {dict} A dictionary returned from '.ml.clust.dbscan.fit'
+//   containing:
+//   - modelInfo which encapsulates all relevant infromation needed to fit
+//     the model `data`inputs`clust`tab, where data is the original data,
+//     inputs are the user defined minPts and eps, clust are the cluster
+//     assignments and tab is the neighbourhood table defining items in the
+//     clusters.
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
+// @return {dict} Updated model configuration (config), including predict
+//   and update functions
+clust.dbscan.update:{[data;config]
+  modelConfig:config[`modelInfo];
   data:clust.i.floatConversion[data];
-  // original data prior to addition of new points, with core points set
-  orig:update corepoint:1b from cfg[`t]where cluster<>0N;
-  // predict new clusters
-  new:clust.i.dbscanpredict[data;cfg];
-  // include new data points in training neighbourhood
-  orig:clust.i.updnbhood/[orig;new;count[orig]+til count new];
-  // fit model with new data included to update model
-  t:{[t]any t`corepoint}.ml.clust.i.dbalgo/orig,new;
-  // reindex the clusters
-  t:update{(d!til count d:distinct x)x}cluster from t where cluster<>0N;
+  // Original data prior to addition of new points, with core points set
+  orig:update corePoint:1b from modelConfig[`tab]where cluster<>0N;
+  // Predict new clusters
+  new:clust.i.dbscanPredict[data;modelConfig];
+  // Include new data points in training neighbourhood
+  orig:clust.i.updNbhood/[orig;new;count[orig]+til count new];
+  // Fit model with new data included to update model
+  tab:{[t]any t`corePoint}.ml.clust.i.dbAlgo/orig,new;
+  // Reindex the clusters
+  tab:update{(d!til count d:distinct x)x}cluster from tab where cluster<>0N;
   // return updated config
-  cfg,`data`t`clt!(cfg[`data],'data;t;-1^exec cluster from t)
-  }
-
-
-// Utilities
-
-// @kind function
-// @category private
-// @fileoverview Update the neighbourhood of a previously fit original dbscan model based on new data
-// @param orig {tab}    Original table of data with all points set as core points
-// @param new  {tab}    Table generated from new data with the previously generated model
-// @param idx  {long[]} Indices used to update the neighbourhood of the original table
-// @return     {tab}    Table with neighbourhood updated appropriately for the newly introduced data
-clust.i.updnbhood:{[orig;new;idx]
-  update nbhood:{x,'y}[nbhood;idx]from orig where i in new`nbhood
-  }
-
-// @kind function
-// @category private
-// @fileoverview Predict clusters using DBSCAN config
-// @param data {float[][]} Data in matrix format, each column is an individual datapoint
-// @param cfg  {dict}      `data`inputs`clt returned from DBSCAN clustered training data
-// @return     {tab}       Cluster table
-clust.i.dbscanpredict:{[data;cfg]
-  idx:count[cfg[`data]0]+til count data 0;
-  // create neighbourhood table
-  t:clust.i.nbhoodtab[cfg[`data],'data;;;;idx]. cfg[`inputs;`df`minpts`eps];
-  // find which existing clusters new data belongs to
-  update cluster:{x[`clt]first y}[cfg]each nbhood from t where corepoint
-  }
-
-// @kind function
-// @category private
-// @fileoverview Create neighbourhood table for points at indices provided
-// @param data   {float[][]} Data in matrix format, each column is an individual datapoint
-// @param df     {symbol}    Distance function name within '.ml.clust.df'
-// @param minpts {long}      Minimum number of points with the epsilon radius
-// @param eps    {float}     Epsilon radius to search
-// @param idx    {long[]}    Data indices to find neighbourhood for
-// @return       {table}     Neighbourhood table with columns `nbhood`cluster`corepoint
-clust.i.nbhoodtab:{[data;df;minpts;eps;idx]
-  // calculate distances and find all points which are not outliers
-  nbhood:clust.i.nbhood[data;df;eps]each idx;
-  // update outlier cluster to null
-  update cluster:0N,corepoint:minpts<=1+count each nbhood from([]nbhood)
-  }
-
-// @kind function
-// @category private
-// @fileoverview Find all points which are not outliers
-// @param data {float[][]} Data in matrix format, each column is an individual datapoint
-// @param df   {symbol}    Distance function name within '.ml.clust.df'
-// @param eps  {float}     Epsilon radius to search
-// @param idx  {long}      Index of current point
-// @return     {long[]}    Indices of points within the epsilon radius
-clust.i.nbhood:{[data;df;eps;idx]
-  where eps>@[;idx;:;0w]clust.i.df[df]data-data[;idx]
-  }
-
-// @kind function
-// @category private
-// @fileoverview Run DBSCAN algorithm and update cluster of each point
-// @param t {table} Cluster info table
-// @return  {table} Updated cluster table with old clusters merged
-clust.i.dbalgo:{[t]
-  nbh:.ml.clust.i.nbhoodidxs[t]/[first where t`corepoint];
-  update cluster:0|1+max t`cluster,corepoint:0b from t where i in nbh
-  }
-
-// @kind function
-// @category private
-// @fileoverview Find indices in each points neighborhood
-// @param t    {table}  Cluster info table
-// @param idxs {long[]} Indices to search the neighborhood of
-// @return     {long[]} Indices in neighborhood
-clust.i.nbhoodidxs:{[t;idxs]
-  nbh:exec nbhood from t[distinct idxs,raze t[idxs]`nbhood]where corepoint;
-  asc distinct idxs,raze nbh
+  clusts:-1^exec cluster from tab;
+  modelConfig,:`data`tab`clust!(modelConfig[`data],'data;tab;clusts);
+  returnInfo:enlist[`modelInfo]!enlist modelConfig;
+  returnKeys:`predict`update;
+  returnVals:(clust.dbscan.predict[;returnInfo];
+    clust.dbscan.update[;returnInfo]);
+  returnInfo,returnKeys!returnVals
   }

@@ -116,7 +116,7 @@
       "version":"3.0"
     },
     ".ml.minmaxscaler":{
-      "function":".ml.minMaxScaler",
+      "function":".ml.minMaxScaler.fitPredict",
       "warning":"futureWarning",
       "version":"3.0"
     },
@@ -137,6 +137,28 @@
     },
     ".ml.timesplit":{
       "function":".ml.timeSplit",
+      "warning":"futureWarning",
+      "version":"3.0"
+    }
+  },
+  "clust":{
+    ".ml.clust.cure.cutk":{
+      "function":".ml.clust.cure.cutK",
+      "warning":"futureWarning",
+      "version":"3.0"
+    },
+    ".ml.clust.cure.cutdist":{
+      "function":".ml.clust.cure.cutDist",
+      "warning":"futureWarning",
+      "version":"3.0"
+    },
+    ".ml.clust.hc.cutk":{
+      "function":".ml.clust.hc.cutK",
+      "warning":"futureWarning",
+      "version":"3.0"
+    },
+    ".ml.clust.hc.cutdist":{
+      "function":".ml.clust.hc.cutDist",
       "warning":"futureWarning",
       "version":"3.0"
     }

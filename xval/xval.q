@@ -260,8 +260,8 @@ gs.mcSplit:hp.i.search hp.i.xvScore[hp.i.gsGen;xv.mcSplit]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters to be searched with 
-//   format `typ`random_state`n`p where typ is the type of search 
-//   (random/sobol), random_state is the seed, n is the number of 
+//   format `typ`randomState`n`p where typ is the type of search 
+//   (random/sobol), randomState is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
 // @param tstTyp {float} Size of the holdout set used in a fitted grid 
@@ -284,8 +284,8 @@ rs.kfSplit:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.kfSplit]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters to be searched with 
-//   format `typ`random_state`n`p where typ is the type of search 
-//   (random/sobol), random_state is the seed, n is the number of 
+//   format `typ`randomState`n`p where typ is the type of search 
+//   (random/sobol), randomState is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
 // @param tstTyp {float} Size of the holdout set used in a fitted grid 
@@ -308,8 +308,8 @@ rs.kfShuff:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.kfShuff]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters to be searched with 
-//   format `typ`random_state`n`p where typ is the type of search 
-//   (random/sobol), random_state is the seed, n is the number of 
+//   format `typ`randomState`n`p where typ is the type of search 
+//   (random/sobol), randomState is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
 // @param tstTyp {float} Size of the holdout set used in a fitted grid 
@@ -332,8 +332,8 @@ rs.kfStrat:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.kfStrat]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters to be searched with 
-//   format `typ`random_state`n`p where typ is the type of search 
-//   (random/sobol), random_state is the seed, n is the number of 
+//   format `typ`randomState`n`p where typ is the type of search 
+//   (random/sobol), randomState is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
 // @param tstTyp {float} Size of the holdout set used in a fitted grid 
@@ -356,8 +356,8 @@ rs.tsRolls:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.tsRolls]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters to be searched with 
-//   format `typ`random_state`n`p where typ is the type of search 
-//   (random/sobol), random_state is the seed, n is the number of 
+//   format `typ`randomState`n`p where typ is the type of search 
+//   (random/sobol), randomState is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
 // @param tstTyp {float} Size of the holdout set used in a fitted grid 
@@ -380,8 +380,8 @@ rs.tsChain:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.tsChain]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters to be searched with 
-//   format `typ`random_state`n`p where typ is the type of search 
-//   (random/sobol), random_state is the seed, n is the number of 
+//   format `typ`randomState`n`p where typ is the type of search 
+//   (random/sobol), randomState is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
 // @param tstTyp {float} Size of the holdout set used in a fitted grid 
@@ -405,8 +405,8 @@ rs.pcSplit:hp.i.search hp.i.xvScore[hp.i.rsGen;xv.pcSplit]
 // @param function {func} Function that takes parameters and data as input
 //   and returns a score
 // @param p {dict} Dictionary of hyperparameters to be searched with 
-//   format `typ`random_state`n`p where typ is the type of search 
-//   (random/sobol), random_state is the seed, n is the number of 
+//   format `typ`randomState`n`p where typ is the type of search 
+//   (random/sobol), randomState is the seed, n is the number of 
 //   hyperparameter sets and p is a dictionary of parameters - see 
 //   documentation for more info.
 // @param tstTyp {float} Size of the holdout set used in a fitted grid 
