@@ -2,10 +2,10 @@
 
 // @kind function
 // @category multiProcess
-// @fileoverview If the mproc key is not already loaded in set .`z.pd` and 
+// @fileoverview If the multiProc key is not already loaded in set .`z.pd` and 
 //   N to 0
 // @return {null} `.z.pd` and N are set to 0
-if[not`mproc in key .ml;.z.pd:`u#0#0i;mproc.N:0]
+if[not`multiProc in key .ml;.z.pd:`u#0#0i;multiProc.N:0]
 
 // @kind function
 // @category multiProcess
@@ -23,9 +23,9 @@ if[not`mproc in key .ml;.z.pd:`u#0#0i;mproc.N:0]
 // @fileoverview Register the handle and pass any functions required to the
 //   worker processes
 // @return {null} The handle is registered and function is passed to process
-mproc.reg:{
+multiProc.reg:{
   .z.pd,:.z.w;
-  neg[.z.w]@/:mproc.cmds
+  neg[.z.w]@/:multiProc.cmds
   }
 
 // @kind function
@@ -34,10 +34,10 @@ mproc.reg:{
 // @param n {int} Number of processes open
 // @param func {str} Function to be passed to the process
 // @return {null} Each of the `n` worker processes evaluate `func`
-mproc.init:{[n;func]
+multiProc.init:{[n;func]
   if[not p:system"p";'"set port to multiprocess"];
   neg[.z.pd]@\:/:func;
-  mproc.cmds,:func;
-  do[0|n-mproc.N;system"q ",path,"/util/mprocw.q -pp ",string p];
-  mproc.N|:n;
+  multiProc.cmds,:func;
+  do[0|n-multiProc.N;system"q ",path,"/util/mprocw.q -pp ",string p];
+  multiProc.N|:n;
   }

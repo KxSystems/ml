@@ -116,7 +116,7 @@
       "version":"3.0"
     },
     ".ml.minmaxscaler":{
-      "function":".ml.minMaxScaler",
+      "function":".ml.minMaxScaler.fitPredict",
       "warning":"futureWarning",
       "version":"3.0"
     },

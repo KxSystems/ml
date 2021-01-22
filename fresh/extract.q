@@ -61,4 +61,4 @@ fresh.createFeatures:{[data;idCol;cols2Extract;params]
 // Multi-processing functionality
 
 loadfile`:util/mproc.q
-if[0>system"s";mproc.init[abs system"s"]enlist".ml.loadfile`:fresh/init.q"];
+if[0>system"s";multiProc.init[abs system"s"]enlist".ml.loadfile`:fresh/init.q"];

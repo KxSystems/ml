@@ -32,12 +32,12 @@ seed:42
 trials:8
 gs_pr:`alpha`max_iter!(0.1 0.2;100 200 1000)
 gs_pc:enlist[`max_depth]!enlist(::;1;2;3;4;5)
-rs_pr_rdm:`typ`random_state`n`p!(`random;seed;trials;`alpha`max_iter!((`uniform;.1;1.;"f");(`loguniform;1;4;"j")))
-rs_pc_rdm:`typ`random_state`n`p!(`random;seed;trials;enlist[`max_depth]!enlist(`uniform;1;30;"j"))
-rs_pr_sbl:`typ`random_state`n`p!(`sobol;seed;trials;`alpha`max_iter!((`uniform;.1;1.;"f");(`loguniform;1;4;"j")))
-rs_pc_sbl:`typ`random_state`n`p!(`sobol;seed;trials;enlist[`max_depth]!enlist(`uniform;1;30;"j"))
-rs_pr_err:`typ`random_state`n`p!(`sobol;seed;10;`alpha`max_iter!((`uniform;.1;1.;"f");(`loguniform;1;4;"j")))
-rs_pc_err:`typ`random_state`n`p!(`sobol;seed;10;enlist[`max_depth]!enlist(`uniform;1;30;"j"))
+rs_pr_rdm:`typ`randomState`n`p!(`random;seed;trials;`alpha`max_iter!((`uniform;.1;1.;"f");(`loguniform;1;4;"j")))
+rs_pc_rdm:`typ`randomState`n`p!(`random;seed;trials;enlist[`max_depth]!enlist(`uniform;1;30;"j"))
+rs_pr_sbl:`typ`randomState`n`p!(`sobol;seed;trials;`alpha`max_iter!((`uniform;.1;1.;"f");(`loguniform;1;4;"j")))
+rs_pc_sbl:`typ`randomState`n`p!(`sobol;seed;trials;enlist[`max_depth]!enlist(`uniform;1;30;"j"))
+rs_pr_err:`typ`randomState`n`p!(`sobol;seed;10;`alpha`max_iter!((`uniform;.1;1.;"f");(`loguniform;1;4;"j")))
+rs_pc_err:`typ`randomState`n`p!(`sobol;seed;10;enlist[`max_depth]!enlist(`uniform;1;30;"j"))
 
 ms:enlist(2 800 2;2 200 2)
 ridx:1_(1 xprev l),'l:enlist each(3,0N)#t:til count yf

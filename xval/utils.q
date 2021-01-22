@@ -216,7 +216,7 @@ hp.i.search:{[scoreFunc;k;n;features;target;dataFunc;hyperparams;testType]
 // @fileoverview Hyperparameter generation for .ml.gs
 // @param hyperparams {dict} Hyperparameters with all possible values for a
 //   given parameter specified by the user, e.g.
-//   pdict = `random_state`max_depth!(42 72 84;1 3 4 7)
+//   pdict = `randomState`max_depth!(42 72 84;1 3 4 7)
 // @return {table} All possible hyperparameter sets
 hp.i.gsGen:{[hyperparams]
   key[hyperparams]!/:1_'(::)cross/value hyperparams
@@ -226,8 +226,8 @@ hp.i.gsGen:{[hyperparams]
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Hyperparameter generation for .ml.rs
-// @param params {dict} Parameters with form `random_state`n`typ`p where 
-//   random_state is the seed, n is the number of hyperparameters to generate 
+// @param params {dict} Parameters with form `randomState`n`typ`p where 
+//   randomState is the seed, n is the number of hyperparameters to generate 
 //   (must equal 2^n for sobol), typ is the type of search (random/sobol) and p
 //   is a dictionary of hyperparameter spaces - see documentation for more info
 // @return {tab} Hyperparameters
@@ -241,7 +241,7 @@ hp.i.rsGen:{[params]
   // Find numerical hyperparameter spaces
   num:where any`uniform`loguniform=\:first each p:params`p;
   // Set random seed
-  system"S ",string$[(::)~params`random_state;42;params`random_state];
+  system"S ",string$[(::)~params`randomState;42;params`random_state];
   // Import sobol sequence generator and check requirements
   pySobol:.p.import[`sobol_seq;`:i4_sobol_generate;<];
   genPts:$[`sobol~typ:params`typ;

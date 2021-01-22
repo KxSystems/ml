@@ -140,6 +140,8 @@ delCfg:delNode
 // @category graph
 // @fileoverview Connect the output of one node to the input to another
 // @param graph {dict} Graph originally generated using .ml.createGraph
+// @param sourceNode {sym} Denotes the name of a node in the graph which 
+//   contains the relevant output
 // @param sourceName {sym} Denotes the name of the output to be connected to an
 //   associated input node 
 // @param destNode {sym} Name of a node in the graph which contains the relevant
