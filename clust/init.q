@@ -4,7 +4,7 @@
 loadfile`:util/init.q
 
 // load clustering files
-loadfile`:clust/util.q
+loadfile`:clust/utils.q
 loadfile`:clust/kdtree.q
 loadfile`:clust/kmeans.q
 loadfile`:clust/aprop.q

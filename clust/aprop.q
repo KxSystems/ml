@@ -33,7 +33,7 @@ clust.ap.fit:{[data;df;damp;diag;iter]
 // @category clust
 // @fileoverview Predict clusters using AP config
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param config  {dict} `data`inputs`clust`exemplars returned by the modelInfo
+// @param config {dict} `data`inputs`clust`exemplars returned by the modelInfo
 //   key from the return of clust.ap.fit
 // @return {long[]} Predicted clusters
 clust.ap.predict:{[data;config]
