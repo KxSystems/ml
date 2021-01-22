@@ -20,23 +20,10 @@ clust.daviesBouldin:{[data;clusts]
   }
 
 // @kind function
-// @category clustUtility
-// @fileoverview Davies-Bouldin of a single index
-// @param avgDist {float} Average distance between clusters and average value 
-// @param avgClust {float} Average value of each cluster 
-// @param idx {int[]} All indices of cluster
-// @param n {int} Single index of the cluster group
-// @return {float} Davies Bouldin index of single point
-clust.i.daviesBouldin:{[avgDist;avgClust;idx;n]
-  dists:clust.i.dists[flip avgClust updIdx:idx _n;`edist;avgClust n;::];
-  max(avgDist[n]+avgDist updIdx)%'dists
-  }
-
-// @kind function
 // @category clust
 // @fileoverview Dunn index
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param clusts {long[]} Clusters produced by .ml.clust algos
 // @return {float} Dunn index of clusts
 clust.dunn:{[data;df;clusts]
@@ -51,9 +38,10 @@ clust.dunn:{[data;df;clusts]
 // @category clust
 // @fileoverview Silhouette score
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param clusts {long[]} Clusters produced by .ml.clust algos
-// @param isAvg {bool} Scores or the average score (1/0b)
+// @param isAvg {bool} Are all scores(1b) or the average score (0b)
+//   to be returned
 // @return {float} Silhouette score of clusts
 clust.silhouette:{[data;df;clusts;isAvg]
   k:1%(count each group clusts)-1;
@@ -70,7 +58,7 @@ clust.silhouette:{[data;df;clusts;isAvg]
 // @return {float} Homogeneity score for true
 clust.homogeneity:{[pred;true]
   if[count[pred]<>n:count true;
-    '`$"pred and true must have equal lengths"
+    '"pred and true must have equal lengths"
     ];
   if[not ent:clust.i.entropy true;:1.];
   confMat:value confMatrix[pred;true];
@@ -85,7 +73,7 @@ clust.homogeneity:{[pred;true]
 // @category clust
 // @fileoverview Elbow method
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param k {long} Max number of clusters
 // @return {float[]} Score for each k value - plot to find elbow
 clust.elbow:{[data;df;k]

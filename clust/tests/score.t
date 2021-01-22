@@ -20,9 +20,9 @@ d1:flip(60#"F";",")0:`:clust/tests/data/ss5.csv
 d2:@[;`AnnualIncome`SpendingScore]("SSIII";(),",")0:`:clust/tests/data/Mall_Customers.csv
 
 // Expected Results
-clt1:.ml.clust.hc.cutK[.ml.clust.hc.fit[d1;`edist;`single]`modelInfo;4]
-clt2:.ml.clust.hc.cutK[.ml.clust.hc.fit[d2;`e2dist;`ward]`modelInfo;4]
-clt3:.ml.clust.hc.cutK[.ml.clust.cure.fit[d2;`edist;20;0.2]`modelInfo;4]
+clt1:.ml.clust.hc.cutK[.ml.clust.hc.fit[d1;`edist;`single];4]
+clt2:.ml.clust.hc.cutK[.ml.clust.hc.fit[d2;`e2dist;`ward];4]
+clt3:.ml.clust.hc.cutK[.ml.clust.cure.fit[d2;`edist;20;0.2];4]
 rnd1:count[flip d1]?4
 rnd2:count[flip d2]?4
 
