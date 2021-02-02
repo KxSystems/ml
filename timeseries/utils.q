@@ -196,14 +196,14 @@ ts.i.SARMA.coefficients:{[endog;exog;residuals;coeffs;params]
   // Get seasonal lag values
   seasLag:flip params[`P]xprev\:endog;
   // Get additional seasonal lag values
-  params[`additionalLags]:$[params[`p]&min count params`P;
+  params[`additionalLags]:$[params[`p]&count params`P;
     m#flip params[`additionalP]xprev\:endog;
     2#0f
     ];
   // Get resid vals
   residVal:ts.i.lagMatrix[residuals;params`q];
   seasResid:flip params[`Q]xprev\:residuals;
-  params[`additionalResiduals]:$[params[`q]&min count params`Q;
+  params[`additionalResiduals]:$[params[`q]&count params`Q;
     m#flip params[`additionalQ]xprev\:residuals;
     2#0f
     ];
