@@ -386,8 +386,8 @@ i.timeSplit[`p`z]:{[time]raze i.timeSplit[`d`n]@\:time}
 // @private
 // @kind function
 // @category preprocessingUtility
-// @fileoverview Break time dependent columns into constituent components
-// @param data {any} Data containing a time dependent component
+// @fileoverview Break time endog columns into constituent components
+// @param data {any} Data containing a time endog component
 // @return {dict} Time or date types broken into their constituent components
 i.timeSplit1:{[data]
   i.timeSplit[`$.Q.t type data]data:raze data
@@ -396,8 +396,8 @@ i.timeSplit1:{[data]
 // @private
 // @kind function
 // @category preprocessingUtility
-// @fileoverview Break time dependent columns into constituent components
-// @param tab {tab} Contains time dependent columns
+// @fileoverview Break time endog columns into constituent components
+// @param tab {tab} Contains time endog columns
 // @param timeCols {sym[]} Columns to apply coding to, if set to :: all columns
 //   with date/time types will be encoded
 // @return {dict} All time or date types broken into labeled versions of their
@@ -570,3 +570,120 @@ i.deprecWarning:{[nameKey;versionMap]
   newFunctions:i.depApply each value mapping;
   {@[x set y]}'[newNames;newFunctions];
   }[;i.versionMap]
+
+// @private
+// @fileOverview Check that the length of the endog and another parameter
+//   are equal 
+// @param endog {float[]} The endogenous variable
+// @param param {num[][];num[]} A parameter to compare the length of
+// @param paramName {str} The name of the parameter
+// @returns {null;err} Return an error if they aren't equal
+i.checkLen:{[endog;param;paramName]
+  if[not count[endog]=count param;
+    '"The length of the endog variable and ",paramName," must be equal"
+    ]
+  }
+
+// @private
+// @fileOverview Calculate descriptive stats for an OLS regression
+// @param coef {float[]} The coefficients for each predictor variable
+// @param endog {float[]} The endogenous variable
+// @param exog {float[][]} Values that predict the endog variable
+// @param trend {bool} Whether a trend is added to the model
+// @returns {dict[]} The descriptive statistics
+i.OLSstats:{[coef;endog;exog;trend]
+  n:count endog;
+  p:count[coef]-trend;
+  statsDict:i.OLScalcs[coef;endog;exog;n;p];
+  variables:i.coefStats[coef;endog;exog;trend;n;p];
+  `coef`variables`statsDict!(coef;variables;statsDict)
+  }
+
+// @private
+// @fileOverview Calculate descriptive stats for an OLS regression
+// @param coef {float[]} The coefficients for each predictor variable
+// @param endog {float[]} The endogenous variable
+// @param exog {float[][]} Values that predict the endog variable
+// @param n {long} The number of endog variables
+// @param p {long} Number of coefs not including trend value
+// @returns {dict[]} The descriptive statistics
+i.OLScalcs:{[coef;endog;exog;n;p]
+  expected:OLS.predict[exog;enlist[`coef]!enlist coef];
+  // DF - Degrees of freedom
+  DFTotal:n-1;
+  DFResidual:DFTotal-p;
+  // Mean squares is SS (sum squares) divided by the degrees of freedom
+  // F-statistic is  F(modelDF, residualDF) = modelMS/residualMS
+  // r2 is SSmodel/SStotal
+  SSTotal:sum{x*x}endog-avg endog;
+  SSModel:sum{x*x}expected-first avg expected;
+  SSResidual:SSTotal-SSModel;
+  MSTotal:SSTotal%DFTotal;
+  MSModel:SSModel%p;
+  MSResidual:SSResidual%DFResidual;
+  fStat:MSModel%MSResidual;
+  r2: SSModel%SSTotal;
+  r2Adj:1-(1-r2)*(n-1)%(n-p)-1;
+  residuals:endog-expected;
+  mse:avg{x*x}residuals;
+  rse:sqrt(sum{x*x}residuals)%DFResidual;
+  pValue:2*1-stats[`:t][`:cdf;<][fStat;p;DFResidual];
+  dictKeys:(`SSTotal;`SSModel;`SSResidual;`MSTotal;`MSModel;`MSResidual;
+    `fStat;`r2;`r2Adj;`mse;`rse;`pValue);
+  dictVals:(SSTotal;SSModel;SSResidual;MSTotal;MSModel;MSResidual;fStat;
+    r2;r2Adj;mse;rse;pValue);
+  dictKeys!dictVals
+  }
+
+// @private
+// @fileOverview Calculate descriptive stats for the calculated coefficients
+// @param coef {float[]} The coefficients for each predictor variable
+// @param endog {float[]} The endogenous variable
+// @param exog {float[][]} Values that predict the endog variable
+// @param trend {bool} Whether a trend is added to the model
+// @param n {long} The number of endog variables
+// @param p {long} Number of coefs not including trend value
+// @returns {dict[]} The descriptive statistics for the calculated coefficients
+i.coefStats:{[coef;endog;exog;trend;n;p]
+  varNames:`$"x",'string til count coef;
+  if[trend;varNames:`yIntercept,-1_varNames];
+  stdErr:i.coefStdErr[coef;exog;endog];
+  tStat:coef%stdErr;
+  pValue:2*1-stats[`:t][`:cdf;<][;n-p-1]each abs tStat;
+  // Calculate the confidence interval
+  C195:i.CI95[n;p]each stdErr;
+  ([name: varNames]coef;stdErr;tStat;pValue;C195)
+  }
+  
+// @private
+// @fileOverview Calculate the standard errors of the coefficients
+// @param coef {float[]} The calculated coefficiant
+// @param exog {float[][]} Values that predict the endog variable
+// @param endog {float[]} The endogenous variable
+// @returns {float[]} The standard error of the coefficients
+i.coefStdErr:{[coef;exog;endog]
+  shape:count[exog]-count first exog;
+  error:{x*x}endog-exog mmu coef;
+  dSigmaSq:sum error%shape;
+  matrixInv:inv flip[exog]mmu exog;
+  mVarCovar:dSigmaSq*matrixInv;
+  // Get the diagonal values from a matrix
+  diag:mVarCovar ./: 2#/:til count mVarCovar;
+  sqrt diag
+  }
+
+// @private
+// @fileOverview Calculate the 95% confidence interval of the standard error
+//   of teh coefficient
+// @param n {long} Number of endog values
+// @param p {long} Number of coefficients
+// @param stdErr {float} The standard error of the coefficient
+// @returns {float} The confidence interval
+i.CI95:{[n;p;stdErr]
+  alpha:(1-.95)%2;
+  // Degrees of freedom
+  df:(n-p)-1;
+  // Calculate the percent point function
+  ppf:stats[`:t][`:ppf][alpha; df]`;
+  neg ppf*stdErr
+  }

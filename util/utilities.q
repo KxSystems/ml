@@ -23,19 +23,46 @@ percentile:{[array;perc]
   iDiff[0]+(percent-i 0)*last iDiff
   }
 
+// @kind data
+// @category utilities
+// @fileoverview Load in functions defined within `describe.json`
+describeFuncs:.j.k raze read0`$path,"/util/describe.json"
+
 // @kind function
 // @category utilities
 // @fileoverview Descriptive information
 // @param tab {tab} A simple table
-// @returns {dict} A tabular description of aggregate information
-//  (count, standard deviation, quartiles etc) for each numeric column
+// @returns {dict} A tabular description of aggregate information column
 describe:{[tab]
-  descKeys:`count`mean`std`min`q1`q2`q3`max;
-  funcs:(count;avg;sdev;min;percentile[;.25];percentile[;.5];
-    percentile[;.75];max);
-  types:"hijefpmdznuvt";
-  descVals:flip funcs@\:/:flip(exec c from meta[tab]where t in types)#tab;
-  descKeys!descVals
+  funcTab:describeFuncs;
+  if[not `func in cols value funcTab;'"Keyed table must contain a func column"];
+  descKeys:key funcTab;
+  funcs:get each value[funcTab]`func;
+  // Get indices of where each type of function is in the function list
+  typeDict:`num`other!where@'("num";"other") in/:\:value[funcTab]`type;
+  numTypes:"hijef";
+  timeTypes:"pmdznuvt";
+  numCols:exec c from meta[tab]where t in numTypes;
+  timeCols:exec c from meta[tab]where t in timeTypes;
+  otherCols:cols[tab]except numCols,timeCols;
+  colDict:`num`other!(numCols,timeCols;otherCols);
+  applyInd:where 0<count each colDict;
+  inds:asc distinct raze typeDict applyInd;
+  n:count funcs;
+  // Create empty list so num/other have same amount of funcs
+  // so that they can be joined later
+  funcDict:`num`other!(2,n)#{(::)};
+  funcDict[`num;typeDict`num]:funcs typeDict`num;
+  funcDict[`other;typeDict`other]:funcs typeDict`other;
+  // Get functions in the correct order for num/other type
+  funcUpd:funcDict applyInd;
+  tabUpd:colDict[applyInd]#\:tab;
+  descVals:(,'/){flip x@\:/:flip y}'[funcUpd;tabUpd];
+  // Reorder columns to original order
+  descVals:cols[tab]xcols descVals;
+  // Convert time dependent columns to a timespan
+  if[count timeCols;descVals[timeCols]:`timespan$descVals[timeCols]];
+  descKeys[inds]!descVals[inds]
   }
 
 // @kind function
@@ -178,3 +205,69 @@ df2tabTimezone:{[tab;local;qObj]
 // @param tab {<} An embedPy representation of a Pandas dataframe
 // @return {<} a q table
 df2tab:df2tabTimezone[;0b;0b]
+
+// @kind function
+// @category utilities
+// @fileoverview Train an ordinary least squares model on data
+// @param endog {num[][];num[]} The endogenous variable
+// @param exog {num[][];num[]} A variables that predict the 
+//   endog variable
+// @param trend {bool} Whether a trend is added to the model
+// @returns {dict} Values calculated during hte fitting process and a 
+//   projection of the predict functional
+OLS.fit:{[endog;exog;trend]
+  i.checkLen[endog;exog;"exog"];
+  endog:"f"$endog;
+  exog:"f"$$[trend;1f,'exog;exog];
+  if[1=count exog[0];exog:flip enlist exog];
+  coef:first enlist[endog]lsq flip exog;
+  modelInfo:i.OLSstats[coef;endog;exog;trend];
+  predFunc:OLS.predict[;modelInfo];
+  `modelInfo`predict!(modelInfo;predFunc)
+  }
+
+// @fileOverview Predict values using coefficients calculated via OLS
+// @param modelInfo {dict} Information calculated from `OLS/WLS.fit`
+// @param exog {tab;num[][];num[]} The exogenous variables
+// @returns {number[]} The predicted values
+OLS.predict:{[exog;modelInfo]
+  trend:`yIntercept in key modelInfo`variables;
+  exog:"f"$$[trend;1f,'exog;exog];
+  coef:modelInfo`coef;
+  if[1=count exog[0];exog:flip enlist exog];
+  sum coef*flip exog
+  }
+
+// @kind function
+// @category utilities
+// @fileoverview Train an ordinary least squares model on data
+// @param endog {num[][];num[]} The endogenous variable
+// @param exog {num[][];num[]} A variables that predict the 
+//   endog variable
+// @param weights {float[]} The weights to be applied to the endog variable
+// @param trend {bool} Whether a trend is added to the model
+// @returns {dict} Values calculated during hte fitting process and a 
+//   projection of the predict functional
+WLS.fit:{[endog;exog;weights;trend]
+  i.checkLen[endog;exog;"exog"];
+  if[weights~(::);weights:()];
+  if[count weights;i.checkLen[endog;weights;"weights"]];
+  endog:"f"$endog; 
+  // Calculate the weights if not given
+  // Must be inversely proportional to the error variance
+  if[not count weights;
+    trained:OLS.fit[endog;exog;0b];
+    residuals:endog-trained[`predict]exog;
+    trained:OLS.fit[abs residuals;exog;0b];
+    weights:1%{x*x}trained[`predict]exog
+    ];
+  exog:"f"$$[trend;1f,'exog;exog];
+  if[1=count exog[0];exog:flip enlist exog];
+  updDependent:flip[exog]mmu weights*'endog;
+  updPredictor:flip[exog]mmu weights*'exog;
+  coef:raze inv[updPredictor]mmu updDependent;
+  modelInfo:i.OLSstats[coef;endog;exog;trend];
+  modelInfo,:enlist[`weights]!enlist weights;
+  predFunc:OLS.predict[;modelInfo];
+  `modelInfo`predict!(modelInfo;predFunc)
+  }

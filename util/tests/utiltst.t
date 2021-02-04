@@ -2,7 +2,8 @@
 \l util/init.q
 
 np:.p.import[`numpy]
-
+ols:.p.import[`statsmodels.api]`:OLS
+wls:.p.import[`statsmodels.api]`:WLS
 p)import pandas as pd
 p)import numpy as np
 p)import datetime
@@ -19,6 +20,10 @@ dt1:2019.01.01D01:30:00.000000000 2019.01.02D01:30:00.000000000
 
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 xm:100 10#1000?100f
+x:1000?1000
+xf:1000?100f
+plaintabn:plaintab,'([]x4:1 3 0n)
+plaintabn2:plaintab,'([]x4:`a`a`b)
 
 .ml.range[til 63] ~ 62
 .ml.range[5] ~ 0
@@ -28,8 +33,12 @@ xm:100 10#1000?100f
 .ml.percentile[x;0.02]~np[`:percentile][x;2]`
 .ml.percentile[xf;0.5]~np[`:percentile][xf;50]`
 .ml.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~3.5
+
+descKeys:`count`mean`std`min`q1`q2`q3`max
+.ml.describeFuncs:descKeys!.ml.describeFuncs[descKeys]
 ("f"$flip value .ml.describe[plaintab])~flip .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
 ("f"$flip value .ml.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
+all all(flip value .ml.describe[plaintabn2])=flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'([]x4:3f,7#(::))
 
 df :.ml.tab2df tt:([]fcol:12?1.;jcol:12?100;scol:12?`aaa`bbb`ccc)
 dfj:.ml.tab2df tj:select by jcol from tt
@@ -80,6 +89,16 @@ tx~update`$scol from .ml.df2tab dfsj
 tx~update`$scol from`scol`jcol xcol .ml.df2tab dfsx
 tx~update`$scol from`scol`jcol xcol .ml.df2tab dfxj
 tx~update`$scol from`scol`jcol xcol .ml.df2tab dfxx
+
+vec1: 6 2 5 1 9 2 4
+vec2:1 9 7 2 3 4 1
+(.ml.OLS.fit[7+2*til 10;til 10;1b][`modelInfo]`coef)~ols[7+2*til 10;1f,'til 10][`:fit][][`:params]`
+(.ml.OLS.fit[7+2*til 10;til 10;0b][`modelInfo]`coef)~ols[7+2*til 10;til 10][`:fit][][`:params]`
+(.ml.OLS.fit[vec2;vec1;0b][`modelInfo]`coef)~ols[vec2;vec1][`:fit][][`:params]`
+
+(.ml.WLS.fit[7+2*til 10;til 10;(5#1),(5#2);1b][`modelInfo]`coef)~wls[7+2*til 10;1f,'til 10;(5#1),(5#2)][`:fit][][`:params]`
+(.ml.WLS.fit[7+2*til 10;til 10;(5#1),(5#2);0b][`modelInfo]`coef)~wls[7+2*til 10;til 10;(5#1),(5#2)][`:fit][][`:params]`
+(.ml.WLS.fit[vec2;vec1;til count vec1;0b][`modelInfo]`coef)~wls[vec2;vec1;til count vec1][`:fit][][`:params]`
 
 \S 43
 .ml.trainTestSplit[til 10;1+til 10;0.2]~`xtrain`ytrain`xtest`ytest!(2 3 7 1 6 4 9 5;3 4 8 2 7 5 10 6;0 8;1 9)
