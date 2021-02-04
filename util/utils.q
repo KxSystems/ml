@@ -572,6 +572,8 @@ i.deprecWarning:{[nameKey;versionMap]
   }[;i.versionMap]
 
 // @private
+// @kind function
+// @category utilitiesUtility
 // @fileOverview Check that the length of the endog and another parameter
 //   are equal 
 // @param endog {float[]} The endogenous variable
@@ -585,6 +587,8 @@ i.checkLen:{[endog;param;paramName]
   }
 
 // @private
+// @kind function
+// @category utilitiesUtility
 // @fileOverview Calculate descriptive stats for an OLS regression
 // @param coef {float[]} The coefficients for each predictor variable
 // @param endog {float[]} The endogenous variable
@@ -600,6 +604,8 @@ i.OLSstats:{[coef;endog;exog;trend]
   }
 
 // @private
+// @kind function
+// @category utilitiesUtility
 // @fileOverview Calculate descriptive stats for an OLS regression
 // @param coef {float[]} The coefficients for each predictor variable
 // @param endog {float[]} The endogenous variable
@@ -636,6 +642,8 @@ i.OLScalcs:{[coef;endog;exog;n;p]
   }
 
 // @private
+// @kind function
+// @category utilitiesUtility
 // @fileOverview Calculate descriptive stats for the calculated coefficients
 // @param coef {float[]} The coefficients for each predictor variable
 // @param endog {float[]} The endogenous variable
@@ -656,6 +664,8 @@ i.coefStats:{[coef;endog;exog;trend;n;p]
   }
   
 // @private
+// @kind function
+// @category utilitiesUtility
 // @fileOverview Calculate the standard errors of the coefficients
 // @param coef {float[]} The calculated coefficiant
 // @param exog {float[][]} Values that predict the endog variable
@@ -673,6 +683,8 @@ i.coefStdErr:{[coef;exog;endog]
   }
 
 // @private
+// @kind function
+// @category utilitiesUtility
 // @fileOverview Calculate the 95% confidence interval of the standard error
 //   of teh coefficient
 // @param n {long} Number of endog values
@@ -687,3 +699,29 @@ i.CI95:{[n;p;stdErr]
   ppf:stats[`:t][`:ppf][alpha; df]`;
   neg ppf*stdErr
   }
+
+// @private 
+// @kind data
+// @category utilitiesUtility
+// @fileoverview Infinity values for different types
+i.infinity:(!) . flip (
+    (`int;       0Wi);
+    (`long;      0W);
+    (`real;      0we);
+    (`float;     0w);
+    (`timestamp; 0Wp);
+    (`month;     0Wm);
+    (`date;      0Wd);
+    (`datetime;  0wz);
+    (`timespan;  0Wn);
+    (`minute;    0Wu);
+    (`second;    0Wv);
+    (`time;      0Wt))
+
+// @private 
+// @kind data
+// @category utilitiesUtility
+// @fileoverview Meta type letters to symbolic names
+i.metaTypes:" bgxhijefcCspmdznuvt"!
+  `general`boolean`guid`byte`short`int`long`real`float`char`compoundChar,
+  `symbol`timestamp`month`date`datetime`timespan`minute`second`time

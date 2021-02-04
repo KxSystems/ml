@@ -40,12 +40,10 @@ describe:{[tab]
   funcs:get each value[funcTab]`func;
   // Get indices of where each type of function is in the function list
   typeDict:`num`other!where@'("num";"other") in/:\:value[funcTab]`type;
-  numTypes:"hijef";
-  timeTypes:"pmdznuvt";
+  numTypes:"hijefpmdznuvt";
   numCols:exec c from meta[tab]where t in numTypes;
-  timeCols:exec c from meta[tab]where t in timeTypes;
-  otherCols:cols[tab]except numCols,timeCols;
-  colDict:`num`other!(numCols,timeCols;otherCols);
+  otherCols:cols[tab]except numCols;
+  colDict:`num`other!(numCols;otherCols);
   applyInd:where 0<count each colDict;
   inds:asc distinct raze typeDict applyInd;
   n:count funcs;
@@ -60,8 +58,6 @@ describe:{[tab]
   descVals:(,'/){flip x@\:/:flip y}'[funcUpd;tabUpd];
   // Reorder columns to original order
   descVals:cols[tab]xcols descVals;
-  // Convert time dependent columns to a timespan
-  if[count timeCols;descVals[timeCols]:`timespan$descVals[timeCols]];
   descKeys[inds]!descVals[inds]
   }
 

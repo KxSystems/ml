@@ -15,6 +15,7 @@ nulltab:([]til 5;@[5?10f;2;:;0n];5?100;@[5?10f;0 1;:;0n];5#0;5#0n)
 plainmat:value flip plaintab
 tab:([]sym:`a`a`a`b`b;time:`time$til 5;@[5#0n;2 4;:;1f];@["f"$til 5;4;:;0n])
 timetab:([]`timestamp$(2000.01.01+til 3);1 3 2;2 1 3)
+timetabn:([]`timestamp$(2000.01.01+til 3),0n;1 3 3 2;2 1 3 3)
 
 \S 42
 

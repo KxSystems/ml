@@ -4,7 +4,7 @@
     "type":["num","other"]
   },
   "type":{
-    "func":"type",
+    "func":"{.ml.i.metaTypes .Q.ty x}",
     "type":["num","other"]
   }, 
   "mean":{
@@ -40,7 +40,7 @@
     "type":["num","other"]
   },
   "inf":{
-    "func":"{sum (`float$x) in (-0w;0w;0W;-0W)}",
+    "func":"{sum x=.ml.i.infinity .ml.i.metaTypes[.Q.ty  x]}",
     "type":["num"]
   },
   "range":{
