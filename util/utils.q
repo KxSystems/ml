@@ -192,6 +192,21 @@ i.dateTime:.p.import`datetime
 // @fileoverview Python pandas dataframe module
 i.pandasDF:.p.import[`pandas]`:DataFrame
 
+// @private
+// @kind function
+// @category utilitiesUtility
+// @fileOverview Check that the length of the endog and another parameter
+//   are equal 
+// @param endog {float[]} The endogenous variable
+// @param param {num[][];num[]} A parameter to compare the length of
+// @param paramName {str} The name of the parameter
+// @returns {null;err} Return an error if they aren't equal
+i.checkLen:{[endog;param;paramName]
+  if[not count[endog]=count param;
+    '"The length of the endog variable and ",paramName," must be equal"
+    ]
+  }
+
 // Metric utility functions
 
 // @private
@@ -570,158 +585,3 @@ i.deprecWarning:{[nameKey;versionMap]
   newFunctions:i.depApply each value mapping;
   {@[x set y]}'[newNames;newFunctions];
   }[;i.versionMap]
-
-// @private
-// @kind function
-// @category utilitiesUtility
-// @fileOverview Check that the length of the endog and another parameter
-//   are equal 
-// @param endog {float[]} The endogenous variable
-// @param param {num[][];num[]} A parameter to compare the length of
-// @param paramName {str} The name of the parameter
-// @returns {null;err} Return an error if they aren't equal
-i.checkLen:{[endog;param;paramName]
-  if[not count[endog]=count param;
-    '"The length of the endog variable and ",paramName," must be equal"
-    ]
-  }
-
-// @private
-// @kind function
-// @category utilitiesUtility
-// @fileOverview Calculate descriptive stats for an OLS regression
-// @param coef {float[]} The coefficients for each predictor variable
-// @param endog {float[]} The endogenous variable
-// @param exog {float[][]} Values that predict the endog variable
-// @param trend {bool} Whether a trend is added to the model
-// @returns {dict[]} The descriptive statistics
-i.OLSstats:{[coef;endog;exog;trend]
-  n:count endog;
-  p:count[coef]-trend;
-  statsDict:i.OLScalcs[coef;endog;exog;n;p];
-  variables:i.coefStats[coef;endog;exog;trend;n;p];
-  `coef`variables`statsDict!(coef;variables;statsDict)
-  }
-
-// @private
-// @kind function
-// @category utilitiesUtility
-// @fileOverview Calculate descriptive stats for an OLS regression
-// @param coef {float[]} The coefficients for each predictor variable
-// @param endog {float[]} The endogenous variable
-// @param exog {float[][]} Values that predict the endog variable
-// @param n {long} The number of endog variables
-// @param p {long} Number of coefs not including trend value
-// @returns {dict[]} The descriptive statistics
-i.OLScalcs:{[coef;endog;exog;n;p]
-  expected:OLS.predict[exog;enlist[`coef]!enlist coef];
-  // DF - Degrees of freedom
-  DFTotal:n-1;
-  DFResidual:DFTotal-p;
-  // Mean squares is SS (sum squares) divided by the degrees of freedom
-  // F-statistic is  F(modelDF, residualDF) = modelMS/residualMS
-  // r2 is SSmodel/SStotal
-  SSTotal:sum{x*x}endog-avg endog;
-  SSModel:sum{x*x}expected-first avg expected;
-  SSResidual:SSTotal-SSModel;
-  MSTotal:SSTotal%DFTotal;
-  MSModel:SSModel%p;
-  MSResidual:SSResidual%DFResidual;
-  fStat:MSModel%MSResidual;
-  r2: SSModel%SSTotal;
-  r2Adj:1-(1-r2)*(n-1)%(n-p)-1;
-  residuals:endog-expected;
-  mse:avg{x*x}residuals;
-  rse:sqrt(sum{x*x}residuals)%DFResidual;
-  pValue:2*1-stats[`:t][`:cdf;<][fStat;p;DFResidual];
-  dictKeys:(`SSTotal;`SSModel;`SSResidual;`MSTotal;`MSModel;`MSResidual;
-    `fStat;`r2;`r2Adj;`mse;`rse;`pValue);
-  dictVals:(SSTotal;SSModel;SSResidual;MSTotal;MSModel;MSResidual;fStat;
-    r2;r2Adj;mse;rse;pValue);
-  dictKeys!dictVals
-  }
-
-// @private
-// @kind function
-// @category utilitiesUtility
-// @fileOverview Calculate descriptive stats for the calculated coefficients
-// @param coef {float[]} The coefficients for each predictor variable
-// @param endog {float[]} The endogenous variable
-// @param exog {float[][]} Values that predict the endog variable
-// @param trend {bool} Whether a trend is added to the model
-// @param n {long} The number of endog variables
-// @param p {long} Number of coefs not including trend value
-// @returns {dict[]} The descriptive statistics for the calculated coefficients
-i.coefStats:{[coef;endog;exog;trend;n;p]
-  varNames:`$"x",'string til count coef;
-  if[trend;varNames:`yIntercept,-1_varNames];
-  stdErr:i.coefStdErr[coef;exog;endog];
-  tStat:coef%stdErr;
-  pValue:2*1-stats[`:t][`:cdf;<][;n-p-1]each abs tStat;
-  // Calculate the confidence interval
-  C195:i.CI95[n;p]each stdErr;
-  ([name: varNames]coef;stdErr;tStat;pValue;C195)
-  }
-  
-// @private
-// @kind function
-// @category utilitiesUtility
-// @fileOverview Calculate the standard errors of the coefficients
-// @param coef {float[]} The calculated coefficiant
-// @param exog {float[][]} Values that predict the endog variable
-// @param endog {float[]} The endogenous variable
-// @returns {float[]} The standard error of the coefficients
-i.coefStdErr:{[coef;exog;endog]
-  shape:count[exog]-count first exog;
-  error:{x*x}endog-exog mmu coef;
-  dSigmaSq:sum error%shape;
-  matrixInv:inv flip[exog]mmu exog;
-  mVarCovar:dSigmaSq*matrixInv;
-  // Get the diagonal values from a matrix
-  diag:mVarCovar ./: 2#/:til count mVarCovar;
-  sqrt diag
-  }
-
-// @private
-// @kind function
-// @category utilitiesUtility
-// @fileOverview Calculate the 95% confidence interval of the standard error
-//   of teh coefficient
-// @param n {long} Number of endog values
-// @param p {long} Number of coefficients
-// @param stdErr {float} The standard error of the coefficient
-// @returns {float} The confidence interval
-i.CI95:{[n;p;stdErr]
-  alpha:(1-.95)%2;
-  // Degrees of freedom
-  df:(n-p)-1;
-  // Calculate the percent point function
-  ppf:stats[`:t][`:ppf][alpha; df]`;
-  neg ppf*stdErr
-  }
-
-// @private 
-// @kind data
-// @category utilitiesUtility
-// @fileoverview Infinity values for different types
-i.infinity:(!) . flip (
-    (`int;       0Wi);
-    (`long;      0W);
-    (`real;      0we);
-    (`float;     0w);
-    (`timestamp; 0Wp);
-    (`month;     0Wm);
-    (`date;      0Wd);
-    (`datetime;  0wz);
-    (`timespan;  0Wn);
-    (`minute;    0Wu);
-    (`second;    0Wv);
-    (`time;      0Wt))
-
-// @private 
-// @kind data
-// @category utilitiesUtility
-// @fileoverview Meta type letters to symbolic names
-i.metaTypes:" bgxhijefcCspmdznuvt"!
-  `general`boolean`guid`byte`short`int`long`real`float`char`compoundChar,
-  `symbol`timestamp`month`date`datetime`timespan`minute`second`time

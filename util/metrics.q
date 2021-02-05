@@ -189,6 +189,18 @@ rmsle:{[pred;true]
 
 // @kind function
 // @category metric
+// @fileoverview Residual squared error 
+// @param pred {float[]} A vector of predicted labels 
+// @param true {float[]} A vector of true labels
+// @param n {long} The degrees of freedom
+// @returns {float} The residual squared error between predicted values
+//   and the true values
+rse:{[pred;true;n]
+  rmse[pred;true]%n
+  }
+ 
+// @kind function
+// @category metric
 // @fileoverview Mean absolute error
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
@@ -231,6 +243,22 @@ smape:{[pred;true]
 //   indicate poor predictors of the system behavior
 r2Score:{[pred;true]
   1-sse[true;pred]%sse[true]avg true
+  }
+
+// @kind function
+// @category metric
+// @fileoverview R2 adjusted score for regression model validation
+// @param pred {float[]} A vector of predicted labels 
+// @param true {float[]} A vector of true labels
+// @param p {long} Number of independent regressors, i.e. the number of 
+//   variables in your model, excluding the constant
+// @returns {float} The R2 adjusted score between the true and predicted values.
+//   Values close to 1 indicate good prediction, while negative values 
+//   indicate poor predictors of the system behavior
+r2AdjScore:{[pred;true;p]
+  n:count pred;
+  r2:r2Score[pred;true];
+  1-(1-r2)*(n-1)%(n-p)-1
   }
 
 // @kind function

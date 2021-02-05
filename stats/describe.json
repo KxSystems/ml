@@ -1,11 +1,11 @@
 {
   "count":{
     "func":"count",
-    "type":["num","other"]
+    "type":["num","temporal","other"]
   },
   "type":{
-    "func":"{.ml.i.metaTypes .Q.ty x}",
-    "type":["num","other"]
+    "func":"{.ml.stats.i.metaTypes .Q.ty x}",
+    "type":["num","temporal","other"]
   }, 
   "mean":{
     "func":"avg",
@@ -17,35 +17,35 @@
   },
   "min":{
     "func":"min",
-    "type":["num"]
+    "type":["num","temporal"]
   },
   "max":{
     "func":"max",
-    "type":["num"]
+    "type":["num","temporal"]
   },
   "q1":{
-    "func":"{.ml.percentile[x;0.25]}",
+    "func":"{.ml.stats.percentile[x;0.25]}",
     "type":["num"]
   },
   "q2":{
-    "func":"{.ml.percentile[x;0.5]}",
+    "func":"{.ml.stats.percentile[x;0.5]}",
     "type":["num"]
   },
   "q3":{
-    "func":"{.ml.percentile[x;0.75]}",
+    "func":"{.ml.stats.percentile[x;0.75]}",
     "type":["num"]
   },
   "nulls":{
     "func":"{sum null x}",
-    "type":["num","other"]
+    "type":["num","temporal","other"]
   },
   "inf":{
-    "func":"{sum x=.ml.i.infinity .ml.i.metaTypes[.Q.ty  x]}",
+    "func":"{sum x=.ml.stats.i.infinity .ml.stats.i.metaTypes[.Q.ty  x]}",
     "type":["num"]
   },
   "range":{
     "func":".ml.range",
-    "type":["num"]
+    "type":["num","temporal"]
   },
   "skew":{
     "func":".ml.fresh.feat.skewness",
@@ -53,15 +53,15 @@
   },
   "countDistinct":{
     "func":"{count distinct x}",
-    "type":["num","other"]
+    "type":["num","temporal","other"]
   },
   "mode":{
     "func":"{first key desc count each group x}",
-    "type":["num","other"]
+    "type":["num","temporal","other"]
   },
   "freq":{
     "func":"{first value asc count each group x}",
-    "type":["num","other"]
+    "type":["num","temporal","other"]
   },
   "sampleDev":{
     "func":"sdev",
