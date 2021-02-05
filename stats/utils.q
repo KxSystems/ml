@@ -53,7 +53,7 @@ stats.i.OLScalcs:{[coef;endog;exog;n;p]
   dfResidual:dfTotal-dfModel;
   // Sum of squares
   SSTotal:sse[endog;avg endog];
-  SSModel:sse[predicted;avg predicted];
+  SSModel:sse[predicted;first avg predicted];
   SSResidual:sse[predicted;endog];
   // Regression mean squares are the sum squares%degrees of freedom
   MSTotal:SSTotal%dfTotal; 

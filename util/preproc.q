@@ -241,7 +241,7 @@ lexiEncode.fit:{[tab;symCols]
 //   values indicate what mapping to use when encoding 
 // @return {tab} Addition of lexigraphical order of symbol column
 lexiEncode.predict:{[mapDict;tab;symDict]
-  symDict:i.mappingCheck[mapDict;tab;symDict];
+  symDict:i.mappingCheck[tab;symDict;mapDict];
   tabCols:key symDict;
   mapCols:value symDict;
   updCols:`$string[tabCols],\:"_lexi";

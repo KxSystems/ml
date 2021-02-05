@@ -35,27 +35,23 @@ clust.kmeans.fit:{[data;df;k;config]
   inputDict:`df`k`iter`kpp!(df;k;updDict`iter;updDict`init);
   modelInfo:r,`data`inputs!(data;inputDict);
   returnInfo:enlist[`modelInfo]!enlist modelInfo;
-  predictFunc:clust.kmeans.predict[;returnInfo];
-  updFunc:clust.kmeans.update[;returnInfo];
+  predictFunc:clust.kmeans.predict returnInfo;
+  updFunc:clust.kmeans.update returnInfo;
   returnInfo,`predict`update!(predictFunc;updFunc)
   }
 
 // @kind function
 // @category clust
 // @fileoverview Predict clusters using k-means config
-// @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.i.df'
 // @param config {dict} A dictionary returned from '.ml.clust.kmeans.fit'
 //   containing
 //   - modelInfo which encapsulates all relevant information needed to fit
 //     the model `data`df`repPts`clt, where data and df are the inputs,
 //     repPts are the calculated k centers and clt are clusters associated
 //     with each of the datapoints
-//   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
+// @param data {float[][]} Each column of the data is an individual datapoint
 // @return {long[]} Predicted clusters
-clust.kmeans.predict:{[data;config]
+clust.kmeans.predict:{[config;data]
   config:config[`modelInfo];
   data:clust.i.floatConversion[data];
   // Get new clusters based on latest config
@@ -65,19 +61,16 @@ clust.kmeans.predict:{[data;config]
 // @kind function
 // @category clust
 // @fileoverview Update kmeans config including new data points
-// @param data {float[][]} Each column of the data is an individual datapoint
 // @param config {dict} A dictionary returned from '.ml.clust.kmeans.fit'
-//   containing:
+//   containing
 //   - modelInfo which encapsulates all relevant information needed to fit
 //     the model `data`df`repPts`clt, where data and df are the inputs,
 //     repPts are the calculated k centers and clt are clusters associated
 //     with each of the datapoints
-//   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
-//     cluster centers such that the model can react to new data
+// @param data {float[][]} Each column of the data is an individual datapoint
 // @return {dict} Updated model configuration (config), including predict 
 //   and update functions
-clust.kmeans.update:{[data;config]
+clust.kmeans.update:{[config;data]
   modelConfig:config[`modelInfo];
   data:clust.i.floatConversion[data];
   // Update data to include new points
@@ -91,7 +84,7 @@ clust.kmeans.update:{[data;config]
   // Return updated config, prediction and update functions
   returnInfo:enlist[`modelInfo]!enlist modelConfig;
   returnKeys:`predict`update;
-  returnVals:(clust.kmeans.predict[;returnInfo];
-    clust.kmeans.update[;returnInfo]);
+  returnVals:(clust.kmeans.predict returnInfo;
+    clust.kmeans.update returnInfo);
   returnInfo,returnKeys!returnVals
   }
