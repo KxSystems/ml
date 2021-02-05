@@ -4,26 +4,19 @@ if "%APPVEYOR_REPO_TAG%"=="true" (
  set ML_VERSION=%APPVEYOR_REPO_BRANCH%_%APPVEYOR_REPO_COMMIT%
 )
 set PATH=C:\Perl;%PATH%
-perl -p -i.bak -e s/TOOLKITVERSION/`\$\"%ML_VERSION%\"/g ml.q
+perl -p -i.bak -e s/MLVERSION/`\$\"%ML_VERSION%\"/g ml.q
+
 
 if not defined QLIC_KC (
  goto :nokdb
 )
-call "build\getkdb.bat" || goto :error
+
 
 set PATH=C:\Miniconda3-x64;C:\Miniconda3-x64\Scripts;%PATH%
-mkdir embedpy
-cd embedpy
-echo getembedpy"latest" | q ..\build\getembedpy.q -q || goto :error
-cd ..
-echo p)print('embedpy runs') | q -q || goto :error
-
-cd clust/build
-call "build.bat" 2017
-cd ../..
+conda config --set always_yes yes --set changeps1 no
+call "build\getkdb.bat" || goto :error
 
 exit /b 0
-
 
 :error
 echo failed with error 

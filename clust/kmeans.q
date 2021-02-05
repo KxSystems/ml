@@ -1,47 +1,97 @@
 \d .ml
 
-// K-Means algorithm
-/* data = data points in `value flip` format
-/* df   = distance function
-/* k    = number of clusters
-/* iter = number of iterations
-/* kpp  = boolean indicating whether to use random initialization (`0b`) or k-means++ (`1b`)
-clust.kmeans:{[data;df;k;iter;kpp]
- // check distance function
- if[not df in`e2dist`edist;clust.i.err.kmeans[]];
- // initialize representative points
- reppts0:$[kpp;clust.i.initkpp df;clust.i.initrdm][data;k];
- // run algo `iter` times
- reppts1:iter{[data;df;reppt]{[data;j]avg each data[;j]}[data]each value group clust.i.getclust[data;df;reppt]}[data;df]/reppts0;
- // return list of clusters
- clust.i.getclust[data;df;reppts1]}
+// K-Means
 
-// Calculate final representative points
-/* data   = data points in `value flip` format
-/* df     = distance function
-/* reppts = representative points of each cluster
-/. r      > return list of clusters
-clust.i.getclust:{[data;df;reppts]max til[count dist]*dist=\:min dist:{[data;df;reppt]clust.i.dd[df]reppt-data}[data;df]each reppts}
+// @kind function
+// @category clust
+// @fileoverview Fit k-Means algorithm to data
+// @param data {float[][]} Each column of the data is an individual datapoint
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param k {long} Number of clusters
+// @param config {dict} Configuration information which can be updated, (::) 
+//   allows a user to use default values, allows update for to maximum 
+//   iterations `iter, initialisation type `init i.e. use k++ or random and
+//   the threshold for smallest distance to move between the previous and
+//   new run `thresh, a distance less than thresh will result in
+//   early stopping
+// @return {dict} A dictionary containing:
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`df`repPts`clt, where data and df are the inputs,
+//     repPts are the calculated k centers and clt are clusters associated
+//     with each of the datapoints
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
+clust.kmeans.fit:{[data;df;k;config]
+  data:clust.i.floatConversion[data];
+  defaultDict:`iter`init`thresh!(100;1b;1e-5);
+  if[config~(::);config:()!()];
+  if[99h<>type config;'"config must be (::) or a dictionary"];
+  // Update iteration dictionary with user changes
+  updDict:defaultDict,config;
+  // Fit algo to data
+  r:clust.i.kMeans[data;df;k;updDict];
+  // Return config with new clusters
+  inputDict:`df`k`iter`kpp!(df;k;updDict`iter;updDict`init);
+  modelInfo:r,`data`inputs!(data;inputDict);
+  returnInfo:enlist[`modelInfo]!enlist modelInfo;
+  predictFunc:clust.kmeans.predict[;returnInfo];
+  updFunc:clust.kmeans.update[;returnInfo];
+  returnInfo,`predict`update!(predictFunc;updFunc)
+  }
 
-// Random initialization of representative points
-/* data = data points in `value flip` format
-/* k    = number of clusters
-/. r    > returns k representative points
-clust.i.initrdm:{[data;k]flip data[;neg[k]?count data 0]}
+// @kind function
+// @category clust
+// @fileoverview Predict clusters using k-means config
+// @param data {float[][]} Each column of the data is an individual datapoint
+// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param config {dict} A dictionary returned from '.ml.clust.kmeans.fit'
+//   containing
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`df`repPts`clt, where data and df are the inputs,
+//     repPts are the calculated k centers and clt are clusters associated
+//     with each of the datapoints
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
+// @return {long[]} Predicted clusters
+clust.kmeans.predict:{[data;config]
+  config:config[`modelInfo];
+  data:clust.i.floatConversion[data];
+  // Get new clusters based on latest config
+  clust.i.getClust[data;config[`inputs]`df;config`repPts]
+  }
 
-// K-Means++ initialization of representative points
-/* df   = distance function
-/* data = data points in `value flip` format
-/* k    = number of clusters
-/. r    > returns k representative points
-clust.i.initkpp:{[df;data;k]
- info0:`point`dists!(data[;rand count data 0];0w);
- infos:(k-1)clust.i.kpp[data;df]\info0;
- infos`point}
-
-// K-Means++ algorithm
-/* data = data points in `value flip` format
-/* df   = distance function
-/* info = dictionary with points and distance info
-/. r    > returns updated info dictionary
-clust.i.kpp:{[data;df;info]@[info;`point;:;data[;s binr rand last s:sums info[`dists]&:clust.i.dists[data;df;info`point;::]]]}
+// @kind function
+// @category clust
+// @fileoverview Update kmeans config including new data points
+// @param data {float[][]} Each column of the data is an individual datapoint
+// @param config {dict} A dictionary returned from '.ml.clust.kmeans.fit'
+//   containing:
+//   - modelInfo which encapsulates all relevant information needed to fit
+//     the model `data`df`repPts`clt, where data and df are the inputs,
+//     repPts are the calculated k centers and clt are clusters associated
+//     with each of the datapoints
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
+// @return {dict} Updated model configuration (config), including predict 
+//   and update functions
+clust.kmeans.update:{[data;config]
+  modelConfig:config[`modelInfo];
+  data:clust.i.floatConversion[data];
+  // Update data to include new points
+  modelConfig[`data]:modelConfig[`data],'data;
+  // Update k means
+  modelConfig[`repPts]:clust.i.updCenters
+    [modelConfig`data;modelConfig[`inputs]`df;()!();modelConfig`repPts];
+  // Get updated clusters based on new means
+  modelConfig[`clust]:clust.i.getClust
+    [modelConfig`data;modelConfig[`inputs]`df;modelConfig`repPts];
+  // Return updated config, prediction and update functions
+  returnInfo:enlist[`modelInfo]!enlist modelConfig;
+  returnKeys:`predict`update;
+  returnVals:(clust.kmeans.predict[;returnInfo];
+    clust.kmeans.update[;returnInfo]);
+  returnInfo,returnKeys!returnVals
+  }

@@ -37,7 +37,6 @@ p)def< range_count(x,min,max):return np.sum((x >= min) & (x < max))
 p)def< variance_larger_than_standard_deviation(x):return np.var(x) > np.std(x)
 p)def< number_cwt_peaks(x,n):return len(find_peaks_cwt(vector=x, widths=np.array(list(range(1, n + 1))), wavelet=ricker)) 
 p)def< quantile_py(x, q):x = pd.Series(x);return pd.Series.quantile(x, q)
-p)def< quantile_py(x, q):x = pd.Series(x);return pd.Series.quantile(x, q)
 p)def< value_count(x, value):
         if np.isnan(value):
                 return np.isnan(x)
@@ -52,6 +51,7 @@ p)def< percentage_recurring_all_val(x):
         x = pd.Series(x)
         if len(x) == 0:
                 return np.nan
+        x = x.copy()
         value_counts = x.value_counts()
         return value_counts[value_counts > 1].sum() / len(x)
 

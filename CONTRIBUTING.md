@@ -22,7 +22,7 @@ If you are looking to lend your development skills to the project, you can check
 
 ### Making Changes
 
-Please fork the projects master branch to your own account. Using your fork, you are free to create changes or create branches in isolation.
+Please fork the project's main branch to your own account. Using your fork, you are free to create changes or create branches in isolation.
 
 The following provides a good general guide ['Beginners Guide To Contributing'](https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/)
 
@@ -36,7 +36,7 @@ When committing changes, please provide a descriptive commit comment of why the 
 
 You can link to a relevant issue in a commit comment by referencing the issue number prefixed with a '#'.
 
-After pushing to your fork, submit a pull request against the main projects master branch. 
+After pushing to your fork, submit a pull request against the project's main branch. 
 
 In order to have your pull request approved in a timely manner, please provide comments on the pull request that details what was changed & for which reasons. The complexity or size of the change indicate the size of the descriptions required, in order for the reviewer to get up to speed as quick as possible.
 

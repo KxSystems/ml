@@ -1,6 +1,7 @@
 numpy
 scipy
-scikit-learn
+scikit-learn<=0.23.0
 statsmodels
 matplotlib
-pandas>=0.21
+sobol-seq
+pandas>=1.0
