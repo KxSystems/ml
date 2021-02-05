@@ -192,11 +192,11 @@ rmsle:{[pred;true]
 // @fileoverview Residual squared error 
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
-// @param n {long} The degrees of freedom
+// @param n {long} The degrees of freedom of the residual
 // @returns {float} The residual squared error between predicted values
 //   and the true values
 rse:{[pred;true;n]
-  rmse[pred;true]%n
+  sqrt sse[pred;true]%n
   }
  
 // @kind function

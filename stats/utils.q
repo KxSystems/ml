@@ -47,23 +47,20 @@ stats.i.OLScalcs:{[coef;endog;exog;n;p]
   mseCalc:mse[predicted;endog];
   r2:r2Score[predicted;endog];
   r2Adj:r2AdjScore[predicted;endog;p];
-  SSTotal:sse[endog;avg endog];
-  SSModel:sse[predicted;avg predicted];
-  SSResidual:sse[predicted;endog];
-  // Sum of squares is divided by the degrees of freedom in Bens version
-  // Need to investigate which is correct in the context
-  MSTotal:mse[avg endog;endog]; 
-  MSModel:mse[first avg predicted;predicted];
-  // Check this is correct
-  MSResidual:MSTotal-MSModel;
-  fStat:MSModel%MSResidual;
-  // I think this is specific to the task at hand rather, not sure if
-  // it can be generalized??
-  logLike:((neg[n%2]*log[2*3.14])-(n%2)*log[SSResidual%n])-(n%2);
   // Calculate degrees of freedom
   dfTotal:n-1;
   dfModel:p;
   dfResidual:dfTotal-dfModel;
+  // Sum of squares
+  SSTotal:sse[endog;avg endog];
+  SSModel:sse[predicted;avg predicted];
+  SSResidual:sse[predicted;endog];
+  // Regression mean squares are the sum squares%degrees of freedom
+  MSTotal:SSTotal%dfTotal; 
+  MSModel:SSModel%dfModel;
+  MSResidual:SSResidual%dfResidual;
+  fStat:MSModel%MSResidual;
+  logLike:stats.i.logLiklihood[SSResidual;n];
   rseCalc:rse[predicted;endog;dfResidual];
   pValue:2*1-pyStats[`:t][`:cdf;<][fStat;p;dfResidual];
   dictKeys:(`dfTotal`dfModel`dfResidual`SSTotal`SSModel`SSResidual`MSTotal,
@@ -73,6 +70,18 @@ stats.i.OLScalcs:{[coef;endog;exog;n;p]
   dictKeys!dictVals
   }
 
+// @private
+// @kind function
+// @category statsUtility
+// @fileOverview Calculate the logliklihood of the residuals
+// @param SSResiduals {float} Sum of sqaures of the residual
+// @param n {long} The number of endog variables
+// @returns {float[]} The loglikelihood value
+stats.i.logLiklihood:{[SSResidual;n]
+  n2:n%2;
+  ((neg[n2]*log[2*3.14])-(n2*log[SSResidual%n]))-n2
+  }
+  
 // @private
 // @kind function
 // @category statsUtility
