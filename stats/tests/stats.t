@@ -23,17 +23,24 @@ descKeys:`count`mean`std`min`q1`q2`q3`max
 ("f"$flip value .ml.stats.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
 all all(flip value .ml.stats.describe[plaintabn2])=flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'([]x4:3f,7#(::))
 
-
 vec1: 6 2 5 1 9 2 4
 vec2:1 9 7 2 3 4 1
-(.ml.stats.OLS.fit[7+2*til 10;til 10;1b][`modelInfo]`coef)~ols[7+2*til 10;1f,'til 10][`:fit][][`:params]`
-(.ml.stats.OLS.fit[7+2*til 10;til 10;0b][`modelInfo]`coef)~ols[7+2*til 10;til 10][`:fit][][`:params]`
-(.ml.stats.OLS.fit[vec2;vec1;0b][`modelInfo]`coef)~ols[vec2;vec1][`:fit][][`:params]`
-mdl:.ml.stats.OLS.fit[7+2*til 10;til 10;1b]
-mdl.predict[vec1]~19 11 17 9 25 11 15f
+mdlOLS1:.ml.stats.OLS.fit[7+2*til 10;til 10;1b]
+mdlOLS2:.ml.stats.OLS.fit[7+2*til 10;til 10;0b]
+mdlOLS3:.ml.stats.OLS.fit[vec2;vec1;0b]
+mdlOLS1.modelInfo.coef~ols[7+2*til 10;1f,'til 10][`:fit][][`:params]`
+mdlOLS2.modelInfo.coef~ols[7+2*til 10;til 10][`:fit][][`:params]`
+mdlOLS3.modelInfo.coef~ols[vec2;vec1][`:fit][][`:params]`
+mdlOLS1.predict[vec1]~19 11 17 9 25 11 15f
+mdlOLS2.predict[7+2*til 10]~ols[7+2*til 10;til 10][`:fit][][`:predict][7+2*til 10]`
+mdlOLS3.predict[vec2]~ols[vec2;vec1][`:fit][][`:predict][vec2]`
 
-(.ml.stats.WLS.fit[7+2*til 10;til 10;(5#1),(5#2);1b][`modelInfo]`coef)~wls[7+2*til 10;1f,'til 10;(5#1),(5#2)][`:fit][][`:params]`
-(.ml.stats.WLS.fit[7+2*til 10;til 10;(5#1),(5#2);0b][`modelInfo]`coef)~wls[7+2*til 10;til 10;(5#1),(5#2)][`:fit][][`:params]`
-(.ml.stats.WLS.fit[vec2;vec1;til count vec1;0b][`modelInfo]`coef)~wls[vec2;vec1;til count vec1][`:fit][][`:params]`
-mdl2:.ml.stats.WLS.fit[7+2*til 10;til 10;(5#1),(5#2);1b]
-mdl2.predict[vec2]~9 25 21 11 13 15 9f
+mdlWLS1:.ml.stats.WLS.fit[7+2*til 10;til 10;(5#1),(5#2);1b]
+mdlWLS2:.ml.stats.WLS.fit[7+2*til 10;til 10;(5#1),(5#2);0b]
+mdlWLS3:.ml.stats.WLS.fit[vec2;vec1;til count vec1;0b]
+mdlWLS1.modelInfo.coef~wls[7+2*til 10;1f,'til 10;(5#1),(5#2)][`:fit][][`:params]`
+mdlWLS2.modelInfo.coef~wls[7+2*til 10;til 10;(5#1),(5#2)][`:fit][][`:params]`
+mdlWLS3.modelInfo.coef~wls[vec2;vec1;til count vec1][`:fit][][`:params]`
+mdlWLS1.predict[vec2]~9 25 21 11 13 15 9f
+mdlWLS2.predict[7+2*til 10]~wls[7+2*til 10;til 10;(5#1),(5#2)][`:fit][][`:predict][7+2*til 10]`
+mdlWLS3.predict[vec2]~wls[vec2;vec1;til count vec1][`:fit][][`:predict][vec2]`

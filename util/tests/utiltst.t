@@ -2,8 +2,6 @@
 \l util/init.q
 
 np:.p.import[`numpy]
-ols:.p.import[`statsmodels.api]`:OLS
-wls:.p.import[`statsmodels.api]`:WLS
 p)import pandas as pd
 p)import numpy as np
 p)import datetime

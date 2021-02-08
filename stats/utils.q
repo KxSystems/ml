@@ -43,7 +43,9 @@ stats.i.OLSstats:{[coef;endog;exog;trend]
 // @param p {long} Number of coefs not including trend value
 // @returns {dict[]} The descriptive statistics
 stats.i.OLScalcs:{[coef;endog;exog;n;p]
-  predicted:stats.OLS.predict[enlist[`coef]!enlist coef;exog];
+  coefDict:enlist[`coef]!enlist coef;
+  modelInfo:enlist[`modelInfo]!enlist coefDict;
+  predicted:stats.OLS.predict[modelInfo;exog];
   mseCalc:mse[predicted;endog];
   r2:r2Score[predicted;endog];
   r2Adj:r2AdjScore[predicted;endog;p];
@@ -63,8 +65,8 @@ stats.i.OLScalcs:{[coef;endog;exog;n;p]
   logLike:stats.i.logLiklihood[SSResidual;n];
   rseCalc:rse[predicted;endog;dfResidual];
   pValue:2*1-pyStats[`:t][`:cdf;<][fStat;p;dfResidual];
-  dictKeys:(`dfTotal`dfModel`dfResidual`SSTotal`SSModel`SSResidual`MSTotal,
-    `MSModel`MSResidual`fStat`r2`r2Adj`mse`rse`pValue`logLike);
+  dictKeys:`dfTotal`dfModel`dfResidual`SSTotal`SSModel`SSResidual`MSTotal,
+    `MSModel`MSResidual`fStat`r2`r2Adj`mse`rse`pValue`logLike;
   dictVals:(dfTotal;dfModel;dfResidual;SSTotal;SSModel;SSResidual;MSTotal;
     MSModel;MSResidual;fStat;r2;r2Adj;mseCalc;rseCalc;pValue;logLike);
   dictKeys!dictVals
@@ -74,7 +76,7 @@ stats.i.OLScalcs:{[coef;endog;exog;n;p]
 // @kind function
 // @category statsUtility
 // @fileOverview Calculate the logliklihood of the residuals
-// @param SSResiduals {float} Sum of sqaures of the residual
+// @param SSResiduals {float} Sum of squares of the residual
 // @param n {long} The number of endog variables
 // @returns {float[]} The loglikelihood value
 stats.i.logLiklihood:{[SSResidual;n]
@@ -127,7 +129,7 @@ stats.i.coefStdErr:{[coef;exog;endog]
 // @kind function
 // @category statsUtility
 // @fileOverview Calculate the 95% confidence interval of the standard error
-//   of teh coefficient
+//   of the coefficient
 // @param n {long} Number of endog values
 // @param p {long} Number of coefficients
 // @param stdErr {float} The standard error of the coefficient

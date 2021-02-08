@@ -38,20 +38,21 @@ minMaxScaler.fit:{[data]
   minData:$[typData;min each;min]data;
   maxData:$[typData;max each;max]data;
   scalingInfo:`minData`maxData!(minData;maxData);
-  predict:i.apUpd minMaxScaler.predict scalingInfo;
-  `modelInfo`predict!(scalingInfo;predict)
+  returnInfo:enlist[`modelInfo]!enlist scalingInfo;
+  predict:i.apUpd minMaxScaler.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predict
   }
 
 // @kind function
 // @category preprocessing
 // @fileoverview Scale data between 0-1 based on fitted model
-// @param modelInfo {dict} Model parameters returned from `minMaxScaler.fit`
+// @params config {dict} Information returned from `ml.minMaxScaler.fit`
 // @param data {tab;dict;num[]} Numerical data
 // @return {tab;dict;num[]} A min-max scaled representation with values
 //   scaled between 0 and 1f
-minMaxScaler.predict:{[modelInfo;data]
-  minData:modelInfo`minData;
-  maxData:modelInfo`maxData;
+minMaxScaler.predict:{[config;data]
+  minData:config[`modelInfo;`minData];
+  maxData:config[`modelInfo;`maxData];
   (data-minData)%maxData-minData
   }
 
@@ -78,20 +79,21 @@ stdScaler.fit:{[data]
   avgData:$[typData in 0 98 99h;avg each;avg]data;
   devData:$[typData in 0 98 99h;dev each;dev]data;
   scalingInfo:`avgData`devData!(avgData;devData);
-  predict:i.apUpd stdScaler.predict scalingInfo;
-  `modelInfo`predict!(scalingInfo;predict)
+  returnInfo:enlist[`modelInfo]!enlist scalingInfo;
+  predict:i.apUpd stdScaler.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predict
   }
 
 // @kind function
 // @category preprocessing
 // @fileoverview Standard scaler transform-based representation of data
 //  using a fitted model
-// @param modelInfo {dict} Model parameters returned from `minMaxScaler.fit`
+// @params config {dict} Information returned from `ml.stdScaler.fit`
 // @param data {tab;dict;num[]} Numerical data
 // @return {tab;dict;num[]} All data has undergone standard scaling
-stdScaler.predict:{[modelInfo;data]
-  avgData:modelInfo`avgData;
-  devData:modelInfo`devData;
+stdScaler.predict:{[config;data]
+  avgData:config[`modelInfo;`avgData];
+  devData:config[`modelInfo;`devData];
   (data-avgData)%devData
   }
 
@@ -168,19 +170,21 @@ oneHot.fit:{[tab;symCols]
   if[(::)~symCols;symCols:i.findCols[tab;"s"]];
   mapVals:asc each distinct each tab symCols,:(); 
   mapDict:symCols!mapVals;
-  predict:oneHot.predict mapDict;
-  `modelInfo`predict!(mapDict;predict)
+  returnInfo:enlist[`modelInfo]!enlist mapDict;
+  predict:oneHot.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predict
   }
 
 // @kind function
 // @category preprocessing
 // @fileoverview Encode categorical features using one-hot encoded fitted model
-// @return {tab} One-hot encoded representation of categorical data
-// @params mapDict {dict} Map cateogorical values to their encoded values
+// @params config {dict} Information returned from `ml.oneHot.fit`
 // @param tab {tab} Numerical and non numerical data
 // @param symDict {dict} Keys indicate the columns in the table to be encoded,
 //   values indicate what mapping to use when encoding 
-oneHot.predict:{[mapDict;tab;symDict]
+// @return {tab} One-hot encoded representation of categorical data
+oneHot.predict:{[config;tab;symDict]
+  mapDict:config`modelInfo;
   symDict:i.mappingCheck[tab;symDict;mapDict];
   oneHotVal:mapDict value symDict;
   oneHotData:key symDict;
@@ -228,24 +232,27 @@ lexiEncode.fit:{[tab;symCols]
   mapping:labelEncode.fit each tab symCols,:();
   mapVals:exec modelInfo from mapping;
   mapDict:symCols!mapVals;
-  predict:lexiEncode.predict mapDict;
-  `modelInfo`predict!(mapDict;predict)
+  returnInfo:enlist[`modelInfo]!enlist mapDict;
+  predict:lexiEncode.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predict
   }
 
 // @kind function
 // @category preprocessing
 // @fileoverview Lexicode encode data based on previously fitted model
-// @params mapDict {dict} Map cateogorical values to their encoded values
+// @params config {dict} Information returned from `ml.lexiEncode.fit`
 // @param tab {tab} Numerical and categorical data
 // @param symDict {dict} Keys indicate the columns in the table to be encoded,
 //   values indicate what mapping to use when encoding 
 // @return {tab} Addition of lexigraphical order of symbol column
-lexiEncode.predict:{[mapDict;tab;symDict]
+lexiEncode.predict:{[config;tab;symDict]
+  mapDict:config`modelInfo;
   symDict:i.mappingCheck[tab;symDict;mapDict];
   tabCols:key symDict;
   mapCols:value symDict;
   updCols:`$string[tabCols],\:"_lexi";
-  updVals:labelEncode.predict'[mapDict mapCols;tab tabCols];
+  modelInfo:enlist[`modelInfo]!/:enlist each mapDict mapCols;
+  updVals:labelEncode.predict'[modelInfo;tab tabCols];
   updDict:updCols!updVals;
   flip(tabCols _ flip tab),updDict
   }
@@ -272,19 +279,20 @@ lexiEncode.fitPredict:{[tab;symCols]
 labelEncode.fit:{[data]
   uniqueData:asc distinct data;
   map:uniqueData!til count uniqueData;
-  predict:labelEncode.predict[map];
+  returnInfo:enlist[`modelInfo]!enlist map;
+  predict:labelEncode.predict returnInfo;
   encoding:uniqueData?data;
-  `modelInfo`predict!(map;predict)
+  returnInfo,enlist[`predict]!enlist predict
   }
 
 // @kind function
 // @category preprocessing
 // @fileoverview Encode categorical data to an integer value representation
-// @param map {dict} Maps true representation to associated integer or
-//   the return from .ml.labelencode
+// @params config {dict} Information returned from `ml.labelEncode.fit`
 // @param data {any[]} Data to be reverted to original representation
 // @return {int[]} List transformed to integer value 
-labelEncode.predict:{[map;data]
+labelEncode.predict:{[config;data]
+  map:config`modelInfo;
   -1^map data
   }
 
@@ -302,9 +310,9 @@ labelEncode.fitPredict:{[data]
 // @category preprocessing
 // @fileoverview Transform a list of integers based on a previously generated
 //    label encoding
+// @param data {int[]} Data to be reverted to original representation
 // @param map {dict} Maps true representation to associated integer or
 //   the return from .ml.labelencode
-// @param data {int[]} Data to be reverted to original representation
 // @return {sym[]} Integer values of `data` replaced by their appropriate 
 //  'true' representation. Values that do not appear in the mapping supplied
 //   by `map` are returned as null values 

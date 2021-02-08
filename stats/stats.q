@@ -16,15 +16,17 @@ stats.OLS.fit:{[endog;exog;trend]
   if[1=count exog[0];exog:flip enlist exog];
   coef:first enlist[endog]lsq flip exog;
   modelInfo:stats.i.OLSstats[coef;endog;exog;trend];
-  predFunc:stats.OLS.predict modelInfo;
-  `modelInfo`predict!(modelInfo;predFunc)
+  returnInfo:enlist[`modelInfo]!enlist modelInfo;
+  predict:stats.OLS.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predict
   }
 
 // @fileOverview Predict values using coefficients calculated via OLS
-// @param modelInfo {dict} Information calculated from `OLS.fit`
+// @param config {dict} Information returned from `OLS.fit`
 // @param exog {tab;num[][];num[]} The exogenous variables
 // @returns {number[]} The predicted values
-stats.OLS.predict:{[modelInfo;exog]
+stats.OLS.predict:{[config;exog]
+  modelInfo:config`modelInfo;
   trend:`yIntercept in key modelInfo`variables;
   exog:"f"$$[trend;1f,'exog;exog];
   coef:modelInfo`coef;
@@ -62,12 +64,13 @@ stats.WLS.fit:{[endog;exog;weights;trend]
   coef:raze inv[updPredictor]mmu updDependent;
   modelInfo:stats.i.OLSstats[coef;endog;exog;trend];
   modelInfo,:enlist[`weights]!enlist weights;
-  predFunc:stats.WLS.predict modelInfo;
-  `modelInfo`predict!(modelInfo;predFunc)
+  returnInfo:enlist[`modelInfo]!enlist modelInfo;
+  predict:stats.WLS.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predict
   }
 
 // @fileOverview Predict values using coefficients calculated via WLS
-// @param modelInfo {dict} Information calculated from `WLS.fit`
+// @param config {dict} Information returned from `WLS.fit`
 // @param exog {tab;num[][];num[]} The exogenous variables
 // @returns {number[]} The predicted values
 stats.WLS.predict:stats.OLS.predict
