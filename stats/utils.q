@@ -43,7 +43,7 @@ stats.i.OLSstats:{[coef;endog;exog;trend]
 // @param p {long} Number of coefs not including trend value
 // @returns {dict[]} The descriptive statistics
 stats.i.OLScalcs:{[coef;endog;exog;n;p]
-  predicted:stats.OLS.predict[exog;enlist[`coef]!enlist coef];
+  predicted:stats.OLS.predict[enlist[`coef]!enlist coef;exog];
   mseCalc:mse[predicted;endog];
   r2:r2Score[predicted;endog];
   r2Adj:r2AdjScore[predicted;endog;p];
