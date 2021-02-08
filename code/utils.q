@@ -232,7 +232,9 @@ utils.modelPath:{[dict]
     `savedModelName in keyDict;
     $[10h=type model`savedModelName;
       "namedModels/",model[`savedModelName],"/";
-      '"Types provided for model name based retrieval must be a string"
+      -11h=type model`savedModeName;
+      "namedModels/",string[model`savedModelName],"/";
+      '"Types provided for model name based retrieval must be a string/symbol"
       ];
     '"A user must define model start date/time or model name.";
     ]
@@ -378,7 +380,7 @@ utils.nearestModel:{[dict]
     '"No named or dated and timed models in outputs folder,",
     " please generate models prior to model retrieval"
     ];
-  allTimes:raze datedTimed,key namedModels;
+  allTimes:asc raze datedTimed,key namedModels;
   binLoc:bin[allTimes;timeMatch];
   if[-1=binLoc;binLoc:binr[allTimes;timeMatch]];
   nearestTime:allTimes binLoc;

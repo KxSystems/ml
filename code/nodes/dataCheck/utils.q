@@ -161,9 +161,10 @@ dataCheck.i.fileNameCheck:{[config]
   loggingExists :$[utils.logging;count key hsym`$config`printFile;0];
   dataCheck.i.delFiles[config;ignore;mainFileExists;loggingExists];
   dataCheck.i.printWarning[config;ignore;mainFileExists;loggingExists];
+  modelName:$[-11h=type config`savedModelName;string;]config`savedModelName;
   if[not`~config`savedModelName;
     h:hopen hsym`$path,"/outputs/timeNameMapping.txt";
-    h .Q.s enlist[sum config`startDate`startTime]!enlist config`savedModelName;
+    h .Q.s enlist[sum config`startDate`startTime]!enlist modelName;
     hclose h;
     ]
   }

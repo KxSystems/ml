@@ -17,7 +17,7 @@ cli.i.checkCustom:{[fileName]
     not()~key hsym`$filePath:"./",fileName;
       :filePath;
     'fileName," does not exist in current directory or '",path,
-      "code/configuration/customConfig'"
+      "/code/configuration/customConfig/'"
     ]
   }
 
