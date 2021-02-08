@@ -424,6 +424,18 @@ utils.parseNamedFiles:{
 
 // @kind function
 // @category utility
+// @fileoverview Delete files and folders recursively
+// @param filepath {sym} File handle for file or directory to delete
+// @return {null;err} Null on success, an error if attempting to delete 
+//   folders outside of automl
+utils.deleteRecursively :{[filepath]
+  if[not filepath>hsym`$path;'"Delete path outside of scope of automl"];
+  orderedPaths:{$[11h=type d:key x;raze x,.z.s each` sv/:x,/:d;d]}filepath;
+  hdel each desc orderedPaths;
+  }
+
+// @kind function
+// @category utility
 // @fileoverview Delete models based on user provided information 
 //   surrounding the date and time of model generation
 // @param config {dict} User provided config containing, start date/time
@@ -431,19 +443,22 @@ utils.parseNamedFiles:{
 //   wildcarded string
 // @param pathStem {string} the start of all paths to be constructed, this
 //   is in the general case .automl.path,"/outputs/"
-// @return {null} returns an error if attempting to delete folders which do
-//   not have a match
+// @return {null;err} Null on success, error if attempting to delete folders
+//   which do not have a match
 utils.deleteDateTimeModel:{[config;pathStem]
   dateInfo:config`startDate;
   timeInfo:config`startTime;
   pathStem,:"dateTimeModels/";
   allDates:key hsym`$pathStem;
   relevantDates:utils.getRelevantDates[dateInfo;allDates];
-  relevantDates:string $[1=count relevantDates;enlist;]relevantDates;
+  dateCheck:(1=count relevantDates)&0>type relevantDates;
+  relevantDates:string $[dateCheck;enlist;]relevantDates;
   datePaths:(pathStem,/:relevantDates),\:"/";
   fileList:raze{x,/:string key hsym`$x}each datePaths;
   relevantFiles:utils.getRelevantFiles[timeInfo;fileList];
-  {system"rm -r ",x}each relevantFiles
+  utils.deleteRecursively each hsym`$relevantFiles;
+  emptyPath:where 0=count each key each datePaths:hsym`$datePaths;
+  if[count emptyPath;hdel each datePaths emptyPath];
   }
 
 // @kind function
@@ -512,15 +527,15 @@ utils.getRelevantFiles:{[timeInfo;fileList]
 //   .automl.path,"/outputs/" folder
 // @param pathStem {string} the start of all paths to be constructed, this
 //   is in the general case .automl.path,"/outputs/"
-// @return {null} returns an error if attempting to delete folders which do
-//   not have a match
+// @return {null;err} Null on success, error if attempting to delete folders
+//   which do not have a match
 utils.deleteNamedModel:{[config;pathStem]
   nameInfo:config[`savedModelName];
   namedPathStem:pathStem,"namedModels/";
   relevantNames:utils.getRelevantNames[nameInfo;namedPathStem];
   namedPaths:namedPathStem,/:string relevantNames;
   utils.deleteFromNameMapping[relevantNames;pathStem];
-  {system "rm -r ",x}each namedPaths
+  utils.deleteRecursively each hsym `$namedPaths;
   }
 
 // @kind function

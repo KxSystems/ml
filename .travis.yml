@@ -27,6 +27,7 @@ install:
   # grab latest embedpy
   - if [[ "x$QLIC_KC" != "x" ]]; then
       echo -n $QLIC_KC |base64 --decode > q/kc.lic;
+      pip install --upgrade pip;
       pip -q install -r requirements.txt;
       pip install tensorflow;
       pip install keras;
