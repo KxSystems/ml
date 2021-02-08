@@ -59,8 +59,8 @@ dataPreprocessing.featPreprocess:{[features;config]
 // @param features {tab} Feature data as a table
 // @return {tab} Feature table with appropriate feature preprocessing applied
 dataPreprocessing.nonTextPreprocess:{[features]
-  features:.ml.dropconstant features;
   features:dataPreprocessing.nullEncode[features;med];
+  features:.ml.dropconstant features;
   dataPreprocessing.infreplace features
   }
 

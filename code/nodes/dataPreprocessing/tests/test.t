@@ -3,8 +3,8 @@
 .automl.loadfile`:code/tests/utils.q
 
 // Any configuration information required to run the function
-nonFreshConfig:enlist[`featureExtractionType]!enlist`normal
-freshConfig   :`featureExtractionType`aggregationColumns!`fresh`freshIdx
+nonFreshConfig:`featureExtractionType`logFunc!(`normal;{})
+freshConfig   :`featureExtractionType`aggregationColumns`logFunc!(`fresh;`freshIdx;{})
 
 -1"\nTesting appropriate sym encoding data preprocessing";
 
@@ -60,7 +60,7 @@ passingTest[.automl.dataPreprocessing.symEncoding;(freshOheFreqEncodeTab;freshCo
 -1"\nTesting appropriate feature preprocessing";
 
 // Nlp configuration
-nlpConfig:enlist[`featureExtractionType]!enlist`nlp
+nlpConfig:`featureExtractionType`logFunc!(`nlp;{})
 
 // Constant, null and infinity input data
 infList:2 1 2 0w 0w 0w 1 2 0 0
@@ -77,6 +77,7 @@ infListReturn:2 1 2 2 2 2 1 2 0 0f
 constantTab   :([]10?10f;10?1f;10#`a)
 nullTab       :([]10?10f;10?1f;nullList)
 infTab        :([]10?10f;10?1f;infList)
+constNullTab  :([]10?10f;10?1f;y:(5#1f),(5#0n))
 nlpConstantTab:([]string each 10?`3;10?10f;10?1f;10#`a)
 nlpNullTab    :([]string each 10?`3;10?10f;10?1f;nullList)
 nlpInfTab     :([]string each 10?`3;10?10f;10?1f;infList)
@@ -85,6 +86,7 @@ nlpInfTab     :([]string each 10?`3;10?10f;10?1f;infList)
 constantReturnTab   :delete x2 from constantTab
 nullReturnTab       :nullTab,'flip nullReturnDict
 infReturnTab        :update infList:infListReturn from infTab
+constNullReturnTab  :update y_null:"j"$0000011111b from delete y from constNullTab
 nlpConstantReturnTab:delete x3 from nlpConstantTab
 nlpNullReturnTab    :nlpNullTab,'flip nullReturnDict
 nlpInfReturnTab     :update infList:infListReturn from nlpInfTab
@@ -93,6 +95,7 @@ nlpInfReturnTab     :update infList:infListReturn from nlpInfTab
 passingTest[.automl.dataPreprocessing.featPreprocess;(constantTab;nonFreshConfig);0b;constantReturnTab]
 passingTest[.automl.dataPreprocessing.featPreprocess;(nullTab    ;nonFreshConfig);0b;nullReturnTab]
 passingTest[.automl.dataPreprocessing.featPreprocess;(infTab     ;nonFreshConfig);0b;infReturnTab]
+passingTest[.automl.dataPreprocessing.featPreprocess;(constNullTab;nonFreshConfig);0b;constNullReturnTab]
 
 passingTest[.automl.dataPreprocessing.featPreprocess;(nlpConstantTab;nlpConfig);0b;nlpConstantReturnTab]
 passingTest[.automl.dataPreprocessing.featPreprocess;(nlpNullTab    ;nlpConfig);0b;nlpNullReturnTab]
