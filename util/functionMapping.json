@@ -139,6 +139,16 @@
       "function":".ml.timeSplit",
       "warning":"futureWarning",
       "version":"3.0"
+    },
+    ".ml.describe":{
+      "function":".ml.stats.describe",
+      "warning":"futureWarning",
+      "version":"3.0"
+    },
+    ".ml.percentile":{
+      "function":".ml.stats.percentile",
+      "warning":"futureWarning",
+      "version":"3.0"
     }
   },
   "clust":{

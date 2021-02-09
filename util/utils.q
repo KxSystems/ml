@@ -231,6 +231,17 @@ i.auc:{[x;y]
   sum 1_deltas[x]*y-.5*deltas y
   }
 
+// @private
+// @kind function
+// @category metricUtility
+// @fileoverview Calculate the correlation of a matrix
+// @param matrix {num[]} A sample from a distribution
+// @returns {num[]} The covariance matrix
+i.corrMatrix:{[matrix]
+  devMatrix:dev each matrix;
+  covMatrix[matrix]%devMatrix*/:devMatrix
+  }
+
 // Preproc utility functions
 
 // @private

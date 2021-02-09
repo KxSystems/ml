@@ -149,11 +149,11 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.corrMatrix[(011b;001b)]~(1 0.5;0.5 1)
 .ml.corrMatrix[(1111b;1111b)]~(2 2#4#0n)
 .ml.corrMatrix[(1 1 2;1 2 0n)]~(1 0n;2#0n)
-(value .ml.corrMat[plaintab]) ~ "f"$([]1 1 -1 1;1 1 -1 1;-1 -1 1 -1;1 1 -1 1)
-.ml.corrMat[(0011b;1010b)]~(1 0f;0 1f)
-.ml.corrMat[(0011b;1111b)]~(1 0n;2#0n)
-.ml.corrMat[(1111b;1111b)]~(2 2#2#0n)
-.ml.corrMat[(1 1 2;1 2 0n)]~(1 0n;2#0n)
+(value .ml.corrMatrix[plaintab]) ~ "f"$([]1 1 -1 1;1 1 -1 1;-1 -1 1 -1;1 1 -1 1)
+.ml.corrMatrix[(0011b;1010b)]~(1 0f;0 1f)
+.ml.corrMatrix[(0011b;1111b)]~(1 0n;2#0n)
+.ml.corrMatrix[(1111b;1111b)]~(2 2#2#0n)
+.ml.corrMatrix[(1 1 2;1 2 0n)]~(1 0n;2#0n)
 {.ml.rocAucScore[x;y]~rocau[x;y]`}[10?0b;10?1f]
 .ml.rocAucScore[10#01b;10#1f]~0.5
 .ml.rocAucScore[10#0b;10?1f]~0f

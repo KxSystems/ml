@@ -42,7 +42,7 @@ stats.OLS.predict:{[config;exog]
 
 // @kind function
 // @category stats
-// @fileoverview Train an ordinary least squares model on data
+// @fileoverview Train a weighted least squares model on data
 // @param endog {num[][];num[]} The endogenous variable
 // @param exog {num[][];num[]} A variables that predict the 
 //   endog variable
@@ -94,9 +94,9 @@ stats.describeFuncs:.j.k raze read0`$path,"/stats/describe.json"
 
 // @kind function
 // @category stats
-// @fileoverview Descriptive information
+// @fileoverview Generates descriptive statistics of a table
 // @param tab {tab} A simple table
-// @returns {dict} A tabular description of aggregate information column
+// @returns {dict} A tabular description of aggregate information of each column
 stats.describe:{[tab]
   funcTab:stats.describeFuncs;
   if[not`func in cols value funcTab;'"Keyed table must contain a func column"];

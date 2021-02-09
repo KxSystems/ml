@@ -305,25 +305,13 @@ covMatrix:{[matrix]
 
 // @kind function
 // @category metric
-// @fileoverview Calculate the correlation of a matrix
-// @param matrix {num[]} A sample from a distribution
-// @returns {num[]} The covariance matrix 
-corrMatrix:{[matrix]
-  devMatrix:dev each matrix;
-  covMatrix[matrix]%devMatrix*/:devMatrix
-  }
-
-// not documented
-
-// @kind function
-// @category metric
-// @fileoverview Table-like correlation matrix for a simple table
-// @param data {tab;num[]} Numerical values
-// @returns {dict} A correlation matrix in tabular format 
-corrMat:{[data]
+// @fileoverview Calculate the correlation of a matrix or table
+// @param data {tab;num[]} A sample from a distribution
+// @returns {dict;num[]} The covariance of the data 
+corrMatrix:{[data]
   dataTab:98=type data;
   matrix:$[dataTab;value flip@;]data;
-  corrMat:corrMatrix matrix;
+  corrMat:i.corrMatrix matrix;
   $[dataTab;{x!x!/:y}cols data;]corrMat
   }
 
