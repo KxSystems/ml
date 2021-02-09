@@ -189,6 +189,18 @@ rmsle:{[pred;true]
 
 // @kind function
 // @category metric
+// @fileoverview Residual squared error 
+// @param pred {float[]} A vector of predicted labels 
+// @param true {float[]} A vector of true labels
+// @param n {long} The degrees of freedom of the residual
+// @returns {float} The residual squared error between predicted values
+//   and the true values
+rse:{[pred;true;n]
+  sqrt sse[pred;true]%n
+  }
+ 
+// @kind function
+// @category metric
 // @fileoverview Mean absolute error
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
@@ -235,6 +247,22 @@ r2Score:{[pred;true]
 
 // @kind function
 // @category metric
+// @fileoverview R2 adjusted score for regression model validation
+// @param pred {float[]} A vector of predicted labels 
+// @param true {float[]} A vector of true labels
+// @param p {long} Number of independent regressors, i.e. the number of 
+//   variables in your model, excluding the constant
+// @returns {float} The R2 adjusted score between the true and predicted values.
+//   Values close to 1 indicate good prediction, while negative values 
+//   indicate poor predictors of the system behavior
+r2AdjScore:{[pred;true;p]
+  n:count pred;
+  r2:r2Score[pred;true];
+  1-(1-r2)*(n-1)%(n-p)-1
+  }
+
+// @kind function
+// @category metric
 // @fileoverview One-sample t-test score
 // @param sample {num[]} A set of samples from a distribution
 // @param mu {float} The population mean
@@ -277,25 +305,13 @@ covMatrix:{[matrix]
 
 // @kind function
 // @category metric
-// @fileoverview Calculate the correlation of a matrix
-// @param matrix {num[]} A sample from a distribution
-// @returns {num[]} The covariance matrix 
-corrMatrix:{[matrix]
-  devMatrix:dev each matrix;
-  covMatrix[matrix]%devMatrix*/:devMatrix
-  }
-
-// not documented
-
-// @kind function
-// @category metric
-// @fileoverview Table-like correlation matrix for a simple table
-// @param data {tab;num[]} Numerical values
-// @returns {dict} A correlation matrix in tabular format 
-corrMat:{[data]
+// @fileoverview Calculate the correlation of a matrix or table
+// @param data {tab;num[]} A sample from a distribution
+// @returns {dict;num[]} The covariance of the data 
+corrMatrix:{[data]
   dataTab:98=type data;
   matrix:$[dataTab;value flip@;]data;
-  corrMat:corrMatrix matrix;
+  corrMat:i.corrMatrix matrix;
   $[dataTab;{x!x!/:y}cols data;]corrMat
   }
 

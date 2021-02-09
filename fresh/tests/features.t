@@ -330,7 +330,7 @@ np:.p.import[`numpy]
 /For the testing of quantiles the 'y' argument must be in the range [0;1] by definition
 .ml.fresh.feat.quantile[xj;0.5] ~ quantile_py[xj;0.5]
 .ml.fresh.feat.quantile[xf;0.5] ~ quantile_py[xf;0.5]
-.ml.fresh.feat.quantile[xb;0.5] ~ quantile_py[xb;0.5]
+.ml.fresh.feat.quantile[xb;0.5] ~ quantile_py["f"$xb;0.5]
 .ml.fresh.feat.quantile[xi;0.5] ~ quantile_py[xi;0.5]
 .ml.fresh.feat.quantile[x0;0.5] ~ 0f
 .ml.fresh.feat.quantile[x1;0.5] ~ quantile_py[x1;0.5]

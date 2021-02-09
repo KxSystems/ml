@@ -11,35 +11,6 @@ range:{[array]
 
 // @kind function
 // @category utilities
-// @fileoverview Percentile calculation for an array
-// @param array {num[]} A numerical array
-// @param perc {float} Percentile of interest
-// @returns {float} The value below which `perc` percent of the observations 
-//   within the array are found
-percentile:{[array;perc]
-  percent:perc*-1+count array;
-  i:0 1+\:floor percent;
-  iDiff:0^deltas asc[array]i;
-  iDiff[0]+(percent-i 0)*last iDiff
-  }
-
-// @kind function
-// @category utilities
-// @fileoverview Descriptive information
-// @param tab {tab} A simple table
-// @returns {dict} A tabular description of aggregate information
-//  (count, standard deviation, quartiles etc) for each numeric column
-describe:{[tab]
-  descKeys:`count`mean`std`min`q1`q2`q3`max;
-  funcs:(count;avg;sdev;min;percentile[;.25];percentile[;.5];
-    percentile[;.75];max);
-  types:"hijefpmdznuvt";
-  descVals:flip funcs@\:/:flip(exec c from meta[tab]where t in types)#tab;
-  descKeys!descVals
-  }
-
-// @kind function
-// @category utilities
 // @fileoverview Evenly-spaced values
 // @param start {num} Start of the interval (inclusive)
 // @param end {num} End of the interval (non-inclusive)

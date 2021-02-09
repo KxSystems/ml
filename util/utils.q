@@ -192,6 +192,21 @@ i.dateTime:.p.import`datetime
 // @fileoverview Python pandas dataframe module
 i.pandasDF:.p.import[`pandas]`:DataFrame
 
+// @private
+// @kind function
+// @category utilitiesUtility
+// @fileOverview Check that the length of the endog and another parameter
+//   are equal 
+// @param endog {float[]} The endogenous variable
+// @param param {num[][];num[]} A parameter to compare the length of
+// @param paramName {str} The name of the parameter
+// @returns {null;err} Return an error if they aren't equal
+i.checkLen:{[endog;param;paramName]
+  if[not count[endog]=count param;
+    '"The length of the endog variable and ",paramName," must be equal"
+    ]
+  }
+
 // Metric utility functions
 
 // @private
@@ -214,6 +229,17 @@ i.curvePts:{[x;y]
 // @returns {num[]} Area under the curve
 i.auc:{[x;y]
   sum 1_deltas[x]*y-.5*deltas y
+  }
+
+// @private
+// @kind function
+// @category metricUtility
+// @fileoverview Calculate the correlation of a matrix
+// @param matrix {num[]} A sample from a distribution
+// @returns {num[]} The covariance matrix
+i.corrMatrix:{[matrix]
+  devMatrix:dev each matrix;
+  covMatrix[matrix]%devMatrix*/:devMatrix
   }
 
 // Preproc utility functions
@@ -386,8 +412,8 @@ i.timeSplit[`p`z]:{[time]raze i.timeSplit[`d`n]@\:time}
 // @private
 // @kind function
 // @category preprocessingUtility
-// @fileoverview Break time dependent columns into constituent components
-// @param data {any} Data containing a time dependent component
+// @fileoverview Break time endog columns into constituent components
+// @param data {any} Data containing a time endog component
 // @return {dict} Time or date types broken into their constituent components
 i.timeSplit1:{[data]
   i.timeSplit[`$.Q.t type data]data:raze data
@@ -396,8 +422,8 @@ i.timeSplit1:{[data]
 // @private
 // @kind function
 // @category preprocessingUtility
-// @fileoverview Break time dependent columns into constituent components
-// @param tab {tab} Contains time dependent columns
+// @fileoverview Break time endog columns into constituent components
+// @param tab {tab} Contains time endog columns
 // @param timeCols {sym[]} Columns to apply coding to, if set to :: all columns
 //   with date/time types will be encoded
 // @return {dict} All time or date types broken into labeled versions of their

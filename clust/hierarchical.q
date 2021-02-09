@@ -10,18 +10,18 @@
 // @param n {long} Number of representative points per cluster
 // @param c {float} Compression factor for representative points
 // @return {dict} A dictionary containing:
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`inputs`dgram, where data is the original data, inputs
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
-//   - predict is a projection allowing for prediction on new input data
+//   predict - A projection allowing for prediction on new input data
 clust.cure.fit:{[data;df;n;c]
   data:clust.i.floatConversion[data];
   if[not df in key clust.i.df;clust.i.err.df[]];
   dgram:clust.i.hcSCC[data;df;`cure;1;n;c;1b];
   modelInfo:`data`inputs`dgram!(data;`df`n`c!(df;n;c);dgram);
   returnInfo:enlist[`modelInfo]!enlist modelInfo;
-  predictFunc:clust.cure.predict[;returnInfo;];
+  predictFunc:clust.cure.predict returnInfo;
   returnInfo,enlist[`predict]!enlist predictFunc
   }
 
@@ -32,11 +32,11 @@ clust.cure.fit:{[data;df;n;c]
 // @param df {sym} Distance function name within '.ml.clust.i.df' 
 // @param lf {sym} Linkage function name within '.ml.clust.i.lf' 
 // @return {dict} A dictionary containing:
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`inputs`dgram, where data is the original data, inputs
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
-//   - predict is a projection allowing for prediction on new input data
+//   predict - A projection allowing for prediction on new input data
 clust.hc.fit:{[data;df;lf]
   // Check distance and linkage functions
   data:clust.i.floatConversion[data];
@@ -49,7 +49,7 @@ clust.hc.fit:{[data;df;lf]
     ];
   modelInfo:`data`inputs`dgram!(data;`df`lf!(df;lf);dgram);
   returnInfo:enlist[`modelInfo]!enlist modelInfo;
-  predictFunc:clust.hc.predict[;returnInfo;];
+  predictFunc:clust.hc.predict returnInfo;
   returnInfo,enlist[`predict]!enlist predictFunc
   }
 
@@ -58,11 +58,11 @@ clust.hc.fit:{[data;df;lf]
 // @fileoverview Convert CURE config to k clusters
 // @param config {dict} A dictionary returned from '.ml.clust.cure.fit'
 //   containing:
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`inputs`dgram, where data is the original data, inputs
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
-//   - predict is a projection allowing for prediction on new input data
+//   predict - A projection allowing for prediction on new input data
 // @param k {long} Number of clusters
 // @return {dict} Updated config with clusters labels added
 clust.cure.cutK:{[config;k]
@@ -77,11 +77,11 @@ clust.cure.cutK:{[config;k]
 // @fileoverview Convert hierarchical config to k clusters
 // @param config {dict} A dictionary returned from '.ml.clust.hc.fit'
 //   containing:
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`inputs`dgram, where data is the original data, inputs
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
-//   - predict is a projection allowing for prediction on new input data
+//   predict - A projection allowing for prediction on new input data
 // @param k {long} Number of clusters
 // @return {dict} Updated config with clusters added
 clust.hc.cutK:clust.cure.cutK
@@ -92,11 +92,11 @@ clust.hc.cutK:clust.cure.cutK
 //   threshold
 // @param config {dict} A dictionary returned from '.ml.clust.cure.fit'
 //   containing:
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`inputs`dgram, where data is the original data, inputs
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
-//   - predict is a projection allowing for prediction on new input data
+//   predict - A projection allowing for prediction on new input data
 // @param distThresh {float} Cutting distance threshold
 // @return {dict} Updated config with clusters added
 clust.cure.cutDist:{[config;distThresh]
@@ -112,11 +112,11 @@ clust.cure.cutDist:{[config;distThresh]
 //   threshold
 // @param config {dict} A dictionary returned from '.ml.clust.cure.fit'
 //   containing:
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`inputs`dgram, where data is the original data, inputs
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
-//   - predict is a projection allowing for prediction on new input data
+//   predict - A projection allowing for prediction on new input data
 // @param distThresh {float} Cutting distance threshold
 // @return {dict} Updated config with clusters added
 clust.hc.cutDist:clust.cure.cutDist
@@ -124,19 +124,19 @@ clust.hc.cutDist:clust.cure.cutDist
 // @kind function
 // @category clust
 // @fileoverview Predict clusters using CURE config
-// @param data {float[][]} Each column of the data is an individual datapoint
 // @param config {dict} A dictionary returned from '.ml.clust.cure.fit'
 //   containing:
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`inputs`dgram, where data is the original data, inputs
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
-//   - predict is a projection allowing for prediction on new input data
+//   predict - A projection allowing for prediction on new input data
+// @param data {float[][]} Each column of the data is an individual datapoint
 // @param cutDict {dict} The key defines what cutting algo to use when 
 //   splitting the data into clusters (`k/`dist) and the value defines the
 //   cutting threshold
 // @return {long[]} Predicted clusters
-clust.cure.predict:{[data;config;cutDict]
+clust.cure.predict:{[config;data;cutDict]
   updConfig:clust.i.prepPred[config;cutDict];
   clust.i.hCCpred[`cure;data;updConfig]
   }
@@ -144,19 +144,19 @@ clust.cure.predict:{[data;config;cutDict]
 // @kind function
 // @category clust
 // @fileoverview Predict clusters using hierarchical config
-// @param data {float[][]} Each column of the data is an individual datapoint
 // @param config {dict} A dictionary returned from '.ml.clust.cure.fit'
 //   containing:
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`inputs`dgram, where data is the original data, inputs
 //     are the user defined linkage and distance functions while dgram
 //     is the generated dendrogram
-//   - predict is a projection allowing for prediction on new input data
+//   predict - A projection allowing for prediction on new input data
+// @param data {float[][]} Each column of the data is an individual datapoint
 // @param cutDict {dict} The key defines what cutting algo to use when 
 //   splitting the data into clusters (`k/`dist) and the value defines the
 //   cutting threshold
 // @return {long[]} Predicted clusters
-clust.hc.predict:{[data;config;cutDict]
+clust.hc.predict:{[config;data;cutDict]
   updConfig:clust.i.prepPred[config;cutDict];
   clust.i.hCCpred[`hc;data;updConfig]
   }

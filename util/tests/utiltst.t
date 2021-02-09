@@ -2,7 +2,6 @@
 \l util/init.q
 
 np:.p.import[`numpy]
-
 p)import pandas as pd
 p)import numpy as np
 p)import datetime
@@ -19,17 +18,13 @@ dt1:2019.01.01D01:30:00.000000000 2019.01.02D01:30:00.000000000
 
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 xm:100 10#1000?100f
+x:1000?1000
+xf:1000?100f
 
 .ml.range[til 63] ~ 62
 .ml.range[5] ~ 0
 .ml.range[0 1 3 2f]~3f
 .ml.range[0 1 0n 2]~2f
-.ml.percentile[x;0.75]~np[`:percentile][x;75]`
-.ml.percentile[x;0.02]~np[`:percentile][x;2]`
-.ml.percentile[xf;0.5]~np[`:percentile][xf;50]`
-.ml.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~3.5
-("f"$flip value .ml.describe[plaintab])~flip .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
-("f"$flip value .ml.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
 
 df :.ml.tab2df tt:([]fcol:12?1.;jcol:12?100;scol:12?`aaa`bbb`ccc)
 dfj:.ml.tab2df tj:select by jcol from tt

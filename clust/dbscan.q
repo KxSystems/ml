@@ -10,13 +10,13 @@
 // @param minPts {long} Minimum number of points with the epsilon radius
 // @param eps {float} Epsilon radius to search
 // @return {dict} A dictionary containing:
-//   - modelInfo which encapsulates all relevant infromation needed to fit
+//   modelInfo - Encapsulates all relevant infromation needed to fit
 //     the model `data`inputs`clust`tab, where data is the original data,
 //     inputs are the user defined minPts and eps, clust are the cluster
 //     assignments and tab is the neighbourhood table defining items in the
 //     clusters.
-//   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
+//   predict - A projection allowing for prediction on new input data
+//   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
 clust.dbscan.fit:{[data;df;minPts;eps]
   data:clust.i.floatConversion[data];
@@ -32,27 +32,27 @@ clust.dbscan.fit:{[data;df;minPts;eps]
   inputDict:`df`minPts`eps!(df;minPts;eps);
   modelInfo:`data`inputs`clust`tab!(data;inputDict;clust;tab);
   returnInfo:enlist[`modelInfo]!enlist modelInfo;
-  predictFunc:clust.dbscan.predict[;returnInfo];
-  updFunc:clust.dbscan.update[;returnInfo];
+  predictFunc:clust.dbscan.predict returnInfo;
+  updFunc:clust.dbscan.update returnInfo;
   returnInfo,`predict`update!(predictFunc;updFunc)
   }
 
 // @kind function
 // @category clust
 // @fileoverview Predict clusters using DBSCAN config
-// @param data {float[][]} Each column of the data is an individual datapoint
 // @param config {dict} A dictionary returned from '.ml.clust.dbscan.fit'
 //   containing:
-//   - modelInfo which encapsulates all relevant infromation needed to fit
+//   modelInfo - Encapsulates all relevant infromation needed to fit
 //     the model `data`inputs`clust`tab, where data is the original data,
 //     inputs are the user defined minPts and eps, clust are the cluster
 //     assignments and tab is the neighbourhood table defining items in the 
 //     clusters.
-//   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
+//   predict - A projection allowing for prediction on new input data
+//   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
+// @param data {float[][]} Each column of the data is an individual datapoint
 // @return {long[]} Predicted clusters
-clust.dbscan.predict:{[data;config]
+clust.dbscan.predict:{[config;data]
   config:config[`modelInfo];
   data:clust.i.floatConversion[data];
   // Predict new clusters
@@ -62,20 +62,20 @@ clust.dbscan.predict:{[data;config]
 // @kind function
 // @category clust
 // @fileoverview Update DBSCAN config including new data points
-// @param data {float[][]} Each column of the data is an individual datapoint
 // @param config {dict} A dictionary returned from '.ml.clust.dbscan.fit'
 //   containing:
-//   - modelInfo which encapsulates all relevant infromation needed to fit
+//   modelInfo - Encapsulates all relevant infromation needed to fit
 //     the model `data`inputs`clust`tab, where data is the original data,
 //     inputs are the user defined minPts and eps, clust are the cluster
-//     assignments and tab is the neighbourhood table defining items in the
+//     assignments and tab is the neighbourhood table defining items in the 
 //     clusters.
-//   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
+//   predict - A projection allowing for prediction on new input data
+//   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
-// @return {dict} Updated model configuration (config), including predict
+// @param data {float[][]} Each column of the data is an individual datapoint
 //   and update functions
-clust.dbscan.update:{[data;config]
+// @return {dict} Updated model configuration (config), including predict
+clust.dbscan.update:{[config;data]
   modelConfig:config[`modelInfo];
   data:clust.i.floatConversion[data];
   // Original data prior to addition of new points, with core points set
@@ -93,7 +93,7 @@ clust.dbscan.update:{[data;config]
   modelConfig,:`data`tab`clust!(modelConfig[`data],'data;tab;clusts);
   returnInfo:enlist[`modelInfo]!enlist modelConfig;
   returnKeys:`predict`update;
-  returnVals:(clust.dbscan.predict[;returnInfo];
-    clust.dbscan.update[;returnInfo]);
+  returnVals:(clust.dbscan.predict returnInfo;
+    clust.dbscan.update returnInfo);
   returnInfo,returnKeys!returnVals
   }

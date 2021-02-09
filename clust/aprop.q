@@ -25,18 +25,18 @@ clust.ap.fit:{[data;df;damp;diag;iter]
   // Cluster data using AP algo
   modelInfo:clust.i.runAp[data;df;damp;diag;til count data 0;updDict];
   returnInfo:enlist[`modelInfo]!enlist modelInfo;
-  predictFunc:clust.ap.predict[;returnInfo];
+  predictFunc:clust.ap.predict returnInfo;
   returnInfo,enlist[`predict]!enlist predictFunc
   }
 
 // @kind function
 // @category clust
 // @fileoverview Predict clusters using AP config
-// @param data {float[][]} Each column of the data is an individual datapoint
 // @param config {dict} `data`inputs`clust`exemplars returned by the modelInfo
 //   key from the return of clust.ap.fit
+// @param data {float[][]} Each column of the data is an individual datapoint
 // @return {long[]} Predicted clusters
-clust.ap.predict:{[data;config]
+clust.ap.predict:{[config;data]
   config:config`modelInfo;
   data:clust.i.floatConversion[data];
   if[-1~first config`clust;

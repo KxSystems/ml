@@ -13,9 +13,9 @@
 // @param p {int} The number/order of time lags of the model
 // @param trend {bool} Is a trend line to be accounted for when fitting 
 //   the model
-// @return {dict} All information collected during the fitting of a model,
-//   along with a prediction function which forecasts future  values of the
-//   timeseries
+// @return {dict} Contains the following information:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
 ts.AR.fit:{[endog;exog;p;trend]
   // Cast endog to floating value
   endog:"f"$endog;
@@ -32,8 +32,9 @@ ts.AR.fit:{[endog;exog;p;trend]
   dictVals:(coeffs;trend#coeffs;coeffs trend +til count exog 0;
     neg[p]#coeffs;lagVals);
   modelDict:dictKeys!dictVals;
-  predictFunc:ts.AR.predict modelDict;
-  `modelInfo`predict!(modelDict;predictFunc)
+  returnInfo:enlist[`modelInfo]!enlist modelDict;
+  predictFunc:ts.AR.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predictFunc
   }
 
 // @kind function
@@ -48,9 +49,9 @@ ts.AR.fit:{[endog;exog;p;trend]
 // @param q {int} The number of residual errors to be accounted for
 // @param trend {bool} Is a trend line to be accounted for when fitting 
 //   the model
-// @return {dict} All information collected during the fitting of a model,
-//   along with a prediction function which forecasts future  values of the
-//   timeseries
+// @return {dict} Contains the following information:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
 ts.ARMA.fit:{[endog;exog;p;q;trend]
   // Cast endog to floating value
   endog:"f"$endog;
@@ -64,8 +65,9 @@ ts.ARMA.fit:{[endog;exog;p;q;trend]
      ];
     ts.i.ARMA.model[endog;exog;paramDict]
     ];
-  predictFunc:ts.ARMA.predict modelDict;
-  `modelInfo`predict!(modelDict;predictFunc) 
+  returnInfo:enlist[`modelInfo]!enlist modelDict;
+  predictFunc:ts.ARMA.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predictFunc
   }
 
 // @kind function
@@ -80,9 +82,9 @@ ts.ARMA.fit:{[endog;exog;p;q;trend]
 // @param d {int} The order of time series differencing used in integration
 // @param q {int} The number of residual errors to be accounted for
 // @param trend {bool} Is a trend line to be accounted for in fitting of model
-// @return {dict} All information collected during the fitting of a model,
-//   along with a prediction function which forecasts future  values of the
-//   timeseries
+// @return {dict} Contains the following information:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
 ts.ARIMA.fit:{[endog;exog;p;d;q;trend]
   exog:ts.i.fitDataCheck[endog;exog];
   // Apply integration (non seasonal)
@@ -95,8 +97,9 @@ ts.ARIMA.fit:{[endog;exog;p;d;q;trend]
   originalDiff:enlist[`originalData]!enlist d{deltas x}/originalData;
   // return relevant data
   modelDict,:originalDiff;
-  predictFunc:ts.ARIMA.predict modelDict;
-  `modelInfo`predict!(modelDict;predictFunc)
+  returnInfo:enlist[`modelInfo]!enlist modelDict;
+  predictFunc:ts.ARIMA.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predictFunc
   }
 
 // @kind function
@@ -114,9 +117,9 @@ ts.ARIMA.fit:{[endog;exog;p;d;q;trend]
 // @param trend {bool} Is a trend line to be accounted for in fitting of model
 // @param season {dict} Is a dictionary containing required seasonal 
 //   components
-// @return {dict} All information collected during the fitting of a model,
-//   along with a prediction function which forecasts future  values of the
-//   timeseries
+// @return {dict} Contains the following information:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
 ts.SARIMA.fit:{[endog;exog;p;d;q;trend;season]
   // Cast endog to floating value
   endog:"f"$endog;
@@ -136,8 +139,9 @@ ts.SARIMA.fit:{[endog;exog;p;d;q;trend;season]
   diffDict:diffKeys!diffVals;
   // Apply SARMA model and postpend differenced original data
   modelDict:ts.i.SARMA.model[I`final;exog;dict],diffDict;
-  predictFunc:ts.SARIMA.predict modelDict;
-  `modelInfo`predict!(modelDict;predictFunc)
+  returnInfo:enlist[`modelInfo]!enlist modelDict;
+  predictFunc:ts.SARIMA.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predictFunc
   }
 
 // @kind function
@@ -146,9 +150,9 @@ ts.SARIMA.fit:{[endog;exog;p;d;q;trend;season]
 //   (ARCH)
 // @param residuals {num[]} Residual errors from fitted time series model
 // @param p {int} The number/order of time  lags of the model
-// @return {dict} All information collected during the fitting of a model,
-//   along with a prediction function which forecasts future  values of the
-//   timeseries
+// @return {dict} Contains the following information:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
 ts.ARCH.fit:{[residuals;p]
   // Cast to floating value
   residuals:"f"$residuals;
@@ -163,6 +167,7 @@ ts.ARCH.fit:{[residuals;p]
   dictKeys:`coefficients`trendCoeff`pCoeff`residualVals;
   dictVals:(coeff;coeff 0;1_coeff;lastResiduals);
   modelDict:dictKeys!dictVals;
-  predictFunc:ts.ARCH.predict modelDict;
-  `modelInfo`predict!(modelDict;predictFunc)
+  returnInfo:enlist[`modelInfo]!enlist modelDict;
+  predictFunc:ts.ARCH.predict returnInfo;
+  returnInfo,enlist[`predict]!enlist predictFunc
   }

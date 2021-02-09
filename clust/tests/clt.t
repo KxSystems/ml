@@ -58,7 +58,7 @@ failingTest[.ml.clust.ap.fit;(100?`8;`nege2dist;0.7;min;(::));0b;"Dataset not su
 passingTest[.ml.clust.ap.fit[d1tts 0;`nege2dist;0.7;min;(::)]`predict;d1tts 1;1b;APclt]
 passingTest[.ml.clust.ap.fit[d1tts 0;`nege2dist;0.7;med;`maxrun`maxmatch!100 10]`predict;d1tts 1;1b;APclt]
 failingTest[.ml.clust.ap.fit[d1tts 0;`nege2dist;0.7;min;(::)]`predict;100?`7;1b;"Dataset not suitable for clustering. Must be convertible to floats."]
-failingTest[.ml.clust.ap.predict;(d1tts 1;enlist[`modelInfo]!enlist enlist[`clust]!enlist -1);
+failingTest[.ml.clust.ap.predict;(enlist[`modelInfo]!enlist enlist[`clust]!enlist -1;d1tts 1);
             0b;"'.ml.clust.ap.fit' did not converge, all clusters returned -1. Cannot predict new data."]
 
 // K-Means
@@ -85,7 +85,7 @@ failingTest[.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;kMeansCfg]`predict;100?`4;1b;
 // Update
 passingTest[algoOutputs[.ml.clust.kmeans.fit[d1tts 0;`edist;4;kMeansCfg]`update];enlist d1tts 1;1b;`modelInfo`predict`update]
 passingTest[clusterIdxsUpd[.ml.clust.kmeans.fit[d1tts 0;`e2dist;4;kMeansCfg]`update];enlist d1tts 1;1b;d1clt]
-failingTest[.ml.clust.kmeans.update;(1000?`2;()!());0b;"Dataset not suitable for clustering. Must be convertible to floats."]
+failingTest[.ml.clust.kmeans.update;(()!();1000?`2);0b;"Dataset not suitable for clustering. Must be convertible to floats."]
 
 
 // DBSCAN
@@ -111,7 +111,7 @@ passingTest[clusterIdxsUpd[.ml.clust.dbscan.fit[d1tts 0;`e2dist;5;5]`update];enl
 passingTest[clusterIdxsUpd[.ml.clust.dbscan.fit[d1tts 0;`edist;5;5]`update];enlist d1tts 1;1b;d1clt]
 passingTest[clusterIdxsUpd[.ml.clust.dbscan.fit[d1tts 0;`mdist;5;5]`update];enlist d1tts 1;1b;d1clt]
 passingTest[algoOutputs[.ml.clust.dbscan.fit[d1tts 0;`mdist;5;5]`update];enlist d1tts 1;1b;`modelInfo`predict`update]
-failingTest[.ml.clust.dbscan.update;(50?`x`y;()!());0b;"Dataset not suitable for clustering. Must be convertible to floats."]
+failingTest[.ml.clust.dbscan.update;(()!();50?`x`y);0b;"Dataset not suitable for clustering. Must be convertible to floats."]
 
 // CURE
 

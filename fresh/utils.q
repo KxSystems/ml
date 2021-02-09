@@ -3,7 +3,7 @@
 // Python imports
 sci_ver  :1.5<="F"$3#.p.import[`scipy][`:__version__]`
 numpy    :.p.import`numpy
-stats    :.p.import`scipy.stats
+pyStats  :.p.import`scipy.stats
 signal   :.p.import`scipy.signal
 stattools:.p.import`statsmodels.tsa.stattools
 
@@ -42,20 +42,20 @@ fresh.i.abso:numpy`:abs
 // @kind function 
 // @category freshPythonUtility
 // @fileoverview Kolmogorov-Smirnov two-sided test statistic distribution
-fresh.i.ksDistrib:stats[$[sci_ver;`:kstwo.sf;`:kstwobign.sf];<]
+fresh.i.ksDistrib:pyStats[$[sci_ver;`:kstwo.sf;`:kstwobign.sf];<]
 
 // @private
 // @kind function 
 // @category freshPythonUtility
 // @fileoverview Calculate Kendall’s tau, a correlation measure for
 //   ordinal data
-fresh.i.kendallTau:stats`:kendalltau
+fresh.i.kendallTau:pyStats`:kendalltau
 
 // @private
 // @kind function 
 // @category freshPythonUtility
 // @fileoverview Perform a Fisher exact test on a 2x2 contingency table
-fresh.i.fisherExact:stats`:fisher_exact
+fresh.i.fisherExact:pyStats`:fisher_exact
 
 // @private
 // @kind function 
