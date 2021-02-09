@@ -49,6 +49,9 @@ clust.kmeans.fit:{[data;df;k;config]
 //     the model `data`df`repPts`clt, where data and df are the inputs,
 //     repPts are the calculated k centers and clt are clusters associated
 //     with each of the datapoints
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @return {long[]} Predicted clusters
 clust.kmeans.predict:{[config;data]
@@ -67,6 +70,9 @@ clust.kmeans.predict:{[config;data]
 //     the model `data`df`repPts`clt, where data and df are the inputs,
 //     repPts are the calculated k centers and clt are clusters associated
 //     with each of the datapoints
+//   - predict is a projection allowing for prediction on new input data
+//   - update is a projection allowing new data to be used to update
+//     cluster centers such that the model can react to new data
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @return {dict} Updated model configuration (config), including predict 
 //   and update functions

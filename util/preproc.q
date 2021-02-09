@@ -31,8 +31,9 @@ dropConstant:{[data]
 // @category preprocessing
 // @fileoverview Fit min max scaling model
 // @param data {tab;dict;num[]} Numerical data
-// @return {dict} modelInfo containing min and max value of fitted data 
-//  along with a predict function projection
+// @return {dict} Contains the following information:
+//   modelInfo - The min/max value of the fitted data
+//   predict - A projection allowing for prediction on new input data
 minMaxScaler.fit:{[data]
   typData:type[data] in 0 99h;
   minData:$[typData;min each;min]data;
@@ -47,6 +48,9 @@ minMaxScaler.fit:{[data]
 // @category preprocessing
 // @fileoverview Scale data between 0-1 based on fitted model
 // @params config {dict} Information returned from `ml.minMaxScaler.fit`
+//   including:
+//   modelInfo - The min/max value of the fitted data
+//   predict - A projection allowing for prediction on new input data
 // @param data {tab;dict;num[]} Numerical data
 // @return {tab;dict;num[]} A min-max scaled representation with values
 //   scaled between 0 and 1f
@@ -71,8 +75,9 @@ minMaxScaler.fitPredict:{[data]
 // @category preprocessing
 // @fileoverview Fit standard scaler model
 // @param data {tab;dict;num[]} Numerical data
-// @return {dict} modelInfo containing avg and dev value of fitted data 
-//  along with a predict function projection
+// @return {dict} Contains the following information:
+//   modelInfo - The avg/dev value of the fitted data
+//   predict - A projection allowing for prediction on new input data
 stdScaler.fit:{[data]
   typData:type[data];
   if[typData=98;data:flip data];
@@ -89,6 +94,9 @@ stdScaler.fit:{[data]
 // @fileoverview Standard scaler transform-based representation of data
 //  using a fitted model
 // @params config {dict} Information returned from `ml.stdScaler.fit`
+//   including:
+//   modelInfo - The avg/dev value of the fitted data
+//   predict - A projection allowing for prediction on new input data
 // @param data {tab;dict;num[]} Numerical data
 // @return {tab;dict;num[]} All data has undergone standard scaling
 stdScaler.predict:{[config;data]
@@ -164,8 +172,9 @@ fillTab:{[tab;groupCol;timeCol;dict]
 // @fileoverview Fit one-hot encoding model to categorical data
 // @param tab {tab} Numerical and non numerical data
 // @param symCols {sym[]} Columns to apply encoding to
-// @return {dict} modelInfo containing mapping information and a projection of
-//   the prediction function to be applied to data
+// @return {dict} Contains the following information:
+//   modelInfo - The mapping information
+//   predict - A projection allowing for prediction on new input data
 oneHot.fit:{[tab;symCols]
   if[(::)~symCols;symCols:i.findCols[tab;"s"]];
   mapVals:asc each distinct each tab symCols,:(); 
@@ -179,6 +188,9 @@ oneHot.fit:{[tab;symCols]
 // @category preprocessing
 // @fileoverview Encode categorical features using one-hot encoded fitted model
 // @params config {dict} Information returned from `ml.oneHot.fit`
+//   including:
+//   modelInfo - The mapping information
+//   predict - A projection allowing for prediction on new input data
 // @param tab {tab} Numerical and non numerical data
 // @param symDict {dict} Keys indicate the columns in the table to be encoded,
 //   values indicate what mapping to use when encoding 
@@ -225,8 +237,9 @@ freqEncode:{[tab;symCols]
 // @fileoverview Fit lexigraphical ordering model to cateogorical data
 // @param tab {tab} Numerical and categorical data
 // @param symCols {sym[]} Columns to apply coding to
-// @return {dict} modelInfo containing mapping information and a projection
-//  of the prediction function to be used on data
+// @return {dict} Contains the following information:
+//   modelInfo - The mapping information
+//   predict - A projection allowing for prediction on new input data
 lexiEncode.fit:{[tab;symCols]
   if[(::)~symCols;symCols:i.findCols[tab;"s"]];
   mapping:labelEncode.fit each tab symCols,:();
@@ -241,6 +254,9 @@ lexiEncode.fit:{[tab;symCols]
 // @category preprocessing
 // @fileoverview Lexicode encode data based on previously fitted model
 // @params config {dict} Information returned from `ml.lexiEncode.fit`
+//   including:
+//   modelInfo - The mapping information
+//   predict - A projection allowing for prediction on new input data
 // @param tab {tab} Numerical and categorical data
 // @param symDict {dict} Keys indicate the columns in the table to be encoded,
 //   values indicate what mapping to use when encoding 
@@ -274,8 +290,9 @@ lexiEncode.fitPredict:{[tab;symCols]
 // @category preprocessing
 // @fileoverview Fit a label encoder model
 // @param data {any[]} Data to encode
-// @return {dict} Schema mapping values and a predict function to be used on 
-//   new data
+// @return {dict} Contains the following information:
+//   modelInfo - The schema mapping values
+//   predict - A projection allowing for prediction on new input data
 labelEncode.fit:{[data]
   uniqueData:asc distinct data;
   map:uniqueData!til count uniqueData;
@@ -289,6 +306,9 @@ labelEncode.fit:{[data]
 // @category preprocessing
 // @fileoverview Encode categorical data to an integer value representation
 // @params config {dict} Information returned from `ml.labelEncode.fit`
+//   including:
+//   modelInfo - The schema mapping values
+//   predict - A projection allowing for prediction on new input data
 // @param data {any[]} Data to be reverted to original representation
 // @return {int[]} List transformed to integer value 
 labelEncode.predict:{[config;data]

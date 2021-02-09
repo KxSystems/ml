@@ -7,8 +7,10 @@
 // @param exog {num[][];num[]} A variables that predict the 
 //   endog variable
 // @param trend {bool} Whether a trend is added to the model
-// @returns {dict} Values calculated during hte fitting process and a 
-//   projection of the predict functional
+// @returns {dict} Contains the following information:
+//   modelInfo - Coeffients and statistical values calculated during the 
+//   fitting process
+//   predict - A projection allowing for prediction on new input data
 stats.OLS.fit:{[endog;exog;trend]
   stats.i.checkLen[endog;exog;"exog"];
   endog:"f"$endog;
@@ -23,6 +25,10 @@ stats.OLS.fit:{[endog;exog;trend]
 
 // @fileOverview Predict values using coefficients calculated via OLS
 // @param config {dict} Information returned from `OLS.fit`
+//   including:
+//   modelInfo - Coeffients and statistical values calculated during the 
+//   fitting process
+//   predict - A projection allowing for prediction on new input data
 // @param exog {tab;num[][];num[]} The exogenous variables
 // @returns {number[]} The predicted values
 stats.OLS.predict:{[config;exog]
@@ -42,8 +48,10 @@ stats.OLS.predict:{[config;exog]
 //   endog variable
 // @param weights {float[]} The weights to be applied to the endog variable
 // @param trend {bool} Whether a trend is added to the model
-// @returns {dict} Values calculated during hte fitting process and a 
-//   projection of the predict functional
+// @returns {dict} Contains the following information:
+//   modelInfo - Coeffients and statistical values calculated during the 
+//   fitting process
+//   predict - A projection allowing for prediction on new input data
 stats.WLS.fit:{[endog;exog;weights;trend]
   stats.i.checkLen[endog;exog;"exog"];
   if[weights~(::);weights:()];
@@ -71,6 +79,10 @@ stats.WLS.fit:{[endog;exog;weights;trend]
 
 // @fileOverview Predict values using coefficients calculated via WLS
 // @param config {dict} Information returned from `WLS.fit`
+//   including:
+//   modelInfo - Coeffients and statistical values calculated during the 
+//   fitting process
+//   predict - A projection allowing for prediction on new input data
 // @param exog {tab;num[][];num[]} The exogenous variables
 // @returns {number[]} The predicted values
 stats.WLS.predict:stats.OLS.predict
@@ -127,4 +139,3 @@ stats.percentile:{[array;perc]
   iDiff:0^deltas asc[array]i;
   iDiff[0]+(percent-i 0)*last iDiff
   }
-
