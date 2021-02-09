@@ -9,7 +9,7 @@
 // @param trend {bool} Whether a trend is added to the model
 // @returns {dict} Contains the following information:
 //   modelInfo - Coeffients and statistical values calculated during the 
-//   fitting process
+//     fitting process
 //   predict - A projection allowing for prediction on new input data
 stats.OLS.fit:{[endog;exog;trend]
   stats.i.checkLen[endog;exog;"exog"];
@@ -27,7 +27,7 @@ stats.OLS.fit:{[endog;exog;trend]
 // @param config {dict} Information returned from `OLS.fit`
 //   including:
 //   modelInfo - Coeffients and statistical values calculated during the 
-//   fitting process
+//     fitting process
 //   predict - A projection allowing for prediction on new input data
 // @param exog {tab;num[][];num[]} The exogenous variables
 // @returns {number[]} The predicted values
@@ -50,7 +50,7 @@ stats.OLS.predict:{[config;exog]
 // @param trend {bool} Whether a trend is added to the model
 // @returns {dict} Contains the following information:
 //   modelInfo - Coeffients and statistical values calculated during the 
-//   fitting process
+//     fitting process
 //   predict - A projection allowing for prediction on new input data
 stats.WLS.fit:{[endog;exog;weights;trend]
   stats.i.checkLen[endog;exog;"exog"];
@@ -81,7 +81,7 @@ stats.WLS.fit:{[endog;exog;weights;trend]
 // @param config {dict} Information returned from `WLS.fit`
 //   including:
 //   modelInfo - Coeffients and statistical values calculated during the 
-//   fitting process
+//     fitting process
 //   predict - A projection allowing for prediction on new input data
 // @param exog {tab;num[][];num[]} The exogenous variables
 // @returns {number[]} The predicted values

@@ -15,12 +15,12 @@
 //   new run `thresh, a distance less than thresh will result in
 //   early stopping
 // @return {dict} A dictionary containing:
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`df`repPts`clt, where data and df are the inputs,
 //     repPts are the calculated k centers and clt are clusters associated
 //     with each of the datapoints
-//   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
+//   predict - A projection allowing for prediction on new input data
+//   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
 clust.kmeans.fit:{[data;df;k;config]
   data:clust.i.floatConversion[data];
@@ -44,13 +44,13 @@ clust.kmeans.fit:{[data;df;k;config]
 // @category clust
 // @fileoverview Predict clusters using k-means config
 // @param config {dict} A dictionary returned from '.ml.clust.kmeans.fit'
-//   containing
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   containing:
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`df`repPts`clt, where data and df are the inputs,
 //     repPts are the calculated k centers and clt are clusters associated
 //     with each of the datapoints
-//   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
+//   predict - A projection allowing for prediction on new input data
+//   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @return {long[]} Predicted clusters
@@ -65,13 +65,13 @@ clust.kmeans.predict:{[config;data]
 // @category clust
 // @fileoverview Update kmeans config including new data points
 // @param config {dict} A dictionary returned from '.ml.clust.kmeans.fit'
-//   containing
-//   - modelInfo which encapsulates all relevant information needed to fit
+//   containing:
+//   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`df`repPts`clt, where data and df are the inputs,
 //     repPts are the calculated k centers and clt are clusters associated
 //     with each of the datapoints
-//   - predict is a projection allowing for prediction on new input data
-//   - update is a projection allowing new data to be used to update
+//   predict - A projection allowing for prediction on new input data
+//   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @return {dict} Updated model configuration (config), including predict 

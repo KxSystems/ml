@@ -10,13 +10,13 @@
 // @param minPts {long} Minimum number of points with the epsilon radius
 // @param eps {float} Epsilon radius to search
 // @return {dict} A dictionary containing:
-//   - modelInfo - Encapsulates all relevant infromation needed to fit
+//   modelInfo - Encapsulates all relevant infromation needed to fit
 //     the model `data`inputs`clust`tab, where data is the original data,
 //     inputs are the user defined minPts and eps, clust are the cluster
 //     assignments and tab is the neighbourhood table defining items in the
 //     clusters.
-//   - predict - A projection allowing for prediction on new input data
-//   - update - A projection allowing new data to be used to update
+//   predict - A projection allowing for prediction on new input data
+//   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
 clust.dbscan.fit:{[data;df;minPts;eps]
   data:clust.i.floatConversion[data];
@@ -42,13 +42,13 @@ clust.dbscan.fit:{[data;df;minPts;eps]
 // @fileoverview Predict clusters using DBSCAN config
 // @param config {dict} A dictionary returned from '.ml.clust.dbscan.fit'
 //   containing:
-//   - modelInfo - Encapsulates all relevant infromation needed to fit
+//   modelInfo - Encapsulates all relevant infromation needed to fit
 //     the model `data`inputs`clust`tab, where data is the original data,
 //     inputs are the user defined minPts and eps, clust are the cluster
 //     assignments and tab is the neighbourhood table defining items in the 
 //     clusters.
-//   - predict - A projection allowing for prediction on new input data
-//   - update - A projection allowing new data to be used to update
+//   predict - A projection allowing for prediction on new input data
+//   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @return {long[]} Predicted clusters
@@ -64,13 +64,13 @@ clust.dbscan.predict:{[config;data]
 // @fileoverview Update DBSCAN config including new data points
 // @param config {dict} A dictionary returned from '.ml.clust.dbscan.fit'
 //   containing:
-//   - modelInfo - Encapsulates all relevant infromation needed to fit
+//   modelInfo - Encapsulates all relevant infromation needed to fit
 //     the model `data`inputs`clust`tab, where data is the original data,
 //     inputs are the user defined minPts and eps, clust are the cluster
 //     assignments and tab is the neighbourhood table defining items in the 
 //     clusters.
-//   - predict - A projection allowing for prediction on new input data
-//   - update - A projection allowing new data to be used to update
+//   predict - A projection allowing for prediction on new input data
+//   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
 // @param data {float[][]} Each column of the data is an individual datapoint
 //   and update functions
