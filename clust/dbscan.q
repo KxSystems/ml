@@ -74,6 +74,7 @@ clust.dbscan.predict:{[config;data]
 //     cluster centers such that the model can react to new data
 // @param data {float[][]} Each column of the data is an individual datapoint
 //   and update functions
+// @return {dict} Updated model configuration (config), including predict
 clust.dbscan.update:{[config;data]
   modelConfig:config[`modelInfo];
   data:clust.i.floatConversion[data];

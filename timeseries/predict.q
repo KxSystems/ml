@@ -5,8 +5,7 @@
 // @kind function
 // @category modelPredict
 // @fileoverview Predictions based on an AutoRegressive model (AR)
-// @params config {dict} Information returned from `ml.ts.AR.fit`
-//   including:
+// @params config {dict} Information returned from `ml.ts.AR.fit` including:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
 // @param exog {tab;float[];(::)} Exogenous variables are additional variables 
@@ -30,8 +29,6 @@ ts.AR.predict:{[config;exog;len]
 //   including:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
-// @param model {dict} Model parameters returned from fitting of an appropriate
-//   model
 // @param exog {tab;float[];(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model
 // @param len {long} Number of future values to be predicted
@@ -50,8 +47,6 @@ ts.ARMA.predict:{[config;exog;len]
 //   including:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
-// @param model {dict} Model parameters returned from fitting of an appropriate
-//   model
 // @param exog {tab;float[];(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model
 // @param len {long} Number of future values to be predicted
@@ -74,8 +69,6 @@ ts.ARIMA.predict:{[config;exog;len]
 //   including:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
-// @param model {dict} Model parameters returned from fitting of an appropriate
-//   model
 // @param exog {tab;float[];(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model
 // @param len {long} Number of future values to be predicted

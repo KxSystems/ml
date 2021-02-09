@@ -1,16 +1,20 @@
 \l ml.q
 \l util/init.q
 \l stats/init.q
+\l fresh/init.q
 
 np:.p.import[`numpy]
 ols:.p.import[`statsmodels.api]`:OLS
 wls:.p.import[`statsmodels.api]`:WLS
 
-plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 x:1000?1000
 xf:1000?100f
+plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 plaintabn:plaintab,'([]x4:1 3 0n)
 plaintabn2:plaintab,'([]x4:`a`a`b)
+symTab:([]`a`a`a`b`b`c;101011b)
+symTab2:([]"abbcca";"x"$til 6)
+timeTab:([]"p"$til 5;"z"$1 3 2 2 1)
 
 .ml.stats.percentile[x;0.75]~np[`:percentile][x;75]`
 .ml.stats.percentile[x;0.02]~np[`:percentile][x;2]`
@@ -18,6 +22,12 @@ plaintabn2:plaintab,'([]x4:`a`a`b)
 .ml.stats.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~3.5
 
 descKeys:`count`mean`std`min`q1`q2`q3`max
+keySym:`count`type`nulls`countDistinct`mode`freq
+temporalKeys:`count`type`min`max`nulls`range`countDistinct`mode`freq
+.ml.stats.describe[symTab]~flip `x`x1!flip keySym!(6 6;`symbol`boolean;0 0i;3 2;(`a;1b);1 2)
+.ml.stats.describe[symTab2]~flip `x`x1!flip keySym!(6 6;`char`byte;0 0i;3 6;("a";0x00);2 1)
+.ml.stats.describe[timeTab]~flip `x`x1!flip temporalKeys!(5 5;`timestamp`datetime;("p"$0;"z"$1);("p"$4;"z"$3);0 0i;(0D00:00:00.000000004;2f);5 3;("p"$0;"z"$1);1 1)
+
 .ml.stats.describeFuncs:descKeys!.ml.stats.describeFuncs[descKeys]
 ("f"$flip value .ml.stats.describe[plaintab])~flip .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
 ("f"$flip value .ml.stats.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
