@@ -3,7 +3,7 @@
 // Python imports
 sci_ver  :1.5<="F"$3#.p.import[`scipy][`:__version__]`
 numpy    :.p.import`numpy
-pyStats    :.p.import`scipy.stats
+pyStats  :.p.import`scipy.stats
 signal   :.p.import`scipy.signal
 stattools:.p.import`statsmodels.tsa.stattools
 
