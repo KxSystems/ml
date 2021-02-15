@@ -65,10 +65,10 @@ stats.i.OLScalcs:{[coef;endog;exog;n;p]
   logLike:stats.i.logLiklihood[SSResidual;n];
   rseCalc:rse[predicted;endog;dfResidual];
   pValue:2*1-pyStats[`:t][`:cdf;<][fStat;p;dfResidual];
-  dictKeys:`dfTotal`dfModel`dfResidual`SSTotal`SSModel`SSResidual`MSTotal,
-    `MSModel`MSResidual`fStat`r2`r2Adj`mse`rse`pValue`logLike;
-  dictVals:(dfTotal;dfModel;dfResidual;SSTotal;SSModel;SSResidual;MSTotal;
-    MSModel;MSResidual;fStat;r2;r2Adj;mseCalc;rseCalc;pValue;logLike);
+  dictKeys:`dfTotal`dfModel`dfResidual`sumSquares`meanSquares,
+    `fStat`r2`r2Adj`mse`rse`pValue`logLike;
+  dictVals:(dfTotal;dfModel;dfResidual;SSResidual;MSResidual;fStat;r2;
+    r2Adj;mseCalc;rseCalc;pValue;logLike);
   dictKeys!dictVals
   }
 

@@ -836,7 +836,7 @@ ts.i.plotFunction:{[data;vals;m;width;title]
   configVals:3,`dashed`red`conf_interval;
   plt[`:plot][m;conf;pykwargs configKeys!configVals];
   if[0>min vals;
-    plt[`:plot][m;neg conf;pykwargs -1_cfgkeys!cfgvals]
+    plt[`:plot][m;neg conf;pykwargs -1_configKeys!configVals]
     ];
   plt[`:legend][];
   plt[`:xlabel]`lags;

@@ -99,11 +99,17 @@ stats.describeFuncs:.j.k raze read0`$path,"/stats/describe.json"
 // @returns {dict} A tabular description of aggregate information of each column
 stats.describe:{[tab]
   funcTab:stats.describeFuncs;
-  if[not`func in cols value funcTab;'"Keyed table must contain a func column"];
+  if[not all `func`type in cols value funcTab;
+    '"Keyed table must contain a func and type attribute"];
+  typeKeys:`num`temporal`other;
+  typeFunc:distinct raze value[funcTab][`type];
+  typCheck:raze not enlist[typeFunc] in string each typeKeys;
+  if[any typCheck;
+    '"Invalid type given:",raze typeFunc where typCheck
+    ];
   descKeys:key funcTab;
   funcs:get each value[funcTab]`func;
   // Get indices of where each type of function is in the function list
-  typeKeys:`num`temporal`other;
   typeDict:typeKeys!where@'(string each typeKeys) in/:\:value[funcTab]`type;
   numTypes:"hijef";
   temporalTypes:"pmdznuvt";
