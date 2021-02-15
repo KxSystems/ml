@@ -59,7 +59,9 @@ i.loadFunc.json:{[config]
 // @return {tab} Data obtained from HDF5 file  
 i.loadFunc.hdf5:{[config]
   if[not`hdf5 in key`;@[system;"l hdf5.q";{'"unable to load hdf5 lib"}]];
-  if[not .hdf5.ishdf5 filePath:i.loadFileName config;'"file is not an hdf5 file"];
+  if[not .hdf5.ishdf5 filePath:i.loadFileName config;
+    '"file is not an hdf5 file"
+    ];
   if[not .hdf5.isObject[filePath;config`dname];'"hdf5 dataset does not exist"];
   .hdf5.readData[fpath;config`dname]
   }
