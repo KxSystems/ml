@@ -1,6 +1,9 @@
-\d .ml
+// util/utils.q - Utility functions
+// Copyright (c) 2021 Kx Systems Inc
+//
+// General utility functions for the ML Toolkit
 
-// Utility functions
+\d .ml
 
 // @kind function
 // @category utilitiesUtility
@@ -32,7 +35,7 @@ i.q2npDate:{[date]
 //   Note check for x~()!() which is required in cases where underlying 
 //   representation is float32 for dates/times
 // @param data {float[]} Floating point data from the dataFrame
-// @param local {bool} Indicates if timezone objects are to be converted
+// @param local {boolean} Indicates if timezone objects are to be converted
 //   to local time (1b) or UTC (0b)
 // @return {float[]} Python float32 objects converted to correct precision 
 //   in kdb
@@ -48,9 +51,10 @@ i.float32Convert:{[data;local]
 // @category utilitiesUtility
 // @fileoverview Convert datetime.timezone types to kdb+ date/time
 // @param tab {<} Contains columns with datetime timezone objects
-// @param local {bool} Indicates if timezone objects are to be converted
+// @param local {boolean} Indicates if timezone objects are to be converted
 //   to local time (1b) or UTC (0b)
-// @return {dict} Datetime objects are converted to kdb date/time objects
+// @return {dictionary} Datetime objects are converted to kdb date/time 
+//   objects
 i.timezoneConvert:{[tab;local]
   $[local~0b;
     i.dateConvert tab;
@@ -63,7 +67,7 @@ i.timezoneConvert:{[tab;local]
 // @category utilitiesUtility
 // @fileoverview Convert datetime/datetimetz objects to kdb timestamp
 // @param dataFrame {<} Pandas dataFrame containing datetime data
-// @return {dict} Datetime objects are converted to timestamps in kdb
+// @return {dictionary} Datetime objects are converted to timestamps in kdb
 i.dateConvert:{[dataFrame]
   nullCols:where any each dataFrame[`:isnull;::][`:to_dict;<;`list];
   $[count nullCols;
@@ -82,7 +86,7 @@ i.dateConvert:{[dataFrame]
 // @category utilitiesUtility
 // @fileoverview Convert datetime data to integer representation
 // @param data {<} Pandas dataframe object containing timedelta objects
-// @return {dict} Datetime objects are converted to integer values
+// @return {dictionary} Datetime objects are converted to integer values
 i.dateDict:{[data]
   data[`:astype;`int64][`:to_dict;<;`list]
   }
@@ -92,7 +96,8 @@ i.dateDict:{[data]
 // @category utilitiesUtility
 // @fileoverview Convert datetime.date/time objects to kdb+ date/time
 // @param dateTime {<} Python datetime object
-// @param qObj {bool} Indicates if python datetime.date/datetime.time objects
+// @param qObj {boolean} Indicates if python datetime.date/datetime.time 
+//   objects
 //   are returned as q (1b) or foreign objects (0b)
 // @return {datetime;<} kdb date/time format or embedpy object
 i.dateTimeConvert:{[dateTime;qObj]
@@ -115,7 +120,7 @@ i.dateTimeConvert:{[dateTime;qObj]
 // @kind function
 // @category utilitiesUtility
 // @fileoverview Cast python datetime object to a kdb datatype
-// @param cast {str} Data type in which python object will be cast to
+// @param cast {string} Data type in which python object will be cast to
 // @param dateTime {<} Python datetime object
 // @return {any} Python datetime object casted to kdb datatype 
 i.isoFormat:{[cast;dateTime]
@@ -126,9 +131,9 @@ i.isoFormat:{[cast;dateTime]
 // @kind function
 // @category utilitiesUtility
 // @fileoverview Apply function to data of various types
-// @param func {func} Function to apply to data
+// @param func {fn} Function to apply to data
 // @param data {any} Data of various types
-// @return {func} function to apply to data
+// @return {fn} function to apply to data
 i.ap:{[func;data] 
   $[0=type data;
       func each data;
@@ -146,9 +151,9 @@ i.ap:{[func;data]
 // @kind function
 // @category utilitiesUtility
 // @fileoverview Apply function to data of various types
-// @param func {func} Function to apply to data
+// @param func {fn} Function to apply to data
 // @param data {any} Data of various types
-// @return {func} function to apply to data
+// @return {fn} function to apply to data
 i.apUpd:{[func;data] 
   $[0=type data;
       func data;
@@ -166,9 +171,9 @@ i.apUpd:{[func;data]
 // @kind function
 // @category utilitiesUtility
 // @fileoverview Find columns of certain types
-// @param tab {tab} Data in tabular format
+// @param tab {table} Data in tabular format
 // @param char {char[]} Type of column to find  
-// @return {sym[]} Columns containing the type being searched 
+// @return {symbol[]} Columns containing the type being searched 
 i.findCols:{[tab;char]
   metaTab:0!meta tab;
   metaTab[`c]where metaTab[`t]in char
@@ -198,9 +203,9 @@ i.pandasDF:.p.import[`pandas]`:DataFrame
 // @fileOverview Check that the length of the endog and another parameter
 //   are equal 
 // @param endog {float[]} The endogenous variable
-// @param param {num[][];num[]} A parameter to compare the length of
-// @param paramName {str} The name of the parameter
-// @returns {null;err} Return an error if they aren't equal
+// @param param {number[][]|number[]} A parameter to compare the length of
+// @param paramName {string} The name of the parameter
+// @returns {::|err} Return an error if they aren't equal
 i.checkLen:{[endog;param;paramName]
   if[not count[endog]=count param;
     '"The length of the endog variable and ",paramName," must be equal"
@@ -213,9 +218,9 @@ i.checkLen:{[endog;param;paramName]
 // @kind function
 // @category metricUtility
 // @fileoverview Exclude collinear points 
-// @param x {num[]} X coordinate of true positives and false negatives
-// @param y {num[]} Y coorfinate of true positives and false negatives
-// @returns {num[]} any colinear points are excluded
+// @param x {number[]} X coordinate of true positives and false negatives
+// @param y {number[]} Y coorfinate of true positives and false negatives
+// @returns {number[]} any colinear points are excluded
 i.curvePts:{[x;y]
   (x;y)@\:where(1b,2_differ deltas[y]%deltas x),1b
   }
@@ -224,9 +229,9 @@ i.curvePts:{[x;y]
 // @kind function
 // @category metricUtility
 // @fileoverview Calculate the area under an ROC cirve
-// @param x {num[]} X coordinate of true positives and false negatives
-// @param y {num[]} Y coorfinate of true positives and false negatives
-// @returns {num[]} Area under the curve
+// @param x {number[]} X coordinate of true positives and false negatives
+// @param y {number[]} Y coorfinate of true positives and false negatives
+// @returns {number[]} Area under the curve
 i.auc:{[x;y]
   sum 1_deltas[x]*y-.5*deltas y
   }
@@ -235,8 +240,8 @@ i.auc:{[x;y]
 // @kind function
 // @category metricUtility
 // @fileoverview Calculate the correlation of a matrix
-// @param matrix {num[]} A sample from a distribution
-// @returns {num[]} The covariance matrix
+// @param matrix {number[]} A sample from a distribution
+// @returns {number[]} The covariance matrix
 i.corrMatrix:{[matrix]
   devMatrix:dev each matrix;
   covMatrix[matrix]%devMatrix*/:devMatrix
@@ -248,8 +253,8 @@ i.corrMatrix:{[matrix]
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Drop any constant numeric values
-// @param data {dict} Numerical data
-// @return {dict} All keys with zero variance are removed
+// @param data {dictionary} Numerical data
+// @return {dictionary} All keys with zero variance are removed
 i.dropConstant.num:{[num]
   (where 0=0^var each num)_num
   }
@@ -258,8 +263,8 @@ i.dropConstant.num:{[num]
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Drop any constant values that aren't numeric
-// @param data {dict} Non-numerical data
-// @return {dict} All keys with zero variance are removed
+// @param data {dictionary} Non-numerical data
+// @return {dictionary} All keys with zero variance are removed
 i.dropConstant.other:{[data]
   (where{all 1_(~':)x}each data)_data
   }
@@ -268,19 +273,19 @@ i.dropConstant.other:{[data]
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Find keys of certain types
-// @param dict {dict} Data stored as a dictionary
+// @param dict {dictionary} Data stored as a dictionary
 // @param char {char[]} Type of key to find  
-// @return {sym[]} Keys containing the type being searched
+// @return {symbol[]} Keys containing the type being searched
 i.findKey:{[dict;char]
-  where({.Q.t abs type dict}each dict)in char
+  where({.Q.t abs type x}each dict)in char
   }
 
 // @private
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Fill nulls with 0 
-// @param data {tab;num[]} Numerical data
-// @return {tab;num[]} Nulls filled with 0 
+// @param data {table|number[]} Numerical data
+// @return {table|number[]} Nulls filled with 0 
 i.fillMap.zero:{[data]
   0^data
   }
@@ -289,8 +294,8 @@ i.fillMap.zero:{[data]
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Fill nulls with the median value 
-// @param data {tab;num[]} Numerical data
-// @return {tab;num[]} Nulls filled with the median value
+// @param data {table|number[]} Numerical data
+// @return {table|number[]} Nulls filled with the median value
 i.fillMap.median:{[data]
   med[data]^data
   }
@@ -299,8 +304,8 @@ i.fillMap.median:{[data]
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Fill nulls with the average value
-// @param data {tab;num[]} Numerical data
-// @return {tab;num[]} Nulls filled with the average value
+// @param data {table|number[]} Numerical data
+// @return {table|number[]} Nulls filled with the average value
 i.fillMap.mean:{[data]
   avg[data]^data
   }
@@ -309,8 +314,8 @@ i.fillMap.mean:{[data]
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Fill nulls forward
-// @param data {tab;num[]} Numerical data
-// @return {tab;num[]} Nulls filled foward  
+// @param data {table|number[]} Numerical data
+// @return {table|number[]} Nulls filled foward  
 i.fillMap.forward:{[data]
   "f"$(data first where not null data)^fills data
   }
@@ -321,7 +326,7 @@ i.fillMap.forward:{[data]
 // @fileoverview Fill nulls depening on timestamp component
 // @param time {time[]} Data containing a time component
 // @param nulls {any[]} Contains null values
-// @return {tab;num[]} Nulls filled in respect to time component
+// @return {table|number[]} Nulls filled in respect to time component
 i.fillMap.linear:{[time;vals]
   nullVal:null vals;
   i:where not nullVal; 
@@ -336,8 +341,8 @@ i.fillMap.linear:{[time;vals]
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Encode categorical features using one-hot encoding
-// @param data {sym[]} Data to encode
-// @return {dict} One-hot encoded representation 
+// @param data {symbol[]} Data to encode
+// @return {dictionary} One-hot encoded representation 
 i.oneHot:{[data]
   vals:asc distinct data;
   vals!"f"$data=/:vals
@@ -348,8 +353,8 @@ i.oneHot:{[data]
 // @category preprocessingUtility
 // @fileoverview Encode categorical features with frequency of 
 //   category occurrence
-// @param data {sym[]} Data to encode
-// @return {num[]} Frequency of occurrance of individual symbols within 
+// @param data {symbol[]} Data to encode
+// @return {number[]} Frequency of occurrance of individual symbols within 
 //   a column
 i.freqEncode:{[data]
   (groupVals%sum groupVals:count each group data)data
@@ -360,7 +365,7 @@ i.freqEncode:{[data]
 // @category preprocessingUtility
 // @fileoverview Break date column into constituent components
 // @param date {date} Data containing a date component
-// @return {dict} A date broken into its constituent components
+// @return {dictionary} A date broken into its constituent components
 i.timeSplit.d:{[date]
   dateDict:`dayOfWeek`year`month`day!`date`year`mm`dd$/:\:date;
   update weekday:1<dayOfWeek from update dayOfWeek:dayOfWeek mod 7,
@@ -372,7 +377,7 @@ i.timeSplit.d:{[date]
 // @category preprocessingUtility
 // @fileoverview Break month column into constituent components
 // @param month {month} Data containing a monthly component
-// @return {dict} A month broken into its constituent components
+// @return {dictionary} A month broken into its constituent components
 i.timeSplit.m:{[month]
   monthDict:monthKey!(monthKey:`year`mm)$/:\:month;
   update quarter:1+(mm-1)div 3 from monthDict
@@ -383,7 +388,7 @@ i.timeSplit.m:{[month]
 // @category preprocessingUtility
 // @fileoverview Break time column into constituent components
 // @param time {time} Data containing a time component
-// @return {dict} A time broken into its constituent components
+// @return {dictionary} A time broken into its constituent components
 i.timeSplit[`n`t`v]:{[time]
   `hour`minute`second!`hh`uu`ss$/:\:time
   }
@@ -393,7 +398,7 @@ i.timeSplit[`n`t`v]:{[time]
 // @category preprocessingUtility
 // @fileoverview Break minute columns into constituent components
 // @param time {minute} Data containing a minute component
-// @return {dict} A minute broken into its constituent components
+// @return {dictionary} A minute broken into its constituent components
 i.timeSplit.u:{[time]
   `hour`minute!`hh`uu$/:\:time
   }
@@ -403,9 +408,9 @@ i.timeSplit.u:{[time]
 // @category preprocessingUtility
 // @fileoverview Break datetime and timestamp columns into constituent 
 //   components
-// @param time {datetime;timestamp} Data containing a datetime or 
+// @param time {datetime|timestamp} Data containing a datetime or 
 //   datetime component
-// @return {dict} A datetime or timestamp broken into its constituent
+// @return {dictionary} A datetime or timestamp broken into its constituent
 //   components
 i.timeSplit[`p`z]:{[time]raze i.timeSplit[`d`n]@\:time}
 
@@ -414,7 +419,8 @@ i.timeSplit[`p`z]:{[time]raze i.timeSplit[`d`n]@\:time}
 // @category preprocessingUtility
 // @fileoverview Break time endog columns into constituent components
 // @param data {any} Data containing a time endog component
-// @return {dict} Time or date types broken into their constituent components
+// @return {dictionary} Time or date types broken into their constituent 
+//   components
 i.timeSplit1:{[data]
   i.timeSplit[`$.Q.t type data]data:raze data
   }
@@ -423,11 +429,11 @@ i.timeSplit1:{[data]
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Break time endog columns into constituent components
-// @param tab {tab} Contains time endog columns
-// @param timeCols {sym[]} Columns to apply coding to, if set to :: all columns
-//   with date/time types will be encoded
-// @return {dict} All time or date types broken into labeled versions of their
-//   constituent components
+// @param tab {table} Contains time endog columns
+// @param timeCols {symbol[]} Columns to apply coding to, if set to :: all 
+//  columns with date/time types will be encoded
+// @return {dictionary} All time or date types broken into labeled versions of 
+//  their constituent components
 i.timeDict:{[tab;timeCol]
   timeVals:i.timeSplit1 tab timeCol;
   timeKeys:`$"_"sv'string timeCol,'key timeVals;
@@ -439,12 +445,12 @@ i.timeDict:{[tab;timeCol]
 // @category preprocessingUtility
 // @fileoverview Ensure that keys in the mapping dictionary matches values in 
 //   the sym dictionary
-// @param tab {tab} Numerical and categorical data
-// @param symDict {dict} Keys indicate columns in the table to be encoded, 
-//   values indicate what mapping to use when encoding
-// @params mapDict {dict} Map cateogorical values to their encoded values
-// @return {err;dict} Error if mapping keys don't match sym values or update
-//  symDict if null is passed
+// @param tab {table} Numerical and categorical data
+// @param symDict {dictionary} Keys indicate columns in the table to be 
+// encoded, values indicate what mapping to use when encoding
+// @params mapDict {dictionary} Map cateogorical values to their encoded values
+// @return {err;dictionary} Error if mapping keys don't match sym values or 
+//  update symDict if null is passed
 i.mappingCheck:{[tab;symDict;mapDict]
   map:key mapDict;
   if[(::)~symDict;
@@ -461,10 +467,11 @@ i.mappingCheck:{[tab;symDict;mapDict]
 // @kind function
 // @category preprocessingUtility
 // @fileoverview Create one hot encoded columns 
-// @param tab {tab} Numerical and categorical data
-// @param colName {sym[]} Name of columns in the table to apply encoding to
-// @params val {sym[]} One hot encoded values
-// @return {dict} Columns in tab transformed to one hot encoded representation
+// @param tab {table} Numerical and categorical data
+// @param colName {symbol[]} Name of columns in the table to apply encoding to
+// @params val {symbol[]} One hot encoded values
+// @return {dictionary} Columns in tab transformed to one hot encoded 
+//   representation
 i.oneHotCols:{[tab;colName;val]
   updCols:`$"_"sv'string colName,'val;
   updVals:"f"$tab[colName]='/:val;
@@ -477,10 +484,10 @@ i.oneHotCols:{[tab;colName;val]
 // @kind function
 // @category utility
 // @fileoverview Save a model locally
-// @param modelName {str;sym} Name of the model to be saved
-// @param path {str;sym} The path in which to save the model. If ()/(::) is 
-//  used then saves to the current directory 
-// @return {null;err} Saves locally or returns an error
+// @param modelName {string|symbol} Name of the model to be saved
+// @param path {string|symbol} The path in which to save the model. 
+//  If ()/(::) is used then saves to the current directory 
+// @return {::;err} Saves locally or returns an error
 i.saveModel:{[modelName;path]
   savePath:i.constructPath[modelName;path];
   save savePath
@@ -490,10 +497,10 @@ i.saveModel:{[modelName;path]
 // @kind function
 // @category utility
 // @fileoverview Load a model
-// @param modelName {str;sym} Name of the model to be loaded
-// @param path {str;sym} The path in which to load the model from. If ()/(::)
-//   is used then saves to the current directory 
-// @return {null;err} Loads a model or returns an error
+// @param modelName {string|symbol} Name of the model to be loaded
+// @param path {string|symbol} The path in which to load the model from. 
+//   If ()/(::) is used then saves to the current directory 
+// @return {::;err} Loads a model or returns an error
 i.loadModel:{[modelName;path]
   loadPath:i.constructPath[modelName;path];
   load loadPath
@@ -504,10 +511,10 @@ i.loadModel:{[modelName;path]
 // @kind function
 // @category utility
 // @fileoverview Construct a path to save/load a model
-// @param modelName {str;sym} Name of the model to be saved/loaded
-// @param path {str;sym} The path in which to save/load the model. If ()/(::)
-//   is used then saves to the current directory 
-// @return {sym;err} Constructs a path or returns an error
+// @param modelName {string|symbol} Name of the model to be saved/loaded
+// @param path {string|symbol} The path in which to save/load the model. 
+//   If ()/(::) is used then saves to the current directory 
+// @return {symbol|err} Constructs a path or returns an error
 i.constructPath:{[modelName;path]  
   pathType:abs type path;
   modelType:abs type modelName;
@@ -528,7 +535,7 @@ i.constructPath:{[modelName;path]
 // @kind function
 // @category utility
 // @fileoverview Return an error for the wrong input type
-// @param input {str} Name of the input parameter
+// @param input {string} Name of the input parameter
 // @return {err} Error for the wrong input typr
 i.inputError:{[input]
   '`$input," must be a string or a symbol"
@@ -559,9 +566,9 @@ i.futureWarning:"Future Deprecation Warning: function will no longer be ",
 // @category utility
 // @fileoverview Give deprecation warning along with returning the result
 //   of the function
-// @param func {str} Name of updated function
-// @pararm warn {str} Warning message to use
-// @param ver {str} Version of the update
+// @param func {string} Name of updated function
+// @pararm warn {string} Warning message to use
+// @param ver {string} Version of the update
 // @param res {any} Result from the updated function
 // @returns {any} Results from the function
 i.depWarn :{[func;warn;ver;res]
@@ -576,8 +583,8 @@ i.depWarn :{[func;warn;ver;res]
 // @kind function
 // @category utility
 // @fileoverview Run new function and warn user of deprecation of old function
-// @param dict {dict} Contains information pertaining to what the new function
-//   name is along with warning error information needed
+// @param dict {dictionary} Contains information pertaining to what the new 
+//   function name is along with warning error information needed
 // @returns {any} Results from the updated function 
 i.depApply:{[dict]
   (i.depWarn . dict`function`warning`version)get[dict`function]::
@@ -587,8 +594,8 @@ i.depApply:{[dict]
 // @kind function
 // @category utility
 // @fileoverview Run new function and warn user of deprecation of old function
-// @param dict {dict} Contains information pertaining to what the new function
-//   name is along with warning error information needed
+// @param dict {dictionary} Contains information pertaining to what the new 
+//   function name is along with warning error information needed
 // @returns {any} Results from the updated function 
 i.deprecWarning:{[nameKey;versionMap]
   mapping:versionMap nameKey;
