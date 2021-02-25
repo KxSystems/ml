@@ -1,3 +1,8 @@
+// util/mprocw.q - multiprocessing 
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Mutliprocessing based on command line input
+
 // Exit if `pp isn't passed as a command parameter
 if[not`pp in key .Q.opt .z.x;exit 1];
 // Exit if no values were passed with pp

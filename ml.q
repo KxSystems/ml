@@ -1,3 +1,9 @@
+// ml.q - set up for ml namespace
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Define version, path, and loadfile 
+
+
 \l p.q /embedPy
 \d .ml
 version:@[{TOOLKITVERSION};`;`development]
