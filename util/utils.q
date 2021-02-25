@@ -1,5 +1,7 @@
-// util/utils.q - utility functions
+// util/utils.q - Utility functions
 // Copyright (c) 2021 Kx Systems Inc
+//
+// General utility functions for the ML Toolkit
 
 \d .ml
 
@@ -129,9 +131,9 @@ i.isoFormat:{[cast;dateTime]
 // @kind function
 // @category utilitiesUtility
 // @fileoverview Apply function to data of various types
-// @param func {anymap} Function to apply to data
+// @param func {fn} Function to apply to data
 // @param data {any} Data of various types
-// @return {anymap} function to apply to data
+// @return {fn} function to apply to data
 i.ap:{[func;data] 
   $[0=type data;
       func each data;
@@ -149,9 +151,9 @@ i.ap:{[func;data]
 // @kind function
 // @category utilitiesUtility
 // @fileoverview Apply function to data of various types
-// @param func {anymap} Function to apply to data
+// @param func {fn} Function to apply to data
 // @param data {any} Data of various types
-// @return {anymap} function to apply to data
+// @return {fn} function to apply to data
 i.apUpd:{[func;data] 
   $[0=type data;
       func data;

@@ -1,4 +1,4 @@
-// util/metrics.q - metrics 
+// util/metrics.q - Metrics 
 // Copyright (c) 2021 Kx Systems Inc
 //
 // Metrics for scoring ml models

@@ -1,4 +1,4 @@
-// util/preproc.q - preprocessing functions
+// util/preproc.q - Preprocessing functions
 // Copyright (c) 2021 Kx Systems Inc
 //
 // Preprocessing of data prior to training
@@ -176,7 +176,7 @@ fillTab:{[tab;groupCol;timeCol;dict]
 // @category preprocessing
 // @fileoverview Fit one-hot encoding model to categorical data
 // @param tab {table} Numerical and non numerical data
-// @param symCols {sym[]} Columns to apply encoding to
+// @param symCols {symbol[]} Columns to apply encoding to
 // @return {dictionary} Contains the following information:
 //   modelInfo - The mapping information
 //   predict - A projection allowing for prediction on new input data

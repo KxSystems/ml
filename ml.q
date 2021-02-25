@@ -1,4 +1,4 @@
-// ml.q - set up for ml namespace
+// ml.q - Setup for ml namespace
 // Copyright (c) 2021 Kx Systems Inc
 //
 // Define version, path, and loadfile 

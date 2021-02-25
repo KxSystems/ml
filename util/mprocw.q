@@ -1,4 +1,4 @@
-// util/mprocw.q - multiprocessing 
+// util/mprocw.q - Multiprocessing 
 // Copyright (c) 2021 Kx Systems Inc
 //
 // Mutliprocessing based on command line input

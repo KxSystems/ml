@@ -92,7 +92,7 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.logLoss[10#0b;(1-p),'p:10?1i]~-0f
 (floor .ml.logLoss[10110b;(2 0n;1 1; 3 1;0n 2; 3 3)])~floor 6
 (floor .ml.logLoss[1000?0b;(1-p),'p:1000#0n])~34
-{.ml.crossentropy[x;y]~logloss[x;y]`}[(first idesc@)each p;p%:sum each p:1000 5#5000?1f]
+{.ml.crossEntropy[x;y]~logloss[x;y]`}[(first idesc@)each p;p%:sum each p:1000 5#5000?1f]
 .ml.mse[x;y] ~ skmetric[`:mean_squared_error][x;y]`
 .ml.mse[xf;yf] ~ skmetric[`:mean_squared_error][xf;yf]`
 .ml.mse[x;x]~0f

@@ -1,5 +1,7 @@
-// util/mproc.q - utilities for multiprocessing
+// util/mproc.q - Utilities for multiprocessing
 // Copyright (c) 2021 Kx Systems Inc
+//
+// Distributes functions to worker processes
 
 \d .ml
 
@@ -13,7 +15,7 @@ if[not`multiProc in key .ml;.z.pd:`u#0#0i;multiProc.N:0]
 // @kind function
 // @category multiProcess
 // @fileoverview Define what happens when the connection is closed
-// @param func {anymap} Value of `.z.pc` function 
+// @param func {fn} Value of `.z.pc` function 
 // @param proc {int} Handle to the worker process
 // @return {::} Appropriate handles are closed
 .z.pc:{[func;proc]

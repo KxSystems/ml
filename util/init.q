@@ -1,4 +1,4 @@
-// util/init.q - load utilities library
+// util/init.q - Load utilities library
 // Copyright (c) 2021 Kx Systems Inc
 
 .ml.loadfile`:util/utils.q

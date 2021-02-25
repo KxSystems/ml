@@ -1,4 +1,4 @@
-// init.q - load ml libraries
+// init.q - Load ml libraries
 // Copyright (c) 2021 Kx Systems Inc
 
 .ml.loadfile`:util/init.q

@@ -1,4 +1,4 @@
-// util/pickle.q - pickle file utilities 
+// util/pickle.q - Pickle file utilities 
 // Copyright (c) 2021 Kx Systems Inc
 //
 // Save and load python objects to and from pickle files

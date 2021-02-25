@@ -1,4 +1,4 @@
-// util/utilities.q - load utilities library
+// util/utilities.q - Utilities library
 // Copyright (c) 2021 Kx Systems Inc
 //
 // Includes range, arange, combs, eye, iMax, iMin,
