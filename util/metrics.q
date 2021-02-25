@@ -143,7 +143,7 @@ classReport:{[pred;true]
 // @param prob {float[]} Representing the probability of belonging to 
 //   each class
 // @returns {float} Total logarithmic loss
-crossentropy:logLoss:{[class;prob]
+crossEntropy:logLoss:{[class;prob]
   EPS:1e-15;
   neg avg log EPS|prob@'class
   }
