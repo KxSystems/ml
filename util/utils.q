@@ -275,7 +275,7 @@ i.dropConstant.other:{[data]
 // @param char {char[]} Type of key to find  
 // @return {symbol[]} Keys containing the type being searched
 i.findKey:{[dict;char]
-  where({.Q.t abs type dict}each dict)in char
+  where({.Q.t abs type x}each dict)in char
   }
 
 // @private
