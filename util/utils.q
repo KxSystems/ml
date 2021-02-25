@@ -51,7 +51,8 @@ i.float32Convert:{[data;local]
 // @param tab {<} Contains columns with datetime timezone objects
 // @param local {boolean} Indicates if timezone objects are to be converted
 //   to local time (1b) or UTC (0b)
-// @return {dictionary} Datetime objects are converted to kdb date/time objects
+// @return {dictionary} Datetime objects are converted to kdb date/time 
+//   objects
 i.timezoneConvert:{[tab;local]
   $[local~0b;
     i.dateConvert tab;
@@ -93,7 +94,8 @@ i.dateDict:{[data]
 // @category utilitiesUtility
 // @fileoverview Convert datetime.date/time objects to kdb+ date/time
 // @param dateTime {<} Python datetime object
-// @param qObj {boolean} Indicates if python datetime.date/datetime.time objects
+// @param qObj {boolean} Indicates if python datetime.date/datetime.time 
+//   objects
 //   are returned as q (1b) or foreign objects (0b)
 // @return {datetime;<} kdb date/time format or embedpy object
 i.dateTimeConvert:{[dateTime;qObj]
@@ -415,7 +417,8 @@ i.timeSplit[`p`z]:{[time]raze i.timeSplit[`d`n]@\:time}
 // @category preprocessingUtility
 // @fileoverview Break time endog columns into constituent components
 // @param data {any} Data containing a time endog component
-// @return {dictionary} Time or date types broken into their constituent components
+// @return {dictionary} Time or date types broken into their constituent 
+//   components
 i.timeSplit1:{[data]
   i.timeSplit[`$.Q.t type data]data:raze data
   }
@@ -425,10 +428,10 @@ i.timeSplit1:{[data]
 // @category preprocessingUtility
 // @fileoverview Break time endog columns into constituent components
 // @param tab {table} Contains time endog columns
-// @param timeCols {symbol[]} Columns to apply coding to, if set to :: all columns
-//   with date/time types will be encoded
-// @return {dictionary} All time or date types broken into labeled versions of their
-//   constituent components
+// @param timeCols {symbol[]} Columns to apply coding to, if set to :: all 
+//  columns with date/time types will be encoded
+// @return {dictionary} All time or date types broken into labeled versions of 
+//  their constituent components
 i.timeDict:{[tab;timeCol]
   timeVals:i.timeSplit1 tab timeCol;
   timeKeys:`$"_"sv'string timeCol,'key timeVals;
@@ -441,11 +444,11 @@ i.timeDict:{[tab;timeCol]
 // @fileoverview Ensure that keys in the mapping dictionary matches values in 
 //   the sym dictionary
 // @param tab {table} Numerical and categorical data
-// @param symDict {dictionary} Keys indicate columns in the table to be encoded, 
-//   values indicate what mapping to use when encoding
+// @param symDict {dictionary} Keys indicate columns in the table to be 
+// encoded, values indicate what mapping to use when encoding
 // @params mapDict {dictionary} Map cateogorical values to their encoded values
-// @return {err;dictionary} Error if mapping keys don't match sym values or update
-//  symDict if null is passed
+// @return {err;dictionary} Error if mapping keys don't match sym values or 
+//  update symDict if null is passed
 i.mappingCheck:{[tab;symDict;mapDict]
   map:key mapDict;
   if[(::)~symDict;
@@ -465,7 +468,8 @@ i.mappingCheck:{[tab;symDict;mapDict]
 // @param tab {table} Numerical and categorical data
 // @param colName {symbol[]} Name of columns in the table to apply encoding to
 // @params val {symbol[]} One hot encoded values
-// @return {dictionary} Columns in tab transformed to one hot encoded representation
+// @return {dictionary} Columns in tab transformed to one hot encoded 
+//   representation
 i.oneHotCols:{[tab;colName;val]
   updCols:`$"_"sv'string colName,'val;
   updVals:"f"$tab[colName]='/:val;
@@ -478,9 +482,9 @@ i.oneHotCols:{[tab;colName;val]
 // @kind function
 // @category utility
 // @fileoverview Save a model locally
-// @param modelName {string;symbol} Name of the model to be saved
-// @param path {string;symbol} The path in which to save the model. If ()/(::) is 
-//  used then saves to the current directory 
+// @param modelName {string|symbol} Name of the model to be saved
+// @param path {string|symbol} The path in which to save the model. 
+//  If ()/(::) is used then saves to the current directory 
 // @return {::;err} Saves locally or returns an error
 i.saveModel:{[modelName;path]
   savePath:i.constructPath[modelName;path];
@@ -491,9 +495,9 @@ i.saveModel:{[modelName;path]
 // @kind function
 // @category utility
 // @fileoverview Load a model
-// @param modelName {string;symbol} Name of the model to be loaded
-// @param path {string;symbol} The path in which to load the model from. If ()/(::)
-//   is used then saves to the current directory 
+// @param modelName {string|symbol} Name of the model to be loaded
+// @param path {string|symbol} The path in which to load the model from. 
+//   If ()/(::) is used then saves to the current directory 
 // @return {::;err} Loads a model or returns an error
 i.loadModel:{[modelName;path]
   loadPath:i.constructPath[modelName;path];
@@ -505,10 +509,10 @@ i.loadModel:{[modelName;path]
 // @kind function
 // @category utility
 // @fileoverview Construct a path to save/load a model
-// @param modelName {string;symbol} Name of the model to be saved/loaded
-// @param path {string;symbol} The path in which to save/load the model. If ()/(::)
-//   is used then saves to the current directory 
-// @return {symbol;err} Constructs a path or returns an error
+// @param modelName {string|symbol} Name of the model to be saved/loaded
+// @param path {string|symbol} The path in which to save/load the model. 
+//   If ()/(::) is used then saves to the current directory 
+// @return {symbol|err} Constructs a path or returns an error
 i.constructPath:{[modelName;path]  
   pathType:abs type path;
   modelType:abs type modelName;
@@ -577,8 +581,8 @@ i.depWarn :{[func;warn;ver;res]
 // @kind function
 // @category utility
 // @fileoverview Run new function and warn user of deprecation of old function
-// @param dict {dictionary} Contains information pertaining to what the new function
-//   name is along with warning error information needed
+// @param dict {dictionary} Contains information pertaining to what the new 
+//   function name is along with warning error information needed
 // @returns {any} Results from the updated function 
 i.depApply:{[dict]
   (i.depWarn . dict`function`warning`version)get[dict`function]::
@@ -588,8 +592,8 @@ i.depApply:{[dict]
 // @kind function
 // @category utility
 // @fileoverview Run new function and warn user of deprecation of old function
-// @param dict {dictionary} Contains information pertaining to what the new function
-//   name is along with warning error information needed
+// @param dict {dictionary} Contains information pertaining to what the new 
+//   function name is along with warning error information needed
 // @returns {any} Results from the updated function 
 i.deprecWarning:{[nameKey;versionMap]
   mapping:versionMap nameKey;

@@ -257,8 +257,8 @@ r2Score:{[pred;true]
 // @param true {float[]} A vector of true labels
 // @param p {long} Number of independent regressors, i.e. the number of 
 //   variables in your model, excluding the constant
-// @returns {float} The R2 adjusted score between the true and predicted values.
-//   Values close to 1 indicate good prediction, while negative values 
+// @returns {float} The R2 adjusted score between the true and predicted 
+//   values. Values close to 1 indicate good prediction, while negative values 
 //   indicate poor predictors of the system behavior
 r2AdjScore:{[pred;true;p]
   n:count pred;

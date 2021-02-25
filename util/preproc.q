@@ -57,8 +57,8 @@ minMaxScaler.fit:{[data]
 //   modelInfo - The min/max value of the fitted data
 //   predict - A projection allowing for prediction on new input data
 // @param data {table|dictionary|number[]} Numerical data
-// @return {table|dictionary|number[]} A min-max scaled representation with values
-//   scaled between 0 and 1f
+// @return {table|dictionary|number[]} A min-max scaled representation with 
+// values scaled between 0 and 1f
 minMaxScaler.predict:{[config;data]
   minData:config[`modelInfo;`minData];
   maxData:config[`modelInfo;`maxData];
@@ -69,8 +69,8 @@ minMaxScaler.predict:{[config;data]
 // @category preprocessing
 // @fileoverview Scale data between 0-1
 // @param data {table|dictionary|number[]} Numerical data
-// @return {table|dictionary|number[]} A min-max scaled representation with values
-//   scaled between 0 and 1f
+// @return {table|dictionary|number[]} A min-max scaled representation with 
+// values scaled between 0 and 1f
 minMaxScaler.fitPredict:{[data]
   scaler:minMaxScaler.fit data;
   scaler[`predict]data
@@ -124,8 +124,8 @@ stdScaler.fitPredict:{[data]
 // @category preprocessing
 // @fileoverview Replace +/- infinities with data min/max
 // @param data {table|dictionary|number[]} Numerical data
-// @return {table|dictionary|number[]} Data with positive/negative infinities are 
-//   replaced by max/min values
+// @return {table|dictionary|number[]} Data with positive/negative 
+//   infinities are replaced by max/min values
 infReplace:i.ap{[data;inf;func]
   @[data;i;:;func@[data;i:where data=inf;:;0n]]
   }/[;-0w 0w;min,max]
@@ -150,8 +150,8 @@ polyTab:{[tab;n]
 // @param tab {table} Numerical and non numerical data
 // @param groupCol {symbol} A grouping column for the fill 
 // @param timeCol {symbol} A time column in the data 
-// @param dict {dictionary} Defines fill behavior, setting this to (::) will result 
-//   in forward followed by reverse filling
+// @param dict {dictionary} Defines fill behavior, setting this to (::) will 
+//   result in forward followed by reverse filling
 // @return {table} Columns filled according to assignment of keys in the 
 //   dictionary dict, the null values are also encoded within a new column 
 //   to maintain knowledge of the null positions
@@ -197,8 +197,8 @@ oneHot.fit:{[tab;symCols]
 //   modelInfo - The mapping information
 //   predict - A projection allowing for prediction on new input data
 // @param tab {table} Numerical and non numerical data
-// @param symDict {dictionary} Keys indicate the columns in the table to be encoded,
-//   values indicate what mapping to use when encoding 
+// @param symDict {dictionary} Keys indicate the columns in the table to be 
+//   encoded, values indicate what mapping to use when encoding 
 // @return {table} One-hot encoded representation of categorical data
 oneHot.predict:{[config;tab;symDict]
   mapDict:config`modelInfo;
@@ -228,7 +228,8 @@ oneHot.fitPredict:{[tab;symCols]
 //   category occurrence
 // @param tab {table} Numerical data
 // @param symCols {symbol[]} Columns to apply coding to
-// @return {table} Frequency of occurrance of individual symbols within a column
+// @return {table} Frequency of occurrance of individual symbols 
+//   within a column
 freqEncode:{[tab;symCols]
   if[(::)~symCols;symCols:i.findCols[tab;"s"]];
   updCols:`$string[symCols],\:"_freq";
@@ -263,8 +264,8 @@ lexiEncode.fit:{[tab;symCols]
 //   modelInfo - The mapping information
 //   predict - A projection allowing for prediction on new input data
 // @param tab {table} Numerical and categorical data
-// @param symDict {dictionary} Keys indicate the columns in the table to be encoded,
-//   values indicate what mapping to use when encoding 
+// @param symDict {dictionary} Keys indicate the columns in the table to be
+//   encoded, values indicate what mapping to use when encoding 
 // @return {table} Addition of lexigraphical order of symbol column
 lexiEncode.predict:{[config;tab;symDict]
   mapDict:config`modelInfo;
@@ -350,10 +351,10 @@ applyLabelEncode:{[data;map]
 // @category preprocessing
 // @fileoverview Break specified time columns into constituent components
 // @param tab {table} Contains time columns
-// @param timeCols {symbol[]} Columns to apply coding to, if set to :: all columns
-//   with date/time types will be encoded
-// @return {dictionary} All time or date types broken into labeled versions of their
-//   constituent components
+// @param timeCols {symbol[]} Columns to apply coding to, if set to :: 
+//   all columns with date/time types will be encoded
+// @return {dictionary} All time or date types broken into labeled versions
+//   of their constituent components
 timeSplit:{[tab;timeCols]
   if[(::)~timeCols;timeCols:i.findCols[tab;"dmntvupz"]];
   timeDict:i.timeDict/:[tab]timeCols,:();

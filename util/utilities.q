@@ -71,7 +71,8 @@ iMin:{[array]
 // @param start {number} Start of the interval (inclusive)
 // @param end {number} End of the interval (non-inclusive)
 // @param n {int} How many spaces are to be created
-// @return {number[]} A vector of `n` evenly-spaced values between start and end
+// @return {number[]} A vector of `n` evenly-spaced values between
+//   start and end
 linearSpace:{[start;end;n]
   start+til[n]*(end-start)%n-1
   }
@@ -91,8 +92,8 @@ shape:{[matrix]
 // @param data {number[]|table} Matrix of input values
 // @param target {number[]} A vector of target values the same count as data
 // @param size {float[]} Percentage size of the testing set
-// @return {dictionary} Contains the data matrix and target split into a training
-//   and testing set
+// @return {dictionary} Contains the data matrix and target split into a
+//   training and testing set
 trainTestSplit:{[data;target;size]
   dictKeys:`xtrain`ytrain`xtest`ytest;
   n:count data;
@@ -123,8 +124,8 @@ tab2df:{[tab]
 // @param tab {<} An embedPy representation of a Pandas dataframe
 // @param local {boolean} Indicates if timezone objects are to be converted
 //   to local time (1b) or UTC (0b)
-// @param qObj {boolean} Indicates if python datetime.date/datetime.time objects
-//   are returned as q (1b) or foreign objects (0b)
+// @param qObj {boolean} Indicates if python datetime.date/datetime.time
+//   objects are returned as q (1b) or foreign objects (0b)
 // @return {<} a q table
 df2tabTimezone:{[tab;local;qObj]
   index:$[enlist[::]~tab[`:index.names]`;0;tab[`:index.nlevels]`];
