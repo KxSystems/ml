@@ -7,7 +7,7 @@
 
 // @kind function
 // @category fresh
-// @fileoverview Statistically significant features based on defined selection
+// @desc Statistically significant features based on defined selection
 //   procedure
 // @param tab {table} Value side of a table of created features
 // @param target {int[]|float[]} Targets corresponding to the rows the table
@@ -21,7 +21,7 @@ fresh.significantFeatures:{[tab;target;func]
 
   // @kind function
 // @category fresh
-// @fileoverview Return p-values for each feature
+// @desc Return p-values for each feature
 // @param tab {table} Value side of a table of created features
 // @param target {int[]|float[]} Targets corresponding to the rows the table
 // @return {dictionary} P-value for each feature to be passed to user-defined 
@@ -34,7 +34,7 @@ fresh.sigFeat:{[tab;target]
 
 // @kind function
 // @category fresh
-// @fileoverview The Benjamini-Hochberg-Yekutieli (BHY) procedure: determines 
+// @desc The Benjamini-Hochberg-Yekutieli (BHY) procedure: determines 
 //   if the feature meets a defined False Discovery Rate (FDR) level. The 
 //   recommended input is 5% (0.05).
 // @param rate {float} False Discovery Rate
@@ -47,7 +47,7 @@ fresh.benjhoch:{[rate;pValues]
 
 // @kind function
 // @category fresh
-// @fileoverview K-best features: choose the K features which have the lowest
+// @desc K-best features: choose the K features which have the lowest
 //   p-values and thus have been determined to be the most important features 
 //   to allow us to predict the target vector.
 // @param k {long} Number of features to select
@@ -59,7 +59,7 @@ fresh.kSigFeat:{[k;pValues]
 
 // @kind function
 // @category fresh
-// @fileoverview Percentile based selection: set a percentile threshold for 
+// @desc Percentile based selection: set a percentile threshold for 
 //   p-values below which features are selected.
 // @param percentile {float} Percentile threshold
 // @param pValues {dictionary} Output of .ml.fresh.sigFeat

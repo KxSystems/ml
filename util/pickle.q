@@ -7,17 +7,17 @@
 
 // @kind function
 // @cateogory pickle
-// @fileoverview Generate python pickle dump module to save a python object
+// @desc Generate python pickle dump module to save a python object
 pickleDump:.p.import[`pickle;`:dumps;<]
 
 // @kind function
 // @cateogory pickle
-// @fileoverview Generate python pickle lodas module to load a python object
+// @desc Generate python pickle lodas module to load a python object
 pickleLoad:.p.import[`pickle;`:loads]
 
 // @kind function
 // @cateogory pickle
-// @fileoverview A wrapper function to load and save python
+// @desc A wrapper function to load and save python
 //   objects using pickle 
 // @param module {boolean} Whether the pickle load module (1b) or 
 //   dump module (0b) is to be invoked

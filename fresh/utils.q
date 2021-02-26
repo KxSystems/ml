@@ -15,81 +15,81 @@ stattools:.p.import`statsmodels.tsa.stattools
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Compute the one-dimensional
+// @desc Compute the one-dimensional
 //   discrete Fourier Transform for real input
 fresh.i.rfft:numpy`:fft.rfft
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Return the real part of the complex argument
+// @desc Return the real part of the complex argument
 fresh.i.real:numpy`:real
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Return the angle of the complex argument
+// @desc Return the angle of the complex argument
 fresh.i.angle:numpy`:angle
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Return the imaginary part of the complex argument
+// @desc Return the imaginary part of the complex argument
 fresh.i.imag:numpy`:imag
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Calculate the absolute value element-wise
+// @desc Calculate the absolute value element-wise
 fresh.i.abso:numpy`:abs
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Kolmogorov-Smirnov two-sided test statistic distribution
+// @desc Kolmogorov-Smirnov two-sided test statistic distribution
 fresh.i.ksDistrib:pyStats[$[sci_ver;`:kstwo.sf;`:kstwobign.sf];<]
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Calculate Kendall’s tau, a correlation measure for
+// @desc Calculate Kendall’s tau, a correlation measure for
 //   ordinal data
 fresh.i.kendallTau:pyStats`:kendalltau
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Perform a Fisher exact test on a 2x2 contingency table
+// @desc Perform a Fisher exact test on a 2x2 contingency table
 fresh.i.fisherExact:pyStats`:fisher_exact
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Estimate power spectral density using Welch’s method
+// @desc Estimate power spectral density using Welch’s method
 fresh.i.welch:signal`:welch
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Find peaks in a 1-D array with wavelet transformation
+// @desc Find peaks in a 1-D array with wavelet transformation
 fresh.i.findPeak:signal`:find_peaks_cwt
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Calculate the autocorrelation function
+// @desc Calculate the autocorrelation function
 fresh.i.acf:stattools`:acf
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Partial autocorrelation estimate
+// @desc Partial autocorrelation estimate
 fresh.i.pacf:stattools`:pacf
 
 // @private
 // @kind function 
 // @category freshPythonUtility
-// @fileoverview Augmented Dickey-Fuller unit root test
+// @desc Augmented Dickey-Fuller unit root test
 fresh.i.adFuller:stattools`:adfuller
 
 // Python features
@@ -101,7 +101,7 @@ fresh.i.pyFeat:`aggAutoCorr`augFuller`fftAggReg`fftCoeff`numCwtPeaks,
 // @private
 // @kind function
 // @category freshUtility
-// @fileoverview Create a mapping between the functions and columns on which
+// @desc Create a mapping between the functions and columns on which
 //   they are to be applied
 // @param map {symbol[][]} Two element list where first element is the
 //   columns to which functions are to be applied and the second element is
@@ -115,7 +115,7 @@ fresh.i.colMap:{[map]
 // @private
 // @kind function 
 // @category freshUtility
-// @fileoverview Returns the length of each sequence
+// @desc Returns the length of each sequence
 // @param condition {boolean} Executed condition, e.g. data>avg data
 // @return {long[]} Sequence length based on condition
 fresh.i.getLenSeqWhere:{[condition]
@@ -126,10 +126,10 @@ fresh.i.getLenSeqWhere:{[condition]
 // @private
 // @kind function 
 // @category freshUtility
-// @fileoverview Find peaks within the data
+// @desc Find peaks within the data
 // @param data {number[]} Numerical data points
-// @param support {long}
-// @param idx {long}
+// @param support {long} Support of the peak
+// @param idx {long} Current index
 // @return {boolean[]} 1 where peak exists
 fresh.i.peakFind:{[data;support;idx]
   neg[support]_support _min data>/:xprev\:[-1 1*idx]data
@@ -138,7 +138,7 @@ fresh.i.peakFind:{[data;support;idx]
 // @private
 // @kind function 
 // @category freshUtility
-// @fileoverview Expand results produced by FRESH
+// @desc Expand results produced by FRESH
 // @param results {table} Table of resulting features
 // @param column {symbol} Column of interest
 // @return {table} Expanded results table
@@ -152,7 +152,7 @@ fresh.i.expandResults:{[results;column]
 // @private
 // @kind function
 // @category freshUtility
-// @fileoverview Apply python function for Kendall’s tau
+// @desc Apply python function for Kendall’s tau
 // @param target {number[]} Target vector
 // @param feature {number[]} Feature table column
 // @return {float} Kendall’s tau - Close to 1 shows strong agreement, close to
@@ -164,7 +164,7 @@ fresh.i.kTau:{[target;feature]
 // @private
 // @kind function
 // @category freshUtility
-// @fileoverview Perform a Fisher exact test
+// @desc Perform a Fisher exact test
 // @param target {number[]} Target vector
 // @param feature {number[]} Feature table column
 // @return {float} Results of Fisher exact test
@@ -176,7 +176,7 @@ fresh.i.fisher:{[target;feature]
 // @private
 // @kind function
 // @category freshUtility
-// @fileoverview Calculate the Kolmogorov-Smirnov two-sided test statistic
+// @desc Calculate the Kolmogorov-Smirnov two-sided test statistic
 //   distribution
 // @param feature {number[]} Feature table column
 // @param target {number[]} Target vector
@@ -192,7 +192,7 @@ fresh.i.ks:{[feature;target]
 // @private
 // @kind function
 // @category freshUtility
-// @fileoverview Pass data correctly to .ml.fresh.i.ks allowing for projection
+// @desc Pass data correctly to .ml.fresh.i.ks allowing for projection
 //   in main function
 // @param target {number[]} Target vector
 // @param feature {number[]} Feature table column

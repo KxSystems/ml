@@ -1,3 +1,9 @@
+// clust/init.q - Load clustering library
+// Copyright (c) 2021 Kx Systems Inc
+// 
+// Clustering algorithms including affinity propagation, 
+// cure, dbscan, hierarchical, and k-means clustering
+
 \d .ml
 
 // required for use of .ml.confmat in score.q

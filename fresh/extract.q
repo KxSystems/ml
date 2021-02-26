@@ -7,14 +7,14 @@
 
 // @kind table
 // @category fresh
-// @fileoverview Table containing .ml.fresh.feat functions
+// @desc Table containing .ml.fresh.feat functions
 fresh.params:update pnum:{count 1_get[fresh.feat x]1}each f,pnames:count[i]#(),
   pvals:count[i]#()from([]f:1_key fresh.feat) 
 fresh.params:1!`pnum xasc update valid:pnum=count each pnames from fresh.params
 
 // @kind function
 // @category fresh
-// @fileoverview Load in hyperparameters for FRESH functions and add to 
+// @desc Load in hyperparameters for FRESH functions and add to 
 //   .ml.fresh.params table
 // @param filePath {string} File path within ML where hyperparameter JSON 
 //   file is
@@ -31,12 +31,12 @@ fresh.loadparams:{[filePath]
 
 // @kind function
 // @category fresh
-// @fileoverview Add hyperparameter values to .ml.fresh.params
+// @desc Add hyperparameter values to .ml.fresh.params
 fresh.loadparams"/fresh/hyperparameters.json";
 
 // @kind fucntion
 // @category fresh
-// @fileoverview Extract features using FRESH
+// @desc Extract features using FRESH
 // @param data {table} Input data
 // @param idCol {symbol[]} ID column(s) name
 // @param cols2Extract {symbol[]} Columns on which extracted features will

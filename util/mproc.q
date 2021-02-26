@@ -7,14 +7,14 @@
 
 // @kind function
 // @category multiProcess
-// @fileoverview If the multiProc key is not already loaded in set .`z.pd` and 
+// @desc If the multiProc key is not already loaded in set .`z.pd` and 
 //   N to 0
 // @return {::} `.z.pd` and N are set to 0
 if[not`multiProc in key .ml;.z.pd:`u#0#0i;multiProc.N:0]
 
 // @kind function
 // @category multiProcess
-// @fileoverview Define what happens when the connection is closed
+// @desc Define what happens when the connection is closed
 // @param func {fn} Value of `.z.pc` function 
 // @param proc {int} Handle to the worker process
 // @return {::} Appropriate handles are closed
@@ -25,7 +25,7 @@ if[not`multiProc in key .ml;.z.pd:`u#0#0i;multiProc.N:0]
 
 // @kind function
 // @category multiProcess
-// @fileoverview Register the handle and pass any functions required to the
+// @desc Register the handle and pass any functions required to the
 //   worker processes
 // @return {::} The handle is registered and function is passed to process
 multiProc.reg:{
@@ -35,7 +35,7 @@ multiProc.reg:{
 
 // @kind function
 // @category multiProcess
-// @fileoverview Distributes functions to worker processes
+// @desc Distributes functions to worker processes
 // @param n {int} Number of processes open
 // @param func {string} Function to be passed to the process
 // @return {::} Each of the `n` worker processes evaluate `func`

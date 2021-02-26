@@ -11,7 +11,7 @@
 
 // @kind function
 // @category stats
-// @fileoverview Train an ordinary least squares model on data
+// @desc Train an ordinary least squares model on data
 // @param endog {number[][]|number[]} The endogenous variable
 // @param exog {number[][]|number[]} A variables that predict the 
 //   endog variable
@@ -32,7 +32,7 @@ stats.OLS.fit:{[endog;exog;trend]
   returnInfo,enlist[`predict]!enlist predict
   }
 
-// @fileOverview Predict values using coefficients calculated via OLS
+// @desc Predict values using coefficients calculated via OLS
 // @param config {dictionary} Information returned from `OLS.fit`
 //   including:
 //   modelInfo - Coeffients and statistical values calculated during the 
@@ -51,7 +51,7 @@ stats.OLS.predict:{[config;exog]
 
 // @kind function
 // @category stats
-// @fileoverview Train a weighted least squares model on data
+// @desc Train a weighted least squares model on data
 // @param endog {number[][]|number[]} The endogenous variable
 // @param exog {number[][]|number[]} A variables that predict the 
 //   endog variable
@@ -86,7 +86,7 @@ stats.WLS.fit:{[endog;exog;weights;trend]
   returnInfo,enlist[`predict]!enlist predict
   }
 
-// @fileOverview Predict values using coefficients calculated via WLS
+// @desc Predict values using coefficients calculated via WLS
 // @param config {dictionary} Information returned from `WLS.fit`
 //   including:
 //   modelInfo - Coeffients and statistical values calculated during the 
@@ -98,12 +98,12 @@ stats.WLS.predict:stats.OLS.predict
 
 // @kind data
 // @category stats
-// @fileoverview Load in functions defined within `describe.json`
+// @desc Load in functions defined within `describe.json`
 stats.describeFuncs:.j.k raze read0`$path,"/stats/describe.json"
 
 // @kind function
 // @category stats
-// @fileoverview Generates descriptive statistics of a table
+// @desc Generates descriptive statistics of a table
 // @param tab {table} A simple table
 // @returns {dictionary} A tabular description of aggregate information 
 //   of each column
@@ -144,7 +144,7 @@ stats.describe:{[tab]
 
 // @kind function
 // @category utilities
-// @fileoverview Percentile calculation for an array
+// @desc Percentile calculation for an array
 // @param array {number[]} A numerical array
 // @param perc {float} Percentile of interest
 // @returns {float} The value below which `perc` percent of the observations

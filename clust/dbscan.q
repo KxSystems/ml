@@ -1,15 +1,23 @@
+// clust/dbscan.q - DBSCAN clustering
+// Copyright (c) 2021 Kx Systems Inc
+// 
+// DBSCAN clustering.
+// The Density-Based Spatial Clustering of Applications with Noise
+// (DBSCAN) algorithm groups points that are closely packed in areas 
+// of high density. Any points in low-density regions are seen as outliers
+
 \d .ml
 
 // Density-Based Spatial Clustering of Applications with Noise (DBSCAN)
 
 // @kind function
 // @category clust
-// @fileoverview Fit DBSCAN algorithm to data
+// @desc Fit DBSCAN algorithm to data
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {symbol} Distance function name within '.ml.clust.df'
 // @param minPts {long} Minimum number of points with the epsilon radius
 // @param eps {float} Epsilon radius to search
-// @return {dict} A dictionary containing:
+// @return {dictionary} A dictionary containing:
 //   modelInfo - Encapsulates all relevant infromation needed to fit
 //     the model `data`inputs`clust`tab, where data is the original data,
 //     inputs are the user defined minPts and eps, clust are the cluster
@@ -39,8 +47,8 @@ clust.dbscan.fit:{[data;df;minPts;eps]
 
 // @kind function
 // @category clust
-// @fileoverview Predict clusters using DBSCAN config
-// @param config {dict} A dictionary returned from '.ml.clust.dbscan.fit'
+// @desc Predict clusters using DBSCAN config
+// @param config {dictionary} A dictionary returned from '.ml.clust.dbscan.fit'
 //   containing:
 //   modelInfo - Encapsulates all relevant infromation needed to fit
 //     the model `data`inputs`clust`tab, where data is the original data,
@@ -61,8 +69,8 @@ clust.dbscan.predict:{[config;data]
 
 // @kind function
 // @category clust
-// @fileoverview Update DBSCAN config including new data points
-// @param config {dict} A dictionary returned from '.ml.clust.dbscan.fit'
+// @desc Update DBSCAN config including new data points
+// @param config {dictionary} A dictionary returned from '.ml.clust.dbscan.fit'
 //   containing:
 //   modelInfo - Encapsulates all relevant infromation needed to fit
 //     the model `data`inputs`clust`tab, where data is the original data,
@@ -74,7 +82,7 @@ clust.dbscan.predict:{[config;data]
 //     cluster centers such that the model can react to new data
 // @param data {float[][]} Each column of the data is an individual datapoint
 //   and update functions
-// @return {dict} Updated model configuration (config), including predict
+// @return {dictionary} Updated model configuration (config), including predict
 clust.dbscan.update:{[config;data]
   modelConfig:config[`modelInfo];
   data:clust.i.floatConversion[data];

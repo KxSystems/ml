@@ -1,14 +1,14 @@
 // stats/utils.q - Utility functions
 // Copyright (c) 2021 Kx Systems Inc
 //
-// Untility functions for implimentations within the stats library
+// Utility functions for implimentations within the stats library
 
 \d .ml
 
 // @private
 // @kind function
 // @category statsUtility
-// @fileOverview Check that the length of the endog and another parameter
+// @desc Check that the length of the endog and another parameter
 //   are equal 
 // @param endog {float[]} The endogenous variable
 // @param param {number[][]|number[]} A parameter to compare the length of
@@ -23,7 +23,7 @@ stats.i.checkLen:{[endog;param;paramName]
 // @private
 // @kind function
 // @category statsUtility
-// @fileOverview Calculate descriptive stats for an OLS regression
+// @desc Calculate descriptive stats for an OLS regression
 // @param coef {float[]} The coefficients for each predictor variable
 // @param endog {float[]} The endogenous variable
 // @param exog {float[][]} Values that predict the endog variable
@@ -40,7 +40,7 @@ stats.i.OLSstats:{[coef;endog;exog;trend]
 // @private
 // @kind function
 // @category statsUtility
-// @fileOverview Calculate descriptive stats for an OLS regression
+// @desc Calculate descriptive stats for an OLS regression
 // @param coef {float[]} The coefficients for each predictor variable
 // @param endog {float[]} The endogenous variable
 // @param exog {float[][]} Values that predict the endog variable
@@ -80,7 +80,7 @@ stats.i.OLScalcs:{[coef;endog;exog;n;p]
 // @private
 // @kind function
 // @category statsUtility
-// @fileOverview Calculate the logliklihood of the residuals
+// @desc Calculate the logliklihood of the residuals
 // @param SSResiduals {float} Sum of squares of the residual
 // @param n {long} The number of endog variables
 // @returns {float[]} The loglikelihood value
@@ -92,7 +92,7 @@ stats.i.logLiklihood:{[SSResidual;n]
 // @private
 // @kind function
 // @category statsUtility
-// @fileOverview Calculate descriptive stats for the calculated coefficients
+// @desc Calculate descriptive stats for the calculated coefficients
 // @param coef {float[]} The coefficients for each predictor variable
 // @param endog {float[]} The endogenous variable
 // @param exog {float[][]} Values that predict the endog variable
@@ -115,7 +115,7 @@ stats.i.coefStats:{[coef;endog;exog;trend;n;p]
 // @private
 // @kind function
 // @category statsUtility
-// @fileOverview Calculate the standard errors of the coefficients
+// @desc Calculate the standard errors of the coefficients
 // @param coef {float[]} The calculated coefficiant
 // @param exog {float[][]} Values that predict the endog variable
 // @param endog {float[]} The endogenous variable
@@ -134,7 +134,7 @@ stats.i.coefStdErr:{[coef;exog;endog]
 // @private
 // @kind function
 // @category statsUtility
-// @fileOverview Calculate the 95% confidence interval of the standard error
+// @desc Calculate the 95% confidence interval of the standard error
 //   of the coefficient
 // @param n {long} Number of endog values
 // @param p {long} Number of coefficients
@@ -152,7 +152,7 @@ stats.i.CI95:{[n;p;stdErr]
 // @private 
 // @kind data
 // @category statsUtility
-// @fileoverview Infinity values for different types
+// @desc Infinity values for different types
 stats.i.infinity:(!) . flip (
     (`int;       0Wi);
     (`long;      0W);
@@ -170,7 +170,7 @@ stats.i.infinity:(!) . flip (
 // @private 
 // @kind data
 // @category statsUtility
-// @fileoverview Meta type letters to symbolic names
+// @desc Meta type letters to symbolic names
 stats.i.metaTypes:" bgxhijefcCspmdznuvt"!
   `general`boolean`guid`byte`short`int`long`real`float`char`string,
   `symbol`timestamp`month`date`datetime`timespan`minute`second`time
@@ -178,7 +178,7 @@ stats.i.metaTypes:" bgxhijefcCspmdznuvt"!
 // @private
 // @kind function
 // @category statsUtility
-// @fileOverview Update the function dictionary applied to data
+// @desc Update the function dictionary applied to data
 // @param funcs {fn[]} Functions loaded from `.ml.stats.describeFuncs`
 // @param typeDict {dictionary} Indices of functions to be applied for 
 //   each type
