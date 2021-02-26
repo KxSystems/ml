@@ -1,3 +1,8 @@
+// stats/utils.q - Utility functions
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Untility functions for implimentations within the stats library
+
 \d .ml
 
 // @private
@@ -6,9 +11,9 @@
 // @fileOverview Check that the length of the endog and another parameter
 //   are equal 
 // @param endog {float[]} The endogenous variable
-// @param param {num[][];num[]} A parameter to compare the length of
-// @param paramName {str} The name of the parameter
-// @returns {null;err} Return an error if they aren't equal
+// @param param {number[][]|number[]} A parameter to compare the length of
+// @param paramName {string} The name of the parameter
+// @returns {::;err} Return an error if they aren't equal
 stats.i.checkLen:{[endog;param;paramName]
   if[not count[endog]=count param;
     '"The length of the endog variable and ",paramName," must be equal"
@@ -22,8 +27,8 @@ stats.i.checkLen:{[endog;param;paramName]
 // @param coef {float[]} The coefficients for each predictor variable
 // @param endog {float[]} The endogenous variable
 // @param exog {float[][]} Values that predict the endog variable
-// @param trend {bool} Whether a trend is added to the model
-// @returns {dict[]} The descriptive statistics
+// @param trend {boolean} Whether a trend is added to the model
+// @returns {dictionary[]} The descriptive statistics
 stats.i.OLSstats:{[coef;endog;exog;trend]
   n:count endog;
   p:count[coef]-trend;
@@ -41,7 +46,7 @@ stats.i.OLSstats:{[coef;endog;exog;trend]
 // @param exog {float[][]} Values that predict the endog variable
 // @param n {long} The number of endog variables
 // @param p {long} Number of coefs not including trend value
-// @returns {dict[]} The descriptive statistics
+// @returns {dictionary[]} The descriptive statistics
 stats.i.OLScalcs:{[coef;endog;exog;n;p]
   coefDict:enlist[`coef]!enlist coef;
   modelInfo:enlist[`modelInfo]!enlist coefDict;
@@ -91,10 +96,11 @@ stats.i.logLiklihood:{[SSResidual;n]
 // @param coef {float[]} The coefficients for each predictor variable
 // @param endog {float[]} The endogenous variable
 // @param exog {float[][]} Values that predict the endog variable
-// @param trend {bool} Whether a trend is added to the model
+// @param trend {boolean} Whether a trend is added to the model
 // @param n {long} The number of endog variables
 // @param p {long} Number of coefs not including trend value
-// @returns {dict[]} The descriptive statistics for the calculated coefficients
+// @returns {dictionary[]} The descriptive statistics for the 
+//   calculated coefficients
 stats.i.coefStats:{[coef;endog;exog;trend;n;p]
   varNames:`$"x",'string til count coef;
   if[trend;varNames:`yIntercept,-1_varNames];
@@ -173,11 +179,14 @@ stats.i.metaTypes:" bgxhijefcCspmdznuvt"!
 // @kind function
 // @category statsUtility
 // @fileOverview Update the function dictionary applied to data
-// @param funcs {funcs[]} Functions loaded from `.ml.stats.describeFuncs`
-// @param typeDict {dict} Indices of functions to be applied for each type
-// @param funcDict {dict} Contains all functions to be applied for each type
-// @param typ {sym} The type of function to be extracted (`num`temporal`other)
-// @returns {dict} The updated funcDict for each `typ` 
+// @param funcs {fn[]} Functions loaded from `.ml.stats.describeFuncs`
+// @param typeDict {dictionary} Indices of functions to be applied for 
+//   each type
+// @param funcDict {dictionary} Contains all functions to be applied 
+//   for each type
+// @param typ {symbol} The type of function to be extracted (
+//   `num`temporal`other)
+// @returns {dictionary} The updated funcDict for each `typ` 
 stats.i.updFuncDict:{[funcs;typeDict;funcDict;typ]
   funcDict[typ;typeDict typ]:funcs typeDict typ;
   funcDict

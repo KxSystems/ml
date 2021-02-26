@@ -19,7 +19,7 @@ timeTab:([]"p"$til 5;"z"$1 3 2 2 1)
 .ml.stats.percentile[x;0.75]~np[`:percentile][x;75]`
 .ml.stats.percentile[x;0.02]~np[`:percentile][x;2]`
 .ml.stats.percentile[xf;0.5]~np[`:percentile][xf;50]`
-.ml.stats.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~3.5
+.ml.stats.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~4.0
 
 descKeys:`count`mean`std`min`q1`q2`q3`max
 keySym:`count`type`nulls`countDistinct`mode`freq
