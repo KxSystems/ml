@@ -1,3 +1,8 @@
+// fresh/utils.q - Utility functions
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Unitily functions used in the implimentation of FRESH
+
 \d .ml 
 
 // Python imports
@@ -98,10 +103,10 @@ fresh.i.pyFeat:`aggAutoCorr`augFuller`fftAggReg`fftCoeff`numCwtPeaks,
 // @category freshUtility
 // @fileoverview Create a mapping between the functions and columns on which
 //   they are to be applied
-// @param map {(sym[];sym[])} Two element list where first element is the
+// @param map {symbol[][]} Two element list where first element is the
 //   columns to which functions are to be applied and the second element is
 //   the name of the function in the .ml.fresh.feat namespace to be applied
-// @return {sym[]} A mapping of the functions to be applied to each column
+// @return {symbol[]} A mapping of the functions to be applied to each column
 fresh.i.colMap:{[map]
   updFunc:flip (` sv'`.ml.fresh.feat,'map[;1];map[;0]);
   updFunc,'last@''2_'map
@@ -111,7 +116,7 @@ fresh.i.colMap:{[map]
 // @kind function 
 // @category freshUtility
 // @fileoverview Returns the length of each sequence
-// @param condition {bool} Executed condition, e.g. data>avg data
+// @param condition {boolean} Executed condition, e.g. data>avg data
 // @return {long[]} Sequence length based on condition
 fresh.i.getLenSeqWhere:{[condition]
   idx:where differ condition;
@@ -122,10 +127,10 @@ fresh.i.getLenSeqWhere:{[condition]
 // @kind function 
 // @category freshUtility
 // @fileoverview Find peaks within the data
-// @param data {num[]} Numerical data points
+// @param data {number[]} Numerical data points
 // @param support {long}
 // @param idx {long}
-// @return {bool[]} 1 where peak exists
+// @return {boolean[]} 1 where peak exists
 fresh.i.peakFind:{[data;support;idx]
   neg[support]_support _min data>/:xprev\:[-1 1*idx]data
   }
@@ -135,8 +140,8 @@ fresh.i.peakFind:{[data;support;idx]
 // @category freshUtility
 // @fileoverview Expand results produced by FRESH
 // @param results {table} Table of resulting features
-// @param column {sym} Column of interest
-// @return {tab} Expanded results table
+// @param column {symbol} Column of interest
+// @return {table} Expanded results table
 fresh.i.expandResults:{[results;column]
   t:(`$"_"sv'string column,'cols t)xcol t:results column;
   ![results;();0b;enlist column],'t
@@ -148,8 +153,8 @@ fresh.i.expandResults:{[results;column]
 // @kind function
 // @category freshUtility
 // @fileoverview Apply python function for Kendall’s tau
-// @param target {num[]} Target vector
-// @param feature {num[]} Feature table column
+// @param target {number[]} Target vector
+// @param feature {number[]} Feature table column
 // @return {float} Kendall’s tau - Close to 1 shows strong agreement, close to
 //   -1 shows strong disagreement
 fresh.i.kTau:{[target;feature]
@@ -160,8 +165,8 @@ fresh.i.kTau:{[target;feature]
 // @kind function
 // @category freshUtility
 // @fileoverview Perform a Fisher exact test
-// @param target {num[]} Target vector
-// @param feature {num[]} Feature table column
+// @param target {number[]} Target vector
+// @param feature {number[]} Feature table column
 // @return {float} Results of Fisher exact test
 fresh.i.fisher:{[target;feature]
   g:group@'target value group feature;
@@ -173,8 +178,8 @@ fresh.i.fisher:{[target;feature]
 // @category freshUtility
 // @fileoverview Calculate the Kolmogorov-Smirnov two-sided test statistic
 //   distribution
-// @param feature {num[]} Feature table column
-// @param target {num[]} Target vector
+// @param feature {number[]} Feature table column
+// @param target {number[]} Target vector
 // @return {float} Kolmogorov-Smirnov two-sided test statistic distribution
 fresh.i.ks:{[feature;target]
   d:asc each target group feature;
@@ -189,8 +194,8 @@ fresh.i.ks:{[feature;target]
 // @category freshUtility
 // @fileoverview Pass data correctly to .ml.fresh.i.ks allowing for projection
 //   in main function
-// @param target {num[]} Target vector
-// @param feature {num[]} Feature table column
+// @param target {number[]} Target vector
+// @param feature {number[]} Feature table column
 // @return {float} Kolmogorov-Smirnov two-sided test statistic distribution
 fresh.i.ksYX:{[target;feature]
   fresh.i.ks[feature;target]

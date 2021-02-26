@@ -30,7 +30,7 @@ temporalKeys:`count`type`min`max`nulls`range`countDistinct`mode`freq
 
 .ml.stats.describeFuncs:descKeys!.ml.stats.describeFuncs[descKeys]
 ("f"$flip value .ml.stats.describe[plaintab])~flip .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
-("f"$flip value .ml.stats.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
+("f"$flip value .ml.stats.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 1.5 2 2.5 3)
 all all(flip value .ml.stats.describe[plaintabn2])=flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'([]x4:3f,7#(::))
 
 vec1: 6 2 5 1 9 2 4
