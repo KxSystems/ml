@@ -1,6 +1,6 @@
 // fresh/extract.q - Extract features
 // Copyright (c) 2021 Kx Systems Inc
-// 
+//   
 // Generate features based on params
 
 \d .ml 
