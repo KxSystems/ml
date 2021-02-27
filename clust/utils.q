@@ -22,7 +22,7 @@ clust.i.df.edist:{[data]
 // @private
 // @kind function
 // @category clustUtility
-// @desc distance calculation
+// @desc Distance calculation
 // @param data {float[][]} Points
 // @return {float[]} Euclidean squared distances for data 
 clust.i.df.e2dist:{[data]
@@ -643,7 +643,7 @@ clust.i.extractClust:{[clusts;cntTab;idxs]
 // @param repPts {float[][]} Representative points and associated info
 // @param kdTree {table} k-dimensional tree storing points and distances
 // @param linkMatrix {float[][]} Linkage matrix
-// @return {(dictionary|long[]|float[][];table)} Parameters dict, clusters, 
+// @return {(dictionary|long[]|float[][]|table)} Parameters dict, clusters, 
 //   representative points and kdTree tables
 clust.i.algoSCC:{[data;df;lf;params;clustTab;repPts;kdTree;linkMatrix]
   // Merge closest clusters
