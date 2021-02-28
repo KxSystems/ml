@@ -8,7 +8,7 @@
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Optimize a function until gradient tolerance is reached or
+// @desc Optimize a function until gradient tolerance is reached or
 //   maximum number of allowed iterations is met. The following outlines a
 //   python equivalent
 //  https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/optimize.py#L1131
@@ -65,7 +65,7 @@ i.BFGSFunction:{[func;optimDict;args;params]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Complete a line search across an unconstrained minimization
+// @desc Complete a line search across an unconstrained minimization
 //   problem making use of wolfe conditions to constrain the search. The naming
 //   convention for dictionary keys in this implementation is based on the 
 //   python implementation of the same functionality here
@@ -112,7 +112,7 @@ i.wolfeSearch:{[fk;fkPrev;gk;pk;func;xk;args;params]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Apply a scalar search to find an alpha value that satisfies
+// @desc Apply a scalar search to find an alpha value that satisfies
 //   strong Wolfe conditions, a python implementation of this is outlined here
 // https://github.com/scipy/scipy/blob/v1.5.0/scipy/optimize/linesearch.py#L338
 //   This functions defines the bounds between which the step function can 
@@ -171,7 +171,7 @@ i.scalarWolfe:{[derPhiFunc;phiFunc;pk;params;wolfeDict]
 // @private
 // @kind function
 // @category optimizeUtility
-// @fileoverview Function to apply 'zoom' iteratively during linesearch to find
+// @desc Function to apply 'zoom' iteratively during linesearch to find
 //   optimal alpha value satisfying strong Wolfe conditions
 // @param derPhiFunc {fn} Function to calculate the value of the objective
 //   function derivative at alpha
@@ -196,7 +196,7 @@ i.zoomFunc:{[derPhiFunc;phiFunc;phi0;derPhi0;params;cond]
 // @private
 // @kind function
 // @category optimizeUtility
-// @fileoverview Function to apply an individual step in 'zoom' during 
+// @desc Function to apply an individual step in 'zoom' during 
 //   linesearch to find optimal alpha value satisfying strong Wolfe conditions.
 //   An outline of the python implementation of this section of the algorithm 
 //   can be found here
@@ -265,7 +265,7 @@ i.zoom:{[derPhiFunc;phiFunc;phi0;derPhi0;params;zoomDict]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Calculate the vector norm, used in calculation of the gradient
+// @desc Calculate the vector norm, used in calculation of the gradient
 //   norm at position k. Default behaviour is to use the maximum value of the
 //   gradient, this can be overwritten by a user, this is in line with the 
 //   default python implementation.
@@ -285,7 +285,7 @@ i.vecNorm:{[gradVals;ord]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Evaluate if the optimization function has reached a condition
+// @desc Evaluate if the optimization function has reached a condition
 //   which should result in the optimization algorithm being stopped
 // @param dict {dictionary} Optimization function returns
 // @param params {dictionary} Parameters controlling non default optimization
@@ -307,7 +307,7 @@ i.stopOptimize:{[dict;params]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Evaluate if the wolfe condition search has reached a condition
+// @desc Evaluate if the wolfe condition search has reached a condition
 //   which should result in the optimization algorithm being stopped
 // @param dict {dictionary} Optimization function returns
 // @param params {dictionary} Parameters controlling non default optimization
@@ -321,7 +321,7 @@ i.stopWolfe:{[dict;params]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Evaluate if the alpha condition 'zoom' has reached a condition
+// @desc Evaluate if the alpha condition 'zoom' has reached a condition
 //   which should result in the optimization algorithm being stopped
 // @param dict {dictionary} Optimization function returns
 // @param params {dictionary} Parameters controlling non default optimization
@@ -337,7 +337,7 @@ i.stopZoom:{[dict;params]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Evaluate the objective function at the position x[k]+step size
+// @desc Evaluate the objective function at the position x[k]+step size
 // @param func {fn} The objective function to be minimized
 // @param pk {float} Step direction
 // @param alpha {float} Size of the step to be applied
@@ -353,7 +353,7 @@ i.phi:{[func;pk;alpha;xk;args]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Evaluate the derivative of the objective function at
+// @desc Evaluate the derivative of the objective function at
 //   the position x[k] + step size
 // @param func {fn} The objective function to be minimized
 // @param eps {float} The absolute step size used for numerical approximation
@@ -378,7 +378,7 @@ i.derPhi:{[func;eps;pk;alpha;xk;args]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Find the minimizing solution for a cubic polynomial which
+// @desc Find the minimizing solution for a cubic polynomial which
 //   passes through the points (a,fa), (b,fb) and (c,fc) with a derivative of
 //   the objective function calculated as fpa. This follows the python 
 //   implementation outlined here 
@@ -408,7 +408,7 @@ i.cubicMin:{[a;fa;fpa;b;fb;c;fc]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Find the minimizing solution for a quadratic polynomial which
+// @desc Find the minimizing solution for a quadratic polynomial which
 //   passes through the points (a,fa) and (b,fb) with a derivative of the 
 //   objective function calculated as fpa. This follows the python 
 //   implementation outlined here
@@ -431,7 +431,7 @@ i.quadMin:{[a;fa;fpa;b;fb]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Calculation of the gradient of the objective function for all 
+// @desc Calculation of the gradient of the objective function for all 
 //   parameters of x incremented individually by epsilon
 // @param func {fn} The objective function to be minimized
 // @param xk {number[]} Parameter values at position k
@@ -448,7 +448,7 @@ i.grad:{[func;xk;args;eps]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Calculation of the gradient of the objective function for a
+// @desc Calculation of the gradient of the objective function for a
 //   single parameter set x where one of the indices has been incremented by
 //   epsilon
 // @param func {fn} The objective function to be minimized
@@ -470,7 +470,7 @@ i.gradEval:{[fk;func;xk;args;eps;idx]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Evaluate the objective function at position x[k] with relevant
+// @desc Evaluate the objective function at position x[k] with relevant
 //   additional arguments accounted for
 // @param {fn} The objective function to be minimized
 // @param xk {number[]} Parameter values at position k
@@ -487,7 +487,7 @@ i.funcEval:{[func;xk;args]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Update the default behaviour of the model optimization 
+// @desc Update the default behaviour of the model optimization 
 //   procedure to account for increased sensitivity to tolerance, the number 
 //   of iterations, how the gradient norm is calculated and various numerical 
 //   updates including changes to the Armijo rule and curvature for calculation
@@ -508,7 +508,7 @@ i.updDefault:{[dict]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Ensure that the Armijo and curvature parameters are consistent
+// @desc Ensure that the Armijo and curvature parameters are consistent
 //   with the expected values for calculation of the strong Wolfe conditions
 // @param dict {dictionary} Updated parameter dictionary containing default
 //   information and any updated parameter information
@@ -528,7 +528,7 @@ i.wolfeParamCheck:{[dict]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Ensure that the input parameter x at position 0 which 
+// @desc Ensure that the input parameter x at position 0 which 
 //   will be updated is in a format that is suitable for use with this 
 //   optimization procedure i.e. the data is a list of values.
 // @param x0 {dictionary|number|number[]} Initial values of x to be optimized
@@ -543,7 +543,7 @@ i.dataFormat:{[x0]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Ensure new values lead to improvements over the older values
+// @desc Ensure new values lead to improvements over the older values
 // @param wolfeDict {dictionary} The current iterations values for the 
 //   objective function and the derivative of the objective function evaluated
 // @param params {dictionary} Parameter dictionary containing the updated/
@@ -561,7 +561,7 @@ i.wolfeCriteria1:{[wolfeDict;params]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Ensure new values lead to improvements over the older values
+// @desc Ensure new values lead to improvements over the older values
 // @param wolfeDict {dictionary} The current iterations values for the objective 
 //   function and the derivative of the objective function evaluated
 // @param params {dictionary} Parameter dictionary containing the updated/
@@ -574,7 +574,7 @@ i.wolfeCriteria2:{[wolfeDict;params]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Check if there is need to apply quadratic minimum calculation
+// @desc Check if there is need to apply quadratic minimum calculation
 // @param findMin {number[]} The currently calculated minimum values
 // @param highLow {dictionary} Upper and lower bounds of the search space
 // @param cubicCheck {float} Interpolation check parameter
@@ -595,7 +595,7 @@ i.quadCriteria:{[findMin;highLow;cubicCheck;zoomDict]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Check if the zoom conditions are sufficient
+// @desc Check if the zoom conditions are sufficient
 // @param phi0 {float} Objective function evaluation at index 0
 // @param derPhi0 {float} Derivative of objective function evaluated at index 0
 // @param phiMin {float} 0bjective function evaluated at the current minimum
@@ -615,7 +615,7 @@ i.zoomCriteria1:{[phi0;derPhi0;phiMin;findMin;zoomDict;params]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Check if the zoom conditions are sufficient
+// @desc Check if the zoom conditions are sufficient
 // @param derPhi0 {float} Derivative of the objective function evaluated at
 //   index 0
 // @param derPhiMin {float} Derivative of the objective function evaluated at
@@ -631,7 +631,7 @@ i.zoomCriteria2:{[derPhi0;derPhiMin;params]
 // @private
 // @kind function
 // @category optimizationUtility
-// @fileoverview Check if the zoom conditions are sufficient
+// @desc Check if the zoom conditions are sufficient
 // @param derPhiMin {float} Derivative of the objective function evaluated at 
 //   the current minimum
 // @param alphaDiff {float} Difference between the upper and lower bound of the 
@@ -646,29 +646,29 @@ i.zoomCriteria3:{[derPhiMin;alphaDiff]
 // @private
 // @kind dictionary
 // @category optimizationUtility
-// @fileoverview Input keys of zoom dictionary
+// @desc Input keys of zoom dictionary
 i.zoomKeys:`aLo`aHi`phiLo`phiHi`derPhiLo`phiRec;
 
 // @private
 // @kind dictionary
 // @category optimizationUtility
-// @fileoverview Keys to be updated in zoom each iteration
+// @desc Keys to be updated in zoom each iteration
 i.zoomKeys1:`phiRec`aRec`aHi`phiHi;
 
 // @private
 // @kind dictionary
 // @category optimizationUtility
-// @fileoverview Extra keys that have to be updated in some scenarios
+// @desc Extra keys that have to be updated in some scenarios
 i.zoomKeys2:`aLo`phiLo`derPhiLo;
 
 // @private
 // @kind dictionary
 // @category optimizationUtility
-// @fileoverview Extra keys that have to be updated in some scenarios
+// @desc Extra keys that have to be updated in some scenarios
 i.zoomKeys3:`phiRec`aRec
 
 // @private
 // @kind dictionary
 // @category optimizationUtility
-// @fileoverview Final updated keys to be used
+// @desc Final updated keys to be used
 i.zoomReturn:`alphaStar`phiStar`derPhiStar;
