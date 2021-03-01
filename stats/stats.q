@@ -99,6 +99,7 @@ stats.WLS.predict:stats.OLS.predict
 // @kind data
 // @category stats
 // @desc Load in functions defined within `describe.json`
+// @type dictionary
 stats.describeFuncs:.j.k raze read0`$path,"/stats/describe.json"
 
 // @kind function

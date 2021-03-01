@@ -61,9 +61,9 @@ clust.i.df.nege2dist:{[data]
 
 // @private
 // @kind dictionary
-// @type dictionary
 // @category clustUtility
 // @desc Linkage dictionary
+// @type dictionary
 clust.i.lf.single:min
 clust.i.lf.complete:max
 clust.i.lf.average:avg
@@ -122,9 +122,9 @@ clust.i.floatConversion:{[data]
 
 // @private
 // @kind dictionary
-// @type dictionary
 // @category clustUtility
 // @desc Error dictionary
+// @type dictionary
 clust.i.err.df:{'`$"invalid distance metric"}
 clust.i.err.lf:{'`$"invalid linkage"}
 clust.i.err.ward:{'`$"ward must be used with e2dist"}
