@@ -342,7 +342,7 @@ i.stopZoom:{[dict;params]
 // @param pk {float} Step direction
 // @param alpha {float} Size of the step to be applied
 // @param xk {number[]} Parameter values at position k
-// @param args {dictionary;number[]} Function arguments that do not change per 
+// @param args {dictionary|number[]} Function arguments that do not change per 
 //   iteration
 // @returns {float} Function evaluated at at the position x[k] + step size
 i.phi:{[func;pk;alpha;xk;args]
@@ -512,13 +512,13 @@ i.updDefault:{[dict]
 //   with the expected values for calculation of the strong Wolfe conditions
 // @param dict {dictionary} Updated parameter dictionary containing default
 //   information and any updated parameter information
-// @returns {dictionary;err} The original input dictionary or an error 
+// @returns {dictionary|err} The original input dictionary or an error 
 //   suggesting that the Armijo and curvature parameters are unsuitable
 i.wolfeParamCheck:{[dict]
   check1:dict[`c1]>dict`c2;
   check2:any not dict[`c1`c2]within 0 1;
   $[check1 or check2;
-    '"When evaluating Wolfe conditions the following must hold 0 < c1 < c2 < 1";
+   '"When evaluating Wolfe conditions the following must hold 0 < c1 < c2 < 1";
     dict
     ]
   }
@@ -562,8 +562,8 @@ i.wolfeCriteria1:{[wolfeDict;params]
 // @kind function
 // @category optimizationUtility
 // @desc Ensure new values lead to improvements over the older values
-// @param wolfeDict {dictionary} The current iterations values for the objective 
-//   function and the derivative of the objective function evaluated
+// @param wolfeDict {dictionary} The current iterations values for the 
+//   objective function and the derivative of the objective function evaluated
 // @param params {dictionary} Parameter dictionary containing the updated/
 /    default information used to modify the behaviour of the system as a whole
 // @returns {boolean} Indication as to if a further zoom is required 

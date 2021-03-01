@@ -61,6 +61,7 @@ clust.i.df.nege2dist:{[data]
 
 // @private
 // @kind dictionary
+// @type dictionary
 // @category clustUtility
 // @desc Linkage dictionary
 clust.i.lf.single:min
@@ -101,7 +102,7 @@ clust.i.closest:{[data;df;pt;idxs]
 // @kind function
 // @category clustUtility
 // @desc Reindex exemplars
-// @param data {#any[]} Data points
+// @param data {any[]} Data points
 // @return {long[]} List of indices
 clust.i.reIndex:{[data]
   distinct[data]?data
@@ -111,7 +112,7 @@ clust.i.reIndex:{[data]
 // @kind function
 // @category clustUtility
 // @desc Convert data to floating value
-// @param data {#any[]} Data points
+// @param data {any[]} Data points
 // @return {err|float[]} Data converted to floating point values or
 //   error if not possible
 clust.i.floatConversion:{[data]
@@ -121,6 +122,7 @@ clust.i.floatConversion:{[data]
 
 // @private
 // @kind dictionary
+// @type dictionary
 // @category clustUtility
 // @desc Error dictionary
 clust.i.err.df:{'`$"invalid distance metric"}
@@ -482,7 +484,7 @@ clust.i.wardCalc:{[df;lf;xdata;ydata]
 // @param k {long} Number of clusters
 // @param n {long} Number of representative points per cluster
 // @param c {float} Compression factor for representative points
-// @return {(dictionary;long[];table;table)} Parameters, clusters, 
+// @return {(dictionary|long[]|table|table)} Parameters, clusters, 
 //   representative points and the kdTree
 clust.i.initSCC:{[data;df;k;n;c;dgram]
   numPts:count data 0;
@@ -941,7 +943,7 @@ clust.i.nbhood:{[data;df;eps;idx]
 // @kind function
 // @category clustUtility
 // @desc Run DBSCAN algorithm and update cluster of each point
-// @param t {table} Cluster info table
+// @param tab {table} Cluster info table
 // @return {table} Updated cluster table with old clusters merged
 clust.i.dbAlgo:{[tab]
   nbIdxs:.ml.clust.i.nbhoodIdxs[tab]/[first where tab`corePoint];
@@ -1217,7 +1219,7 @@ clust.kd.i.findNext:{[tree;pt;node]
 // @private
 // @kind function
 // @category clustUtility
-// @desc Entropy
+// @desc Calculate entropy
 // @param d {long[]} distribution
 // @return {float} Entropy for d
 clust.i.entropy:{[d]
