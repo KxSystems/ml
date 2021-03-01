@@ -7,7 +7,7 @@
 
 // @kind function
 // @category preprocessing
-// @fileoverview Remove columns/keys with zero variance
+// @desc Remove columns/keys with zero variance
 // @param data {table|dictionary} Data in various formats
 // @return {table|dictionary} All columns/keys with zero variance are removed
 dropConstant:{[data]
@@ -34,7 +34,7 @@ dropConstant:{[data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Fit min max scaling model
+// @desc Fit min max scaling model
 // @param data {table|dictionary|number[]} Numerical data
 // @return {dictionary} Contains the following information:
 //   modelInfo - The min/max value of the fitted data
@@ -51,7 +51,7 @@ minMaxScaler.fit:{[data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Scale data between 0-1 based on fitted model
+// @desc Scale data between 0-1 based on fitted model
 // @params config {dictionary} Information returned from `ml.minMaxScaler.fit`
 //   including:
 //   modelInfo - The min/max value of the fitted data
@@ -67,7 +67,7 @@ minMaxScaler.predict:{[config;data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Scale data between 0-1
+// @desc Scale data between 0-1
 // @param data {table|dictionary|number[]} Numerical data
 // @return {table|dictionary|number[]} A min-max scaled representation with 
 // values scaled between 0 and 1f
@@ -78,7 +78,7 @@ minMaxScaler.fitPredict:{[data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Fit standard scaler model
+// @desc Fit standard scaler model
 // @param data {table|dictionary|number[]} Numerical data
 // @return {dictionary} Contains the following information:
 //   modelInfo - The avg/dev value of the fitted data
@@ -96,7 +96,7 @@ stdScaler.fit:{[data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Standard scaler transform-based representation of data
+// @desc Standard scaler transform-based representation of data
 //  using a fitted model
 // @params config {dictionary} Information returned from `ml.stdScaler.fit`
 //   including:
@@ -112,7 +112,7 @@ stdScaler.predict:{[config;data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Standard scaler transform-based representation of data
+// @desc Standard scaler transform-based representation of data
 // @param data {table|dictionary|number[]} Numerical data
 // @return {dictionary} All data has undergone standard scaling
 stdScaler.fitPredict:{[data]
@@ -122,7 +122,7 @@ stdScaler.fitPredict:{[data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Replace +/- infinities with data min/max
+// @desc Replace +/- infinities with data min/max
 // @param data {table|dictionary|number[]} Numerical data
 // @return {table|dictionary|number[]} Data with positive/negative 
 //   infinities are replaced by max/min values
@@ -132,7 +132,7 @@ infReplace:i.ap{[data;inf;func]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Tunable polynomial features from an input table
+// @desc Tunable polynomial features from an input table
 // @param tab {table} Numerical data
 // @param n {int} Order of the polynomial feature being created
 // @return {table} The polynomial derived features of degree n 
@@ -146,7 +146,7 @@ polyTab:{[tab;n]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Tunable filling of null data for a simple table
+// @desc Tunable filling of null data for a simple table
 // @param tab {table} Numerical and non numerical data
 // @param groupCol {symbol} A grouping column for the fill 
 // @param timeCol {symbol} A time column in the data 
@@ -174,7 +174,7 @@ fillTab:{[tab;groupCol;timeCol;dict]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Fit one-hot encoding model to categorical data
+// @desc Fit one-hot encoding model to categorical data
 // @param tab {table} Numerical and non numerical data
 // @param symCols {symbol[]} Columns to apply encoding to
 // @return {dictionary} Contains the following information:
@@ -191,7 +191,7 @@ oneHot.fit:{[tab;symCols]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Encode categorical features using one-hot encoded fitted model
+// @desc Encode categorical features using one-hot encoded fitted model
 // @params config {dictionary} Information returned from `ml.oneHot.fit`
 //   including:
 //   modelInfo - The mapping information
@@ -211,7 +211,7 @@ oneHot.predict:{[config;tab;symDict]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Encode categorical features using one-hot encoding
+// @desc Encode categorical features using one-hot encoding
 // @param tab {table} Numerical and non numerical data
 // @param symCols {symbol[]} Columns to apply coding to
 // @return {table} One-hot encoded representation of categorical data
@@ -224,7 +224,7 @@ oneHot.fitPredict:{[tab;symCols]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Encode categorical features with frequency of 
+// @desc Encode categorical features with frequency of 
 //   category occurrence
 // @param tab {table} Numerical data
 // @param symCols {symbol[]} Columns to apply coding to
@@ -240,7 +240,7 @@ freqEncode:{[tab;symCols]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Fit lexigraphical ordering model to cateogorical data
+// @desc Fit lexigraphical ordering model to cateogorical data
 // @param tab {table} Numerical and categorical data
 // @param symCols {symbol[]} Columns to apply coding to
 // @return {dictionary} Contains the following information:
@@ -258,7 +258,7 @@ lexiEncode.fit:{[tab;symCols]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Lexicode encode data based on previously fitted model
+// @desc Lexicode encode data based on previously fitted model
 // @params config {dictionary} Information returned from `ml.lexiEncode.fit`
 //   including:
 //   modelInfo - The mapping information
@@ -281,7 +281,7 @@ lexiEncode.predict:{[config;tab;symDict]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Encode categorical features based on lexigraphical order
+// @desc Encode categorical features based on lexigraphical order
 // @param tab {table} Numerical data
 // @param symCols {symbol[]} Columns to apply coding to
 // @return {table} Addition of lexigraphical order of symbol column
@@ -294,7 +294,7 @@ lexiEncode.fitPredict:{[tab;symCols]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Fit a label encoder model
+// @desc Fit a label encoder model
 // @param data {any[]} Data to encode
 // @return {dictionary} Contains the following information:
 //   modelInfo - The schema mapping values
@@ -310,7 +310,7 @@ labelEncode.fit:{[data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Encode categorical data to an integer value representation
+// @desc Encode categorical data to an integer value representation
 // @params config {dictionary} Information returned from `ml.labelEncode.fit`
 //   including:
 //   modelInfo - The schema mapping values
@@ -324,7 +324,7 @@ labelEncode.predict:{[config;data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Encode categorical data to an integer value representation
+// @desc Encode categorical data to an integer value representation
 // @param data {any[]} Data to encode
 // @return {int[]} List is encoded to an integer representation 
 labelEncode.fitPredict:{[data]
@@ -334,7 +334,7 @@ labelEncode.fitPredict:{[data]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Transform a list of integers based on a previously generated
+// @desc Transform a list of integers based on a previously generated
 //    label encoding
 // @param data {int[]} Data to be reverted to original representation
 // @param map {dictionary} Maps true representation to associated integer or
@@ -349,7 +349,7 @@ applyLabelEncode:{[data;map]
 
 // @kind function
 // @category preprocessing
-// @fileoverview Break specified time columns into constituent components
+// @desc Break specified time columns into constituent components
 // @param tab {table} Contains time columns
 // @param timeCols {symbol[]} Columns to apply coding to, if set to :: 
 //   all columns with date/time types will be encoded

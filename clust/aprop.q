@@ -1,18 +1,28 @@
-\d .ml
+// clust/init.q - Affinity propagation 
+// Copyright (c) 2021 Kx Systems Inc
+// 
+// Clustering using affinity propagation. 
+// Affinity Propagation groups data based on the similarity 
+// between points and subsequently finds exemplars, which best 
+// represent the points in each cluster. The algorithm does 
+// not require the number of clusters be provided at run time, 
+// but determines the optimum solution by exchanging real-valued 
+// messages between points until a high-valued set of exemplars 
+// is produced.
 
-// Affinity Propagation
+\d .ml
 
 // @kind function
 // @category clust
-// @fileoverview Fit affinity propagation algorithm
+// @desc Fit affinity propagation algorithm
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.df'
+// @param df {symbol} Distance function name within '.ml.clust.df'
 // @param damp {float} Damping coefficient
-// @param diag {func} Function applied to the similarity matrix diagonal
-// @param iter {dict} Max number of overall iterations and iterations 
-//   without a change in clusters. (::) can be passed in which case the defaults
-//   of (`total`noChange!200 15) will be used
-// @return {dict} Data, input variables, clusters and exemplars 
+// @param diag {fn} Function applied to the similarity matrix diagonal
+// @param iter {dictionary} Max number of overall iterations and iterations 
+//   without a change in clusters. (::) can be passed in which case the 
+//   defaults of (`total`noChange!200 15) will be used
+// @return {dictionary} Data, input variables, clusters and exemplars 
 //   (`data`inputs`clust`exemplars) required, along with a projection of the
 //   predict function
 clust.ap.fit:{[data;df;damp;diag;iter]
@@ -31,9 +41,9 @@ clust.ap.fit:{[data;df;damp;diag;iter]
 
 // @kind function
 // @category clust
-// @fileoverview Predict clusters using AP config
-// @param config {dict} `data`inputs`clust`exemplars returned by the modelInfo
-//   key from the return of clust.ap.fit
+// @desc Predict clusters using AP config
+// @param config {dictionary} `data`inputs`clust`exemplars returned by the 
+//   modelInfo key from the return of clust.ap.fit
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @return {long[]} Predicted clusters
 clust.ap.predict:{[config;data]

@@ -9,7 +9,7 @@
 
 // @kind function
 // @category utilities
-// @fileoverview Range of values
+// @desc Range of values
 // @param array {number[]} A numerical array 
 // @returns {float} Range of its values
 range:{[array]
@@ -18,7 +18,7 @@ range:{[array]
 
 // @kind function
 // @category utilities
-// @fileoverview Evenly-spaced values
+// @desc Evenly-spaced values
 // @param start {number} Start of the interval (inclusive)
 // @param end {number} End of the interval (non-inclusive)
 // @param step {number} Spacing between values 
@@ -30,7 +30,7 @@ arange:{[start;end;step]
 
 // @kind function
 // @category utilities
-// @fileoverview Unique combinations of a vector or matrix
+// @desc Unique combinations of a vector or matrix
 // @param n {int} Number of values required for combinations
 // @param degree {int} Degree of the combinations to be produced
 // @return {int[]} Unique combinations of values from the data 
@@ -40,7 +40,7 @@ combs:{[n;degree]
 
 // @kind function
 // @category utilities
-// @fileoverview Create identity matrix 
+// @desc Create identity matrix 
 // @param n {int} Width/height of identity matrix
 // @return {int[]} Identity matrix of height/width n
 eye:{[n]
@@ -49,7 +49,7 @@ eye:{[n]
 
 // @kind function
 // @category utilities
-// @fileoverview Index of maximum element of a list
+// @desc Index of maximum element of a list
 // @param array {number[]} Array of values 
 // @return {number} The index of the maximum element of the array
 iMax:{[array]
@@ -58,7 +58,7 @@ iMax:{[array]
 
 // @kind function
 // @category utilities
-// @fileoverview Index of minimum element of a list
+// @desc Index of minimum element of a list
 // @param array {number[]} Array of values 
 // @return {number} The index of the minimum element of the array
 iMin:{[array]
@@ -67,7 +67,7 @@ iMin:{[array]
 
 // @kind function
 // @category utilities
-// @fileoverview Create an array of evenly-spaced values
+// @desc Create an array of evenly-spaced values
 // @param start {number} Start of the interval (inclusive)
 // @param end {number} End of the interval (non-inclusive)
 // @param n {int} How many spaces are to be created
@@ -79,7 +79,7 @@ linearSpace:{[start;end;n]
 
 // @kind function
 // @category utilities
-// @fileoverview Shape of a matrix
+// @desc Shape of a matrix
 // @param matrix {number[]} Matrix of values
 // @return {number[]} Its shape as a list of dimensions
 shape:{[matrix]
@@ -88,7 +88,7 @@ shape:{[matrix]
 
 // @kind function
 // @category utilities
-// @fileoverview Split data into training and test sets
+// @desc Split data into training and test sets
 // @param data {number[]|table} Matrix of input values
 // @param target {number[]} A vector of target values the same count as data
 // @param size {float[]} Percentage size of the testing set
@@ -104,7 +104,7 @@ trainTestSplit:{[data;target;size]
 
 // @kind function
 // @category utilities
-// @fileoverview Convert q table to Pandas dataframe
+// @desc Convert q table to Pandas dataframe
 // @param tab {table} A q table
 // @return {<} a Pandas dataframe
 tab2df:{[tab]
@@ -119,7 +119,7 @@ tab2df:{[tab]
 
 // @kind function
 // @category utilities
-// @fileoverview Convert a pandas dataframe containing datetime timezones and
+// @desc Convert a pandas dataframe containing datetime timezones and
 //   datetime objects (datetime.datetime, datetime.time) to a q table
 // @param tab {<} An embedPy representation of a Pandas dataframe
 // @param local {boolean} Indicates if timezone objects are to be converted
@@ -153,7 +153,7 @@ df2tabTimezone:{[tab;local;qObj]
 
 // @kind function
 // @category utilities
-// @fileoverview Convert pandas dataframe to q table
+// @desc Convert pandas dataframe to q table
 // @param tab {<} An embedPy representation of a Pandas dataframe
 // @return {<} a q table
 df2tab:df2tabTimezone[;0b;0b]

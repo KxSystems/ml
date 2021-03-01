@@ -1,20 +1,32 @@
+// clust/kmeans.q - K means clustering
+// Copyright (c) 2021 Kx Systems Inc
+// 
+// K means clustering.
+// K-means clustering begins by selecting k data points 
+// as cluster centers and assigning data to the cluster
+// with the nearest center.
+// The algorithm follows an iterative refinement process
+// which runs a specified number of times, updating the 
+// cluster centers and assigned points to a cluster at 
+// each iteration based on the nearest cluster center.
+
 \d .ml
 
 // K-Means
 
 // @kind function
 // @category clust
-// @fileoverview Fit k-Means algorithm to data
+// @desc Fit k-Means algorithm to data
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param df {symbol} Distance function name within '.ml.clust.i.df'
 // @param k {long} Number of clusters
-// @param config {dict} Configuration information which can be updated, (::) 
-//   allows a user to use default values, allows update for to maximum 
+// @param config {dictionary} Configuration information which can be updated,
+//   (::) allows a user to use default values, allows update for to maximum 
 //   iterations `iter, initialisation type `init i.e. use k++ or random and
 //   the threshold for smallest distance to move between the previous and
 //   new run `thresh, a distance less than thresh will result in
 //   early stopping
-// @return {dict} A dictionary containing:
+// @return {dictionary} A dictionary containing:
 //   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`df`repPts`clt, where data and df are the inputs,
 //     repPts are the calculated k centers and clt are clusters associated
@@ -42,8 +54,8 @@ clust.kmeans.fit:{[data;df;k;config]
 
 // @kind function
 // @category clust
-// @fileoverview Predict clusters using k-means config
-// @param config {dict} A dictionary returned from '.ml.clust.kmeans.fit'
+// @desc Predict clusters using k-means config
+// @param config {dictionary} A dictionary returned from '.ml.clust.kmeans.fit'
 //   containing:
 //   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`df`repPts`clt, where data and df are the inputs,
@@ -63,8 +75,8 @@ clust.kmeans.predict:{[config;data]
 
 // @kind function
 // @category clust
-// @fileoverview Update kmeans config including new data points
-// @param config {dict} A dictionary returned from '.ml.clust.kmeans.fit'
+// @desc Update kmeans config including new data points
+// @param config {dictionary} A dictionary returned from '.ml.clust.kmeans.fit'
 //   containing:
 //   modelInfo - Encapsulates all relevant information needed to fit
 //     the model `data`df`repPts`clt, where data and df are the inputs,
@@ -74,7 +86,7 @@ clust.kmeans.predict:{[config;data]
 //   update - A projection allowing new data to be used to update
 //     cluster centers such that the model can react to new data
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @return {dict} Updated model configuration (config), including predict 
+// @return {dictionary} Updated model configuration (config), including predict 
 //   and update functions
 clust.kmeans.update:{[config;data]
   modelConfig:config[`modelInfo];

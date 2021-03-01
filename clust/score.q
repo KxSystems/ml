@@ -1,3 +1,9 @@
+// clust/score.q - Scoring metrics for clustering
+// Copyright (c) 2021 Kx Systems Inc
+// 
+// Scoring metrics allow you to validate the performance 
+// of your clustering algorithms
+
 \d .ml
 
 // Cluster Scoring Algorithms
@@ -6,7 +12,7 @@
 
 // @kind function
 // @category clust
-// @fileoverview Davies-Bouldin index - Euclidean distance only (edist)
+// @desc Davies-Bouldin index - Euclidean distance only (edist)
 // @param data {float[][]} Each column of the data is an individual datapoint
 // @param clusts {long[]} Clusters produced by .ml.clust algos
 // @return {float} Davies Bouldin index of clusts
@@ -21,9 +27,9 @@ clust.daviesBouldin:{[data;clusts]
 
 // @kind function
 // @category clust
-// @fileoverview Dunn index
+// @desc Dunn index
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param df {symbol} Distance function name within '.ml.clust.i.df'
 // @param clusts {long[]} Clusters produced by .ml.clust algos
 // @return {float} Dunn index of clusts
 clust.dunn:{[data;df;clusts]
@@ -36,11 +42,11 @@ clust.dunn:{[data;df;clusts]
 
 // @kind function
 // @category clust
-// @fileoverview Silhouette score
+// @desc Silhouette score
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param df {symbol} Distance function name within '.ml.clust.i.df'
 // @param clusts {long[]} Clusters produced by .ml.clust algos
-// @param isAvg {bool} Are all scores (0b) or the average score (1b)
+// @param isAvg {boolean} Are all scores (0b) or the average score (1b)
 //   to be returned
 // @return {float} Silhouette score of clusts
 clust.silhouette:{[data;df;clusts;isAvg]
@@ -52,7 +58,7 @@ clust.silhouette:{[data;df;clusts;isAvg]
 
 // @kind function
 // @category clust
-// @fileoverview Homogeneity Score
+// @desc Homogeneity Score
 // @param pred {long[]} Predicted cluster labels
 // @param true {long[]} True cluster labels
 // @return {float} Homogeneity score for true
@@ -71,9 +77,9 @@ clust.homogeneity:{[pred;true]
 
 // @kind function
 // @category clust
-// @fileoverview Elbow method
+// @desc Elbow method
 // @param data {float[][]} Each column of the data is an individual datapoint
-// @param df {sym} Distance function name within '.ml.clust.i.df'
+// @param df {symbol} Distance function name within '.ml.clust.i.df'
 // @param k {long} Max number of clusters
 // @return {float[]} Score for each k value - plot to find elbow
 clust.elbow:{[data;df;k]
