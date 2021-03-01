@@ -1,11 +1,16 @@
+// graph/graph.q - Graph tools
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Create, update, and delete functionality for a graph.
+
 \d .ml
 
 // @kind function
 // @category graph
-// @fileoverview Generate an empty graph
-// @return {dict} Structure required for the generation of a connected graph.
-//   This includes a key for information on the nodes present within the graph
-//   and edges outlining how the nodes within the graph are connected. 
+// @desc Generate an empty graph
+// @return {dictionary} Structure required for the generation of a connected 
+//   graph. This includes a key for information on the nodes present within the
+//   graph and edges outlining how the nodes within the graph are connected. 
 createGraph:{[]
   nodeKeys:`nodeId``function`inputs`outputs;
   nodes:1!enlist nodeKeys!(`;::;::;::;::);
@@ -16,11 +21,12 @@ createGraph:{[]
 
 // @kind function
 // @category graph
-// @fileoverview Add a functional node to a graph
-// @param graph {dict} Graph originally generated using .ml.createGraph
-// @param nodeId {sym} Denotes the name associated with the functional node
-// @param node {func} A functional node
-// @return {dict} The graph with the the new node added to the graph structure
+// @desc Add a functional node to a graph
+// @param graph {dictionary} Graph originally generated using .ml.createGraph
+// @param nodeId {symbol} Denotes the name associated with the functional node
+// @param node {fn} A functional node
+// @return {dictionary} The graph with the the new node added to the graph 
+//   structure
 addNode:{[graph;nodeId;node]
   node,:(1#`)!1#(::);
   if[nodeId in exec nodeId from graph`nodes;'"invalid nodeId"];
@@ -42,11 +48,12 @@ addNode:{[graph;nodeId;node]
 
 // @kind function
 // @category graph
-// @fileoverview Update the contents of a functional node
-// @param graph {dict} Graph originally generated using .ml.createGraph
-// @param nodeId {sym} Denotes the name of a functional node to be updated
-// @param node {func} A functional node
-// @return {dict} The graph with the named functional node contents overwritten
+// @desc Update the contents of a functional node
+// @param graph {dictionary} Graph originally generated using .ml.createGraph
+// @param nodeId {symbol} Denotes the name of a functional node to be updated
+// @param node {fn} A functional node
+// @return {dictionary} The graph with the named functional node contents 
+//   overwritten
 updNode:{[graph;nodeId;node]
   node,:(1#`)!1#(::);
   if[not nodeId in 1_exec nodeId from graph`nodes;'"invalid nodeId"];
@@ -86,10 +93,10 @@ updNode:{[graph;nodeId;node]
 
 // @kind function
 // @category graph
-// @fileoverview Delete a named function node
-// @param graph {dict} Graph originally generated using .ml.createGraph
-// @param nodeId {sym} Denotes the name of a functional node to be deleted
-// @return {dict} The graph with the named fucntional node removed
+// @desc Delete a named function node
+// @param graph {dictionary} Graph originally generated using .ml.createGraph
+// @param nodeId {symbol} Denotes the name of a functional node to be deleted
+// @return {dictionary} The graph with the named fucntional node removed
 delNode:{[graph;nodeId]
   if[not nodeId in 1_exec nodeId from graph`nodes;'"invalid nodeId"];
   graph:@[graph;`nodes;_;nodeId];
@@ -103,13 +110,14 @@ delNode:{[graph;nodeId]
 
 // @kind function
 // @category graph
-// @fileoverview Add a configuration node to a graph
-// @param graph {dict} Graph originally generated using .ml.createGraph
-// @param nodeId {sym} Denotes the name associated with the configuration node
-// @param config {func} Any configuration information to be supplied to other
+// @desc Add a configuration node to a graph
+// @param graph {dictionary} Graph originally generated using .ml.createGraph
+// @param nodeId {symbol} Denotes the name associated with the configuration 
+//   node
+// @param config {fn} Any configuration information to be supplied to other
 //   nodes in the graph
-// @return {dict} A graph with the the new configuration added to the graph 
-//   structure
+// @return {dictionary} A graph with the the new configuration added to the 
+//   graph structure
 addCfg:{[graph;nodeId;config]
   nodeKeys:``function`inputs`outputs;
   addNode[graph;nodeId]nodeKeys!(::;@[;config];::;"!")
@@ -117,12 +125,13 @@ addCfg:{[graph;nodeId;config]
 
 // @kind function
 // @category graph
-// @fileoverview Update the contents of a configuration node
-// @param graph {dict} Graph originally generated using .ml.createGraph
-// @param nodeId {sym} Denotes the name of a configuration node to be updated
-// @param config {func} Any configuration information to be supplied to other
+// @desc Update the contents of a configuration node
+// @param graph {dictionary} Graph originally generated using .ml.createGraph
+// @param nodeId {symbol} Denotes the name of a configuration node to be 
+//   updated
+// @param config {fn} Any configuration information to be supplied to other
 //   nodes in the graph
-// @return {dict} The graph with the named configuration node contents 
+// @return {dictionary} The graph with the named configuration node contents 
 //   overwritten
 updCfg:{[graph;nodeId;config]
   updNode[graph;nodeId](1#`function)!enlist config
@@ -130,25 +139,26 @@ updCfg:{[graph;nodeId;config]
 
 // @kind function
 // @category graph
-// @fileoverview Delete a named configuration node
-// @param graph {dict} Graph originally generated using .ml.createGraph
-// @param nodeId {sym} Denotes the name of a configuration node to be deleted
-// @return {dict} The graph with the named fucntional node removed
+// @desc Delete a named configuration node
+// @param graph {dictionary} Graph originally generated using .ml.createGraph
+// @param nodeId {symbol} Denotes the name of a configuration node to be 
+//   deleted
+// @return {dictionary} The graph with the named fucntional node removed
 delCfg:delNode
 
 // @kind function
 // @category graph
-// @fileoverview Connect the output of one node to the input to another
-// @param graph {dict} Graph originally generated using .ml.createGraph
-// @param sourceNode {sym} Denotes the name of a node in the graph which 
+// @desc Connect the output of one node to the input to another
+// @param graph {dictionary} Graph originally generated using .ml.createGraph
+// @param sourceNode {symbol} Denotes the name of a node in the graph which 
 //   contains the relevant output
-// @param sourceName {sym} Denotes the name of the output to be connected to an
-//   associated input node 
-// @param destNode {sym} Name of a node in the graph which contains the relevant
-//   input to be connected to
-// @param destName {sym} Name of the input which is connected to the output
+// @param sourceName {symbol} Denotes the name of the output to be connected to
+//   an associated input node 
+// @param destNode {symbol} Name of a node in the graph which contains the 
+//   relevant input to be connected to
+// @param destName {symbol} Name of the input which is connected to the output
 //   defined by sourceNode and sourceName
-// @return {dict} The graph with the relevant connection made between the 
+// @return {dictionary} The graph with the relevant connection made between the 
 //   inputs and outputs of two nodes
 connectEdge:{[graph;sourceNode;sourceName;destNode;destName]
   srcOutputs:graph[`nodes;sourceNode;`outputs];  
@@ -165,13 +175,13 @@ connectEdge:{[graph;sourceNode;sourceName;destNode;destName]
 
 // @kind function
 // @category graph
-// @fileoverview Disconnect an edge from the input of a node
-// @param graph {dict} Graph originally generated using .ml.createGraph
-// @param destNode {sym} Name of the node containing the edge to be deleted
-// @param destName {sym} Name of the edge associated with a specific input to
-//   be disconnected
-// @return {dict} The graph with the edge connected to the destination input
-//   removed from the graph.
+// @desc Disconnect an edge from the input of a node
+// @param graph {dictionary} Graph originally generated using .ml.createGraph
+// @param destNode {symbol} Name of the node containing the edge to be deleted
+// @param destName {symbol} Name of the edge associated with a specific input 
+//   to be disconnected
+// @return {dictionary} The graph with the edge connected to the destination 
+//   input removed from the graph.
 disconnectEdge:{[graph;destNode;destName]
   if[not(destNode;destName)in key graph`edges;'"invalid edge"];
   edge:(1#`valid)!1#0b;

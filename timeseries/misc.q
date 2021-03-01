@@ -1,15 +1,19 @@
-\d .ml
-
+// timeseries/misc.q - Timeseries functions
+// Copyright (c) 2021 Kx Systems Inc
+// 
 // Miscellaneous functionality relating to time series analysis
 // and model generation procedures
 
+\d .ml
+
 // @kind function
 // @category misc
-// @fileoverview Summary of the stationarity of each vector of a multivariate 
+// @desc Summary of the stationarity of each vector of a multivariate 
 //   time series or a single vector
-// @param data {dict;tab;num[]} a time series of interest, the entries should 
+// @param data {dictionary|table|number[]} a time series of interest,
+//   the entries should 
 //   in each case be numeric data types.
-// @return {keytab} informative outputs from the python adfuller test 
+// @return {dictionary} informative outputs from the python adfuller test 
 //   indicating the stationarity of each vector entry of the relevant dataset
 ts.stationarity:{[data]
   dataType:type data;
@@ -28,13 +32,15 @@ ts.stationarity:{[data]
 
 // @kind function
 // @category misc
-// @fileoverview Retrieve the best parameters for an ARIMA model based on the
+// @desc Retrieve the best parameters for an ARIMA model based on the
 //   Akaike Information Criterion (AIC)
-// @param train  {dict} training data dictionary containing `endog/`exog data
-// @param test   {dict} testing data dictionary containing `endog/`exog data
-// @param len    {integer} number of steps forward to predict
-// @param params {dict} parameter sets to fit ARIMA model with 
-// @return {dict} parameter set which produced the lowest AIC score
+// @param train  {dictionary} training data dictionary 
+//   containing `endog/`exog data
+// @param test   {dictionary} testing data dictionary 
+//   containing `endog/`exog data
+// @param len    {int} number of steps forward to predict
+// @param params {dictionary} parameter sets to fit ARIMA model with 
+// @return {dictionary} parameter set which produced the lowest AIC score
 ts.ARIMA.aicParam:{[train;test;len;params]
   ts.i.dictCheck[;`endog`exog;]'[(train;test);("train";"test")];
   ts.i.dictCheck[params;`p`d`q`trend;"params"];
@@ -50,13 +56,14 @@ ts.ARIMA.aicParam:{[train;test;len;params]
 
 // @kind function
 // @category misc
-// @fileoverview Apply a set of user defined functions over variously sized 
+// @desc Apply a set of user defined functions over variously sized 
 //   sliding windows to a subset of columns within a table
-// @param tab {tab} dataset onto which to apply the windowed functions
-// @param colNames {sym[]} names of the columns on which to apply the functions
-// @param funcs {sym[]} names of the functions to be applied
+// @param tab {table} dataset onto which to apply the windowed functions
+// @param colNames {symbol[]} names of the columns on which to apply the 
+//   functions
+// @param funcs {symbol[]} names of the functions to be applied
 // @param winSize {int[]} list of sliding window sizes
-// @return {tab} table with functions applied on specified columns over
+// @return {table} table with functions applied on specified columns over
 //   appropriate windows remove the first max[winSize] columns as these are 
 //   produced with insufficient information to be deemed accurate
 ts.windowFeatures:{[tab;colNames;funcs;winSize]
@@ -73,12 +80,12 @@ ts.windowFeatures:{[tab;colNames;funcs;winSize]
 
 // @kind function
 // @category misc
-// @fileoverview Apply a set of user defined functions over variously sized 
+// @desc Apply a set of user defined functions over variously sized 
 //   sliding windows to a subset of columns within a table
-// @param tab {tab} Dataset from which to generate lagged data
-// @param colNames {sym[]} Names of the columns to retrieve lagged data from
+// @param tab {table} Dataset from which to generate lagged data
+// @param colNames {symbol[]} Names of the columns to retrieve lagged data from
 // @param lags {int[]} List of lagged values to retrieve from the dataset
-// @return {tab} Table with columns added associated with the specied lagged
+// @return {table} Table with columns added associated with the specied lagged
 //   values 
 ts.laggedFeatures:{[tab;colNames;lags]
   if[1=count colNames;colNames,:()];
@@ -92,8 +99,9 @@ ts.laggedFeatures:{[tab;colNames;lags]
 
 // @kind function
 // @category misc
-// @fileoverview Plot and display an autocorrelation plot
-// @param data {num[]} Dataset from which to generate the autocorrelation plot
+// @desc Plot and display an autocorrelation plot
+// @param data {number[]} Dataset from which to generate the autocorrelation 
+//   plot
 // @param n {int} Number of lags to include in the graph
 // @return {graph} display to standard out the autocorrelation bar plot
 ts.acfPlot:{[data;n;width]
@@ -103,8 +111,8 @@ ts.acfPlot:{[data;n;width]
 
 // @kind function
 // @category misc
-// @fileoverview Plot and display an autocorrelation plot
-// @param data {num[]} Dataset from which to generate the partial 
+// @desc Plot and display an autocorrelation plot
+// @param data {number[]} Dataset from which to generate the partial 
 //   autocorrelation plot
 // @param n {int} Number of lags to include in the graph
 // @return {graph} display to standard out the partial autocorrelation bar plot

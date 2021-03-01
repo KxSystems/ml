@@ -1,3 +1,9 @@
+// graph/init.q - Load graph library
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Graph and Pipeline is a structural framework for developing 
+// q/kdb+ solutions, based on a directed acyclic graph.
+
 .ml.loadfile`:graph/utils.q
 .ml.loadfile`:graph/graph.q
 .ml.loadfile`:graph/pipeline.q

@@ -1,6 +1,9 @@
-\d .ml
-
+// xval/utils.q - Cross validation utilities
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Utilities for cross validation library
+
+\d .ml
 
 // Cross validation indexing
 
@@ -8,7 +11,7 @@
 // @kind function
 // @category xvUtility
 // @fileoverview Shuffle data point indices
-// @param data {#any} Table, matrix or list
+// @param data {any} Table, matrix or list
 // @return {long[]} Indices of data shuffled
 xv.i.shuffle:{[data]
   0N?count data
@@ -19,7 +22,7 @@ xv.i.shuffle:{[data]
 // @category xvUtility
 // @fileoverview Find indices required to split data into k-folds
 // @param k {int} Number of folds
-// @param data {#any} Table, matrix or list
+// @param data {any} Table, matrix or list
 // @return {long[][]} Indices required to split data into k sub-sets
 xv.i.splitIdx:{[k;data]
   (k;0N)#til count data
@@ -30,7 +33,7 @@ xv.i.splitIdx:{[k;data]
 // @category xvUtility
 // @fileoverview Find shuffled indices required to split data into k-folds
 // @param k {int} Number of folds
-// @param data {#any} Table, matrix or list
+// @param data {any} Table, matrix or list
 // @return {long[][]} Shuffled indices required to split data into k 
 //   sub-sets
 xv.i.shuffIdx:{[k;data]
@@ -43,7 +46,7 @@ xv.i.shuffIdx:{[k;data]
 // @fileoverview Split target data ensuring that each distinct value appears in
 //   each fold
 // @param k {int} Number of folds
-// @param data {#any} Table, matrix or list
+// @param data {any} Table, matrix or list
 // @return {long[][]} Data split into k-folds with distinct values 
 //   appearing in each
 xv.i.stratIdx:{[k;data]
@@ -93,12 +96,12 @@ xv.i.tsChainIdx:{[k]
 // @category xvUtility
 // @fileoverview Creates projection contining data split according to k
 //   in ((xtrain;ytrain);(xtest;ytest)) format for each fold
-// @param func1 {func} Function to be applied to x data
-// @param func2 {func} Function to be applied to k
+// @param func1 {fn} Function to be applied to x data
+// @param func2 {fn} Function to be applied to k
 // @param k {int} Number of folds
-// @param features {#any[][]} Matrix of features
-// @param target {#any[]} Vector of targets
-// @return {func} Projection of data split per fold
+// @param features {any[][]} Matrix of features
+// @param target {any[]} Vector of targets
+// @return {fn} Projection of data split per fold
 xv.i.idx1:{[func1;func2;k;features;target]
   dataSplit:flip@'((features;target)@/:\:func1[k;target])@\:/:func2 k;
   {{raze@''y}[;x]}each dataSplit
@@ -109,13 +112,13 @@ xv.i.idx1:{[func1;func2;k;features;target]
 // @category xvUtility
 // @fileoverview Creates projection contining data split according to k
 //   in ((xtrain;ytrain);(xtest;ytest)) format for each fold
-// @param func1 {func} Function to be applied to x data
-// @param func2 {func} Function to be applied to k
+// @param func1 {fn} Function to be applied to x data
+// @param func2 {fn} Function to be applied to k
 // @param k {int} Number of folds
 // @param n {int} Number of repetitions
-// @param features {#any[][]} Matrix of features
-// @param target {#any[]} Vector of targets
-// @return {func} Projection of data split per fold
+// @param features {any[][]} Matrix of features
+// @param target {any[]} Vector of targets
+// @return {fn} Projection of data split per fold
 xv.i.idxR:{[func1;func2;k;n;features;target]
   n#enlist xv.i.idx1[func1;func2;k;features;target]
   }
@@ -125,13 +128,13 @@ xv.i.idxR:{[func1;func2;k;n;features;target]
 // @category xvUtility
 // @fileoverview Creates projection contining data split according to k
 //   in ((xtrain;ytrain);(xtest;ytest)) format for each fold
-// @param func1 {func} Function to be applied to x data
-// @param func2 {func} Function to be applied to k
+// @param func1 {fn} Function to be applied to x data
+// @param func2 {fn} Function to be applied to k
 // @param k {int} Number of folds
 // @param n {int} Number of repetitions
-// @param features {#any[][]} Matrix of features
-// @param target {#any[]} Vector of targets
-// @return {func} Projection of data split per fold
+// @param features {any[][]} Matrix of features
+// @param target {any[]} Vector of targets
+// @return {fn} Projection of data split per fold
 xv.i.idxN:{[func1;func2;k;n;features;target]
   xv.i.idx1[func1;func2;;features;target]@'n#k
   }
@@ -143,10 +146,10 @@ xv.i.idxN:{[func1;func2;k;n;features;target]
 // @param idx {long[][]} Indicies to apply to data
 // @param k {int} Number of folds
 // @param n {int} Number of repetitions
-// @param features {#any[][]} Matrix of features
-// @param target {#any[]} Vector of targets
+// @param features {any[][]} Matrix of features
+// @param target {any[]} Vector of targets
 // @param function {fn} Function which takes data as input
-// @return {#any} Output of func with idx applied to data
+// @return {any} Output of func with idx applied to data
 xv.i.applyIdx:{[idx;k;n;features;target;function]
   splitData:raze idx[k;n;features;target];
   {[function;data]function data[]}[function]peach splitData
@@ -158,7 +161,7 @@ xv.i.applyIdx:{[idx;k;n;features;target;function]
 // @kind function
 // @category xvUtility
 // @fileoverview Convert q list to numpy array
-// @param x {#any[]} q list to be converted
+// @param x {any[]} q list to be converted
 // @return {<} embedPy object following numpy array conversion
 numpyArray:.p.import[`numpy]`:array
 
@@ -168,14 +171,14 @@ numpyArray:.p.import[`numpy]`:array
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Perform hyperparameter generation and cross validation
-// @param paramFunc {func} Parameter function
+// @param paramFunc {fn} Parameter function
 // @param xvalFunc {fn} Cross validation function
 // @param k {int} Number of folds
 // @param n {int} Number of repetitions
-// @param features {#any[][]} Matrix of features
-// @param target {#any[]} Vector of targets
-// @param dataFunc {func} Function which takes data as input
-// @param hyperparams {dict} Hyperparameters
+// @param features {any[][]} Matrix of features
+// @param target {any[]} Vector of targets
+// @param dataFunc {fn} Function which takes data as input
+// @param hyperparams {dictionary} Hyperparameters
 // @return {table} Cross validation scores for each hyperparameter set
 hp.i.xvScore:{[paramFunc;xvalFunc;k;n;features;target;dataFunc;hyperparams]
   // Generate hyperparameter sets
@@ -188,18 +191,18 @@ hp.i.xvScore:{[paramFunc;xvalFunc;k;n;features;target;dataFunc;hyperparams]
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Hyperparameter search with option to test final model 
-// @param scoreFunc {func} Scoring function
+// @param scoreFunc {fn} Scoring function
 // @param k {int} Number of folds
 // @param n {int} Number of repetitions
-// @param features {#any[][]} Matrix of features
-// @param target {#any[]} Vector of targets
-// @param dataFunc {func} Function which takes data as input
-// @param hyperparams {dict} Dictionary of hyperparameters
+// @param features {any[][]} Matrix of features
+// @param target {any[]} Vector of targets
+// @param dataFunc {fn} Function which takes data as input
+// @param hyperparams {dictionary} Dictionary of hyperparameters
 // @param testType {float} Size of the holdout set used in a fitted grid 
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
-// @return {table/(table;dict;float)} Either validation or testing results from 
+// @return {table|list} Either validation or testing results from 
 //   hyperparameter search with (full results;best set;testing score)
 hp.i.search:{[scoreFunc;k;n;features;target;dataFunc;hyperparams;testType]
   if[testType=0;:scoreFunc[k;n;features;target;dataFunc;hyperparams]];
@@ -214,8 +217,8 @@ hp.i.search:{[scoreFunc;k;n;features;target;dataFunc;hyperparams;testType]
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Hyperparameter generation for .ml.gs
-// @param hyperparams {dict} Hyperparameters with all possible values for a
-//   given parameter specified by the user, e.g.
+// @param hyperparams {dictionary} Hyperparameters with all possible values 
+//  for a given parameter specified by the user, e.g.
 //   pdict = `randomState`max_depth!(42 72 84;1 3 4 7)
 // @return {table} All possible hyperparameter sets
 hp.i.gsGen:{[hyperparams]
@@ -226,11 +229,11 @@ hp.i.gsGen:{[hyperparams]
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Hyperparameter generation for .ml.rs
-// @param params {dict} Parameters with form `randomState`n`typ`p where 
+// @param params {dictionary} Parameters with form `randomState`n`typ`p where 
 //   randomState is the seed, n is the number of hyperparameters to generate 
 //   (must equal 2^n for sobol), typ is the type of search (random/sobol) and p
 //   is a dictionary of hyperparameter spaces - see documentation for more info
-// @return {tab} Hyperparameters
+// @return {table} Hyperparameters
 hp.i.rsGen:{[params]
   // Set default number of trials
   if[(::)~n:params`n;n:16];
@@ -263,10 +266,11 @@ hp.i.rsGen:{[params]
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Random/sobol hyperparameter generation for .ml.rs
-// @param randomType {sym} Type of random search, denoting the namespace to use
+// @param randomType {symbol} Type of random search, denoting the namespace 
+//   to use
 // @param n {long} Number of hyperparameter sets
-// @param params {dict} Parameters
-// @return {#any} Hyperparameters
+// @param params {dictionary} Parameters
+// @return {any} Hyperparameters
 hp.i.hpGen:{[randomType;n;params]
   // Split parameters
   params:@[;0;first](0;1)_params,();
@@ -286,12 +290,13 @@ hp.i.hpGen:{[randomType;n;params]
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Uniform number generator 
-// @param randomType {sym} Type of random search, denoting the namespace to use
+// @param randomType {symbol} Type of random search, denoting the namespace 
+//   to use
 // @param low {long} Lower bound
 // @param high {long} Higher bound
 // @param paramType {char} Type of parameter, e.g. "i", "f", etc
-// @param params {num[]} Parameters
-// @return {num[]} Uniform numbers
+// @param params {number[]} Parameters
+// @return {number[]} Uniform numbers
 hp.i.uniform:{[randomType;low;high;paramType;params]
   if[high<low;'"upper bound must be greater than lower bound"];
   hp.i[randomType][`uniform][low;high;paramType;params]
@@ -301,23 +306,24 @@ hp.i.uniform:{[randomType;low;high;paramType;params]
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Generate list of log uniform numbers
-// @param randomType {sym} Type of random search, denoting the namespace to use
-// @param low {num} Lower bound as power of 10
-// @param high {num} Higher bound as power of 10
+// @param randomType {symbol} Type of random search, denoting the namespace 
+//   to use
+// @param low {number} Lower bound as power of 10
+// @param high {number} Higher bound as power of 10
 // @param paramType {char} Type of parameter, e.g. "i", "f", etc
-// @param params {num[]} Parameters
-// @return {num[]} Log uniform numbers
+// @param params {number[]} Parameters
+// @return {number[]} Log uniform numbers
 hp.i.logUniform:xexp[10]hp.i.uniform::
 
 // @private
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Random uniform generator
-// @param low {num} Lower bound as power of 10
-// @param high {num} Higher bound as power of 10
+// @param low {number} Lower bound as power of 10
+// @param high {number} Higher bound as power of 10
 // @param paramType {char} Type of parameter, e.g. "i", "f", etc
 // @param n {long} Number of hyperparameter sets
-// @return {num[]} Random uniform numbers
+// @return {number[]} Random uniform numbers
 hp.i.random.uniform:{[low;high;paramType;n]
   low+n?paramType$high-low
   }
@@ -326,11 +332,11 @@ hp.i.random.uniform:{[low;high;paramType;n]
 // @kind function
 // @category hyperparameterUtility
 // @fileoverview Sobol uniform generator
-// @param low {num} Lower bound as power of 10
-// @param high {num} Higher bound as power of 10
+// @param low {number} Lower bound as power of 10
+// @param high {number} Higher bound as power of 10
 // @param paramType {char} Type of parameter, e.g. "i", "f", etc
 // @param sequence {float[]} Sobol sequence
-// @return {num[]} Uniform numbers from sobol sequence
+// @return {number[]} Uniform numbers from sobol sequence
 hp.i.sobol.uniform:{[low;high;paramType;sequence]
   paramType$low+(high-low)*sequence
   }
