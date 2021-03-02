@@ -1,17 +1,22 @@
+// timeseries/utils.q - Timeseries Utilities
+// Copyright (c) 2021 Kx Systems Inc
+// 
+// AR/ARMA/SARMA model utilities
+
 \d .ml
 
-// AR/ARMA/SARMA model utilities
 
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview ARMA model generation
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//    model. This is the target variable from which a value is to be predicted
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @desc ARMA model generation
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @param params {dict} Parameter sets used to fit the ARMA model
-// @return {dict} Dictionary containing all information required to make 
+// @param params {dictionary} Parameter sets used to fit the ARMA model
+// @return {dictionary} Dictionary containing all information required to make 
 //   predictions using an ARMA based model
 ts.i.ARMA.model:{[endog;exog;params]
   n:1+max params`p`q;
@@ -27,13 +32,14 @@ ts.i.ARMA.model:{[endog;exog;params]
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview SARMA model generation
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @desc SARMA model generation
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @param params {dict} Parameter sets used to fit the SARMA model
-// @return {dict} Dictionary containing all information required to make 
+// @param params {dictionary} Parameter sets used to fit the SARMA model
+// @return {dictionary} Dictionary containing all information required to make 
 //   predictions using an SARMA based model
 ts.i.SARMA.model:{[endog;exog;params]
   n:1+max params`p`q;
@@ -51,15 +57,16 @@ ts.i.SARMA.model:{[endog;exog;params]
 // @private
 // @kind function 
 // @category fitUtility
-// @fileoverview Estimate error coefficients
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @desc Estimate error coefficients
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @param params {dict} Parameter sets used to estimate coefficients
+// @param params {dictionary} Parameter sets used to estimate coefficients
 // @param n {int} Number of error coefficients to estimate
-// @return {dict} Dictionary returning coefficients and errors required for 
-//   model generation
+// @return {dictionary} Dictionary returning coefficients and errors required
+//   for model generation
 ts.i.estimateErrorCoeffs:{[endog;exog;params;n]
   errors:ts.i.estimateErrors[endog;exog;n];
   coeffs:ts.i.estimateCoefficients[endog;exog;errors`errorVals;params];
@@ -69,13 +76,15 @@ ts.i.estimateErrorCoeffs:{[endog;exog;params;n]
 // @private
 // @kind function 
 // @category fitUtility
-// @fileoverview Estimate ARMA model parameters using ordinary least squares
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @desc Estimate ARMA model parameters using ordinary least squares
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @param errors {dict} Errors estimated using `i.estimateErrorCoeffs`
-// @param params {dict} Parameter sets used to estimate model coefficients
+// @param errors {dictionary} Errors estimated using `i.estimateErrorCoeffs`
+// @param params {dictionary} Parameter sets used to estimate model 
+//   coefficients
 // @return {float[]} Estimated ARMA model coefficients
 ts.i.estimateCoefficients:{[endog;exog;errors;params]
   // Create lagged matrices for the endogenous variable and residual errors
@@ -98,7 +107,7 @@ ts.i.estimateCoefficients:{[endog;exog;errors;params]
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview Durbin Levinson function to calculate the coefficients
+// @desc Durbin Levinson function to calculate the coefficients
 //   in a pure AR model with no trend for a univariate dataset
 //   Implementation can be found here 
 //   https://www.stat.purdue.edu/~zhanghao/STAT520/handout/DurbinLevHandout.pdf
@@ -118,10 +127,10 @@ ts.i.durbinLevinson:{[data;p]
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview Recursive function to estimate the coefficients
+// @desc Recursive function to estimate the coefficients
 //   in a pure AR model with no trend for a univariate dataset
 // @param data {float[]} Dataset from which to estimate the coefficients
-// @param info {num[]} Matrix, vector and n information 
+// @param info {number[]} Matrix, vector and n information 
 // @return {float[]} New matrix,vector and n information
 ts.i.durbinLevinsonEstimate:{[data;info]
   matrix:info 0;vector:info 1;n:info 2;
@@ -137,7 +146,7 @@ ts.i.durbinLevinsonEstimate:{[data;info]
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview Update matrix values for calculating AR coefficients using
+// @desc Update matrix values for calculating AR coefficients using
 //   Durbin Levinson method
 // @param data {float[]} Dataset from which to estimate the coefficients
 // @param n {int} Number of iterations
@@ -151,13 +160,14 @@ ts.i.durbinUpdateMatrix:{[data;n;matrix;j]
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview Estimate residual errors for the Hannan Riessanan method
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @desc Estimate residual errors for the Hannan Riessanan method
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
 // @param p {int} The number/order of time lags of the model
-// @return {dict} Residual errors and parameters for calculation of these 
+// @return {dictionary} Residual errors and parameters for calculation of these 
 //   parameters
 ts.i.estimateErrors:{[endog;exog;p]
   // Construct an AR model to estimate the residual error coeffs
@@ -173,18 +183,19 @@ ts.i.estimateErrors:{[endog;exog;p]
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview Estimate coefficients as starting points to calculate the 
+// @desc Estimate coefficients as starting points to calculate the 
 //   SARIMA coeffs
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @param residuals {num[]} Residual errors estimated using 
+// @param residuals {number[]} Residual errors estimated using 
 //   i.estimateErrorCoeffs
-// @param coeffs {num[]} Estimated coefficients for ARMA model using OLS
-// @param params {dict} Information on seasonal and non seasonal lags to be
-//   accounted for
-// @return {dict} Updated optimized coefficients for SARMA model
+// @param coeffs {number[]} Estimated coefficients for ARMA model using OLS
+// @param params {dictionary} Information on seasonal and non seasonal lags to
+//   be accounted for
+// @return {dictionary} Updated optimized coefficients for SARMA model
 ts.i.SARMA.coefficients:{[endog;exog;residuals;coeffs;params]
   // Data length to use
   qLen:count[residuals]-max raze params`q`Q`additionalQ;
@@ -217,9 +228,9 @@ ts.i.SARMA.coefficients:{[endog;exog;residuals;coeffs;params]
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview Calculation of the error when finding the SARIMA coefficients
-// @param coeffs {dict} Coefficients of SARIMA model
-// @param dict {dict} Additional parameters required in calculation
+// @desc Calculation of the error when finding the SARIMA coefficients
+// @param coeffs {dictionary} Coefficients of SARIMA model
+// @param dict {dictionary} Additional parameters required in calculation
 // @return {float} The square root of the summed, squared errors
 ts.i.SARMA.maxLikelihood:{[coeffs;dict]
   // Get additional seasonal parameters 
@@ -233,14 +244,15 @@ ts.i.SARMA.maxLikelihood:{[coeffs;dict]
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview Sort ARMA coefficients and parameters into correct order
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param coeff {num[]} Coefficients for calculating residuals
-// @param params {dict} Parameter sets used to fit the ARMA model
-// @param errors {dict} Error and coefficient dictionary
+// @desc Sort ARMA coefficients and parameters into correct order
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
+// @param coeff {number[]} Coefficients for calculating residuals
+// @param params {dictionary} Parameter sets used to fit the ARMA model
+// @param errors {dictionary} Error and coefficient dictionary
 // @param n {int} The number/order of time lags in estimated AR model
-// @return {num[]} Information needed for future predictions
+// @return {number[]} Information needed for future predictions
 ts.i.ARMA.sortValues:{[endog;coeff;params;errors;n]
   (params[`p]#neg[sum params`q`p]#coeff;neg[params`q]#coeff),
   (neg[n]#endog;neg[params`q]#errors`errorVals;errors`estCoeffs),
@@ -250,14 +262,15 @@ ts.i.ARMA.sortValues:{[endog;coeff;params;errors;n]
 // @private
 // @kind function
 // @category fitUtility
-// @fileoverview Sort SARMA coefficients and parameters into correct order 
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//   model this is the target variable from which a value is to be predicted
-// @param coeff {num[]} Coefficients for calculating residuals
-// @param params {dict} Parameter sets used to fit the SARMA model
-// @param errors {dict} Error and coefficient dictionary
+// @desc Sort SARMA coefficients and parameters into correct order 
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model this is the target variable from which a value is to be 
+//   predicted
+// @param coeff {number[]} Coefficients for calculating residuals
+// @param params {dictionary} Parameter sets used to fit the SARMA model
+// @param errors {dictionary} Error and coefficient dictionary
 // @param n {int} The number/order of time lags in estimated AR model
-// @return {dict} Information needed for future predictions
+// @return {dictionary} Information needed for future predictions
 ts.i.SARMA.sortValues:{[endog;coeff;params;errors;n]
   // Number of seasonal components
   seasParams:count raze params`P`Q;
@@ -280,15 +293,15 @@ ts.i.SARMA.sortValues:{[endog;coeff;params;errors;n]
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview predict a set number of future values based on a fit model 
+// @desc Predict a set number of future values based on a fit model 
 //   AR/ARMA/SARMA
-// @param model {dict} All information regarding model coefficients and 
+// @param model {dictionary} All information regarding model coefficients and 
 //   required residual information
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
 // @param len {int} The number of future data points to be predicted
-// @param predFunc {func} The function to be used for prediction
-// @return {num[]} Predicted values based on fit model
+// @param predFunc {fn} The function to be used for prediction
+// @return {number[]} Predicted values based on fit model
 ts.i.predictFunction:{[model;exog;len;predFunc]
   vals:(model`lagVals;model`residualVals;());
   last{x>count y 2}[len;]predFunc
@@ -300,13 +313,13 @@ ts.i.predictFunction:{[model;exog;len;predFunc]
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Prediction function for ARMA model
-// @param model {dict} All information regarding model coefficients and
+// @desc Prediction function for ARMA model
+// @param model {dictionary} All information regarding model coefficients and
 //   required residual information
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
 // @param len {int} The number of future data points to be predicted
-// @return {num[]} Predicted values based on fit ARMA model
+// @return {number[]} Predicted values based on fit ARMA model
 ts.i.ARMA.predictFunction:{[model;exog;len]
   exog:ts.i.predDataCheck[model;exog];
   ts.i.predictFunction[model;exog;len;ts.i.ARMA.singlePredict]
@@ -315,15 +328,15 @@ ts.i.ARMA.predictFunction:{[model;exog;len]
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Predict a single ARMA value
-// @param coeffs {num[]} Model coefficients retrieved from initial fit model
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @desc Predict a single ARMA value
+// @param coeffs {number[]} Model coefficients retrieved from initial fit model
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @param dict {dict} Additional information which can dictate the behaviour
-//   when making a prediction
-// @param pastPreds {num[]} Previously predicted values
-// @param residualCoeffs {num[]} Coefficients to estimate the residuals
-// @return {num[]} Information required for the prediction of a set of ARMA
+// @param dict {dictionary} Additional information which can dictate the 
+//   behaviour when making a prediction
+// @param pastPreds {number[]} Previously predicted values
+// @param residualCoeffs {number[]} Coefficients to estimate the residuals
+// @return {number[]} Information required for the prediction of a set of ARMA
 //   values
 ts.i.ARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs]
   exog:exog count pastPreds 2;
@@ -342,13 +355,13 @@ ts.i.ARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs]
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Prediction function for AR model
-// @param model {dict} All information regarding model coefficients and
+// @desc Prediction function for AR model
+// @param model {dictionary} All information regarding model coefficients and
 //   required residual information
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
 // @param len {int} The number of future data points to be predicted
-// @return {num[]} Predicted values based on fit AR model
+// @return {number[]} Predicted values based on fit AR model
 ts.i.AR.predictFunction:{[model;exog;len]
   exog:ts.i.predDataCheck[model;exog];
   model[`paramDict]:enlist[`p]!enlist count model`pCoeff;
@@ -365,13 +378,13 @@ ts.i.AR.singlePredict:ts.i.ARMA.singlePredict
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Prediction function for SARMA model
-// @param model  {dict} All information regarding model coefficientss and
+// @desc Prediction function for SARMA model
+// @param model  {dictionary} All information regarding model coefficientss and
 //   required residual information
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
 // @param len {int} The number of future data points to be predicted
-// @return {num[]} Predicted values based on fit SARMA model
+// @return {number[]} Predicted values based on fit SARMA model
 ts.i.SARMA.predictFunction:{[model;exog;len]
   exog:ts.i.predDataCheck[model;exog];
   $[count raze model`paramDict;
@@ -383,15 +396,17 @@ ts.i.SARMA.predictFunction:{[model;exog;len]
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Predict a single SARMA value
-// @param coeffs {dict} Model coefficients retrieved from initial fit model
-// @param exog {float[];(::)} Exogenous variables, are additional variables 
+// @desc Predict a single SARMA value
+// @param coeffs {dictionary} Model coefficients retrieved from initial fit 
+//   model
+// @param exog {float[]|(::)} Exogenous variables, are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @param dict {dict} Additional information which can dictate the behaviour
-//   when making a prediction
-// @param pastPreds {num[]} Previously predicted values
-// @param residualCoeffs {num[]} Coefficients to calculate the residual errors
-// @return {num[]} Information required for the prediction of SARMA values
+// @param dict {dictionary} Additional information which can dictate the 
+//   behaviour when making a prediction
+// @param pastPreds {number[]} Previously predicted values
+// @param residualCoeffs {number[]} Coefficients to calculate the residual 
+//   errors
+// @return {number[]} Information required for the prediction of SARMA values
 ts.i.SARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs];
   exog:exog count pastPreds 2;
   dict,:ts.i.SARMA.preproc[coeffs;dict];
@@ -407,12 +422,13 @@ ts.i.SARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs];
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Calculate additional coefficients for SARMA prediction 
+// @desc Calculate additional coefficients for SARMA prediction 
 //   surrounding seasonal components
-// @param coeffs {dict} Model coefficients retrieved from initial fit model
-// @param dict {dict} Additional information which can dictate the behaviour
-//   in different situations where predictions are being made 
-// @return {dict} Seasonal parameters for prediction in SARMA models
+// @param coeffs {dictionary} Model coefficients retrieved from initial fit 
+//   model
+// @param dict {dictionary} Additional information which can dictate the 
+//   behaviour in different situations where predictions are being made 
+// @return {dictionary} Seasonal parameters for prediction in SARMA models
 ts.i.SARMA.preproc:{[coeffs;dict]
   // Calculate or retrieve all necessary seasonal lagged values for SARMA 
   // prediction and split up the coefficients to their respective p,q,P,Q parts
@@ -430,13 +446,14 @@ ts.i.SARMA.preproc:{[coeffs;dict]
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Function to extract additional seasonal multiplied 
+// @desc Function to extract additional seasonal multiplied 
 //   coefficients. These coefficients multiply p x P vals and q x Q vals
-// @param dictKeys {sym} Key of dictionary to extract info from 
-// @param normVals {nums[]} Non seasonal coefficients
-// @param seasonVals {nums[]} Seasonal coefficients
-// @param dict {dict} Model parameters retrieved from initial fit model
-// @return {dict} Seasonal coefficients multiplied by non seasonal coefficients
+// @param dictKeys {symbol} Key of dictionary to extract info from 
+// @param normVals {number[]} Non seasonal coefficients
+// @param seasonVals {number[]} Seasonal coefficients
+// @param dict {dictionary} Model parameters retrieved from initial fit model
+// @return {dictionary} Seasonal coefficients multiplied by non seasonal 
+//   coefficients
 ts.i.SARMA.multiplySeason:{[dictKey;normVals;seasonVals;dict]
   $[dict[dictKey]&min count dict upper dictKey;
     (*/)flip normVals cross seasonVals;
@@ -447,14 +464,14 @@ ts.i.SARMA.multiplySeason:{[dictKey;normVals;seasonVals;dict]
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Predict a single SARMA value
-// @param coeffs {num[]} Model coefficiants retrieved from initial fit model
-// @param pastPreds {num[]} Previously predicted values
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @desc Predict a single SARMA value
+// @param coeffs {number[]} Model coefficiants retrieved from initial fit model
+// @param pastPreds {number[]} Previously predicted values
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @param dict {dict} Additional information which can dictate the behaviour
-//   when making a prediction
-// @return {num[]} information required for the prediction of a set of SARMA 
+// @param dict {dictionary} Additional information which can dictate the 
+//   behaviour when making a prediction
+// @return {number[]} information required for the prediction of a set of SARMA 
 //   values
 ts.i.SARMA.predictVal:{[coeffs;pastPreds;exog;dict]
   dict[`additionalResiduals]:$[dict[`q]&min count dict`Q;
@@ -474,12 +491,12 @@ ts.i.SARMA.predictVal:{[coeffs;pastPreds;exog;dict]
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Calculate the value of a SARMA prediction based on 
+// @desc Calculate the value of a SARMA prediction based on 
 //   provided coeffs/dictionary
-// @param coeffs {num[]} Model coefficients retrieved from initial fit model
-// @param dict {dict} Additional information which can dictate the behaviour
-//   when making a prediction
-// @return {num[]} The SARMA prediction values 
+// @param coeffs {number[]} Model coefficients retrieved from initial fit model
+// @param dict {dictionary} Additional information which can dictate the 
+//   behaviour when making a prediction
+// @return {number[]} The SARMA prediction values 
 ts.i.SARMA.eval:{[coeffs;dict]
   normVals  :mmu[dict`matrix;dict[`trend] _coeffs];
   seasResids:mmu[dict`additionalResiduals;dict`additionalqCoeff];
@@ -490,10 +507,11 @@ ts.i.SARMA.eval:{[coeffs;dict]
 // @private
 // @kind function
 // @category predictUtility
-// @fileoverview Calculate a single ARCH value, 
-// @param coeffs {dict} Model coefficients retrieved from initial fit model
-// @param pastPreds {num[]} Previously predicted values
-// @return {num[]} Residuals and predicted values
+// @desc Calculate a single ARCH value, 
+// @param coeffs {dictionary} Model coefficients retrieved from 
+//   initial fit model
+// @param pastPreds {number[]} Previously predicted values
+// @return {number[]} Residuals and predicted values
 ts.i.ARCH.singlePredict:{[coeffs;pastPreds]
   predict:coeffs[0]+pastPreds[0] mmu 1_coeffs;
   ((1_pastPreds 0),predict;pastPreds[1],predict)
@@ -504,10 +522,10 @@ ts.i.ARCH.singlePredict:{[coeffs;pastPreds]
 // @private
 // @kind function
 // @category aicUtility
-// @fileoverview Calculate the Akaike Information Criterion
-// @param true {num[]} True values
-// @param pred {num[]} Predicted values
-// @param params {num[]} The lag/residual parameters
+// @desc Calculate the Akaike Information Criterion
+// @param true {number[]} True values
+// @param pred {number[]} Predicted values
+// @param params {number[]} The lag/residual parameters
 // @return {float} Akaike Information Criterion score
 ts.i.aicScore:{[true;pred;params]
   // Calculate residual sum of squares, normalised for number of values
@@ -522,12 +540,14 @@ ts.i.aicScore:{[true;pred;params]
 // @private
 // @kind function
 // @category aicUtility
-// @fileoverview Fit a model, predict the test, return AIC score 
+// @desc Fit a model, predict the test, return AIC score 
 //   for a single set of input params
-// @param train {dict} Training data as a dictionary with endog and exog data
-// @param test {dict} Testing data as a dictionary with endog and exog data
+// @param train {dictionary} Training data as a dictionary with 
+//   endog and exog data
+// @param test {dictionary} Testing data as a dictionary with 
+//   endog and exog data
 // @param len {integer} Number of steps in the future to be predicted
-// @param params {dict} Parameters used in prediction
+// @param params {dictionary} Parameters used in prediction
 // @return {float} Akaike Information Criterion score
 ts.i.aicFitScore:{[train;test;len;params]
   // Fit an model using the specified parameters
@@ -543,10 +563,11 @@ ts.i.aicFitScore:{[train;test;len;params]
 // @private
 // @kind function
 // @category autocorrelationUtility
-// @fileoverview Lagged covariance between a dataset at time t and time t-lag
-// @param data {num[]} Vector on which to calculate the lagged covariance
+// @desc Lagged covariance between a dataset at time t and time t-lag
+// @param data {number[]} Vector on which to calculate the lagged covariance
 // @param lag {int} Size of the lag to use when calculating covariance
-// @return {float} Covariance between a time series and lagged version of itself
+// @return {float} Covariance between a time series and lagged version of 
+//   itself
 ts.i.lagCovariance:{[data;lag]
   cov[neg[lag] _ data;lag _ data]
   }
@@ -554,9 +575,9 @@ ts.i.lagCovariance:{[data;lag]
 // @private
 // @kind function
 // @category autocorrelationUtility
-// @fileoverview Calculate the autocorrelation between a time series
+// @desc Calculate the autocorrelation between a time series
 //   and lagged version of itself
-// @param data {num[]} Vector on which to calculate the lagged covariance
+// @param data {number[]} Vector on which to calculate the lagged covariance
 // @param lag {int} Size of the lag to use when calculating covariance
 // @return {float} Autocorrelation between a time series and lagged version of
 //   itself
@@ -569,13 +590,13 @@ ts.i.autoCorrFunction:{[data;lag]
 // @private
 // @kind function
 // @category matrixUtilities
-// @fileoverview Create a lagged matrix with each row containing the original
+// @desc Create a lagged matrix with each row containing the original
 //   data as its first element and the remaining 'lag' values as additional row
 //   elements
-// @param data {num[]} Vector from which to create the lagged matrix
+// @param data {number[]} Vector from which to create the lagged matrix
 // @param lag {int} Size of the lag to use when creating lagged matrix
-// @return {num[][]} A numeric matrix containing original data augmented with
-//   lagged versions of the original dataset.
+// @return {number[][]} A numeric matrix containing original data augmented 
+//   with lagged versions of the original dataset.
 ts.i.lagMatrix:{[data;lag]
   data til[count[data]-lag]+\:til lag
   }
@@ -583,9 +604,9 @@ ts.i.lagMatrix:{[data;lag]
 // @private
 // @kind function
 // @category matrixUtilities
-// @fileoverview Convert a simple table into a matrix
-// @param data {tab} Simple table to be converted to a matrix representation
-// @return {num[]} Matrix representation of the input table in the same 
+// @desc Convert a simple table into a matrix
+// @param data {table} Simple table to be converted to a matrix representation
+// @return {number[]} Matrix representation of the input table in the same 
 //   'configuration'
 ts.i.tabToMatrix:{[data]
   flip value flip data
@@ -598,11 +619,12 @@ ts.i.tabToMatrix:{[data]
 // @private
 // @kind function
 // @category stationaryUtilities
-// @fileoverview Calculate relevant augmented dickey fuller statistics using
+// @desc Calculate relevant augmented dickey fuller statistics using
 //   python
-// @param data {dict;tab;num[]} Dataset to be testing for stationarity
+// @param data {dictionary|table|number[]} Dataset to be testing for 
+//   stationarity
 // @param dtype {short} Type of the dataset that's being passed to the function
-// @return {num[]} All relevant scores from an augmented dickey fuller test
+// @return {number[]} All relevant scores from an augmented dickey fuller test
 ts.i.stationaryScores:{[data;dtype]
   // Calculate the augmented dickey-fuller scores for a dict/tab/vector input
   scores:{.ml.fresh.i.adFuller[x]`}@'
@@ -620,10 +642,11 @@ ts.i.stationaryScores:{[data;dtype]
 // @private
 // @kind function
 // @category stationaryUtilities
-// @fileoverview Are all of the series provided by a user stationary,
+// @desc Are all of the series provided by a user stationary,
 //   determined using augmented dickey fuller?
-// @param data {dict;tab;num[]} Dataset to be testing for stationarity
-// @return {bool} Indicate if all time series are stationary or not
+// @param data {dictionary|table|number[]} Dataset to be testing for 
+//   stationarity
+// @return {boolean} Indicate if all time series are stationary or not
 ts.i.stationary:{[data]
   (all/)ts.i.stationaryScores[data;type data][2]
   }
@@ -633,10 +656,10 @@ ts.i.stationary:{[data]
 // @private
 // @kind function
 // @category differUtility
-// @fileoverview Apply time-series differencing and remove first d elements
-// @param data {num[]} Dataset to apply differencing to
+// @desc Apply time-series differencing and remove first d elements
+// @param data {number[]} Dataset to apply differencing to
 // @param d {int} Order of time series differencing
-// @return {num[]} Differenced time series
+// @return {number[]} Differenced time series
 ts.i.diff:{[data;d]
   diffData:d{deltas x}/data;
   d _ diffData
@@ -645,11 +668,11 @@ ts.i.diff:{[data;d]
 // @private
 // @kind function
 // @category differUtility
-// @fileoverview Apply seasonal differencing and remove first d elements
+// @desc Apply seasonal differencing and remove first d elements
 // @param d {int} How many points in the past does data need to be
 //   differenced with respect to
-// @param data {num[]} Dataset to apply differencing to 
-// @return {num[]} Differenced time series
+// @param data {number[]} Dataset to apply differencing to 
+// @return {number[]} Differenced time series
 ts.i.seasonDiff:{[d;data]
   diffData:data - xprev[d;data];
   d _ diffData
@@ -658,11 +681,11 @@ ts.i.seasonDiff:{[d;data]
 // @private
 // @kind function
 // @category differUtility
-// @fileoverview Revert seasonally differenced data to correct representation
-// @param originData {num[]} Set of original dataset saved before being 
+// @desc Revert seasonally differenced data to correct representation
+// @param originData {number[]} Set of original dataset saved before being 
 //   differenced
-// @param diffData {num[]} Differenced dataset
-// @return {num[]} Data reverted back to its original format before 
+// @param diffData {number[]} Differenced dataset
+// @return {number[]} Data reverted back to its original format before 
 //   differencing 
 ts.i.reverseSeasonDiff:{[originData;diffData]
   seasonData:originData,diffData;
@@ -673,12 +696,12 @@ ts.i.reverseSeasonDiff:{[originData;diffData]
 // @private
 // @kind function
 // @category differUtility
-// @fileoverview Revert each individual seasonally differenced data to correct 
+// @desc Revert each individual seasonally differenced data to correct 
 //   representation one by one
 // @param n {int} Number of datapoints to revert
-// @param diffInfo {num[]} The differenced dataset along with what index in the 
-//   dataset is currently being reverted to its original state
-// @return {num[]} The updated dataset along with the next index of the list 
+// @param diffInfo {number[]} The differenced dataset along with what index in
+//   the dataset is currently being reverted to its original state
+// @return {number[]} The updated dataset along with the next index of the list 
 //  that's to be updated next
 ts.i.revertDiffFunc:{[n;diffInfo]
   seasonDiff:diffInfo 0;
@@ -700,14 +723,15 @@ ts.i.err.exog:{'`$"Test exog length does not match train exog length"}
 // @private
 // @kind function
 // @category dataCheckUtility
-// @fileoverview Check that the lengths of endogenous and exogenous data when
+// @desc Check that the lengths of endogenous and exogenous data when
 //   fitting the model are consistent, in the case they are not flag an error,
 //   ensure that the exogenous data is returned as a matrix
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//    model. This is the target variable from which a value is to be predicted
-// @param exog {float[];(::)} Exogenous variables are additional variables 
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
+// @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @return {num[]} Exogenous data as a matrix
+// @return {number[]} Exogenous data as a matrix
 ts.i.fitDataCheck:{[endog;exog]
   // Accept null as input
   if[exog~(::);exog:()];
@@ -720,13 +744,13 @@ ts.i.fitDataCheck:{[endog;exog]
 // @private
 // @kind function
 // @category dataCheckUtility
-// @fileoverview Ensure that all required keys are present for the application
+// @desc Ensure that all required keys are present for the application
 //   of the various prediction functions
-// @param dict {dict} dictionary parameter to be validated
-// @param keyVals {sym[]} Keys which should be present in order to fully 
+// @param dict {dictionary} dictionary parameter to be validated
+// @param keyVals {symbol[]} Keys which should be present in order to fully 
 //   execute the logic of the function
-// @param input {str} Name of input dictionary which issue is highlighted in
-// @return {err;(::)} Will error on incorrect inputs otherwise run silently
+// @param input {string} Name of input dictionary which issue is highlighted in
+// @return {err|::} Will error on incorrect inputs otherwise run silently
 ts.i.dictCheck:{[dict;keyVals;input]
   if[99h<>type dict;'input," must be a dictionary input"];
   validKeys:keyVals in key dict;
@@ -740,14 +764,14 @@ ts.i.dictCheck:{[dict;keyVals;input]
 // @private
 // @kind function
 // @category dataCheckUtility
-// @fileoverview Check that the exogenous data match the expected input when
+// @desc Check that the exogenous data match the expected input when
 //   predicting data using a the model are consistent, in the case they are 
 //   not, flag an error ensure that the exogenous data is returned as a matrix
-// @param model {dict} Dictionary containing required information to predict
-//   future values
-// @param exog {float[];(::)} Exogenous variables, are additional variables 
+// @param model {dictionary} Dictionary containing required information to 
+//   predict future values
+// @param exog {float[]|(::)} Exogenous variables, are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
-// @return {num[]} Exogenous data as a matrix
+// @return {number[]} Exogenous data as a matrix
 ts.i.predDataCheck:{[model;exog]
   // Allow null to be provided as exogenous variable
   if[exog~(::);exog:()];
@@ -760,14 +784,16 @@ ts.i.predDataCheck:{[model;exog]
 // @private
 // @kind function
 // @category dataCheckUtility
-// @fileoverview Apply seasonal and non-seasonal time-series differencing,error
+// @desc Apply seasonal and non-seasonal time-series differencing,error
 //   checking stationarity of the dataset following application of differencing
-// @param endog {num[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
+// @param endog {number[]} Endogenous variable (time-series) from which to 
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
 // @param d {int} Non seasonal differencing component
-// @param seasonDict {dict} Dictionary containing relevant seasonal
+// @param seasonDict {dictionary} Dictionary containing relevant seasonal
 //  differencing components
-// @return {dict} Seasonal and nonseasonally differenced stationary time-series
+// @return {dictionary} Seasonal and nonseasonally differenced stationary 
+//   time-series
 ts.i.differ:{[endog;d;seasonDict]
   // Apply non seasonal differencing if appropriate (handling of AR/ARMA)
   if[seasonDict~()!();seasonDict[`D]:0b];
@@ -787,17 +813,17 @@ ts.i.differ:{[endog;d;seasonDict]
 // @private
 // @kind function
 // @category featureExtractUtilities
-// @fileoverview Apply a user defined unary function across a dataset 
+// @desc Apply a user defined unary function across a dataset 
 //   using a sliding window of specified length
 //   Note: this is a modified version of a function provided in qidioms
 //   using floating point windows instead of long windows to increase the 
 //   diversity of functions that can be applied
-// @param func {func} Unary function to be applied with the data in the sliding
+// @param func {fn} Unary function to be applied with the data in the sliding
 //  window
 // @param winSize {int} Size of the sliding window 
-// @param data {num[]} Data on which the sliding window and associated function
-//   are to be applied
-// @return {num[]} Result of the application of the function on each of the 
+// @param data {number[]} Data on which the sliding window and associated 
+//   function are to be applied
+// @return {number[]} Result of the application of the function on each of the 
 //   sliding window components over the data vector
 ts.i.slidingWindowFunction:{[func;winSize;data]
   0f,-1_func each{1_x,y}\[winSize#0f;data]
@@ -806,11 +832,11 @@ ts.i.slidingWindowFunction:{[func;winSize;data]
 // @private
 // @kind function
 // @category featureExtractUtilities
-// @fileoverview Set up the order for the inputs of the sliding window function
-// @param tab {tab} Dataset onto which to apply the windowed functions 
-// @param uniCombs {num[]} Unique combinations of columns/windows and functions
-//   to be applied to the dataset  
-// @return {num[]} Result of the application of the function on each of the 
+// @desc Set up the order for the inputs of the sliding window function
+// @param tab {table} Dataset onto which to apply the windowed functions 
+// @param uniCombs {number[]} Unique combinations of columns/windows and 
+//   functions to be applied to the dataset  
+// @return {number[]} Result of the application of the function on each of the 
 //   sliding window components over the data vector
 ts.i.setupWindow:{[tab;uniCombs]
   ts.i.slidingWindowFunction[get string uniCombs 0;uniCombs 1;tab uniCombs 2]
@@ -821,12 +847,12 @@ ts.i.setupWindow:{[tab;uniCombs]
 // @private
 // @kind function
 // @category plottingUtility
-// @fileoverview Plotting function used in the creation of plots
+// @desc Plotting function used in the creation of plots
 //   for both full and partial autocorrelation graphics
-// @param data {num[]} x-axis original dataset
-// @param vals {num[]} Calculated values
-// @param m {num[]} Bar plot indices
-// @param title {str} Title to be given to the plot
+// @param data {number[]} x-axis original dataset
+// @param vals {number[]} Calculated values
+// @param m {number[]} Bar plot indices
+// @param title {string} Title to be given to the plot
 // @return {graph} Presents a plot to screen associated with relevant analysis
 ts.i.plotFunction:{[data;vals;m;width;title]
   plt:.p.import`matplotlib.pyplot;

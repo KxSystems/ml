@@ -1,19 +1,23 @@
-\d .ml
-
+// timeseries/fit.q - Fit timeseries models 
+// Copyright (c) 2021 Kx Systems Inc
+// 
 // Fitting functionality for time series models. 
+// Models include AR, ARCH, ARMA, ARIMA, and SARIMA.
+
+\d .ml
 
 // @kind function
 // @category modelFit
-// @fileoverview Fit an AutoRegressive model (AR)
-// @param endog {float[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param exog {tab;float[];(::)} Exogenous variables are additional variables 
-//   which may be accounted for to improve the model, if (::)/()
+// @desc Fit an AutoRegressive model (AR)
+// @param endog {float[]} Endogenous variable (time-series) from which to build
+//   a model. This is the target variable from which a value is to be predicted
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model, if (::)/()
 //   this will be ignored
 // @param p {int} The number/order of time lags of the model
-// @param trend {bool} Is a trend line to be accounted for when fitting 
+// @param trend {boolean} Is a trend line to be accounted for when fitting 
 //   the model
-// @return {dict} Contains the following information:
+// @return {dictionary} Contains the following information:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
 ts.AR.fit:{[endog;exog;p;trend]
@@ -39,17 +43,17 @@ ts.AR.fit:{[endog;exog;p;trend]
 
 // @kind function
 // @category modelFit
-// @fileoverview Fit an AutoRegressive Moving Average model (ARMA)
-// @param endog {float[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param exog {tab;float[];(::)} Exogenous variables are additional variables 
-//   which may be accounted for to improve the model, if (::)/() 
+// @desc Fit an AutoRegressive Moving Average model (ARMA)
+// @param endog {float[]} Endogenous variable (time-series) from which to build
+//   a model. This is the target variable from which a value is to be predicted
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model, if (::)/() 
 //   this will be ignored
 // @param p {int} The number/order of time  lags of the model
 // @param q {int} The number of residual errors to be accounted for
-// @param trend {bool} Is a trend line to be accounted for when fitting 
+// @param trend {boolean} Is a trend line to be accounted for when fitting 
 //   the model
-// @return {dict} Contains the following information:
+// @return {dictionary} Contains the following information:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
 ts.ARMA.fit:{[endog;exog;p;q;trend]
@@ -72,17 +76,18 @@ ts.ARMA.fit:{[endog;exog;p;q;trend]
 
 // @kind function
 // @category modelFit
-// @fileoverview Fit an AutoRegressive Integrated Moving Average model (ARIMA)
-// @param endog {float[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param exog {tab;float[];(::)} Exogenous variables are additional variables 
-//   which may be accounted for to improve the model, if (::)/()
+// @desc Fit an AutoRegressive Integrated Moving Average model (ARIMA)
+// @param endog {float[]} Endogenous variable (time-series) from which to build
+//   a model. This is the target variable from which a value is to be predicted
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model, if (::)/()
 //   this will be ignored
 // @param p {int} The number/order of time  lags of the model
 // @param d {int} The order of time series differencing used in integration
 // @param q {int} The number of residual errors to be accounted for
-// @param trend {bool} Is a trend line to be accounted for in fitting of model
-// @return {dict} Contains the following information:
+// @param trend {boolean} Is a trend line to be accounted for in fitting of 
+//   model
+// @return {dictionary} Contains the following information:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
 ts.ARIMA.fit:{[endog;exog;p;d;q;trend]
@@ -104,20 +109,21 @@ ts.ARIMA.fit:{[endog;exog;p;d;q;trend]
 
 // @kind function
 // @category modelFit
-// @fileoverview Fit a Seasonal AutoRegressive Integrated Moving Average model 
+// @desc Fit a Seasonal AutoRegressive Integrated Moving Average model 
 //   (SARIMA)
-// @param endog {float[]} Endogenous variable (time-series) from which to build a
-//   model. This is the target variable from which a value is to be predicted
-// @param exog  {tab;float[];(::)} Exogenous variables are additional variables 
-//   which may be accounted for to improve the model, if (::)/()
+// @param endog {float[]} Endogenous variable (time-series) from which to build
+//   a model. This is the target variable from which a value is to be predicted
+// @param exog  {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model, if (::)/()
 //   this will be ignored
 // @param p {int} The number/order of time  lags of the model
 // @param d {int} The order of time series differencing used in integration
 // @param p {int} The number of residual errors to be accounted for
-// @param trend {bool} Is a trend line to be accounted for in fitting of model
-// @param season {dict} Is a dictionary containing required seasonal 
+// @param trend {boolean} Is a trend line to be accounted for in fitting of 
+//   model
+// @param season {dictionary} Is a dictionary containing required seasonal 
 //   components
-// @return {dict} Contains the following information:
+// @return {dictionary} Contains the following information:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
 ts.SARIMA.fit:{[endog;exog;p;d;q;trend;season]
@@ -146,11 +152,11 @@ ts.SARIMA.fit:{[endog;exog;p;d;q;trend;season]
 
 // @kind function
 // @category modelFit
-// @fileoverview Fit an AutoRegressive Conditional Heteroscedasticity model
+// @desc Fit an AutoRegressive Conditional Heteroscedasticity model
 //   (ARCH)
-// @param residuals {num[]} Residual errors from fitted time series model
+// @param residuals {number[]} Residual errors from fitted time series model
 // @param p {int} The number/order of time  lags of the model
-// @return {dict} Contains the following information:
+// @return {dictionary} Contains the following information:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
 ts.ARCH.fit:{[residuals;p]

@@ -1,15 +1,19 @@
-\d .ml
-
+// timeseries/predict.q - Timeseries prediction 
+// Copyright (c) 2021 Kx Systems Inc
+// 
 // Prediction functionality for time-series models
+
+\d .ml
 
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on an AutoRegressive model (AR)
-// @params config {dict} Information returned from `ml.ts.AR.fit` including:
+// @desc Predictions based on an AutoRegressive model (AR)
+// @params config {dictionary} Information returned from `ml.ts.AR.fit` 
+//   including:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
-// @param exog {tab;float[];(::)} Exogenous variables are additional variables 
-//   which may be accounted for to improve the model
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model
 // @param len {long} Number of future values to be predicted
 // @return {float[]} Predicted values
 ts.AR.predict:{[config;exog;len]
@@ -23,14 +27,14 @@ ts.AR.predict:{[config;exog;len]
 
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on an AutoRegressive Moving Average model 
+// @desc Predictions based on an AutoRegressive Moving Average model 
 //   (ARMA)
-// @params config {dict} Information returned from `ml.ts.ARMA.fit`
+// @params config {dictionary} Information returned from `ml.ts.ARMA.fit`
 //   including:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
-// @param exog {tab;float[];(::)} Exogenous variables are additional variables 
-//   which may be accounted for to improve the model
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model
 // @param len {long} Number of future values to be predicted
 // @return {float[]} Predicted values
 ts.ARMA.predict:{[config;exog;len]
@@ -41,14 +45,14 @@ ts.ARMA.predict:{[config;exog;len]
 
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on an AutoRegressive Integrated Moving
+// @desc Predictions based on an AutoRegressive Integrated Moving
 //   Average model (ARIMA)
-// @params config {dict} Information returned from `ml.ts.ARIMA.fit`
+// @params config {dictionary} Information returned from `ml.ts.ARIMA.fit`
 //   including:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
-// @param exog {tab;float[];(::)} Exogenous variables are additional variables 
-//   which may be accounted for to improve the model
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model
 // @param len {long} Number of future values to be predicted
 // @return {float[]} Predicted values
 ts.ARIMA.predict:{[config;exog;len]
@@ -63,14 +67,14 @@ ts.ARIMA.predict:{[config;exog;len]
 
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on a Seasonal AutoRegressive Integrated 
+// @desc Predictions based on a Seasonal AutoRegressive Integrated 
 //   Moving Average model (SARIMA)
-// @params config {dict} Information returned from `ml.ts.SARIMA.fit`
+// @params config {dictionary} Information returned from `ml.ts.SARIMA.fit`
 //   including:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
-// @param exog {tab;float[];(::)} Exogenous variables are additional variables 
-//   which may be accounted for to improve the model
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model
 // @param len {long} Number of future values to be predicted
 // @return {float[]} Predicted values
 ts.SARIMA.predict:{[config;exog;len]
@@ -93,9 +97,9 @@ ts.SARIMA.predict:{[config;exog;len]
 
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on an AutoRegressive Conditional 
+// @desc Predictions based on an AutoRegressive Conditional 
 //   Heteroskedasticity model (ARCH)
-// @params config {dict} Information returned from `ml.ts.ARCH.fit`
+// @params config {dictionary} Information returned from `ml.ts.ARCH.fit`
 //   including:
 //   modelInfo - Model coefficients and data needed for future predictions
 //   predict - A projection allowing for prediction of future values
