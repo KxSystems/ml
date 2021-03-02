@@ -10,7 +10,7 @@
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Shuffle data point indices
+// @desc Shuffle data point indices
 // @param data {any} Table, matrix or list
 // @return {long[]} Indices of data shuffled
 xv.i.shuffle:{[data]
@@ -20,7 +20,7 @@ xv.i.shuffle:{[data]
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Find indices required to split data into k-folds
+// @desc Find indices required to split data into k-folds
 // @param k {int} Number of folds
 // @param data {any} Table, matrix or list
 // @return {long[][]} Indices required to split data into k sub-sets
@@ -31,7 +31,7 @@ xv.i.splitIdx:{[k;data]
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Find shuffled indices required to split data into k-folds
+// @desc Find shuffled indices required to split data into k-folds
 // @param k {int} Number of folds
 // @param data {any} Table, matrix or list
 // @return {long[][]} Shuffled indices required to split data into k 
@@ -43,7 +43,7 @@ xv.i.shuffIdx:{[k;data]
 // @private
 // @kind function 
 // @category xvUtility
-// @fileoverview Split target data ensuring that each distinct value appears in
+// @desc Split target data ensuring that each distinct value appears in
 //   each fold
 // @param k {int} Number of folds
 // @param data {any} Table, matrix or list
@@ -61,7 +61,7 @@ xv.i.stratIdx:{[k;data]
 // @private
 // @kind function 
 // @category xvUtility
-// @fileoverview Get training and testing indices for each fold
+// @desc Get training and testing indices for each fold
 // @param k {int} Number of folds
 // @return {long[][]} Training and testing indices for each fold
 xv.i.groupIdx:{[k]
@@ -71,7 +71,7 @@ xv.i.groupIdx:{[k]
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Get training/testing indices for equi-distanced bins of data 
+// @desc Get training/testing indices for equi-distanced bins of data 
 //   across k-folds
 // @param k {int} Number of folds
 // @return {long[][]} Indices for equi-distanced bins of data based on k
@@ -82,7 +82,7 @@ xv.i.tsRollsIdx:{[k]
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Get training/testing indices for equi-distanced bins of data 
+// @desc Get training/testing indices for equi-distanced bins of data 
 //   across k-folds with increasing amounts of data added to the training set 
 //   at each stage
 // @param k {int} Number of folds
@@ -94,7 +94,7 @@ xv.i.tsChainIdx:{[k]
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Creates projection contining data split according to k
+// @desc Creates projection contining data split according to k
 //   in ((xtrain;ytrain);(xtest;ytest)) format for each fold
 // @param func1 {fn} Function to be applied to x data
 // @param func2 {fn} Function to be applied to k
@@ -110,7 +110,7 @@ xv.i.idx1:{[func1;func2;k;features;target]
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Creates projection contining data split according to k
+// @desc Creates projection contining data split according to k
 //   in ((xtrain;ytrain);(xtest;ytest)) format for each fold
 // @param func1 {fn} Function to be applied to x data
 // @param func2 {fn} Function to be applied to k
@@ -126,7 +126,7 @@ xv.i.idxR:{[func1;func2;k;n;features;target]
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Creates projection contining data split according to k
+// @desc Creates projection contining data split according to k
 //   in ((xtrain;ytrain);(xtest;ytest)) format for each fold
 // @param func1 {fn} Function to be applied to x data
 // @param func2 {fn} Function to be applied to k
@@ -142,7 +142,7 @@ xv.i.idxN:{[func1;func2;k;n;features;target]
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Apply funct to data split using specified indexing functions
+// @desc Apply funct to data split using specified indexing functions
 // @param idx {long[][]} Indicies to apply to data
 // @param k {int} Number of folds
 // @param n {int} Number of repetitions
@@ -160,7 +160,7 @@ xv.i.applyIdx:{[idx;k;n;features;target;function]
 // @private
 // @kind function
 // @category xvUtility
-// @fileoverview Convert q list to numpy array
+// @desc Convert q list to numpy array
 // @param x {any[]} q list to be converted
 // @return {<} embedPy object following numpy array conversion
 numpyArray:.p.import[`numpy]`:array
@@ -170,7 +170,7 @@ numpyArray:.p.import[`numpy]`:array
 // @private
 // @kind function
 // @category hyperparameterUtility
-// @fileoverview Perform hyperparameter generation and cross validation
+// @desc Perform hyperparameter generation and cross validation
 // @param paramFunc {fn} Parameter function
 // @param xvalFunc {fn} Cross validation function
 // @param k {int} Number of folds
@@ -190,7 +190,7 @@ hp.i.xvScore:{[paramFunc;xvalFunc;k;n;features;target;dataFunc;hyperparams]
 // @private
 // @kind function
 // @category hyperparameterUtility
-// @fileoverview Hyperparameter search with option to test final model 
+// @desc Hyperparameter search with option to test final model 
 // @param scoreFunc {fn} Scoring function
 // @param k {int} Number of folds
 // @param n {int} Number of repetitions
@@ -216,7 +216,7 @@ hp.i.search:{[scoreFunc;k;n;features;target;dataFunc;hyperparams;testType]
 // @private
 // @kind function
 // @category hyperparameterUtility
-// @fileoverview Hyperparameter generation for .ml.gs
+// @desc Hyperparameter generation for .ml.gs
 // @param hyperparams {dictionary} Hyperparameters with all possible values 
 //  for a given parameter specified by the user, e.g.
 //   pdict = `randomState`max_depth!(42 72 84;1 3 4 7)
@@ -228,7 +228,7 @@ hp.i.gsGen:{[hyperparams]
 // @private
 // @kind function
 // @category hyperparameterUtility
-// @fileoverview Hyperparameter generation for .ml.rs
+// @desc Hyperparameter generation for .ml.rs
 // @param params {dictionary} Parameters with form `randomState`n`typ`p where 
 //   randomState is the seed, n is the number of hyperparameters to generate 
 //   (must equal 2^n for sobol), typ is the type of search (random/sobol) and p
@@ -265,7 +265,7 @@ hp.i.rsGen:{[params]
 // @private
 // @kind function
 // @category hyperparameterUtility
-// @fileoverview Random/sobol hyperparameter generation for .ml.rs
+// @desc Random/sobol hyperparameter generation for .ml.rs
 // @param randomType {symbol} Type of random search, denoting the namespace 
 //   to use
 // @param n {long} Number of hyperparameter sets
@@ -289,7 +289,7 @@ hp.i.hpGen:{[randomType;n;params]
 // @private
 // @kind function
 // @category hyperparameterUtility
-// @fileoverview Uniform number generator 
+// @desc Uniform number generator 
 // @param randomType {symbol} Type of random search, denoting the namespace 
 //   to use
 // @param low {long} Lower bound
@@ -305,7 +305,7 @@ hp.i.uniform:{[randomType;low;high;paramType;params]
 // @private
 // @kind function
 // @category hyperparameterUtility
-// @fileoverview Generate list of log uniform numbers
+// @desc Generate list of log uniform numbers
 // @param randomType {symbol} Type of random search, denoting the namespace 
 //   to use
 // @param low {number} Lower bound as power of 10
@@ -318,7 +318,7 @@ hp.i.logUniform:xexp[10]hp.i.uniform::
 // @private
 // @kind function
 // @category hyperparameterUtility
-// @fileoverview Random uniform generator
+// @desc Random uniform generator
 // @param low {number} Lower bound as power of 10
 // @param high {number} Higher bound as power of 10
 // @param paramType {char} Type of parameter, e.g. "i", "f", etc
@@ -331,7 +331,7 @@ hp.i.random.uniform:{[low;high;paramType;n]
 // @private
 // @kind function
 // @category hyperparameterUtility
-// @fileoverview Sobol uniform generator
+// @desc Sobol uniform generator
 // @param low {number} Lower bound as power of 10
 // @param high {number} Higher bound as power of 10
 // @param paramType {char} Type of parameter, e.g. "i", "f", etc

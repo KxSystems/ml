@@ -125,7 +125,7 @@ xv.fitScore:{[function;p;data]
 //   search, where the best model is fit to the holdout set. If 0 the function 
 //   will return scores for each fold for the given hyperparameters. If 
 //   negative the data will be shuffled prior to designation of the holdout set
-// @return {table/(table;dictionary;float)} Scores for hyperparameter sets on 
+// @return {table|list} Scores for hyperparameter sets on 
 //   each of the k folds for all values of h and additionally returns the best 
 //   hyperparameters and score on the holdout set for 0 < h <=1.
 gs.kfSplit:hp.i.search hp.i.xvScore[hp.i.gsGen;xv.kfSplit]

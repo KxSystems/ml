@@ -1,5 +1,7 @@
 // graph/utils.q - Utility functions for graphs
 // Copyright (c) 2021 Kx Systems Inc
+//
+// Utility functions for implementation of graph library
 
 \d .ml
 

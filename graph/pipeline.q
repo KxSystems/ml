@@ -4,7 +4,6 @@
 // Contains createPipeline and execPipeline for 
 // the creation and execution of pipelines.
 
-
 \d .ml
 
 // Execution of a pipeline will not default to enter q debug mode but should 

@@ -10,7 +10,7 @@
 // @category modelFit
 // @desc Fit an AutoRegressive model (AR)
 // @param endog {float[]} Endogenous variable (time-series) from which to build
-//  a model. This is the target variable from which a value is to be predicted
+//   a model. This is the target variable from which a value is to be predicted
 // @param exog {table|float[]|(::)} Exogenous variables are additional 
 //   variables which may be accounted for to improve the model, if (::)/()
 //   this will be ignored
@@ -45,7 +45,7 @@ ts.AR.fit:{[endog;exog;p;trend]
 // @category modelFit
 // @desc Fit an AutoRegressive Moving Average model (ARMA)
 // @param endog {float[]} Endogenous variable (time-series) from which to build
-// a model. This is the target variable from which a value is to be predicted
+//   a model. This is the target variable from which a value is to be predicted
 // @param exog {table|float[]|(::)} Exogenous variables are additional 
 //   variables which may be accounted for to improve the model, if (::)/() 
 //   this will be ignored

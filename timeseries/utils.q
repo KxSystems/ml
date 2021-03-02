@@ -11,8 +11,8 @@
 // @category fitUtility
 // @desc ARMA model generation
 // @param endog {number[]} Endogenous variable (time-series) from which to 
-//    build a model. This is the target variable from which a value is to be 
-//    predicted
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
 // @param params {dictionary} Parameter sets used to fit the ARMA model
@@ -34,8 +34,8 @@ ts.i.ARMA.model:{[endog;exog;params]
 // @category fitUtility
 // @desc SARMA model generation
 // @param endog {number[]} Endogenous variable (time-series) from which to 
-//  build a model. This is the target variable from which a value is to be 
-//  predicted
+//   build a model. This is the target variable from which a value is to be 
+//   predicted
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
 // @param params {dictionary} Parameter sets used to fit the SARMA model
@@ -293,7 +293,7 @@ ts.i.SARMA.sortValues:{[endog;coeff;params;errors;n]
 // @private
 // @kind function
 // @category predictUtility
-// @desc predict a set number of future values based on a fit model 
+// @desc Predict a set number of future values based on a fit model 
 //   AR/ARMA/SARMA
 // @param model {dictionary} All information regarding model coefficients and 
 //   required residual information
