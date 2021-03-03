@@ -1,10 +1,15 @@
+// util/metrics.q - Metrics 
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Metrics for scoring ml models
+
 \d .ml
 
 // @kind function
 // @category metric
-// @fileoverview Accuracy of classification results
-// @param pred {int[];bool[];str[]} A vector/matrix of predicted labels 
-// @param true {int[];bool[];str[]} A vector/matrix of true labels 
+// @desc Accuracy of classification results
+// @param pred {int[]|boolean[]|string[]} A vector/matrix of predicted labels 
+// @param true {int[]|boolean[]|string[]} A vector/matrix of true labels 
 // @returns {float} The accuracy of predictions made
 accuracy:{[pred;true]
   avg pred=true
@@ -12,10 +17,10 @@ accuracy:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview Precision of a binary classifier
-// @param pred {bool[]} A vector of predicted labels 
-// @param true {bool[]} A vector of true labels
-// @param posClass {bool} The positive class 
+// @desc Precision of a binary classifier
+// @param pred {boolean[]} A vector of predicted labels 
+// @param true {boolean[]} A vector of true labels
+// @param posClass {boolean} The positive class 
 // @returns {float} A measure of the precision
 precision:{[pred;true;posClass]
   predPos:pred=posClass;
@@ -25,10 +30,10 @@ precision:{[pred;true;posClass]
 
 // @kind function
 // @category metric
-// @fileoverview Sensitivity of a binary classifier
-// @param pred {bool[]} A vector of predicted labels 
-// @param true {bool[]} A vector of true labels
-// @param posClass {bool} The positive class 
+// @desc Sensitivity of a binary classifier
+// @param pred {boolean[]} A vector of predicted labels 
+// @param true {boolean[]} A vector of true labels
+// @param posClass {boolean} The positive class 
 // @returns {float} A measure of the sensitivity
 sensitivity:{[pred;true;posClass]
   realPos:true=posClass;
@@ -38,10 +43,10 @@ sensitivity:{[pred;true;posClass]
 
 // @kind function
 // @category metric
-// @fileoverview Specificity of a binary classifier
-// @param pred {bool[]} A vector of predicted labels 
-// @param true {bool[]} A vector of true labels
-// @param posClass {bool} The positive class 
+// @desc Specificity of a binary classifier
+// @param pred {boolean[]} A vector of predicted labels 
+// @param true {boolean[]} A vector of true labels
+// @param posClass {boolean} The positive class 
 // @returns {float} A measure of the specificity
 specificity:{[pred;true;posClass]
   allNeg:true<>posClass;
@@ -51,10 +56,10 @@ specificity:{[pred;true;posClass]
 
 // @kind function
 // @category metric
-// @fileoverview F-beta score for classification results
-// @param pred {num[];bool[]} A vector of predicted labels 
-// @param true {num[];bool[]} A vector of true labels
-// @param posClass {num;bool} The positive class
+// @desc F-beta score for classification results
+// @param pred {number[]|boolean[]} A vector of predicted labels 
+// @param true {number[]|boolean[]} A vector of true labels
+// @param posClass {number|boolean} The positive class
 // @param beta {float} The value of beta
 // @returns {float} The F-beta score between predicted and true labels
 fBetaScore:{[pred;true;posClass;beta]
@@ -66,18 +71,18 @@ fBetaScore:{[pred;true;posClass;beta]
 
 // @kind function
 // @category metric
-// @fileoverview F-1 score for classification results
-// @param pred {int[];bool[];str[]} A vector of predicted labels 
-// @param true {int[];bool[];str[]} A vector of true labels
-// @param posClass {num;bool} The positive class
+// @desc F-1 score for classification results
+// @param pred {int[]|boolean[]|string[]} A vector of predicted labels 
+// @param true {int[]|boolean[]|string[]} A vector of true labels
+// @param posClass {number|boolean} The positive class
 // @returns {float} The F-1 score between predicted and true labels
 f1Score:fBetaScore[;;;1]
 
 // @kind function
 // @category metric
-// @fileoverview Matthews-correlation coefficient
-// @param pred {int[];bool[];str[]} A vector of predicted labels 
-// @param true {int[];bool[];str[]} A vector of true labels
+// @desc Matthews-correlation coefficient
+// @param pred {int[]|boolean[]|string[]} A vector of predicted labels 
+// @param true {int[]|boolean[]|string[]} A vector of true labels
 // @returns {float} The Matthews-correlation coefficient between predicted
 //   and true values
 matthewCorr:{[true;pred]
@@ -88,10 +93,10 @@ matthewCorr:{[true;pred]
 
 // @kind function
 // @category metric
-// @fileoverview Confusion matrix
-// @param pred {int[];bool[];str[]} A vector of predicted labels 
-// @param true {int[];bool[];str[]} A vector of true labels
-// @returns {dict} A confusion matrix
+// @desc Confusion matrix
+// @param pred {int[]|boolean[]|string[]} A vector of predicted labels 
+// @param true {int[]|boolean[]|string[]} A vector of true labels
+// @returns {dictionary} A confusion matrix
 confMatrix:{[pred;true]
   classes:asc distinct pred,true;
   if[1=type classes;classes:01b];
@@ -102,11 +107,11 @@ confMatrix:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview True/false positives and true/false negatives
-// @param pred {int[];bool[];str[]} A vector of predicted labels 
-// @param true {int[];bool[];str[]} A vector of true labels
-// @param posClass {num;bool} The positive class
-// @returns {dict} The count of true positives (tp), true negatives (tn),
+// @desc True/false positives and true/false negatives
+// @param pred {int[]|boolean[]|string[]} A vector of predicted labels 
+// @param true {int[]|boolean[]|string[]} A vector of true labels
+// @param posClass {number|boolean} The positive class
+// @returns {dictionary} The count of true positives (tp), true negatives (tn),
 //   false positives (fp) and false negatives (fn) 
 confDict:{[pred;true;posClass]
   confKeys:`tn`fp`fn`tp;
@@ -116,10 +121,10 @@ confDict:{[pred;true;posClass]
 
 // @kind function
 // @category metric
-// @fileoverview Statistical information about classification result
-// @param pred {int[];bool[];str[]} A vector of predicted labels 
-// @param true {int[];bool[];str[]} A vector of true labels
-// @returns {tab} The accuracy, precision, f1 scores and the support 
+// @desc Statistical information about classification result
+// @param pred {int[]|boolean[]|string[]} A vector of predicted labels 
+// @param true {int[]|boolean[]|string[]} A vector of true labels
+// @returns {table} The accuracy, precision, f1 scores and the support 
 //   (number of occurrences) of each class.
 classReport:{[pred;true]
   trueClass:asc distinct true;
@@ -133,19 +138,19 @@ classReport:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview Logarithmic loss
-// @param class {bool[]} Class labels
+// @desc Logarithmic loss
+// @param class {boolean[]} Class labels
 // @param prob {float[]} Representing the probability of belonging to 
 //   each class
 // @returns {float} Total logarithmic loss
-crossentropy:logLoss:{[class;prob]
+crossEntropy:logLoss:{[class;prob]
   EPS:1e-15;
   neg avg log EPS|prob@'class
   }
 
 // @kind function
 // @category metric
-// @fileoverview Mean square error
+// @desc Mean square error
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @returns {float} The mean squared error between predicted values and
@@ -156,7 +161,7 @@ mse:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview Sum squared error
+// @desc Sum squared error
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @returns {float} The sum squared error between predicted values and
@@ -167,7 +172,7 @@ sse:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview Root mean squared error 
+// @desc Root mean squared error 
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @returns {float} The root mean squared error between predicted values 
@@ -178,7 +183,7 @@ rmse:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview Root mean squared log error 
+// @desc Root mean squared log error 
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @returns {float} The root mean squared log error between predicted values
@@ -189,7 +194,7 @@ rmsle:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview Residual squared error 
+// @desc Residual squared error 
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @param n {long} The degrees of freedom of the residual
@@ -201,7 +206,7 @@ rse:{[pred;true;n]
  
 // @kind function
 // @category metric
-// @fileoverview Mean absolute error
+// @desc Mean absolute error
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @returns {float} The mean absolute error between predicted values
@@ -212,7 +217,7 @@ mae:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview Mean absolute percentage error
+// @desc Mean absolute percentage error
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @returns {float} The mean absolute percentage error between predicted values
@@ -223,7 +228,7 @@ mape:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview Symmetric mean absolute percentage error
+// @desc Symmetric mean absolute percentage error
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @returns {float} The symmetric-mean absolute percentage between predicted
@@ -235,7 +240,7 @@ smape:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview R2-score for regression model validation
+// @desc R2-score for regression model validation
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @returns {float} The R2-score between the true and predicted values.
@@ -247,13 +252,13 @@ r2Score:{[pred;true]
 
 // @kind function
 // @category metric
-// @fileoverview R2 adjusted score for regression model validation
+// @desc R2 adjusted score for regression model validation
 // @param pred {float[]} A vector of predicted labels 
 // @param true {float[]} A vector of true labels
 // @param p {long} Number of independent regressors, i.e. the number of 
 //   variables in your model, excluding the constant
-// @returns {float} The R2 adjusted score between the true and predicted values.
-//   Values close to 1 indicate good prediction, while negative values 
+// @returns {float} The R2 adjusted score between the true and predicted 
+//   values. Values close to 1 indicate good prediction, while negative values 
 //   indicate poor predictors of the system behavior
 r2AdjScore:{[pred;true;p]
   n:count pred;
@@ -263,8 +268,8 @@ r2AdjScore:{[pred;true;p]
 
 // @kind function
 // @category metric
-// @fileoverview One-sample t-test score
-// @param sample {num[]} A set of samples from a distribution
+// @desc One-sample t-test score
+// @param sample {number[]} A set of samples from a distribution
 // @param mu {float} The population mean
 // @returns {float} The one sample t-score for a distribution with less than 
 //   30 samples. 
@@ -274,10 +279,10 @@ tScore:{[sample;mu]
 
 // @kind function
 // @category metric
-// @fileoverview T-test for independent samples with equal variances 
+// @desc T-test for independent samples with equal variances 
 //   and equal sample size
-// @param sample1 {num[]} A sample from a distribution
-// @param sample1 {num[]} A sample from a distribution
+// @param sample1 {number[]} A sample from a distribution
+// @param sample1 {number[]} A sample from a distribution
 // sample1&2 are independent with equal variance and sample size
 // @returns {float} Their t-test score 
 tScoreEqual:{[sample1;sample2]
@@ -289,9 +294,9 @@ tScoreEqual:{[sample1;sample2]
 
 // @kind function
 // @category metric
-// @fileoverview Calculate the covariance of a matrix
-// @param matrix {num[]} A sample from a distribution
-// @returns {num[]} The covariance matrix 
+// @desc Calculate the covariance of a matrix
+// @param matrix {number[]} A sample from a distribution
+// @returns {number[]} The covariance matrix 
 covMatrix:{[matrix]
   matrix:"f"$matrix;
   n:til count matrix;
@@ -305,9 +310,9 @@ covMatrix:{[matrix]
 
 // @kind function
 // @category metric
-// @fileoverview Calculate the correlation of a matrix or table
-// @param data {tab;num[]} A sample from a distribution
-// @returns {dict;num[]} The covariance of the data 
+// @desc Calculate the correlation of a matrix or table
+// @param data {table|number[]} A sample from a distribution
+// @returns {dictionary|number[]} The covariance of the data 
 corrMatrix:{[data]
   dataTab:98=type data;
   matrix:$[dataTab;value flip@;]data;
@@ -317,11 +322,11 @@ corrMatrix:{[data]
 
 // @kind function
 // @category metric
-// @fileoverview X- and Y-axis values for an ROC curve
-// @param label {num[];bool[]} Label associated with a prediction
+// @desc X- and Y-axis values for an ROC curve
+// @param label {number[]|boolean[]} Label associated with a prediction
 // @param prob {float[]} Probability that each prediction belongs to 
 //   the positive class
-// @returns {num[]} The coordinates of the true-positive and false-positive 
+// @returns {number[]} The coordinates of the true-positive and false-positive 
 //   values associated with the ROC curve
 roc:{[label;prob]
   tab:(update sums label from`prob xdesc([]label;prob));
@@ -331,8 +336,8 @@ roc:{[label;prob]
 
 // @kind function
 // @category metric
-// @fileoverview Area under an ROC curve
-// @param label {num[];bool[]} Label associated with a prediction
+// @desc Area under an ROC curve
+// @param label {number[]|boolean[]} Label associated with a prediction
 // @param prob {float[]} Probability that each prediction belongs to 
 //   the positive class
 // @returns {float} The area under the ROC curve

@@ -1,4 +1,7 @@
-\d .ml
+// optimize/optimize.q - Otimization algorithms
+// Copyright (c) 2021 Kx Systems Inc
+// 
+// Contains an implementation of the BFGS algorithm.
 
 // Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm. This implementation
 // is based on 
@@ -8,23 +11,25 @@
 // function.
 
 // An outline of the algorithm mathematically is provided here:
-// https://en.wikipedia.org/wiki/Broyden-Fletcher-Goldfarb-Shanno_algorithm#Algorithm  // noqa
+// https://en.wikipedia.org/wiki/Broyden-Fletcher-Goldfarb-Shanno_algorithm 
+
+\d .ml
 
 // @kind function
 // @category optimization
-// @fileoverview Optimize a function using the Broyden-Fletcher-Goldfarb-Shanno
+// @desc Optimize a function using the Broyden-Fletcher-Goldfarb-Shanno
 //    (BFGS) algorithm
-// @param func {func} Function to be optimized. This function should take
+// @param func {fn} Function to be optimized. This function should take
 //   as its arguments a list/dictionary of parameters to be optimized and
 //   a list/dictionary of additional unchanging arguments
-// @param x0 {num[];dict} The first guess at the parameters to be optimized as 
-//   a list or dictionary of numeric values
-// @param args {list;dict;(::)} Any unchanging parameters to required for 
+// @param x0 {number[]|dictionary} The first guess at the parameters to be 
+//   optimized as a list or dictionary of numeric values
+// @param args {list|dictionary|(::)} Any unchanging parameters to required for 
 //   evaluation of the function, these should be in the order that they are to 
 //   be applied to the function
-// @param params {dict} Any modifications to be applied to the optimization 
-//   procedure e.g.
-//   - display   {bool} Results at each optimization iteration to be printed
+// @param params {dictionary} Any modifications to be applied to the 
+//   optimization procedure e.g.
+//   - display   {boolean} Results at each optimization iteration to be printed
 //   - optimIter {int} Maximum number of iterations in optimization procedure
 //   - zoomIter  {int} Maximum number of iterations when finding optimal zoom
 //   - wolfeIter {int} Maximum number of iterations
@@ -38,7 +43,7 @@
 //     calculations
 //   - c1 {float} Armijo rule condition 
 //   - c2 {int} Curvature conditions rule 
-// @returns {dict} Contains the estimated optimal parameters, number of
+// @returns {dictionary} Contains the estimated optimal parameters, number of
 //   iterations and the evaluated return of the function being optimized
 optimize.BFGS:{[func;x0;args;params]
   // Update the default behaviour of the parameters

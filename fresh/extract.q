@@ -1,20 +1,24 @@
-\d .ml 
+// fresh/extract.q - Extract features
+// Copyright (c) 2021 Kx Systems Inc
+// 
+// Generate features based on params
 
-// FRESH feature extraction
+\d .ml 
 
 // @kind table
 // @category fresh
-// @fileoverview Table containing .ml.fresh.feat functions
+// @desc Table containing .ml.fresh.feat functions
 fresh.params:update pnum:{count 1_get[fresh.feat x]1}each f,pnames:count[i]#(),
   pvals:count[i]#()from([]f:1_key fresh.feat) 
 fresh.params:1!`pnum xasc update valid:pnum=count each pnames from fresh.params
 
 // @kind function
 // @category fresh
-// @fileoverview Load in hyperparameters for FRESH functions and add to 
+// @desc Load in hyperparameters for FRESH functions and add to 
 //   .ml.fresh.params table
-// @param filePath {str} File path within ML where hyperparameter JSON file is
-// @return {null} Null on success with .ml.fresh.params updated
+// @param filePath {string} File path within ML where hyperparameter JSON 
+//   file is
+// @return {::} Null on success with .ml.fresh.params updated
 fresh.loadparams:{[filePath]
   hyperparamFile:.ml.path,filePath;
   p:.j.k raze read0`$hyperparamFile;
@@ -27,19 +31,19 @@ fresh.loadparams:{[filePath]
 
 // @kind function
 // @category fresh
-// @fileoverview Add hyperparameter values to .ml.fresh.params
+// @desc Add hyperparameter values to .ml.fresh.params
 fresh.loadparams"/fresh/hyperparameters.json";
 
 // @kind fucntion
 // @category fresh
-// @fileoverview Extract features using FRESH
-// @param data {tab} Input data
-// @param idCol {sym[]} ID column(s) name
-// @param cols2Extract {sym[]} Columns on which extracted features will
+// @desc Extract features using FRESH
+// @param data {table} Input data
+// @param idCol {symbol[]} ID column(s) name
+// @param cols2Extract {symbol[]} Columns on which extracted features will
 //   be calculated (these columns must be numerical)
-// @param params {tab} Functions/parameters to be applied to cols2Extract.
+// @param params {table} Functions/parameters to be applied to cols2Extract.
 //   This should be a modified version of .ml.fresh.params
-// @return {tab} Table keyed by ID column and containing the features 
+// @return {table} Table keyed by ID column and containing the features 
 //   extracted from the subset of the data identified by the ID column.
 fresh.createFeatures:{[data;idCol;cols2Extract;params]
   param0:exec f from params where valid,pnum=0;

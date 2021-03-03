@@ -19,7 +19,7 @@ timeTab:([]"p"$til 5;"z"$1 3 2 2 1)
 .ml.stats.percentile[x;0.75]~np[`:percentile][x;75]`
 .ml.stats.percentile[x;0.02]~np[`:percentile][x;2]`
 .ml.stats.percentile[xf;0.5]~np[`:percentile][xf;50]`
-.ml.stats.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~3.5
+.ml.stats.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~4.0
 
 descKeys:`count`mean`std`min`q1`q2`q3`max
 keySym:`count`type`nulls`countDistinct`mode`freq
@@ -30,7 +30,7 @@ temporalKeys:`count`type`min`max`nulls`range`countDistinct`mode`freq
 
 .ml.stats.describeFuncs:descKeys!.ml.stats.describeFuncs[descKeys]
 ("f"$flip value .ml.stats.describe[plaintab])~flip .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
-("f"$flip value .ml.stats.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
+("f"$flip value .ml.stats.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 1.5 2 2.5 3)
 all all(flip value .ml.stats.describe[plaintabn2])=flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'([]x4:3f,7#(::))
 
 vec1: 6 2 5 1 9 2 4

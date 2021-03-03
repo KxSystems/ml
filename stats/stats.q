@@ -1,13 +1,22 @@
+// stats/stats.q - Statistical tools
+// Copyright (c) 2021 Kx Systems Inc
+//
+// This statistical library contains functionality ranging from
+// descriptive statistical methods to gain more insight into a 
+// users data, to linear regression estimation methods to investigate 
+// unknown parameters in a model. Includes OLS, WLS, describe, 
+// and percentile
+
 \d .ml
 
 // @kind function
 // @category stats
-// @fileoverview Train an ordinary least squares model on data
-// @param endog {num[][];num[]} The endogenous variable
-// @param exog {num[][];num[]} A variables that predict the 
+// @desc Train an ordinary least squares model on data
+// @param endog {number[][]|number[]} The endogenous variable
+// @param exog {number[][]|number[]} A variables that predict the 
 //   endog variable
-// @param trend {bool} Whether a trend is added to the model
-// @returns {dict} Contains the following information:
+// @param trend {boolean} Whether a trend is added to the model
+// @returns {dictionary} Contains the following information:
 //   modelInfo - Coeffients and statistical values calculated during the 
 //     fitting process
 //   predict - A projection allowing for prediction on new input data
@@ -23,13 +32,13 @@ stats.OLS.fit:{[endog;exog;trend]
   returnInfo,enlist[`predict]!enlist predict
   }
 
-// @fileOverview Predict values using coefficients calculated via OLS
-// @param config {dict} Information returned from `OLS.fit`
+// @desc Predict values using coefficients calculated via OLS
+// @param config {dictionary} Information returned from `OLS.fit`
 //   including:
 //   modelInfo - Coeffients and statistical values calculated during the 
 //     fitting process
 //   predict - A projection allowing for prediction on new input data
-// @param exog {tab;num[][];num[]} The exogenous variables
+// @param exog {table|number[][]|number[]} The exogenous variables
 // @returns {number[]} The predicted values
 stats.OLS.predict:{[config;exog]
   modelInfo:config`modelInfo;
@@ -42,13 +51,13 @@ stats.OLS.predict:{[config;exog]
 
 // @kind function
 // @category stats
-// @fileoverview Train a weighted least squares model on data
-// @param endog {num[][];num[]} The endogenous variable
-// @param exog {num[][];num[]} A variables that predict the 
+// @desc Train a weighted least squares model on data
+// @param endog {number[][]|number[]} The endogenous variable
+// @param exog {number[][]|number[]} A variables that predict the 
 //   endog variable
 // @param weights {float[]} The weights to be applied to the endog variable
-// @param trend {bool} Whether a trend is added to the model
-// @returns {dict} Contains the following information:
+// @param trend {boolean} Whether a trend is added to the model
+// @returns {dictionary} Contains the following information:
 //   modelInfo - Coeffients and statistical values calculated during the 
 //     fitting process
 //   predict - A projection allowing for prediction on new input data
@@ -77,26 +86,28 @@ stats.WLS.fit:{[endog;exog;weights;trend]
   returnInfo,enlist[`predict]!enlist predict
   }
 
-// @fileOverview Predict values using coefficients calculated via WLS
-// @param config {dict} Information returned from `WLS.fit`
+// @desc Predict values using coefficients calculated via WLS
+// @param config {dictionary} Information returned from `WLS.fit`
 //   including:
 //   modelInfo - Coeffients and statistical values calculated during the 
 //     fitting process
 //   predict - A projection allowing for prediction on new input data
-// @param exog {tab;num[][];num[]} The exogenous variables
+// @param exog {table|number[][]|number[]} The exogenous variables
 // @returns {number[]} The predicted values
 stats.WLS.predict:stats.OLS.predict
 
 // @kind data
 // @category stats
-// @fileoverview Load in functions defined within `describe.json`
+// @desc Load in functions defined within `describe.json`
+// @type dictionary
 stats.describeFuncs:.j.k raze read0`$path,"/stats/describe.json"
 
 // @kind function
 // @category stats
-// @fileoverview Generates descriptive statistics of a table
-// @param tab {tab} A simple table
-// @returns {dict} A tabular description of aggregate information of each column
+// @desc Generates descriptive statistics of a table
+// @param tab {table} A simple table
+// @returns {dictionary} A tabular description of aggregate information 
+//   of each column
 stats.describe:{[tab]
   funcTab:stats.describeFuncs;
   if[not all `func`type in cols value funcTab;
@@ -134,12 +145,13 @@ stats.describe:{[tab]
 
 // @kind function
 // @category utilities
-// @fileoverview Percentile calculation for an array
-// @param array {num[]} A numerical array
+// @desc Percentile calculation for an array
+// @param array {number[]} A numerical array
 // @param perc {float} Percentile of interest
 // @returns {float} The value below which `perc` percent of the observations
 //   within the array are found
 stats.percentile:{[array;perc]
+  array:array where not null array;
   percent:perc*-1+count array;
   i:0 1+\:floor percent;
   iDiff:0^deltas asc[array]i;

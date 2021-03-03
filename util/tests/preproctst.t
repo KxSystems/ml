@@ -46,6 +46,9 @@ nt:([]101b;000b;1 2 0n)
 .ml.dropConstant[ti]~flip `x`x2`x3!ti`x`x2`x3
 .ml.dropConstant[tf]~flip `x`x2`x3!tf`x`x2`x3
 .ml.dropConstant[tb]~flip `x`x2`x3!tb`x`x2`x3
+.ml.dropConstant[flip ti]~`x`x2`x3!ti`x`x2`x3
+.ml.dropConstant[flip tf]~`x`x2`x3!tf`x`x2`x3
+.ml.dropConstant[flip tb]~`x`x2`x3!tb`x`x2`x3
 .ml.dropConstant[nt]~([]101b;x2:1 2 0n)
 .ml.dropConstant[nulltab]~select x,x1,x2,x3 from nulltab
 
