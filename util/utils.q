@@ -142,7 +142,7 @@ i.ap:{[func;data]
     99<>type data;
       func data;
     98=type key data;
-      key[data]!.z.s value data;
+      key[data]!.z.s[func] value data;
     func each data
     ]
   }

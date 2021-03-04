@@ -127,7 +127,10 @@ stdScaler.fitPredict:{[data]
 // @return {table|dictionary|number[]} Data with positive/negative 
 //   infinities are replaced by max/min values
 infReplace:i.ap{[data;inf;func]
-  @[data;i;:;func@[data;i:where data=inf;:;0n]]
+  t:.Q.t abs type first first data;
+  if[not t in "hijefpnuv";:data];
+  i:$[t;]@/:(inf;0n);
+  @[data;i;:;func@[data;i:where data=i 0;:;i 1]]
   }/[;-0w 0w;min,max]
 
 // @kind function
