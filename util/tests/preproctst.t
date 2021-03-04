@@ -42,6 +42,7 @@ tf:([]1000?500f;1000#30f;1000?1000f;1000?100f)
 tb:([]1000?0b;1000#1b;1000?0b;1000?0b)
 infdict:`x`x1`x2!(0 1 2 0w;0 1 2 -0w;1 2 3 0w)
 nt:([]101b;000b;1 2 0n)
+keyedinfs:([k:1 2]x:0 0W)
 
 .ml.dropConstant[ti]~flip `x`x2`x3!ti`x`x2`x3
 .ml.dropConstant[tf]~flip `x`x2`x3!tf`x`x2`x3
@@ -101,6 +102,7 @@ stdScale2.predict[scale4]~(1 5f;-2 0n;0 0n)
 .ml.infReplace[infdict]~`x`x1`x2!"f"$(0 1 2 2;0 1 2 0;1 2 3 3)
 .ml.infReplace[flip infdict]~flip `x`x1`x2!"f"$(0 1 2 2;0 1 2 0;1 2 3 3)
 .ml.infReplace[infdict`x]~0 1 2 2f
+.ml.infReplace[keyedinfs]~([k:1 2]x:0 0)
 
 .ml.polyTab[([] 2 4 1f;3 4 1f;3 2 3f);2]~([]x_x1:6 16 1f;x_x2:6 8 3f;x1_x2:9 8 3f)
 .ml.polyTab[([] 2 4 1;3 4 1;3 2 3);2]~([]x_x1:6 16 1;x_x2:6 8 3;x1_x2:9 8 3)
