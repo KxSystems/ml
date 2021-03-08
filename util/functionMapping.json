@@ -106,22 +106,22 @@
       "version":"3.0"
     },
     ".ml.labelencode":{
-      "function":".ml.labelEncode.fitPredict",
+      "function":".ml.labelEncode.fitTransform",
       "warning":"futureWarning",
       "version":"3.0"
     },
     ".ml.lexiencode":{
-      "function":".ml.lexiEncode.fitPredict",
+      "function":".ml.lexiEncode.fitTransform",
       "warning":"futureWarning",
       "version":"3.0"
     },
     ".ml.minmaxscaler":{
-      "function":".ml.minMaxScaler.fitPredict",
+      "function":".ml.minMaxScaler.fitTransform",
       "warning":"futureWarning",
       "version":"3.0"
     },
     ".ml.onehot":{
-      "function":".ml.oneHot.fitPredict",
+      "function":".ml.oneHot.fitTransform",
       "warning":"futureWarning",
       "version":"3.0"
     },
@@ -131,7 +131,7 @@
       "version":"3.0"
     },
     ".ml.stdscaler":{
-      "function":".ml.stdScaler.fitPredict",
+      "function":".ml.stdScaler.fitTransform",
       "warning":"futureWarning",
       "version":"3.0"
     },

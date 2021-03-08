@@ -38,15 +38,15 @@ dropConstant:{[data]
 // @param data {table|dictionary|number[]} Numerical data
 // @return {dictionary} Contains the following information:
 //   modelInfo - The min/max value of the fitted data
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformation on new input data
 minMaxScaler.fit:{[data]
   typData:type[data] in 0 99h;
   minData:$[typData;min each;min]data;
   maxData:$[typData;max each;max]data;
   scalingInfo:`minData`maxData!(minData;maxData);
   returnInfo:enlist[`modelInfo]!enlist scalingInfo;
-  predict:i.apUpd minMaxScaler.predict returnInfo;
-  returnInfo,enlist[`predict]!enlist predict
+  transform:i.apUpd minMaxScaler.transform returnInfo;
+  returnInfo,enlist[`transform]!enlist transform
   }
 
 // @kind function
@@ -55,11 +55,11 @@ minMaxScaler.fit:{[data]
 // @params config {dictionary} Information returned from `ml.minMaxScaler.fit`
 //   including:
 //   modelInfo - The min/max value of the fitted data
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformation on new input data
 // @param data {table|dictionary|number[]} Numerical data
 // @return {table|dictionary|number[]} A min-max scaled representation with 
 // values scaled between 0 and 1f
-minMaxScaler.predict:{[config;data]
+minMaxScaler.transform:{[config;data]
   minData:config[`modelInfo;`minData];
   maxData:config[`modelInfo;`maxData];
   (data-minData)%maxData-minData
@@ -71,9 +71,9 @@ minMaxScaler.predict:{[config;data]
 // @param data {table|dictionary|number[]} Numerical data
 // @return {table|dictionary|number[]} A min-max scaled representation with 
 // values scaled between 0 and 1f
-minMaxScaler.fitPredict:{[data]
+minMaxScaler.fitTransform:{[data]
   scaler:minMaxScaler.fit data;
-  scaler[`predict]data
+  scaler[`transform]data
   }
 
 // @kind function
@@ -82,7 +82,7 @@ minMaxScaler.fitPredict:{[data]
 // @param data {table|dictionary|number[]} Numerical data
 // @return {dictionary} Contains the following information:
 //   modelInfo - The avg/dev value of the fitted data
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformation on new input data
 stdScaler.fit:{[data]
   typData:type[data];
   if[typData=98;data:flip data];
@@ -90,8 +90,8 @@ stdScaler.fit:{[data]
   devData:$[typData in 0 98 99h;dev each;dev]data;
   scalingInfo:`avgData`devData!(avgData;devData);
   returnInfo:enlist[`modelInfo]!enlist scalingInfo;
-  predict:i.apUpd stdScaler.predict returnInfo;
-  returnInfo,enlist[`predict]!enlist predict
+  transform:i.apUpd stdScaler.transform returnInfo;
+  returnInfo,enlist[`transform]!enlist transform
   }
 
 // @kind function
@@ -101,10 +101,10 @@ stdScaler.fit:{[data]
 // @params config {dictionary} Information returned from `ml.stdScaler.fit`
 //   including:
 //   modelInfo - The avg/dev value of the fitted data
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformation on new input data
 // @param data {table|dictionary|number[]} Numerical data
 // @return {table|dictionary|number[]} All data has undergone standard scaling
-stdScaler.predict:{[config;data]
+stdScaler.transform:{[config;data]
   avgData:config[`modelInfo;`avgData];
   devData:config[`modelInfo;`devData];
   (data-avgData)%devData
@@ -115,9 +115,9 @@ stdScaler.predict:{[config;data]
 // @desc Standard scaler transform-based representation of data
 // @param data {table|dictionary|number[]} Numerical data
 // @return {dictionary} All data has undergone standard scaling
-stdScaler.fitPredict:{[data]
+stdScaler.fitTransform:{[data]
   scaler:stdScaler.fit data;
-  scaler[`predict]data
+  scaler[`transform]data
   }
 
 // @kind function
@@ -182,14 +182,14 @@ fillTab:{[tab;groupCol;timeCol;dict]
 // @param symCols {symbol[]} Columns to apply encoding to
 // @return {dictionary} Contains the following information:
 //   modelInfo - The mapping information
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformation on new input data
 oneHot.fit:{[tab;symCols]
   if[(::)~symCols;symCols:i.findCols[tab;"s"]];
   mapVals:asc each distinct each tab symCols,:(); 
   mapDict:symCols!mapVals;
   returnInfo:enlist[`modelInfo]!enlist mapDict;
-  predict:oneHot.predict returnInfo;
-  returnInfo,enlist[`predict]!enlist predict
+  transform:oneHot.transform returnInfo;
+  returnInfo,enlist[`transform]!enlist transform
   }
 
 // @kind function
@@ -198,12 +198,12 @@ oneHot.fit:{[tab;symCols]
 // @params config {dictionary} Information returned from `ml.oneHot.fit`
 //   including:
 //   modelInfo - The mapping information
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformation on new input data
 // @param tab {table} Numerical and non numerical data
 // @param symDict {dictionary} Keys indicate the columns in the table to be 
 //   encoded, values indicate what mapping to use when encoding 
 // @return {table} One-hot encoded representation of categorical data
-oneHot.predict:{[config;tab;symDict]
+oneHot.transform:{[config;tab;symDict]
   mapDict:config`modelInfo;
   symDict:i.mappingCheck[tab;symDict;mapDict];
   oneHotVal:mapDict value symDict;
@@ -218,11 +218,11 @@ oneHot.predict:{[config;tab;symDict]
 // @param tab {table} Numerical and non numerical data
 // @param symCols {symbol[]} Columns to apply coding to
 // @return {table} One-hot encoded representation of categorical data
-oneHot.fitPredict:{[tab;symCols]
+oneHot.fitTransform:{[tab;symCols]
   encode:oneHot.fit[tab;symCols];
   map:raze key encode`modelInfo;
   symDict:map!map;
-  encode[`predict][tab;symDict]
+  encode[`transform][tab;symDict]
   }
 
 // @kind function
@@ -248,15 +248,15 @@ freqEncode:{[tab;symCols]
 // @param symCols {symbol[]} Columns to apply coding to
 // @return {dictionary} Contains the following information:
 //   modelInfo - The mapping information
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformation on new input data
 lexiEncode.fit:{[tab;symCols]
   if[(::)~symCols;symCols:i.findCols[tab;"s"]];
   mapping:labelEncode.fit each tab symCols,:();
   mapVals:exec modelInfo from mapping;
   mapDict:symCols!mapVals;
   returnInfo:enlist[`modelInfo]!enlist mapDict;
-  predict:lexiEncode.predict returnInfo;
-  returnInfo,enlist[`predict]!enlist predict
+  transform:lexiEncode.transform returnInfo;
+  returnInfo,enlist[`transform]!enlist transform
   }
 
 // @kind function
@@ -265,19 +265,19 @@ lexiEncode.fit:{[tab;symCols]
 // @params config {dictionary} Information returned from `ml.lexiEncode.fit`
 //   including:
 //   modelInfo - The mapping information
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformation on new input data
 // @param tab {table} Numerical and categorical data
 // @param symDict {dictionary} Keys indicate the columns in the table to be
 //   encoded, values indicate what mapping to use when encoding 
 // @return {table} Addition of lexigraphical order of symbol column
-lexiEncode.predict:{[config;tab;symDict]
+lexiEncode.transform:{[config;tab;symDict]
   mapDict:config`modelInfo;
   symDict:i.mappingCheck[tab;symDict;mapDict];
   tabCols:key symDict;
   mapCols:value symDict;
   updCols:`$string[tabCols],\:"_lexi";
   modelInfo:enlist[`modelInfo]!/:enlist each mapDict mapCols;
-  updVals:labelEncode.predict'[modelInfo;tab tabCols];
+  updVals:labelEncode.transform'[modelInfo;tab tabCols];
   updDict:updCols!updVals;
   flip(tabCols _ flip tab),updDict
   }
@@ -288,11 +288,11 @@ lexiEncode.predict:{[config;tab;symDict]
 // @param tab {table} Numerical data
 // @param symCols {symbol[]} Columns to apply coding to
 // @return {table} Addition of lexigraphical order of symbol column
-lexiEncode.fitPredict:{[tab;symCols]
+lexiEncode.fitTransform:{[tab;symCols]
   encode:lexiEncode.fit[tab;symCols];
   map:raze key encode`modelInfo;
   symDict:map!map;
-  encode[`predict][tab;symDict]
+  encode[`transform][tab;symDict]
   }
 
 // @kind function
@@ -301,14 +301,14 @@ lexiEncode.fitPredict:{[tab;symCols]
 // @param data {any[]} Data to encode
 // @return {dictionary} Contains the following information:
 //   modelInfo - The schema mapping values
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformion on new input data
 labelEncode.fit:{[data]
   uniqueData:asc distinct data;
   map:uniqueData!til count uniqueData;
   returnInfo:enlist[`modelInfo]!enlist map;
-  predict:labelEncode.predict returnInfo;
+  transform:labelEncode.transform returnInfo;
   encoding:uniqueData?data;
-  returnInfo,enlist[`predict]!enlist predict
+  returnInfo,enlist[`transform]!enlist transform
   }
 
 // @kind function
@@ -317,10 +317,10 @@ labelEncode.fit:{[data]
 // @params config {dictionary} Information returned from `ml.labelEncode.fit`
 //   including:
 //   modelInfo - The schema mapping values
-//   predict - A projection allowing for prediction on new input data
+//   transform - A projection allowing for transformation on new input data
 // @param data {any[]} Data to be reverted to original representation
 // @return {int[]} List transformed to integer value 
-labelEncode.predict:{[config;data]
+labelEncode.transform:{[config;data]
   map:config`modelInfo;
   -1^map data
   }
@@ -330,9 +330,9 @@ labelEncode.predict:{[config;data]
 // @desc Encode categorical data to an integer value representation
 // @param data {any[]} Data to encode
 // @return {int[]} List is encoded to an integer representation 
-labelEncode.fitPredict:{[data]
+labelEncode.fitTransform:{[data]
   encoder:labelEncode.fit data;
-  encoder[`predict]data
+  encoder[`transform]data
   }
 
 // @kind function
@@ -341,13 +341,13 @@ labelEncode.fitPredict:{[data]
 //    label encoding
 // @param data {int[]} Data to be reverted to original representation
 // @param map {dictionary} Maps true representation to associated integer or
-//   the return from .ml.labelencode
+//   the return from .ml.labelEncode.fit
 // @return {symbol[]} Integer values of `data` replaced by their appropriate 
 //  'true' representation. Values that do not appear in the mapping supplied
 //   by `map` are returned as null values 
 applyLabelEncode:{[data;map]
   if[99h<>type map;'"Input must be a dictionary"];
-  $[`modelInfo`predict~key map;map[`modelInfo]?;map?]data
+  $[`modelInfo`transform~key map;map[`modelInfo]?;map?]data
   }
 
 // @kind function

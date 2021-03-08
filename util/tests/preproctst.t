@@ -67,13 +67,13 @@ minMax3[`modelInfo]~minMaxKeys!1 5f
 minMax4[`modelInfo]~minMaxKeys!01b
 minMax5[`modelInfo]~minMaxKeys!(3 1 4f;5 1 4f)
 
-.ml.minMaxScaler.fitPredict[plainmat]~flip"f"$MinMaxScaler[`:transform][flip plainmat]`
-.ml.minMaxScaler.fitPredict[scale1]~(0 1f;1 0f;1 0f)
-.ml.minMaxScaler.fitPredict[scale2]~0.5 0.25 1 0.75 0f
-.ml.minMaxScaler.fitPredict[scale3]~0 0 1 1f
-.ml.minMaxScaler.fitPredict[scale4]~(0 1f;2#0n;2#0n)
-minMax2.predict[scale4]~(1 3f;-0.5 0n;0.5 0n)
-minMax3.predict[5#y]~5.75 1.75 9.5 5.5 4.25
+.ml.minMaxScaler.fitTransform[plainmat]~flip"f"$MinMaxScaler[`:transform][flip plainmat]`
+.ml.minMaxScaler.fitTransform[scale1]~(0 1f;1 0f;1 0f)
+.ml.minMaxScaler.fitTransform[scale2]~0.5 0.25 1 0.75 0f
+.ml.minMaxScaler.fitTransform[scale3]~0 0 1 1f
+.ml.minMaxScaler.fitTransform[scale4]~(0 1f;2#0n;2#0n)
+minMax2.transform[scale4]~(1 3f;-0.5 0n;0.5 0n)
+minMax3.transform[5#y]~5.75 1.75 9.5 5.5 4.25
 
 StdScaler[`:fit][flip plainmat];
 stdScaleKeys:`avgData`devData
@@ -91,13 +91,13 @@ key[stdScale4[`modelInfo]]~stdScaleKeys
 key[stdScale5[`modelInfo]]~stdScaleKeys
 key[stdScale6[`modelInfo]]~stdScaleKeys
 
-stdScale1.predict[plainmat]~flip"f"$StdScaler[`:transform][flip plainmat]`
-stdScale2.predict[scale1]~(-1 1f;1 -1f;1 -1f)
-stdScale3.predict[xf]~scale[xf]`
-stdScale4.predict[y]~scale[y]`
-stdScale5.predict[yb]~scale[yb]`
-stdScale6.predict[scale4]~(-1 1f;2#0n;2#0n)
-stdScale2.predict[scale4]~(1 5f;-2 0n;0 0n)
+stdScale1.transform[plainmat]~flip"f"$StdScaler[`:transform][flip plainmat]`
+stdScale2.transform[scale1]~(-1 1f;1 -1f;1 -1f)
+stdScale3.transform[xf]~scale[xf]`
+stdScale4.transform[y]~scale[y]`
+stdScale5.transform[yb]~scale[yb]`
+stdScale6.transform[scale4]~(-1 1f;2#0n;2#0n)
+stdScale2.transform[scale4]~(1 5f;-2 0n;0 0n)
 
 .ml.infReplace[infdict]~`x`x1`x2!"f"$(0 1 2 2;0 1 2 0;1 2 3 3)
 .ml.infReplace[flip infdict]~flip `x`x1`x2!"f"$(0 1 2 2;0 1 2 0;1 2 3 3)
@@ -116,20 +116,20 @@ stdScale2.predict[scale4]~(1 5f;-2 0n;0 0n)
 (select x4,x5,x1_null,x3_null from .ml.fillTab[nulltab;`x2;x;`x1`x3!`median`mean])~([]x4:5#0;x5:5#0n;x1_null:00100b;x3_null:11000b)
 .ml.fillTab[tab,'flip (enlist `x2)!enlist 5#0n;`sym;`time;`x1`x`x2!`median`mean`max]~flip`sym`time`x`x1`x2`x1_null`x_null`x2_null!(`a`a`a`b`b;00:00:00.000 00:00:00.001 00:00:00.002 00:00:00.003 00:00:00.004;1 1 1 1 1f;0 1 2 3 3f;5#0n;00001b;11010b;11111b)
 
-.ml.oneHot.fitPredict[symtf;`x] ~"f"$([] x1:til 5;x_a:1 0 0 1 1;x_b: 0 1 1 0 0)
-.ml.oneHot.fitPredict[symtf;::] ~"f"$([] x1:til 5;x_a:1 0 0 1 1;x_b: 0 1 1 0 0)
-.ml.oneHot.fitPredict[symti;`x] ~([] x1:til 5;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
-.ml.oneHot.fitPredict[symti;::] ~([] x1:til 5;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
-.ml.oneHot.fitPredict[symtb;`x]~([] x1:11001b;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
-.ml.oneHot.fitPredict[symtb;::]~([] x1:11001b;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
-.ml.oneHot.fitPredict[symtn;`x]~([]x1:til 5;x_:0 0 0 1 0f;x_a:1 0 0 0 1f;x_b:0 1 1 0 0f)
-.ml.oneHot.fitPredict[symtn;::]~([]x1:til 5;x_:0 0 0 1 0f;x_a:1 0 0 0 1f;x_b:0 1 1 0 0f)
-.ml.oneHot.fitPredict[symm;::]~([]x1:til 5;x_a:1 0 0 1 1f;x_b:0 1 1 0 0f;x2_q:1 0 1 1 0f;x2_w:0 1 0 0 1f) 
+.ml.oneHot.fitTransform[symtf;`x] ~"f"$([] x1:til 5;x_a:1 0 0 1 1;x_b: 0 1 1 0 0)
+.ml.oneHot.fitTransform[symtf;::] ~"f"$([] x1:til 5;x_a:1 0 0 1 1;x_b: 0 1 1 0 0)
+.ml.oneHot.fitTransform[symti;`x] ~([] x1:til 5;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
+.ml.oneHot.fitTransform[symti;::] ~([] x1:til 5;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
+.ml.oneHot.fitTransform[symtb;`x]~([] x1:11001b;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
+.ml.oneHot.fitTransform[symtb;::]~([] x1:11001b;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
+.ml.oneHot.fitTransform[symtn;`x]~([]x1:til 5;x_:0 0 0 1 0f;x_a:1 0 0 0 1f;x_b:0 1 1 0 0f)
+.ml.oneHot.fitTransform[symtn;::]~([]x1:til 5;x_:0 0 0 1 0f;x_a:1 0 0 0 1f;x_b:0 1 1 0 0f)
+.ml.oneHot.fitTransform[symm;::]~([]x1:til 5;x_a:1 0 0 1 1f;x_b:0 1 1 0 0f;x2_q:1 0 1 1 0f;x2_w:0 1 0 0 1f) 
 
 oneHot1:.ml.oneHot.fit[symtf;::]
-oneHot1.predict[symtb;::]~([] x1:11001b;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
-oneHot1.predict[symti;::]~([] x1:til 5;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
-oneHot1.predict[symm;`x`x2!`x`x]~([]x1:til 5;x_a:1 0 0 1 1f;x_b:0 1 1 0 0f;x2_a:5#0f;x2_b:5#0f)
+oneHot1.transform[symtb;::]~([] x1:11001b;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
+oneHot1.transform[symti;::]~([] x1:til 5;x_a:1 0 0 1 1f;x_b: 0 1 1 0 0f)
+oneHot1.transform[symm;`x`x2!`x`x]~([]x1:til 5;x_a:1 0 0 1 1f;x_b:0 1 1 0 0f;x2_a:5#0f;x2_b:5#0f)
 
 .ml.freqEncode[symtf;`x]~(delete x from symtf),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
 .ml.freqEncode[symtf;::]~(delete x from symtf),'([]x_freq:0.6 0.4 0.4 0.6 0.6)
@@ -141,20 +141,20 @@ oneHot1.predict[symm;`x`x2!`x`x]~([]x1:til 5;x_a:1 0 0 1 1f;x_b:0 1 1 0 0f;x2_a:
 .ml.freqEncode[symtn;::]~([] x1:til 5;x_freq:0.4 0.4 0.4 0.2 0.4)
 .ml.freqEncode[symm;::]~([]x1:til 5;x_freq:0.6 0.4 0.4 0.6 0.6;x2_freq:0.6 0.4 0.6 0.6 0.4)
 
-.ml.lexiEncode.fitPredict[symtf;`x]~(delete x from symtf),'([]x_lexi:0 1 1 0 0)
-.ml.lexiEncode.fitPredict[symtf;::]~(delete x from symtf),'([]x_lexi:0 1 1 0 0)
-.ml.lexiEncode.fitPredict[symti;`x]~(delete x from symti),'([]x_lexi:0 1 1 0 0)
-.ml.lexiEncode.fitPredict[symti;::]~(delete x from symti),'([]x_lexi:0 1 1 0 0)
-.ml.lexiEncode.fitPredict[symtb;`x]~(delete x from symtb),'([]x_lexi:0 1 1 0 0)
-.ml.lexiEncode.fitPredict[symtb;::]~(delete x from symtb),'([]x_lexi:0 1 1 0 0)
-.ml.lexiEncode.fitPredict[symtn;`x]~([] x1:til 5;x_lexi:1 2 2 0 1)
-.ml.lexiEncode.fitPredict[symtn;::]~([] x1:til 5;x_lexi:1 2 2 0 1)
-.ml.lexiEncode.fitPredict[symm;::]~([]x1:til 5;x_lexi: 0 1 1 0 0;x2_lexi:0 1 0 0 1)
+.ml.lexiEncode.fitTransform[symtf;`x]~(delete x from symtf),'([]x_lexi:0 1 1 0 0)
+.ml.lexiEncode.fitTransform[symtf;::]~(delete x from symtf),'([]x_lexi:0 1 1 0 0)
+.ml.lexiEncode.fitTransform[symti;`x]~(delete x from symti),'([]x_lexi:0 1 1 0 0)
+.ml.lexiEncode.fitTransform[symti;::]~(delete x from symti),'([]x_lexi:0 1 1 0 0)
+.ml.lexiEncode.fitTransform[symtb;`x]~(delete x from symtb),'([]x_lexi:0 1 1 0 0)
+.ml.lexiEncode.fitTransform[symtb;::]~(delete x from symtb),'([]x_lexi:0 1 1 0 0)
+.ml.lexiEncode.fitTransform[symtn;`x]~([] x1:til 5;x_lexi:1 2 2 0 1)
+.ml.lexiEncode.fitTransform[symtn;::]~([] x1:til 5;x_lexi:1 2 2 0 1)
+.ml.lexiEncode.fitTransform[symm;::]~([]x1:til 5;x_lexi: 0 1 1 0 0;x2_lexi:0 1 0 0 1)
 
 lexi1:.ml.lexiEncode.fit[symtf;::]
-lexi1.predict[symtb;::]~(delete x from symtb),'([]x_lexi:0 1 1 0 0)
-lexi1.predict[symti;::]~(delete x from symti),'([]x_lexi:0 1 1 0 0)
-lexi1.predict[symm;`x`x2!`x`x]~([]x1:til 5;x_lexi: 0 1 1 0 0;x2_lexi:5#-1)
+lexi1.transform[symtb;::]~(delete x from symtb),'([]x_lexi:0 1 1 0 0)
+lexi1.transform[symti;::]~(delete x from symti),'([]x_lexi:0 1 1 0 0)
+lexi1.transform[symm;`x`x2!`x`x]~([]x1:til 5;x_lexi: 0 1 1 0 0;x2_lexi:5#-1)
 
 guidList :asc 5?0Ng
 symList1 :`b`a`d`c
@@ -166,8 +166,8 @@ floatList:1.2 2 2.5 0.1
 .ml.labelEncode.fit[floatList][`modelInfo]~0.1 1.2 2 2.5!til 4
 
 label1:.ml.labelEncode.fit[symList1]
-label1.predict[symList1]~1 0 3 2
-label1.predict[symList2]~-1 0 3 3
+label1.transform[symList1]~1 0 3 2
+label1.transform[symList2]~-1 0 3 3
 
 .ml.applyLabelEncode[0 0 2 3 4  ;.ml.labelEncode.fit floatList]~(0.1;0.1;2f;2.5;0n)
 .ml.applyLabelEncode[1 1 2 5 3 0;.ml.labelEncode.fit symList1  ]~`b`b`c``d`a
