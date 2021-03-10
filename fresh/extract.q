@@ -34,7 +34,7 @@ fresh.loadparams:{[filePath]
 // @desc Add hyperparameter values to .ml.fresh.params
 fresh.loadparams"/fresh/hyperparameters.json";
 
-// @kind fucntion
+// @kind function
 // @category fresh
 // @desc Extract features using FRESH
 // @param data {table} Input data

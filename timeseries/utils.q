@@ -15,6 +15,7 @@
 //   predicted
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param params {dictionary} Parameter sets used to fit the ARMA model
 // @return {dictionary} Dictionary containing all information required to make 
 //   predictions using an ARMA based model
@@ -38,6 +39,7 @@ ts.i.ARMA.model:{[endog;exog;params]
 //   predicted
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param params {dictionary} Parameter sets used to fit the SARMA model
 // @return {dictionary} Dictionary containing all information required to make 
 //   predictions using an SARMA based model
@@ -63,6 +65,7 @@ ts.i.SARMA.model:{[endog;exog;params]
 //   predicted
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param params {dictionary} Parameter sets used to estimate coefficients
 // @param n {int} Number of error coefficients to estimate
 // @return {dictionary} Dictionary returning coefficients and errors required
@@ -82,6 +85,7 @@ ts.i.estimateErrorCoeffs:{[endog;exog;params;n]
 //   predicted
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param errors {dictionary} Errors estimated using `i.estimateErrorCoeffs`
 // @param params {dictionary} Parameter sets used to estimate model 
 //   coefficients
@@ -160,7 +164,7 @@ ts.i.durbinUpdateMatrix:{[data;n;matrix;j]
 // @private
 // @kind function
 // @category fitUtility
-// @desc Estimate residual errors for the Hannan Riessanan method
+// @desc Estimate residual errors using the Hannan Riessanan method
 // @param endog {number[]} Endogenous variable (time-series) from which to 
 //   build a model. This is the target variable from which a value is to be 
 //   predicted
@@ -190,6 +194,7 @@ ts.i.estimateErrors:{[endog;exog;p]
 //   predicted
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param residuals {number[]} Residual errors estimated using 
 //   i.estimateErrorCoeffs
 // @param coeffs {number[]} Estimated coefficients for ARMA model using OLS
@@ -238,7 +243,8 @@ ts.i.SARMA.maxLikelihood:{[coeffs;dict]
   // Calculate SARIMA model including the additional seasonal coeffs
   preds:ts.i.SARMA.eval[coeffs;dict];
   // Calculate error
-  sqrt sum n*n:preds-dict`true
+  n:preds-dict`true;
+  sqrt wsum[n;n]
   }
 
 // @private
@@ -299,6 +305,7 @@ ts.i.SARMA.sortValues:{[endog;coeff;params;errors;n]
 //   required residual information
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param len {int} The number of future data points to be predicted
 // @param predFunc {fn} The function to be used for prediction
 // @return {number[]} Predicted values based on fit model
@@ -318,6 +325,7 @@ ts.i.predictFunction:{[model;exog;len;predFunc]
 //   required residual information
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param len {int} The number of future data points to be predicted
 // @return {number[]} Predicted values based on fit ARMA model
 ts.i.ARMA.predictFunction:{[model;exog;len]
@@ -332,6 +340,7 @@ ts.i.ARMA.predictFunction:{[model;exog;len]
 // @param coeffs {number[]} Model coefficients retrieved from initial fit model
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param dict {dictionary} Additional information which can dictate the 
 //   behaviour when making a prediction
 // @param pastPreds {number[]} Previously predicted values
@@ -360,6 +369,7 @@ ts.i.ARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs]
 //   required residual information
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param len {int} The number of future data points to be predicted
 // @return {number[]} Predicted values based on fit AR model
 ts.i.AR.predictFunction:{[model;exog;len]
@@ -379,10 +389,11 @@ ts.i.AR.singlePredict:ts.i.ARMA.singlePredict
 // @kind function
 // @category predictUtility
 // @desc Prediction function for SARMA model
-// @param model  {dictionary} All information regarding model coefficientss and
+// @param model  {dictionary} All information regarding model coefficients and
 //   required residual information
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param len {int} The number of future data points to be predicted
 // @return {number[]} Predicted values based on fit SARMA model
 ts.i.SARMA.predictFunction:{[model;exog;len]
@@ -401,6 +412,7 @@ ts.i.SARMA.predictFunction:{[model;exog;len]
 //   model
 // @param exog {float[]|(::)} Exogenous variables, are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param dict {dictionary} Additional information which can dictate the 
 //   behaviour when making a prediction
 // @param pastPreds {number[]} Previously predicted values
@@ -469,6 +481,7 @@ ts.i.SARMA.multiplySeason:{[dictKey;normVals;seasonVals;dict]
 // @param pastPreds {number[]} Previously predicted values
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @param dict {dictionary} Additional information which can dictate the 
 //   behaviour when making a prediction
 // @return {number[]} information required for the prediction of a set of SARMA 
@@ -731,6 +744,7 @@ ts.i.err.exog:{'`$"Test exog length does not match train exog length"}
 //   predicted
 // @param exog {float[]|(::)} Exogenous variables are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @return {number[]} Exogenous data as a matrix
 ts.i.fitDataCheck:{[endog;exog]
   // Accept null as input
@@ -771,6 +785,7 @@ ts.i.dictCheck:{[dict;keyVals;input]
 //   predict future values
 // @param exog {float[]|(::)} Exogenous variables, are additional variables 
 //   which may be accounted for to improve the model, if (::)/()
+//   this will be ignored
 // @return {number[]} Exogenous data as a matrix
 ts.i.predDataCheck:{[model;exog]
   // Allow null to be provided as exogenous variable

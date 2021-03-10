@@ -114,7 +114,7 @@ stdScaler.transform:{[config;data]
 // @category preprocessing
 // @desc Standard scaler transform-based representation of data
 // @param data {table|dictionary|number[]} Numerical data
-// @return {dictionary} All data has undergone standard scaling
+// @return {table|dictionary|number[]} All data has undergone standard scaling
 stdScaler.fitTransform:{[data]
   scaler:stdScaler.fit data;
   scaler[`transform]data
@@ -216,7 +216,7 @@ oneHot.transform:{[config;tab;symDict]
 // @category preprocessing
 // @desc Encode categorical features using one-hot encoding
 // @param tab {table} Numerical and non numerical data
-// @param symCols {symbol[]} Columns to apply coding to
+// @param symCols {symbol[]} Columns to apply encoding to
 // @return {table} One-hot encoded representation of categorical data
 oneHot.fitTransform:{[tab;symCols]
   encode:oneHot.fit[tab;symCols];
@@ -230,7 +230,7 @@ oneHot.fitTransform:{[tab;symCols]
 // @desc Encode categorical features with frequency of 
 //   category occurrence
 // @param tab {table} Numerical data
-// @param symCols {symbol[]} Columns to apply coding to
+// @param symCols {symbol[]} Columns to apply encoding to
 // @return {table} Frequency of occurrance of individual symbols 
 //   within a column
 freqEncode:{[tab;symCols]
@@ -243,9 +243,9 @@ freqEncode:{[tab;symCols]
 
 // @kind function
 // @category preprocessing
-// @desc Fit lexigraphical ordering model to cateogorical data
+// @desc Fit lexigraphical ordering model to categorical data
 // @param tab {table} Numerical and categorical data
-// @param symCols {symbol[]} Columns to apply coding to
+// @param symCols {symbol[]} Columns to apply encoding to
 // @return {dictionary} Contains the following information:
 //   modelInfo - The mapping information
 //   transform - A projection allowing for transformation on new input data
@@ -286,7 +286,7 @@ lexiEncode.transform:{[config;tab;symDict]
 // @category preprocessing
 // @desc Encode categorical features based on lexigraphical order
 // @param tab {table} Numerical data
-// @param symCols {symbol[]} Columns to apply coding to
+// @param symCols {symbol[]} Columns to apply encoding to
 // @return {table} Addition of lexigraphical order of symbol column
 lexiEncode.fitTransform:{[tab;symCols]
   encode:lexiEncode.fit[tab;symCols];
@@ -301,7 +301,7 @@ lexiEncode.fitTransform:{[tab;symCols]
 // @param data {any[]} Data to encode
 // @return {dictionary} Contains the following information:
 //   modelInfo - The schema mapping values
-//   transform - A projection allowing for transformion on new input data
+//   transform - A projection allowing for transformation on new input data
 labelEncode.fit:{[data]
   uniqueData:asc distinct data;
   map:uniqueData!til count uniqueData;
@@ -354,7 +354,7 @@ applyLabelEncode:{[data;map]
 // @category preprocessing
 // @desc Break specified time columns into constituent components
 // @param tab {table} Contains time columns
-// @param timeCols {symbol[]} Columns to apply coding to, if set to :: 
+// @param timeCols {symbol[]} Columns to apply encoding to, if set to :: 
 //   all columns with date/time types will be encoded
 // @return {dictionary} All time or date types broken into labeled versions
 //   of their constituent components

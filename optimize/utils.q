@@ -581,7 +581,7 @@ i.wolfeCriteria2:{[wolfeDict;params]
 // @param zoomDict {dictionary} Parameters to be updated as 'zoom' procedure is 
 //   applied to find the optimal value of alpha
 // @returns {boolean} Indication as to if the value of findMin needs to be
-//   pdated 
+//   updated 
 i.quadCriteria:{[findMin;highLow;cubicCheck;zoomDict]
   // On first iteration the initial minimum has not been calculated
   // as such criteria should exit early to complete the quadratic calculation
@@ -644,31 +644,36 @@ i.zoomCriteria3:{[derPhiMin;alphaDiff]
 // Zoom dictionary 
 
 // @private
-// @kind dictionary
+// @kind symbol
 // @category optimizationUtility
 // @desc Input keys of zoom dictionary
+// @type symbol[]
 i.zoomKeys:`aLo`aHi`phiLo`phiHi`derPhiLo`phiRec;
 
 // @private
-// @kind dictionary
+// @kind symbol
 // @category optimizationUtility
 // @desc Keys to be updated in zoom each iteration
+// @type symbol[]
 i.zoomKeys1:`phiRec`aRec`aHi`phiHi;
 
 // @private
-// @kind dictionary
+// @kind symbol
 // @category optimizationUtility
 // @desc Extra keys that have to be updated in some scenarios
+// @type symbol[]
 i.zoomKeys2:`aLo`phiLo`derPhiLo;
 
 // @private
-// @kind dictionary
+// @kind symbol
 // @category optimizationUtility
 // @desc Extra keys that have to be updated in some scenarios
+// @type symbol[]
 i.zoomKeys3:`phiRec`aRec
 
 // @private
-// @kind dictionary
+// @kind symbol
 // @category optimizationUtility
 // @desc Final updated keys to be used
+// @type symbol[]
 i.zoomReturn:`alphaStar`phiStar`derPhiStar;

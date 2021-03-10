@@ -28,8 +28,8 @@
 //   early stopping
 // @return {dictionary} A dictionary containing:
 //   modelInfo - Encapsulates all relevant information needed to fit
-//     the model `data`df`repPts`clt, where data and df are the inputs,
-//     repPts are the calculated k centers and clt are clusters associated
+//     the model `data`df`repPts`clust, where data and df are the inputs,
+//     repPts are the calculated k centers and clust are clusters associated
 //     with each of the datapoints
 //   predict - A projection allowing for prediction on new input data
 //   update - A projection allowing new data to be used to update
@@ -58,8 +58,8 @@ clust.kmeans.fit:{[data;df;k;config]
 // @param config {dictionary} A dictionary returned from '.ml.clust.kmeans.fit'
 //   containing:
 //   modelInfo - Encapsulates all relevant information needed to fit
-//     the model `data`df`repPts`clt, where data and df are the inputs,
-//     repPts are the calculated k centers and clt are clusters associated
+//     the model `data`df`repPts`clust, where data and df are the inputs,
+//     repPts are the calculated k centers and clust are clusters associated
 //     with each of the datapoints
 //   predict - A projection allowing for prediction on new input data
 //   update - A projection allowing new data to be used to update
@@ -79,8 +79,8 @@ clust.kmeans.predict:{[config;data]
 // @param config {dictionary} A dictionary returned from '.ml.clust.kmeans.fit'
 //   containing:
 //   modelInfo - Encapsulates all relevant information needed to fit
-//     the model `data`df`repPts`clt, where data and df are the inputs,
-//     repPts are the calculated k centers and clt are clusters associated
+//     the model `data`df`repPts`clust, where data and df are the inputs,
+//     repPts are the calculated k centers and clust are clusters associated
 //     with each of the datapoints
 //   predict - A projection allowing for prediction on new input data
 //   update - A projection allowing new data to be used to update

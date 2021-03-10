@@ -82,7 +82,7 @@ fresh.feat.autoCorr:{[data;lag]
 // @desc Calculate entropy for data binned into n equi-distant bins
 // @param data {number[]} Numerical data points
 // @params numBins {long} Number of bins to apply to data
-// @return {float} Entropy of the series binned into nbins equidistant bins
+// @return {float} Entropy of the series binned into numBins equidistant bins
 fresh.feat.binnedEntropy:{[data;numBins]
   n:count data;
   data-:min data;
@@ -331,8 +331,8 @@ fresh.feat.linTrend:{[data]
 
 // @kind function
 // @category freshFeat
-// @desc Calculate if the length of the longest subsequence within a
-//   series is greater than the series mean
+// @desc Longest sequence of consecutive data points within the series with 
+//   a value greater than the mean
 // @param data {number[]} Numerical data points
 // @return {boolean} Is longest subsequence greater than the mean
 fresh.feat.longStrikeAboveMean:{[data]
@@ -341,8 +341,8 @@ fresh.feat.longStrikeAboveMean:{[data]
 
 // @kind function
 // @category freshFeat
-// @desc Calculate if the length of the longest subsequence within a 
-//   series is less than the series mean
+// @desc Longest sequence of consecutive data points within the series with 
+//   a value lower than the mean
 // @param data {number[]} Numerical data points
 // @return {boolean} Is longest subsequence less than the mean
 fresh.feat.longStrikeBelowMean:{[data]

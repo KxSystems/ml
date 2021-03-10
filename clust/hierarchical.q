@@ -1,10 +1,11 @@
-// clust/hierarchical.q - Heirarchical and CURE clustering
+// clust/hierarchical.q - Hierarchical and CURE clustering
 // Copyright (c) 2021 Kx Systems Inc
 // 
 // Hierarchical clustering.
 // Agglomerative hierarchical clustering iteratively groups data, 
 // using a bottom-up approach that initially treats all data 
 // points as individual clusters.
+//
 // CURE clustering.
 // Clustering Using REpresentatives (CURE) is a technique used to deal 
 // with datasets containing outliers and clusters of varying sizes and 

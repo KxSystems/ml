@@ -83,7 +83,7 @@ clust.kd.c.nn:{[tree;data;df;xIdxs;pt]
 // @category kdtree
 // @desc Find the leaf node point belongs to using C
 // @param tree {table} k-d tree table
-// @param pt {float[]} Point to search
+// @param point {float[]} Point to search
 // @param node {dictionary} Node in the k-d tree to start the search 
 // @return {dictionary} The index (row) of the kd-tree that the 
 //   datapoint belongs to

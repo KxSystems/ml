@@ -17,7 +17,7 @@
 //   endog variable
 // @param trend {boolean} Whether a trend is added to the model
 // @returns {dictionary} Contains the following information:
-//   modelInfo - Coeffients and statistical values calculated during the 
+//   modelInfo - Coefficients and statistical values calculated during the 
 //     fitting process
 //   predict - A projection allowing for prediction on new input data
 stats.OLS.fit:{[endog;exog;trend]
@@ -35,7 +35,7 @@ stats.OLS.fit:{[endog;exog;trend]
 // @desc Predict values using coefficients calculated via OLS
 // @param config {dictionary} Information returned from `OLS.fit`
 //   including:
-//   modelInfo - Coeffients and statistical values calculated during the 
+//   modelInfo - Coefficients and statistical values calculated during the 
 //     fitting process
 //   predict - A projection allowing for prediction on new input data
 // @param exog {table|number[][]|number[]} The exogenous variables
@@ -58,7 +58,7 @@ stats.OLS.predict:{[config;exog]
 // @param weights {float[]} The weights to be applied to the endog variable
 // @param trend {boolean} Whether a trend is added to the model
 // @returns {dictionary} Contains the following information:
-//   modelInfo - Coeffients and statistical values calculated during the 
+//   modelInfo - Coefficients and statistical values calculated during the 
 //     fitting process
 //   predict - A projection allowing for prediction on new input data
 stats.WLS.fit:{[endog;exog;weights;trend]
@@ -89,7 +89,7 @@ stats.WLS.fit:{[endog;exog;weights;trend]
 // @desc Predict values using coefficients calculated via WLS
 // @param config {dictionary} Information returned from `WLS.fit`
 //   including:
-//   modelInfo - Coeffients and statistical values calculated during the 
+//   modelInfo - Coefficients and statistical values calculated during the 
 //     fitting process
 //   predict - A projection allowing for prediction on new input data
 // @param exog {table|number[][]|number[]} The exogenous variables

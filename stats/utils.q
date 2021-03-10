@@ -1,7 +1,7 @@
 // stats/utils.q - Utility functions
 // Copyright (c) 2021 Kx Systems Inc
 //
-// Utility functions for implimentations within the stats library
+// Utility functions for implementations within the stats library
 
 \d .ml
 
@@ -67,7 +67,7 @@ stats.i.OLScalcs:{[coef;endog;exog;n;p]
   MSModel:SSModel%dfModel;
   MSResidual:SSResidual%dfResidual;
   fStat:MSModel%MSResidual;
-  logLike:stats.i.logLiklihood[SSResidual;n];
+  logLike:stats.i.logLikelihood[SSResidual;n];
   rseCalc:rse[predicted;endog;dfResidual];
   pValue:2*1-pyStats[`:t][`:cdf;<][fStat;p;dfResidual];
   dictKeys:`dfTotal`dfModel`dfResidual`sumSquares`meanSquares,
@@ -80,11 +80,11 @@ stats.i.OLScalcs:{[coef;endog;exog;n;p]
 // @private
 // @kind function
 // @category statsUtility
-// @desc Calculate the logliklihood of the residuals
+// @desc Calculate the loglikelihood of the residuals
 // @param SSResiduals {float} Sum of squares of the residual
 // @param n {long} The number of endog variables
 // @returns {float[]} The loglikelihood value
-stats.i.logLiklihood:{[SSResidual;n]
+stats.i.logLikelihood:{[SSResidual;n]
   n2:n%2;
   ((neg[n2]*log[2*3.14])-(n2*log[SSResidual%n]))-n2
   }
@@ -115,11 +115,11 @@ stats.i.coefStats:{[coef;endog;exog;trend;n;p]
 // @private
 // @kind function
 // @category statsUtility
-// @desc Calculate the standard errors of the coefficients
-// @param coef {float[]} The calculated coefficiant
+// @desc Calculate the standard error of the coefficient
+// @param coef {float[]} The calculated coefficient
 // @param exog {float[][]} Values that predict the endog variable
 // @param endog {float[]} The endogenous variable
-// @returns {float[]} The standard error of the coefficients
+// @returns {float[]} The standard error of the coefficient
 stats.i.coefStdErr:{[coef;exog;endog]
   shape:count[exog]-count first exog;
   error:{x*x}endog-exog mmu coef;
@@ -150,22 +150,12 @@ stats.i.CI95:{[n;p;stdErr]
   }
 
 // @private 
-// @kind data
+// @kind dictionary
 // @category statsUtility
 // @desc Infinity values for different types
-stats.i.infinity:(!) . flip (
-    (`int;       0Wi);
-    (`long;      0W);
-    (`real;      0we);
-    (`float;     0w);
-    (`timestamp; 0Wp);
-    (`month;     0Wm);
-    (`date;      0Wd);
-    (`datetime;  0wz);
-    (`timespan;  0Wn);
-    (`minute;    0Wu);
-    (`second;    0Wv);
-    (`time;      0Wt))
+// @type dictionary
+infTypes:`int`long`real`float`timestamp`month`date`datetime`timespan`minute`second`time
+stats.i.infinity:infTypes!infTypes$\:0w
 
 // @private 
 // @kind data

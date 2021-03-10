@@ -9,7 +9,7 @@
 // @category utilitiesUtility
 // @desc Unique combinations of a vector or matrix
 // @param n {int} Number of values required for combinations
-// @param vals {int[]} Indexes involved in the combination 
+// @param vals {int[]} Indices involved in the combination 
 // @return {int[]} Unique combinations of values from the data 
 i.combFunc:{[n;vals]
   j@:i:where 0<>k:n-j:1+last vals;
@@ -228,7 +228,7 @@ i.curvePts:{[x;y]
 // @private
 // @kind function
 // @category metricUtility
-// @desc Calculate the area under an ROC cirve
+// @desc Calculate the area under an ROC curve
 // @param x {number[]} X coordinate of true positives and false negatives
 // @param y {number[]} Y coorfinate of true positives and false negatives
 // @returns {number[]} Area under the curve
@@ -262,7 +262,7 @@ i.dropConstant.num:{[num]
 // @private
 // @kind function
 // @category preprocessingUtility
-// @desc Drop any constant values that aren't numeric
+// @desc All non numeric values with zero variance are removed
 // @param data {dictionary} Non-numerical data
 // @return {dictionary} All keys with zero variance are removed
 i.dropConstant.other:{[data]
@@ -323,7 +323,7 @@ i.fillMap.forward:{[data]
 // @private
 // @kind function
 // @category preprocessingUtility
-// @desc Fill nulls depening on timestamp component
+// @desc Fill nulls depending on timestamp component
 // @param time {time[]} Data containing a time component
 // @param nulls {any[]} Contains null values
 // @return {table|number[]} Nulls filled in respect to time component
@@ -430,7 +430,7 @@ i.timeSplit1:{[data]
 // @category preprocessingUtility
 // @desc Break time endog columns into constituent components
 // @param tab {table} Contains time endog columns
-// @param timeCols {symbol[]} Columns to apply coding to, if set to :: all 
+// @param timeCols {symbol[]} Columns to apply encoding to, if set to :: all 
 //  columns with date/time types will be encoded
 // @return {dictionary} All time or date types broken into labeled versions of 
 //  their constituent components

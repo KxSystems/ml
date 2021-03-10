@@ -43,8 +43,8 @@ xv.i.shuffIdx:{[k;data]
 // @private
 // @kind function 
 // @category xvUtility
-// @desc Split target data ensuring that each distinct value appears in
-//   each fold
+// @desc Split target data ensuring that the percentage of each class are 
+//   preserved in each fold
 // @param k {int} Number of folds
 // @param data {any} Table, matrix or list
 // @return {long[][]} Data split into k-folds with distinct values 

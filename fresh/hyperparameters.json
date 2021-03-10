@@ -79,7 +79,7 @@
   },
   "valCount":{
     "val":{
-      "value":[0,1,null,1e9999,-1e9999],
+      "value":[0,1,null,inf,-inf],
       "type":"int"
     }
   },

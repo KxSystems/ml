@@ -49,7 +49,7 @@ eye:{[n]
 
 // @kind function
 // @category utilities
-// @desc Index of maximum element of a list
+// @desc Index of the first occurance of the maximum value in a list
 // @param array {number[]} Array of values 
 // @return {number} The index of the maximum element of the array
 iMax:{[array]
@@ -89,8 +89,8 @@ shape:{[matrix]
 // @kind function
 // @category utilities
 // @desc Split data into training and test sets
-// @param data {number[]|table} Matrix of input values
-// @param target {number[]} A vector of target values the same count as data
+// @param data {any[]} Matrix of input values
+// @param target {any[]} A vector of target values the same count as data
 // @param size {float[]} Percentage size of the testing set
 // @return {dictionary} Contains the data matrix and target split into a
 //   training and testing set

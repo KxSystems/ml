@@ -2,7 +2,7 @@
 // Copyright (c) 2021 Kx Systems Inc
 // 
 // Collection of utility functions for 
-// implimentation of clustering algos
+// implementation of clustering algos
 
 \d .ml
 
@@ -87,11 +87,13 @@ clust.i.dists:{[data;df;pt;idxs]
 // @private
 // @kind function
 // @category clustUtility
+// @desc Get the closest point and distance from the current point
 // @param data {float[][]} Points in `value flip` format
 // @param df {fn} Distance function
 // @param pt {float[]} Current point
 // @param idxs {long[]} Indices from data
-// @return {float[]} Distances for data and pt
+// @return {dictionary} Index of the closest point and the distance between
+//   that point and current point
 clust.i.closest:{[data;df;pt;idxs]
   dists:clust.i.dists[data;df;pt;idxs];
   minIdx:idxs dists?minDist:min dists;
@@ -100,6 +102,7 @@ clust.i.closest:{[data;df;pt;idxs]
 
 // @private
 // @kind function
+// @desc Reindex the data
 // @category clustUtility
 // @desc Reindex exemplars
 // @param data {any[]} Data points
@@ -141,7 +144,7 @@ clust.i.err.ap:{'`$"AP must be used with nege2dist"}
 //   at position K when using .ml.clust.cutK >1
 // @param cutK {int} The user provided number of clusters to be
 //   retrieved when cutting the dendrogram
-// @return {err} Returns nothing on successful invocation, will error
+// @return {::|err} Returns nothing on successful invocation, will error
 //   if a user provides an unsupported value
 clust.i.checkK:{[cutK]
   if[cutK<=1;'"Number of requested clusters must be > 1."];
@@ -157,7 +160,7 @@ clust.i.checkK:{[cutK]
 // @return {::|err} Returns nothing on successful invocation, will error
 //   if a user provides an unsupported value
 clust.i.checkDist:{[cutDist]
-  if[cutDist<=0;'"Cutting distance must be >= 0."];
+  if[cutDist<=0;'"Cutting distance must be > 0."];
   }
 
 // @private
@@ -168,7 +171,8 @@ clust.i.checkDist:{[cutDist]
 // @param cutDist {dictionary} The key defines what cutting algo to use when
 //   splitting the data into clusters (`k/`dist) and the value defines the
 //   cutting threshold
-// @return {dictionary} `data`df`n`c`clt returned from .ml.clust.(cutK/cutDist)
+// @return {dictionary} `data`df`n`c`clust returned from 
+//   .ml.clust.(cutK/cutDist)
 clust.i.prepPred:{[config;cutDict]
   cutType:first key cutDict;
   if[not cutType in`k`dist;'"Cutting distance has to be 'k' or 'dist'"];
@@ -222,7 +226,7 @@ clust.i.hcSCC:{[data;df;lf;k;n;c;dgram]
   $[dgram;
     clust.i.dgramIdx last[clusts]0;
     enlist @[;;:;]/[count[data 0]#0N;validClusts`points;til count validClusts]
-   ]
+    ]
   }
 
 // @private
@@ -292,7 +296,7 @@ clust.i.getRep:{[config;idxs]
 // @param numPts {long} Number of points in training clusters
 // @param clustIdx {long[][]} Training data indices
 // @param ptIdx {long[][]} Index of current data point
-// @return {long[]} List of predicted clusters
+// @return {long} Index of the nearest cluster to the current point 
 clust.i.predClosest:{[data;config;repPt;c;clustIdx;ptIdx]
   config:config[`modelInfo];
   // Intra cluster distances
@@ -560,7 +564,7 @@ clust.i.cureRep:{[df;n;c;pts]
 // @param df {symbol} Distance function name within '.ml.clust.i.df'
 // @param repPts {float[]} Representative points of the cluster
 // @param pts {float[][]} Data points
-// @return {float} Representative point
+// @return {float[]} Representative point and the updated data points 
 clust.i.repCalc:{[df;repPts;pts]
   i:iMax min clust.i.df[df]each pts-/:neg[1|-1+count repPts]#repPts;
   repPts,:enlist pts[;i];

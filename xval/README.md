@@ -1,6 +1,6 @@
 # Cross Validation
 
-The functions contained in this folder surround the implementation of various cross validation procedures, both time series and non-time series in nature. The goal of this library is to make such procedures available to kdb+ users using a q-like syntax.
+The functions contained in this folder surround the implementation of various cross validation procedures, both time series and non time series in nature. The goal of this library is to make such procedures available to kdb+ users using a q-like syntax.
 
 ## Functionality
 
