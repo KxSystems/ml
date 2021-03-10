@@ -1,0 +1,74 @@
+{
+  "count":{
+    "func":"count",
+    "type":["num","temporal","other"]
+  },
+  "type":{
+    "func":"{.ml.stats.i.metaTypes .Q.ty x}",
+    "type":["num","temporal","other"]
+  }, 
+  "mean":{
+    "func":"avg",
+    "type":["num"]
+  },
+  "std":{
+    "func":"sdev",
+    "type":["num"]
+  },
+  "min":{
+    "func":"min",
+    "type":["num","temporal"]
+  },
+  "max":{
+    "func":"max",
+    "type":["num","temporal"]
+  },
+  "q1":{
+    "func":"{.ml.stats.percentile[x;0.25]}",
+    "type":["num"]
+  },
+  "q2":{
+    "func":"{.ml.stats.percentile[x;0.5]}",
+    "type":["num"]
+  },
+  "q3":{
+    "func":"{.ml.stats.percentile[x;0.75]}",
+    "type":["num"]
+  },
+  "nulls":{
+    "func":"{sum null x}",
+    "type":["num","temporal","other"]
+  },
+  "inf":{
+    "func":"{sum x=.ml.stats.i.infinity .ml.stats.i.metaTypes[.Q.ty  x]}",
+    "type":["num"]
+  },
+  "range":{
+    "func":".ml.range",
+    "type":["num","temporal"]
+  },
+  "skew":{
+    "func":".ml.fresh.feat.skewness",
+    "type":["num"]
+  },
+  "countDistinct":{
+    "func":"{count distinct x}",
+    "type":["num","temporal","other"]
+  },
+  "mode":{
+    "func":"{first key desc count each group x}",
+    "type":["num","temporal","other"]
+  },
+  "freq":{
+    "func":"{first value asc count each group x}",
+    "type":["num","temporal","other"]
+  },
+  "sampleDev":{
+    "func":"sdev",
+    "type":["num"]
+  },
+  "standardError":{
+    "func":"{dev[x]%sqrt count x}",
+    "type":["num"]
+  }
+}

@@ -1,98 +1,112 @@
-\d .ml
-
+// timeseries/predict.q - Timeseries prediction 
+// Copyright (c) 2021 Kx Systems Inc
+// 
 // Prediction functionality for time-series models
 
+\d .ml
+
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on an AutoRegressive model (AR)
-// @param mdl  {dict} model parameters returned from fitting of an appropriate model
-// @param exog {tab/num[][]/(::)} Exogenous variables, are additional variables which
-//   required for application of model prediction 
-// @param len  {integer} number of values to be predicted
-// @return     {float[]} list of predicted values
-ts.AR.predict:{[mdl;exog;len]
-  ts.i.dictCheck[mdl;ts.i.AR.keyList;"mdl"];
-  exog:ts.i.predDataCheck[mdl;exog];
-  mdl[`pred_dict]:`p`tr!count each mdl`p_param`tr_param;
-  mdl[`estresid]:();
-  mdl[`resid]:();
-  ts.i.predictFunction[mdl;exog;len;ts.i.AR.singlePredict]
+// @desc Predictions based on an AutoRegressive model (AR)
+// @params config {dictionary} Information returned from `ml.ts.AR.fit` 
+//   including:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model
+// @param len {long} Number of future values to be predicted
+// @return {float[]} Predicted values
+ts.AR.predict:{[config;exog;len]
+  model:config`modelInfo;
+  exog:ts.i.predDataCheck[model;exog];
+  model[`paramDict]:`p`trend!count each model`pCoeff`trendCoeff;
+  model[`residualCoeffs]:();
+  model[`residuals]:();
+  ts.i.predictFunction[model;exog;len;ts.i.AR.singlePredict]
   }
 
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on an AutoRegressive Moving Average model (ARMA)
-// @param mdl  {dict} model parameters returned from fitting of an appropriate model
-// @param exog {tab/num[][]/(::)} Exogenous variables, are additional variables which
-//   required for application of model prediction 
-// @param len  {integer} number of values to be predicted
-// @return     {float[]} list of predicted values
-// Predict future data using an ARMA model
-/. r    > list of predicted values
-ts.ARMA.predict:{[mdl;exog;len]
-  ts.i.dictCheck[mdl;ts.i.ARMA.keyList;"mdl"];
-  exog:ts.i.predDataCheck[mdl;exog];
-  ts.i.predictFunction[mdl;exog;len;ts.i.ARMA.singlePredict]
+// @desc Predictions based on an AutoRegressive Moving Average model 
+//   (ARMA)
+// @params config {dictionary} Information returned from `ml.ts.ARMA.fit`
+//   including:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model
+// @param len {long} Number of future values to be predicted
+// @return {float[]} Predicted values
+ts.ARMA.predict:{[config;exog;len]
+  model:config`modelInfo;
+  exog:ts.i.predDataCheck[model;exog];
+  ts.i.predictFunction[model;exog;len;ts.i.ARMA.singlePredict]
   }
 
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on an AutoRegressive Integrated Moving Average 
-//   model (ARIMA)
-// @param mdl  {dict} model parameters returned from fitting of an appropriate model
-// @param exog {tab/num[][]/(::)} Exogenous variables, are additional variables which
-//   required for application of model prediction 
-// @param len  {integer} number of values to be predicted
-// @return     {float[]} list of predicted values
-ts.ARIMA.predict:{[mdl;exog;len]
-  ts.i.dictCheck[mdl;ts.i.ARIMA.keyList;"mdl"];
-  exog:ts.i.predDataCheck[mdl;exog];
+// @desc Predictions based on an AutoRegressive Integrated Moving
+//   Average model (ARIMA)
+// @params config {dictionary} Information returned from `ml.ts.ARIMA.fit`
+//   including:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model
+// @param len {long} Number of future values to be predicted
+// @return {float[]} Predicted values
+ts.ARIMA.predict:{[config;exog;len]
+  model:config`modelInfo;
+  exog:ts.i.predDataCheck[model;exog];
   // Calculate predictions not accounting for differencing
-  pred:ts.i.predictFunction[mdl;exog;len;ts.i.ARMA.singlePredict];
-  dval:count mdl`origd;
+  preds:ts.i.predictFunction[model;exog;len;ts.i.ARMA.singlePredict];
+  dVal:count model`originalData;
   // Revert data to correct scale (remove differencing if previously applied)
-  $[dval;dval _dval{sums x}/mdl[`origd],pred;pred]
+  $[dVal;dVal _dVal{sums x}/model[`originalData],preds;preds]
   }
 
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on a Seasonal AutoRegressive Integrated Moving 
-//   Average model (SARIMA)
-// @param mdl  {dict} model parameters returned from fitting of an appropriate model
-// @param exog {tab/num[][]/(::)} Exogenous variables, are additional variables which
-//   required for application of model prediction 
-// @param len  {integer} number of values to be predicted
-// @return     {float[]} list of predicted values
-ts.SARIMA.predict:{[mdl;exog;len]
-  ts.i.dictCheck[mdl;ts.i.SARIMA.keyList;"mdl"];
-  exog:ts.i.predDataCheck[mdl;exog];
+// @desc Predictions based on a Seasonal AutoRegressive Integrated 
+//   Moving Average model (SARIMA)
+// @params config {dictionary} Information returned from `ml.ts.SARIMA.fit`
+//   including:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
+// @param exog {table|float[]|(::)} Exogenous variables are additional 
+//   variables which may be accounted for to improve the model
+// @param len {long} Number of future values to be predicted
+// @return {float[]} Predicted values
+ts.SARIMA.predict:{[config;exog;len]
+  model:config`modelInfo;
+  exog:ts.i.predDataCheck[model;exog];
   // Calculate predictions not accounting for differencing
-  preds:$[count raze mdl[`pred_dict];
-    ts.i.predictFunction[mdl;exog;len;ts.i.SARMA.singlePredict];
-    ts.i.AR.predict[mdl;exog;len]
+  preds:$[count raze model`paramDict;
+    ts.i.predictFunction[model;exog;len;ts.i.SARMA.singlePredict];
+    ts.i.AR.predict[model;exog;len]
     ];
   // Order of seasonal differencing originally applied
-  sval:count mdl`origs;
-  // if seasonal differenced, revert to original
-  if[sval;preds:ts.i.reverseSeasonDiff[mdl[`origs];preds]];
+  dSeasVal:count model`seasonData;
+  // If seasonal differenced, revert to original
+  if[dSeasVal;preds:ts.i.reverseSeasonDiff[model`seasonData;preds]];
   // Order of differencing originally applied
-  dval:count mdl`origd;
+  dVal:count model`originalData;
   // Revert data to correct scale (remove differencing if previously applied)
-  $[dval;dval _dval{sums x}/mdl[`origd],preds;preds]
+  $[dVal;dVal _dVal{sums x}/model[`originalData],preds;preds]
   }
-
 
 // @kind function
 // @category modelPredict
-// @fileoverview Predictions based on an AutoRegressive Conditional Heteroskedasticity 
-//   model (ARCH)
-// @param mdl  {dict} model parameters returned from fitting of an appropriate model
-// @param len  {integer} number of values to be predicted
-// @return     {float[]} list of predicted values
-// Predict future volatility using an ARCH model
-/. r    > list of predicted values
-ts.ARCH.predict:{[mdl;len]
-  ts.i.dictCheck[mdl;ts.i.ARCH.keyList;"mdl"];
-  // predict and return future values
-  last{x>count y 1}[len;]ts.i.ARCH.singlePredict[mdl`params]/(mdl`resid;())
+// @desc Predictions based on an AutoRegressive Conditional 
+//   Heteroskedasticity model (ARCH)
+// @params config {dictionary} Information returned from `ml.ts.ARCH.fit`
+//   including:
+//   modelInfo - Model coefficients and data needed for future predictions
+//   predict - A projection allowing for prediction of future values
+// @param len {long} Number of future values to be predicted
+// @return {float[]} Predicted values
+ts.ARCH.predict:{[config;len]
+  model:config`modelInfo;
+  last{x>count y 1}[len;]ts.i.ARCH.singlePredict
+    [model`coefficients]/(model`residualVals;())
   }
