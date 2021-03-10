@@ -26,7 +26,7 @@ The problems which can be solved by this framework will be expanded over time as
 The following requirements cover all those needed to run the libraries in the current build of the toolkit.
 
 - embedPy
-- ML-Toolkit
+- ML-Toolkit>=3.0.0
 
 A number of Python dependencies also exist for the running of embedPy functions within both the the machine-learning utilities and FRESH libraries. Install of the requirements can be completed as follows
 

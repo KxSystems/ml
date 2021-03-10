@@ -82,6 +82,6 @@ applyAndCheck[prmsNLPReg     ;`nlp   ;`reg  ]
 
 -1"\nRemoving any directories created";
 
-rmPath:.automl.utils.ssrWindows .automl.path,"/outputs/testing/";
+rmPath: .automl.path,"/outputs/testing/";
 if[.z.o like "w*";system"timeout 5"];
-system"rm -r ",rmPath;
+.automl.utils.deleteRecursively hsym `$rmPath;

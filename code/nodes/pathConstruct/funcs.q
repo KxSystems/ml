@@ -1,14 +1,17 @@
-\d .automl
-
+// code/nodes/pathConstruct/funcs.q - Functions called in pathConstruct node
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Definitions of the main callable functions used in the application of
-//   .automl.pathConstruct
+// .automl.pathConstruct
+
+\d .automl
 
 // @kind function
 // @category pathConstruct
-// @fileoverview Create the folders that are required for the saving of the 
+// @desc Create the folders that are required for the saving of the 
 //   config, models, images and reports
-// @param preProcParams {dict} Data generated during the preprocess stage
-// @return {dict} File path where paths/graphs are to be saved
+// @param preProcParams {dictionary} Data generated during the preprocess stage
+// @return {dictionary} File path where paths/graphs are to be saved
 pathConstruct.constructPath:{[preProcParams]
   cfg:preProcParams`config;
   saveOpt:cfg`saveOption;
@@ -20,10 +23,10 @@ pathConstruct.constructPath:{[preProcParams]
 
 // @kind function
 // @category pathConstruct
-// @fileoverview Create the folders that are required for the saving of the
+// @desc Create the folders that are required for the saving of the
 //   config, models, images and reports
-// @param pathName {str} Name of paths that are to be created
-// @return {null} File paths are created
+// @param pathName {string} Name of paths that are to be created
+// @return {::} File paths are created
 pathConstruct.createFile:{[pathName]
   windowsChk:$[.z.o like"w*";" ";" -p "];
   system"mkdir",windowsChk,pathName

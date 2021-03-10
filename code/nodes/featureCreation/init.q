@@ -1,3 +1,8 @@
+// code/nodes/featureCreation/init.q - Load featureCreation node
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Load code for featureCreation node 
+
 \d .automl
 
 loadfile`:code/nodes/featureCreation/featureCreation.q

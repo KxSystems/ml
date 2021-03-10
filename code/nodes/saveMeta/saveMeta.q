@@ -1,13 +1,17 @@
-\d .automl
-
+// code/nodes/saveMeta/saveMeta.q - Save meta data node
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Save relevant metadata for use with a persisted model on new data
+
+\d .automl
 
 // @kind function
 // @category node
-// @fileoverview Save all metadata information needed to predict on new data
-// @param params {dict} All data generated during the preprocessing and
+// @desc Save all metadata information needed to predict on new data
+// @param params {dictionary} All data generated during the preprocessing and
 //   prediction stages
-// @return {dict} All metadata information needed to generate predict function
+// @return {dictionary} All metadata information needed to generate predict
+//   function
 saveMeta.node.function:{[params]
   saveOpt:params[`config]`saveOption;
   if[0~saveOpt;:(::)];
@@ -19,7 +23,7 @@ saveMeta.node.function:{[params]
   }
 
 // Input information
-saveMeta.node.inputs  :"!"
+saveMeta.node.inputs:"!"
 
 // Output information
-saveMeta.node.outputs :"!"
+saveMeta.node.outputs:"!"

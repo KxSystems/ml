@@ -1,3 +1,10 @@
+// automl.q - Setup automl namespace
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Define version, path, and loadfile. 
+// Execute algo if run from cmd line.
+
+
 \l p.q
 
 \d .automl

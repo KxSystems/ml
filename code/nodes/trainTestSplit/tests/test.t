@@ -2,7 +2,7 @@
 .automl.loadfile`:init.q
 .automl.loadfile`:code/tests/utils.q
 
-// Load Python version of .ml.traintestsplit
+// Load Python version of .ml.trainTestSplit
 \l code/nodes/dataCheck/tests/pythonTTS.p
 
 \S 10
@@ -14,17 +14,17 @@ sigFeats:`x`x2
 
 // Utilities
 matrixTTS:{[x;y;sz]
-  value .ml.traintestsplit[x;y;sz]
+  value .ml.trainTestSplit[x;y;sz]
   }
 wrongKeyTTS:{[x;y;sz]
   `a`b`c`d!til 4
   }
 
 // Config
-cfg13      :`trainTestSplit`testingSize!(`.ml.traintestsplit;.13)
-cfg20      :`trainTestSplit`testingSize!(`.ml.traintestsplit;.2)
-cfg40      :`trainTestSplit`testingSize!(`.ml.traintestsplit;.4)
-cfgNeg1    :`trainTestSplit`testingSize!(`.ml.traintestsplit;-1)
+cfg13      :`trainTestSplit`testingSize!(`.ml.trainTestSplit;.13)
+cfg20      :`trainTestSplit`testingSize!(`.ml.trainTestSplit;.2)
+cfg40      :`trainTestSplit`testingSize!(`.ml.trainTestSplit;.4)
+cfgNeg1    :`trainTestSplit`testingSize!(`.ml.trainTestSplit;-1)
 cfgMatrix  :`trainTestSplit`testingSize!(`matrixTTS  ;.2)
 cfgWrongKey:`trainTestSplit`testingSize!(`wrongKeyTTS;.2)
 cfgPy      :`trainTestSplit`testingSize!(`python_train_test_split;.2)

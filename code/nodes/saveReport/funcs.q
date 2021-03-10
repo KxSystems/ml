@@ -1,13 +1,16 @@
-\d .automl
-
+// code/nodes/saveReport/funcs.q - Functions called in saveReport node
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Definitions of the main callable functions used in the application of
-//  .automl.saveReport
+// .automl.saveReport
+
+\d .automl
 
 // @kind function
 // @category saveReport
-// @fileoverview Create a dictionary with image filenames for report generation
-// @param params {dict} All data generated during the process
-// @return {dict} Image filenames for report generation
+// @desc Create a dictionary with image filenames for report generation
+// @param params {dictionary} All data generated during the process
+// @return {dictionary} Image filenames for report generation
 saveReport.reportDict:{[params]
   config:params`config;
   saveImage:config`imagesSavePath;
@@ -22,9 +25,9 @@ saveReport.reportDict:{[params]
 
 // @kind function
 // @category saveReport
-// @fileoverview  Generate and save down procedure report
-// @param params {dict} All data generated during the process
-// @return {null} Report saved to appropriate location 
+// @desc  Generate and save down procedure report
+// @param params {dictionary} All data generated during the process
+// @return {::} Report saved to appropriate location 
 saveReport.saveReport:{[params]
   savePath:params[`config;`reportSavePath];
   modelName:params`modelName;

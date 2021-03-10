@@ -1,25 +1,28 @@
-
-\d .automl
-
+// code/utils.q - General utility functions
+// Copyright (c) 2021 Kx Systems Inc
+//
 // The purpose of this file is to house utilities that are useful across more
 // than one node or as part of the AutoML fit functionality and graph.
 
-// @kind function
+\d .automl
+
+// @kind data
 // @category utility
-// @fileoverview List of models to exclude
+// @desc List of models to exclude
+// @type symbol[]
 utils.excludeList:`GaussianNB`LinearRegression
 
 // @kind function
 // @category utility
-// @fileoverview Defaulted fitting and prediction functions for AutoML cross
+// @desc Defaulted fitting and prediction functions for AutoML cross
 //   validation and hyperparameter search. Both models fit on a training set
 //   and return the predicted scores based on supplied scoring function.
 // @param func {<} Scoring function that takes parameters and data as input, 
 //   returns appropriate score
-// @param hyperParam {dict} Hyperparameters to be searched
+// @param hyperParam {dictionary} Hyperparameters to be searched
 // @param data {float[]} Data split into training and testing sets of format
 //   ((xtrn;ytrn);(xval;yval))
-// @return {(bool[];float[])} Predicted and true validation values
+// @return {boolean[]|float[]} Predicted and true validation values
 utils.fitPredict:{[func;hyperParam;data]
   predicts:$[0h~type hyperParam;
     func[data;hyperParam 0;hyperParam 1];
@@ -30,8 +33,8 @@ utils.fitPredict:{[func;hyperParam;data]
 
 // @kind function
 // @category utility
-// @fileoverview Load function from q. If function not found, try Python.
-// @param funcName {sym} Name of function to retrieve
+// @desc Load function from q. If function not found, try Python.
+// @param funcName {symbol} Name of function to retrieve
 // @return {<} Loaded function
 utils.qpyFuncSearch:{[funcName]
   func:@[get;funcName;()];
@@ -40,8 +43,8 @@ utils.qpyFuncSearch:{[funcName]
 
 // @kind function
 // @category utility
-// @fileoverview Load NLP library if requirements met
-// This function takes no arguments and returns nothing. Its purpose is to load
+// @desc Load NLP library if requirements met
+//   This function takes no arguments and returns nothing. Its purpose is to load
 //   the NLP library if requirements are met. If not, a statement printed to 
 //   terminal.
 utils.loadNLP:{
@@ -55,10 +58,10 @@ utils.loadNLP:{
 
 // @kind function
 // @category utility
-// @fileoverview Used throughout the library to convert linux/mac file names to
+// @desc Used throughout the library to convert linux/mac file names to
 //   windows equivalent
-// @param path {str} Linux style path
-// @return {str} Path modified to be suitable for windows systems
+// @param path {string} Linux style path
+// @return {string} Path modified to be suitable for windows systems
 utils.ssrWindows:{[path]
   $[.z.o like "w*";ssr[;"/";"\\"];]path
   }
@@ -68,11 +71,11 @@ utils.plt:.p.import`matplotlib.pyplot;
 
 // @kind function
 // @category utility
-// @fileoverview Split data into training and testing sets without shuffling
-// @param features {tab} Unkeyed tabular feature data
-// @param target {num[]} Numerical target vector
+// @desc Split data into training and testing sets without shuffling
+// @param features {table} Unkeyed tabular feature data
+// @param target {number[]} Numerical target vector
 // @param size {float} Percentage of data in testing set
-// @return {dict} Data separated into training and testing sets
+// @return {dictionary} Data separated into training and testing sets
 utils.ttsNonShuff:{[features;target;size]
   `xtrain`ytrain`xtest`ytest!
     raze(features;target)@\:/:(0,floor n*1-size)_til n:count features
@@ -80,50 +83,53 @@ utils.ttsNonShuff:{[features;target;size]
 
 // @kind function
 // @category utility
-// @fileoverview Return column value based on best model
-// @param modelTab {tab} Models to apply to feature data
-// @param modelName {sym} Name of current model
-// @param col {sym} Column to search
-// @return {sym} Column value
+// @desc Return column value based on best model
+// @param modelTab {table} Models to apply to feature data
+// @param modelName {symbol} Name of current model
+// @param col {symbol} Column to search
+// @return {symbol} Column value
 utils.bestModelDef:{[modelTab;modelName;col]
   first?[modelTab;enlist(=;`model;enlist modelName);();col]
   }
 
 // @kind function
 // @category automl
-// @fileoverview Retrieve feature and target data using information contained
+// @desc Retrieve feature and target data using information contained
 //   in user-defined JSON file
-// @param method {dict} Retrieval methods for command line data. i.e.
+// @param method {dictionary} Retrieval methods for command line data. i.e.
 //   `featureData`targetData!("csv";"ipc")
-// @return {dict} Feature and target data retrieved based on user instructions
+// @return {dictionary} Feature and target data retrieved based on user 
+//   instructions
 utils.getCommandLineData:{[method]
   methodSpecification:cli.input`retrievalMethods;
   dict:key[method]!methodSpecification'[value method;key method];
   if[count idx:where`ipc=method;dict[idx]:("J";"c";"c")$/:3#'dict idx];
   dict:dict,'([]typ:value method);
-  featureData:.ml.i.loaddset dict`featureData;
+  featureData:.ml.i.loadDataset dict`featureData;
   featurePath:dict[`featureData]utils.dataType method`featureData;
   targetPath:dict[`targetData]utils.dataType method`targetData;
   targetName:`$dict[`targetData]`targetColumn;
   // If data retrieval methods are the same for both feature and target data, 
   // only load data once and retrieve the target from the table. Otherwise,
-  // retrieve target data using .ml.i.loaddset
+  // retrieve target data using .ml.i.loadDataset
   data:$[featurePath~targetPath;
     (flip targetName _ flip featureData;featureData targetName);
-    (featureData;.ml.i.loaddset[dict`targetData]$[`~targetName;::;targetName])
+    (featureData;.ml.i.loadDataset[dict`targetData]$[`~targetName;::;
+    targetName])
     ];
   `features`target!data
   }
 
 // @kind function
 // @category utility
-// @fileoverview Create a prediction function to be used when applying a 
+// @desc Create a prediction function to be used when applying a 
 //   previously fit model to new data. The function calls the predict method
 //   of the defined model and passes in new feature data to make predictions.
-// @param config {dict} Information about a previous run of AutoML including
-//   the feature extraction procedure used and the best model produced
-// @param features {tab} Tabular feature data to make predictions on
-// @returns {num[]} Predictions
+// @param config {dictionary} Information about a previous run of AutoML 
+//   including the feature extraction procedure used and the best model 
+//   produced
+// @param features {table} Tabular feature data to make predictions on
+// @returns {number[]} Predictions
 utils.generatePredict:{[config;features]
   original_print:utils.printing;
   utils.printing:0b;
@@ -144,12 +150,14 @@ utils.generatePredict:{[config;features]
 
 // @kind function
 // @category utility
-// @fileoverview Apply feature extraction/creation and selection on provided 
+// @desc Apply feature extraction/creation and selection on provided 
 //   data based on a previous run
-// @param config {dict} Information about a previous run of AutoML including
-//   the feature extraction procedure used and the best model produced
-// @param features {tab} Tabular feature data to make predictions on
-// @returns {tab} Features produced using config feature extraction procedures
+// @param config {dictionary} Information about a previous run of AutoML 
+//   including the feature extraction procedure used and the best model 
+//   produced
+// @param features {table} Tabular feature data to make predictions on
+// @returns {table} Features produced using config feature extraction 
+//   procedures
 utils.featureCreation:{[config;features]
   sigFeats:config`sigFeats;
   extractType:config`featureExtractionType;
@@ -169,10 +177,12 @@ utils.featureCreation:{[config;features]
 
 // @kind function
 // @category utility
-// @fileoverview Retrieve previous generated model from disk
-// @param config {dict} Information about a previous run of AutoML including
-//   the feature extraction procedure used and the best model produced
-// @returns {tab} Features produced using config feature extraction procedures
+// @desc Retrieve previous generated model from disk
+// @param config {dictionary} Information about a previous run of AutoML 
+//   including the feature extraction procedure used and the best model 
+//   produced
+// @returns {table} Features produced using config feature extraction 
+//   procedures
 utils.loadModel:{[config]
   modelLibrary:config`modelLib;
   loadFunction:$[modelLibrary~`sklearn;
@@ -208,11 +218,11 @@ utils.loadModel:{[config]
 
 // @kind function
 // @category utility
-// @fileoverview Generate the path to a model based on user-defined dictionary
+// @desc Generate the path to a model based on user-defined dictionary
 //   input. This assumes no knowledge of the configuration, rather this is the 
 //   gateway to retrieve the configuration and models.
-// @param dict {dict} Configuration detailing where to retrieve the model which
-//   must contain one of the following:
+// @param dict {dictionary} Configuration detailing where to retrieve the 
+//   model which must contain one of the following:
 //     1. Dictionary mapping `startDate`startTime to the date and time 
 //       associated with the model run.
 //     2. Dictionary mapping `savedModelName to a model named for a run 
@@ -242,11 +252,11 @@ utils.modelPath:{[dict]
 
 // @kind function
 // @category utility
-// @fileoverview Extract model meta while checking that the directory for the
+// @desc Extract model meta while checking that the directory for the
 //    specified model exists
-// @param modelDetails {dict} Details of current model
-// @param pathToMeta {hsym} Path to previous model metadata
-// @returns {dict} Returns either extracted model metadata or errors out
+// @param modelDetails {dictionary} Details of current model
+// @param pathToMeta {symbol} Path to previous model metadata hsym
+// @returns {dictionary} Returns either extracted model metadata or errors out
 utils.extractModelMeta:{[modelDetails;pathToMeta]
   details:raze modelDetails;
   modelName:$[10h=type raze value modelDetails;;{sv[" - ";string x]}]details;
@@ -254,17 +264,19 @@ utils.extractModelMeta:{[modelDetails;pathToMeta]
   @[get;pathToMeta;errFunc]
   }
 
-// @kind function
+// @kind data 
 // @category utility
-// @fileoverview Dictionary outlining the keys which must be equivalent for 
+// @desc Dictionary outlining the keys which must be equivalent for 
 //   data retrieval in order for a dataset not to be loaded twice (assumes 
 //   tabular return under equivalence)
+// @type dictionary
 utils.dataType:`ipc`binary`csv!
   (`port`select;`directory`fileName;`directory`fileName)
 
-// @kind function
+// @kind data
 // @category utility
-// @fileoverview Dictionary with console print statements to reduce clutter
+// @desc Dictionary with console print statements to reduce clutter
+// @type dictionary
 utils.printDict:(!) . flip(
   (`describe;"The following is a breakdown of information for each of the ",
     "relevant columns in the dataset");
@@ -296,12 +308,13 @@ utils.printDict:(!) . flip(
   (`meta;"Saving down model parameters to ");
   (`model;"Saving down model to "))
 
-// @kind function
+// @kind data
 // @category utility
-// @fileoverview Dictionary of warning print statements that can be turned 
+// @desc Dictionary of warning print statements that can be turned 
 //   on/off. If two elements are within a key,first element is the warning 
 //   given when ignoreWarnings=2, the second is the warning given when 
 //   ignoreWarnings=1.
+// @type dictionary
 utils.printWarnings:(!) . flip(
   (`configExists;("A configuration file of this name already exists";
      "A configuration file of this name already exists and will be ",
@@ -326,29 +339,32 @@ utils.printWarnings:(!) . flip(
   )
 
 
-// @kind function
+// @kind data 
 // @category utility
-// @fileoverview Decide how warning statements should be handles.
+// @desc Decide how warning statements should be handles.
 //   0=No warning or action taken
 //   1=Warning given but no action taken.
 //   2=Warning given and appropriate action taken.
+// @type int
 utils.ignoreWarnings:2
 
-// @kind function
+// @kind data 
 // @category utility
-// @fileoverview Default printing and logging functionality
+// @desc Default printing and logging functionality
+// @type boolean
 utils.printing:1b
 utils.logging :0b
 
 // @kind function
 // @category api
-// @fileoverview
-// @param filename {sym} Filename to apply to log of outputs to file
-// @param val {str} Item that is to be displayed to standard out of any type
+// @desc Print string to stdout or log file
+// @param filename {symbol} Filename to apply to log of outputs to file
+// @param val {string} Item that is to be displayed to standard out of any type
 // @param nline1 {int} Number of new line breaks before the text that are 
 //   needed to 'pretty print' the display
 // @param nline2 {int} Number of new line breaks after the text that are needed
 //   to 'pretty print' the display
+// @return {::} String is printed to std or to log file
 utils.printFunction:{[filename;val;nline1;nline2]
   if[not 10h~type val;val:.Q.s val];
   newLine1:nline1#"\n";
@@ -364,14 +380,14 @@ utils.printFunction:{[filename;val;nline1;nline2]
 
 // @kind function
 // @category utility
-// @fileoverview Retrieve the model which is closest in time to
+// @desc Retrieve the model which is closest in time to
 //   the user specified `startDate`startTime where nearest is
 //   here defined at the closest preceding model
-// @param dict {dict} information about the start date and
+// @param dict {dictionary} information about the start date and
 //   start time of the model to be retrieved mapping `startDate`startTime
 //   to their associated values
-// @returns {dict} The model whose start date and time most closely matches
-//   the input
+// @returns {dictionary} The model whose start date and time most closely 
+//   matches the input
 utils.nearestModel:{[dict]
   timeMatch:sum dict`startDate`startTime;
   datedTimed :utils.getTimes[];
@@ -392,7 +408,7 @@ utils.nearestModel:{[dict]
 
 // @kind function
 // @category utility
-// @fileoverview Retrieve the timestamp associated
+// @desc Retrieve the timestamp associated
 //   with all dated/timed models generated historically
 // @return {timestamp[]} The timestamps associated with
 //   each of the previously generated non named models
@@ -403,7 +419,7 @@ utils.getTimes:{
 
 // @kind function
 // @category utility
-// @fileoverview Generate a timestamp for each timed file within the
+// @desc Generate a timestamp for each timed file within the
 //   outputs folder
 // @param folder {symbol} name of a dated folder within the outputs directory
 // @return {timestamp} an individual timestamp denoting the date+time of a run
@@ -414,21 +430,21 @@ utils.parseModelTimes:{[folder]
 
 // @kind function
 // @category utility
-// @fileoverview Retrieve the dictionary mapping timestamp of 
+// @desc Retrieve the dictionary mapping timestamp of 
 //   model generation to the name of the associated model
-// @return {dict} A mapping between the timestamp associated with start date/time
-//   and the name of the model produced
+// @return {dictionary} A mapping between the timestamp associated with 
+//   start date/time and the name of the model produced
 utils.parseNamedFiles:{
   (!).("P*";"|")0:hsym`$path,"/outputs/timeNameMapping.txt"
   }
 
 // @kind function
 // @category utility
-// @fileoverview Delete files and folders recursively
-// @param filepath {sym} File handle for file or directory to delete
-// @return {null;err} Null on success, an error if attempting to delete 
+// @desc Delete files and folders recursively
+// @param filepath {symbol} File handle for file or directory to delete
+// @return {::|err} Null on success, an error if attempting to delete 
 //   folders outside of automl
-utils.deleteRecursively :{[filepath]
+utils.deleteRecursively:{[filepath]
   if[not filepath>hsym`$path;'"Delete path outside of scope of automl"];
   orderedPaths:{$[11h=type d:key x;raze x,.z.s each` sv/:x,/:d;d]}filepath;
   hdel each desc orderedPaths;
@@ -436,14 +452,14 @@ utils.deleteRecursively :{[filepath]
 
 // @kind function
 // @category utility
-// @fileoverview Delete models based on user provided information 
+// @desc Delete models based on user provided information 
 //   surrounding the date and time of model generation
-// @param config {dict} User provided config containing, start date/time
+// @param config {dictionary} User provided config containing, start date/time
 //   information these can be date/time types in the former case or a
 //   wildcarded string
 // @param pathStem {string} the start of all paths to be constructed, this
 //   is in the general case .automl.path,"/outputs/"
-// @return {null;err} Null on success, error if attempting to delete folders
+// @return {::|err} Null on success, error if attempting to delete folders
 //   which do not have a match
 utils.deleteDateTimeModel:{[config;pathStem]
   dateInfo:config`startDate;
@@ -463,7 +479,7 @@ utils.deleteDateTimeModel:{[config;pathStem]
 
 // @kind function
 // @category utility
-// @fileoverview Retrieve all files/models which meet the criteria
+// @desc Retrieve all files/models which meet the criteria
 //   set out by the date/time information provided by the user
 // @param dateInfo {date|string} user provided string (for wildcarding)
 //   or individual date
@@ -475,7 +491,7 @@ utils.getRelevantDates:{[dateInfo;allDates]
   relevantDates:$[-14h=type dateInfo;
       $[(`$string dateInfo)in allDates;
         dateInfo;
-        '"startDate provided was not present within the list of available dates"
+       '"startDate provided was not present within the list of available dates"
        ];
     10h=abs type dateInfo;
       $["*"~dateInfo;
@@ -484,13 +500,15 @@ utils.getRelevantDates:{[dateInfo;allDates]
        ];
     '"startDate provided must be an individual date or regex string"
     ];
-  if[0=count relevantDates;'"No dates requested matched a presently saved model folder"];
+  if[0=count relevantDates;
+    '"No dates requested matched a presently saved model folder"
+    ];
   relevantDates
   }
 
 // @kind function
 // @category utility
-// @fileoverview Retrieve all files/models which meet the criteria
+// @desc Retrieve all files/models which meet the criteria
 //   set out by the date/time information provided by the user
 // @param timeInfo {time|string} user provided string (for wildcarding)
 //   or individual time
@@ -512,22 +530,23 @@ utils.getRelevantFiles:{[timeInfo;fileList]
     '"startTime provided must be an individual time or regex string"
     ];
   if[0=count relevantFiles;
-    '"No files matching the user provided date and time were found for deletion"
+   '"No files matching the user provided date and time were found for deletion"
     ];
   relevantFiles
   }
 
 // @kind function
 // @category utility
-// @fileoverview Delete models pased on named input, this may be a direct match
+// @desc Delete models pased on named input, this may be a direct match
 //   or a regex matching string
-// @param config {dict} User provided config containing, a mapping from 
-//   the save model name to the defined name as a string (direct match/wildcard)
+// @param config {dictionary} User provided config containing, a mapping from 
+//   the save model name to the defined name as a string 
+//   (direct match/wildcard)
 // @param allFiles {symbol[]} list of all folders contained within the
 //   .automl.path,"/outputs/" folder
 // @param pathStem {string} the start of all paths to be constructed, this
 //   is in the general case .automl.path,"/outputs/"
-// @return {null;err} Null on success, error if attempting to delete folders
+// @return {::|err} Null on success, error if attempting to delete folders
 //   which do not have a match
 utils.deleteNamedModel:{[config;pathStem]
   nameInfo:config[`savedModelName];
@@ -540,7 +559,7 @@ utils.deleteNamedModel:{[config;pathStem]
 
 // @kind function
 // @category utility
-// @fileoverview Retrieve all named models matching the user supplied
+// @desc Retrieve all named models matching the user supplied
 //   string representation of the search
 // @param nameInfo {string} string used to compare all named models to
 //   during a search
@@ -559,24 +578,25 @@ utils.getRelevantNames:{[nameInfo;namedPathStem]
     '"savedModelName must be a string"
     ];
   if[0=count relevantModels;
-    '"No files matching the user provided savedModelName were found for deletion"
+    '"No files matching the user provided savedModelName were found for",
+    " deletion"
     ];
   relevantModels
   }
 
 // @kind function
 // @category utility
-// @fileoverview In the case that a named model is to be deleted, in order to
+// @desc In the case that a named model is to be deleted, in order to
 //   facilitate retrieval 'nearest' timed model a text file mapping timestamp
 //   to model name is provided. If a model is to be deleted then this timestamp
 //   also needs to be removed from the mapping. This function is used to
 //   facilitate this by rewriting the timeNameMapping.txt file following
 //   model deletion.
-// @param relevantNames {symbol[]} the names of all named models which match the
-//   user provided string pattern
+// @param relevantNames {symbol[]} the names of all named models which match 
+//   the user provided string pattern
 // @param pathStem {string} the start of all paths to be constructed,
 //   this is in the general case .automl.path,"/outputs"
-// @return {null} On successful execution will return null, otherwise raises 
+// @return {::} On successful execution will return null, otherwise raises 
 //   an error indicating that the timeNameMapping.txt file contains
 //   no information.
 utils.deleteFromNameMapping:{[relevantNames;pathStem]

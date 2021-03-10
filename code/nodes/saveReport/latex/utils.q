@@ -1,17 +1,20 @@
-\d .automl
-
+// code/nodes/saveReport/latex/utils.q - Utilities to save latex report
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Utilities used for the generation of a Latex PDF
+
+\d .automl
 
 // @kind function
 // @category saveReportUtility
-// @fileoverview Load in python latex function
+// @desc Load in python latex function
 // @return {<} Python latex function
 saveReport.i.latexReportGen:.p.get`python_latex
 
 // @kind function
 // @category saveReportUtility
-// @fileoverview Convert table to a pandas dataframe
-// @param tab {tab} To be converted to a pandas dataframe
+// @desc Convert table to a pandas dataframe
+// @param tab {table} To be converted to a pandas dataframe
 // @return {<} Pandas dataframe object
 saveReport.i.tab2dfFunc:{[tab]
   .ml.tab2df[tab][`:round][3]
@@ -19,8 +22,8 @@ saveReport.i.tab2dfFunc:{[tab]
 
 // @kind function
 // @category saveReportUtility
-// @fileoverview Convert table to a pandas dataframe
-// @param describe {dict} Description of input data
+// @desc Convert table to a pandas dataframe
+// @param describe {dictionary} Description of input data
 // @return {<} Pandas dataframe object
 saveReport.i.descriptionTab:{[describe]
   describeDict:enlist[`column]!enlist key describe;
@@ -30,8 +33,8 @@ saveReport.i.descriptionTab:{[describe]
 
 // @kind function
 // @category saveReportUtility
-// @fileoverview Convert table to a pandas dataframe
-// @param scoreDict {dict} Scores of each model
+// @desc Convert table to a pandas dataframe
+// @param scoreDict {dictionary} Scores of each model
 // @return {<} Pandas dataframe object
 saveReport.i.scoringTab:{[scoreDict]
   scoreTab:flip `model`score!(key scoreDict;value scoreDict);
@@ -40,8 +43,8 @@ saveReport.i.scoringTab:{[scoreDict]
 
 // @kind function
 // @category saveReportUtility
-// @fileoverview Convert table to a pandas dataframe
-// @param hyperParam {dict} Hyperparameters used on the best model
+// @desc Convert table to a pandas dataframe
+// @param hyperParam {dictionary} Hyperparameters used on the best model
 // @return {<} Pandas dataframe object
 saveReport.i.gridSearch:{[hyperParams]
   if[99h=type hyperParams;

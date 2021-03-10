@@ -48,9 +48,9 @@ predictionStoreDict:`bestModel`hyperParams`testScore`predictions`modelMetaData!
 // Generate function to check that all directories are created 
 dirCheck:{[preProcParams;predictionStore;saveOpt]
   .automl.pathConstruct.node.function[preProcParams;predictionStore];  
-  outputDir:.automl.utils.ssrWindows .automl.path,"/outputs/testing/";  
+  outputDir:.automl.path,"/outputs/testing/";  
   returns:key hsym`$outputDir;  if[0~count returns;returns:`];  
-  if[0<>saveOpt;@[{system"rm -r ",x};outputDir;{`}]];  
+  if[0<>saveOpt;@[{.automl.utils.deleteRecursively hsym`$x};outputDir;{`}]];  
   returns
   }
 
@@ -70,8 +70,8 @@ pathConstructFunc:{[preProcParams;predictionStore]
   returnDict:.automl.pathConstruct.node.function[preProcParams;predictionStore];
   $[0~returnDict[`config]`saveOption;
     key returnDict;
-    [rmPath:.automl.utils.ssrWindows .automl.path,"/outputs/testing/";
-     system"rm -r ",rmPath;
+    [rmPath: .automl.path,"/outputs/testing/";
+     .automl.utils.deleteRecursively hsym`$rmPath;
      key returnDict]
     ]
   }

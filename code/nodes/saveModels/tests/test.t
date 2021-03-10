@@ -72,5 +72,5 @@ passingTest[.automl.saveModels.node.function;paramNlp2;1b;(::)]
 -1"\nRemoving any directories created";
 
 // Remove any directories made
-rmPath:.automl.utils.ssrWindows .automl.path,"/outputs/testing/";
-system"rm -r ",rmPath;
+rmPath: .automl.path,"/outputs/testing/";
+.automl.utils.deleteRecursively hsym `$rmPath;

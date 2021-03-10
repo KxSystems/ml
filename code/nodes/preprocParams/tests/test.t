@@ -31,7 +31,7 @@ symMap:.automl.labelEncode.node.function[targ]`symMap
 featModel:()
 
 // Train Test Split data
-ttsData:.ml.traintestsplit[feat;targ;.2]
+ttsData:.ml.trainTestSplit[feat;targ;.2]
 
 // Functions
 outputKey:{[inputs]

@@ -1,13 +1,16 @@
-\d .automl
-
+// code/nodes/runModels/funcs.q - Functions called in runModels node
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Definitions of the main callable functions used in the application of 
-//   .automl.runModels
+// .automl.runModels
+
+\d .automl
 
 // @kind function
 // @category runModels
-// @fileoverview Extraction of appropriately valued dictionary from a JSON file
-// @param scoreFunc {sym} Function used to score models run
-// @return {func} Order function retrieved from JSON file for specific scoring 
+// @desc Extraction of appropriately valued dictionary from a JSON file
+// @param scoreFunc {symbol} Function used to score models run
+// @return {fn} Order function retrieved from JSON file for specific scoring 
 //   function
 runModels.jsonParse:{[scoreFunc]
   jsonPath:hsym`$path,"/code/customization/scoring/scoringFunctions.json";
@@ -17,20 +20,21 @@ runModels.jsonParse:{[scoreFunc]
 
 // @kind function
 // @category runModels
-// @fileoverview Set value of random seed for reproducibility
-// @param config {dict} Information relating to the current run of AutoML
-// @return {Null} Value of seed is set
+// @desc Set value of random seed for reproducibility
+// @param config {dictionary} Information relating to the current run of AutoML
+// @return {::} Value of seed is set
 runModels.setSeed:{[config]
   system"S ",string config`seed;
   }
 
 // @kind function
 // @category runModels
-// @fileoverview Apply TTS to keep holdout for feature impact plot and testing
+// @desc Apply TTS to keep holdout for feature impact plot and testing
 //   of best vanilla model
-// @param config {dict} Information relating to the current run of AutoML
-// @param tts {dict} Feature and target data split into training/testing sets
-// @return {dict} Training and holdout split of data
+// @param config {dictionary} Information relating to the current run of AutoML
+// @param tts {dictionary} Feature and target data split into training/testing
+//   sets
+// @return {dictionary} Training and holdout split of data
 runModels.holdoutSplit:{[config;tts]
   ttsFunc:utils.qpyFuncSearch config`trainTestSplit;
   ttsFunc[tts`xtrain;tts`ytrain;config`holdoutSize]
@@ -38,14 +42,15 @@ runModels.holdoutSplit:{[config;tts]
 
 // @kind function
 // @category runModels
-// @fileoverview Seeded cross validation function, designed to ensure that 
+// @desc Seeded cross validation function, designed to ensure that 
 //   models will be consistent from run to run in order to accurately assess
 //   the benefit of updates to parameters.
-// @param tts {dict} Feature and target data split into training/testing sets
-// @param config {dict} Information relating to the current run of AutoML
-// @param modelTab {tab} Models to be applied to feature data
-// @return {(bool[];float[])} Predictions and associated actual values for each
-//   cross validation fold
+// @param tts {dictionary} Feature and target data split into training/testing
+//   sets
+// @param config {dictionary} Information relating to the current run of AutoML
+// @param modelTab {table} Models to be applied to feature data
+// @return {boolean[]|float[]} Predictions and associated actual values for
+//   each cross validation fold
 runModels.xValSeed:{[tts;config;modelTab]
   xTrain:tts`xtrain;
   yTrain:tts`ytrain;
@@ -77,9 +82,9 @@ runModels.xValSeed:{[tts;config;modelTab]
    
 // @kind function
 // @category runModels
-// @fileoverview Extract the scoring function to be applied for model selection
-// @param config {dict} Information relating to the current run of AutoML
-// @param modelTab {tab} Models to be applied to feature data
+// @desc Extract the scoring function to be applied for model selection
+// @param config {dictionary} Information relating to the current run of AutoML
+// @param modelTab {table} Models to be applied to feature data
 // @return {<} Scoring function appropriate to the problem being solved
 runModels.scoringFunc:{[config;modelTab]
   problemType:$[`reg in distinct modelTab`typ;"Regression";"Classification"];
@@ -91,12 +96,12 @@ runModels.scoringFunc:{[config;modelTab]
 
 // @kind function
 // @category runModels
-// @fileoverview Order average predictions returned by models
-// @param modelTab {tab} Models to be applied to feature data
+// @desc Order average predictions returned by models
+// @param modelTab {table} Models to be applied to feature data
 // @param scoreFunc {<} Scoring function applied to predictions
 // @param orderFunc {<} Ordering function applied to scores
-// @param predictions {(bool[];float[])} Predictions made by model
-// @return {dict} Scores returned by each model in appropriate order 
+// @param predictions {boolean[]|float[]} Predictions made by model
+// @return {dictionary} Scores returned by each model in appropriate order 
 runModels.orderModels:{[modelTab;scoreFunc;orderFunc;predicts]
   avgScore:avg each scoreFunc .''predicts;
   scoreDict:modelTab[`model]!avgScore;
@@ -105,13 +110,14 @@ runModels.orderModels:{[modelTab;scoreFunc;orderFunc;predicts]
 
 // @kind function
 // @category runModels
-// @fileoverview Fit best model on holdout set and score predictions
-// @param scores {dict} Scores returned by each model
-// @param tts {dict} Feature and target data split into training/testing sets
-// @param modelTab {tab} Models to be applied to feature data
+// @desc Fit best model on holdout set and score predictions
+// @param scores {dictionary} Scores returned by each model
+// @param tts {dictionary} Feature and target data split into training/testing
+//   sets
+// @param modelTab {table} Models to be applied to feature data
 // @param scoreFunc {<} Scoring function applied to predictions
-// @param config {dict} Information related to the current run of AutoML
-// @return {dict} Fitted model and scores along with time taken 
+// @param config {dictionary} Information related to the current run of AutoML
+// @return {dictionary} Fitted model and scores along with time taken 
 runModels.bestModelFit:{[scores;tts;modelTab;scoreFunc;config]
   config[`logFunc]scores;
   holdoutTimeStart:.z.T;
@@ -130,14 +136,15 @@ runModels.bestModelFit:{[scores;tts;modelTab;scoreFunc;config]
 
 // @kind function
 // @category runModels
-// @fileoverview Create dictionary of meta data used
-// @param holdoutRun {dict} Information from fitting/scoring on the holdout set
-// @param scores {dict} Scores returned by each model
+// @desc Create dictionary of meta data used
+// @param holdoutRun {dictionary} Information from fitting/scoring on the 
+//   holdout set
+// @param scores {dictionary} Scores returned by each model
 // @param scoreFunc {<} Scoring function applied to predictions
-// @param xValTime {T} Time taken to apply xval functions to data
-// @param modelTab {tab} Models to be applied to feature data
-// @param modelName {str} Name of best model
-// @return {dict} Metadata to be contained within the end reports
+// @param xValTime {time} Time taken to apply xval functions to data
+// @param modelTab {table} Models to be applied to feature data
+// @param modelName {string} Name of best model
+// @return {dictionary} Metadata to be contained within the end reports
 runModels.createMeta:{[holdoutRun;scores;scoreFunc;xValTime;modelTab;modelName]
   modelLib:first exec lib from modelTab where model=modelName;
   modelFunc:first exec fnc from modelTab where model=modelName;

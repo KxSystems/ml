@@ -1,13 +1,16 @@
-\d .automl
-
+// code/nodes/modelGeneration/funcs.q - Model generation functions
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Definitions of the main callable functions used in the application of
-//   modelGeneration
+// .automl.modelGeneration
+
+\d .automl
 
 // @kind function
 // @category modelGeneration
-// @fileoverview Extraction of an appropriately valued dictionary from a JSON
+// @desc Extraction of an appropriately valued dictionary from a JSON
 //   file
-// @param config {dict} Information relating to the current run of AutoML
+// @param config {dictionary} Information relating to the current run of AutoML
 // @return {table} Models extracted from JSON file
 modelGeneration.jsonParse:{[config]
   typ:$[`class~config`problemType;`classification;`regression];
@@ -29,11 +32,12 @@ modelGeneration.jsonParse:{[config]
 
 // @kind function
 // @category modelGeneration
-// @fileoverview Extract appropriate models based on the problem type
-// @param config {dict} Information relating to the current run of AutoML
-// @param modelTab {tab} Information on applicable models based on problem type
-// @param target {(num[];sym[])} Numerical or symbol target vector
-// @return {tab} Appropriate models based on target and problem type
+// @desc Extract appropriate models based on the problem type
+// @param config {dictionary} Information relating to the current run of AutoML
+// @param modelTab {table} Information on applicable models based on problem 
+//   type
+// @param target {number[]|symbol[]} Numerical or symbol target vector
+// @return {table} Appropriate models based on target and problem type
 modelGeneration.modelPrep:{[config;modelTab;target]
   if[`class=config`problemType;
     // For classification tasks remove inappropriate classification models
@@ -43,16 +47,17 @@ modelGeneration.modelPrep:{[config;modelTab;target]
       ]
     ];
   // Add a column with appropriate initialized models for each row
-  update minit:.automl.modelGeneration.modelFunc .'flip(lib;fnc;model)from modelTab
+  update minit:.automl.modelGeneration.modelFunc .'flip(lib;fnc;model)from 
+    modelTab
   }
 
 // @kind function
 // @category modelGeneration
-// @fileoverview Build up the model to be applied based on naming convention
-// @param library {sym} Library which forms the basis for the definition
-// @param func {sym} Function name if keras or module from which model is 
+// @desc Build up the model to be applied based on naming convention
+// @param library {symbol} Library which forms the basis for the definition
+// @param func {symbol} Function name if keras or module from which model is 
 //   derived for non-keras models  
-// @param model {sym} Model being applied within the library
+// @param model {symbol} Model being applied within the library
 // @return {<} Appropriate function or projection in the case of sklearn
 modelGeneration.modelFunc:{[library;func;model]
   $[library in key models;

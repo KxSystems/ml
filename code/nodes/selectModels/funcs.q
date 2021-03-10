@@ -1,16 +1,20 @@
-\d .automl
-
+// code/nodes/selectModels/funcs.q - Functions called in selectModels node
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Definitions of the main callable functions used in the application of 
-//   .automl.selectModels
+// .automl.selectModels
+
+\d .automl
 
 // @kind function
 // @category selectModels
-// @fileoverview Remove Keras models if criteria met
-// @param modelTab {tab} Models which are to be applied to the dataset
-// @param tts {dict} Feature and target data split into train and testing sets
-// @param target {(num[];sym[])} Numerical or symbol target vector
-// @param config {dict} Information related to the current run of AutoML
-// @return {tab} Keras model removed if needed and removal highlighted
+// @desc Remove Keras models if criteria met
+// @param modelTab {table} Models which are to be applied to the dataset
+// @param tts {dictionary} Feature and target data split into train and testing
+//   sets
+// @param target {number[]|symbol[]} Numerical or symbol target vector
+// @param config {dictionary} Information related to the current run of AutoML
+// @return {table} Keras model removed if needed and removal highlighted
 selectModels.targetKeras:{[modelTab;tts;target;config]
   if[not check.keras[];:?[modelTab;enlist(<>;`lib;enlist`keras);0b;()]];
   multiCheck:`multi in modelTab`typ;
@@ -25,12 +29,12 @@ selectModels.targetKeras:{[modelTab;tts;target;config]
 
 // @kind function
 // @category selectModels
-// @fileoverview Update models available for use based on the number of data
+// @desc Update models available for use based on the number of data
 //   points in the target vector
-// @param modelTab {tab} Models which are to be applied to the dataset
-// @param target {(num[];sym[])} Numerical or symbol target vector
-// @param config {dict} Information related to the current run of AutoML
-// @return {tab} Appropriate models removed and highlighted to the user
+// @param modelTab {table} Models which are to be applied to the dataset
+// @param target {number[]|symbol[]} Numerical or symbol target vector
+// @param config {dictionary} Information related to the current run of AutoML
+// @return {table} Appropriate models removed and highlighted to the user
 selectModels.targetLimit:{[modelTab;target;config]
   if[config[`targetLimit]<count target;
     if[utils.ignoreWarnings=2;
@@ -48,11 +52,11 @@ selectModels.targetLimit:{[modelTab;target;config]
 
 // @kind function
 // @category selectModels
-// @fileoverview Remove theano/torch models if these are unavailable
-// @param config {dict} Information related to the current run of AutoML
-// @param modelTab {tab} Models which are to be applied to the dataset
-// @param lib {sym} Which library you are checking for e.g.`theano`torch
-// @return {tab} Model removed if needed and removal highlighted
+// @desc Remove theano/torch models if these are unavailable
+// @param config {dictionary} Information related to the current run of AutoML
+// @param modelTab {table} Models which are to be applied to the dataset
+// @param lib {symbol} Which library you are checking for e.g.`theano`torch
+// @return {table} Model removed if needed and removal highlighted
 selectModels.removeUnavailable:{[config;modelTab;lib]
   if[0<>checkimport$[lib~`torch;1;5];
     config[`logFunc]utils.printDict`$string[lib],"Models";

@@ -6,7 +6,7 @@
 configKeys   :`logFunc`seed`trainTestSplit`gridSearchFunction`gridSearchArgument,
               `crossValidationFunction`crossValidationArgument`predictionFunction,
               `scoringFunctionClassification`scoringFunctionRegression`holdoutSize
-configVals   :(();42;`.ml.traintestsplit;`.automl.gs.kfshuff;5;`.ml.xv.kfshuff;5;
+configVals   :(();42;`.ml.trainTestSplit;`.automl.gs.kfShuff;5;`.ml.xv.kfShuff;5;
                `.automl.utils.fitPredict;`.ml.accuracy;`.ml.mse;.2)
 configDefault:configKeys!configVals
 
@@ -111,12 +111,12 @@ multiPreds:($[hasKeras;6;5],1 2 16)#192?0b
 regPreds:8 1 2 16#256?1f
 
 binaryReturn:`SVC`LogisticRegression`GaussianNB`LinearSVC`BinaryKeras
-multiReturnKeras:`MLPClassifier`KNeighborsClassifier`AdaBoostClassifier`MultiKeras`GradientBoostingClassifier`RandomForestClassifier
+multiReturnKeras:`AdaBoostClassifier`RandomForestClassifier`GradientBoostingClassifier`KNeighborsClassifier`MLPClassifier`MultiKeras
 multiReturn:`MLPClassifier`KNeighborsClassifier`AdaBoostClassifier`RandomForestClassifier`GradientBoostingClassifier
 regReturn  :`Lasso`LinearRegression`RegKeras`AdaBoostRegressor`GradientBoostingRegressor`MLPRegressor`RandomForestRegressor`KNeighborsRegressor
 
 passingTest[keyOrderModels;(binaryModelTab;`.ml.accuracy;binaryPreds);0b;binaryReturn]
-passingTest[keyOrderModels;(multiModelTab ;`.ml.r2score ;multiPreds);0b;$[hasKeras;multiReturnKeras;multiReturn]]
+passingTest[keyOrderModels;(multiModelTab ;`.ml.r2Score ;multiPreds);0b;$[hasKeras;multiReturnKeras;multiReturn]]
 passingTest[keyOrderModels;(regModelTab   ;`.ml.mse     ;regPreds);0b;regReturn]
 
 -1"\nTesting appropriate input values for fitting the best model";

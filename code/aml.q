@@ -1,30 +1,34 @@
-\d .automl
-
+// code/aml.q - Automl main functionality
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Automated machine learning, generation of optimal models, predicting on new
-//   data and generation of default configurations
+// data and generation of default configurations
+
+\d .automl
 
 // @kind function
 // @category automl 
-// @fileoverview The application of AutoML on training and testing data,
+// @desc The application of AutoML on training and testing data,
 //   applying cross validation and hyperparameter searching methods across a
 //   range of machine learning models, with the option to save outputs.
-// @param graph {dict} Fully connected graph nodes and edges following the
-//   structure outlined in `graph/Automl_Graph.png`
-// @param features {(dict;table)} Unkeyed tabular feature data or a dictionary
-//   outlining how to retrieve the data in accordance with `.ml.i.loaddset`
-// @param target {(dict;#any[])} Target vector of any type or a dictionary
+// @param graph {dictionary} Fully connected graph nodes and edges following 
+//   the structure outlined in `graph/Automl_Graph.png`
+// @param features {dictionary|table} Unkeyed tabular feature data or a 
+//   dictionary outlining how to retrieve the data in accordance with 
+//   `.ml.i.loadDataset`
+// @param target {dictionary|any[]} Target vector of any type or a dictionary
 //   outlining how to retrieve the target vector in accordance with
-//   `.ml.i.loaddset`
-// @param ftype {sym} Feature extraction type (`nlp/`normal/`fresh)
-// @param ptype {sym} Problem type being solved (`reg/`class)
-// @param params {(dict;char[];::)} One of the following:
+//   `.ml.i.loadDataset`
+// @param ftype {symbol} Feature extraction type (`nlp/`normal/`fresh)
+// @param ptype {symbol} Problem type being solved (`reg/`class)
+// @param params {dictionary|char[]|::} One of the following:
 //   1. Path relative to `.automl.path` pointing to a user defined JSON file
 //      for modifying default parameters
 //   2. Dictionary containing the default behaviours to be overwritten
 //   3. Null (::) indicating to run AutoML using default parameters 
-// @return {dict} Configuration produced within the current run of AutoML along
-//   with a prediction function which can be used to make predictions using the
-//   best model produced
+// @return {dictionary} Configuration produced within the current run of AutoML
+//   along with a prediction function which can be used to make predictions 
+//   using the best model produced
 fit:{[graph;features;target;ftype;ptype;params]
   runParams:`featureExtractionType`problemType`startDate`startTime!
     (ftype;ptype;.z.D;.z.T);
@@ -57,12 +61,12 @@ fit:{[graph;features;target;ftype;ptype;params]
 
 // @kind function
 // @category automl
-// @fileoverview Retrieve a previously fit AutoML model and associated workflow
+// @desc Retrieve a previously fit AutoML model and associated workflow
 //   to be used for predictions
-// @param modelDetails {dict} Information regarding the location of the model
-//   and metadata within the outputs directory
-// @return {dict} The predict function (generated using utils.generatePredict)
-//   and all relevant metadata for the model
+// @param modelDetails {dictionary} Information regarding the location of 
+//   the model and metadata within the outputs directory
+// @return {dictionary} The predict function (generated using 
+//   utils.generatePredict) and all relevant metadata for the model
 getModel:{[modelDetails]
   pathToOutputs:utils.modelPath modelDetails;
   pathToMeta:hsym`$pathToOutputs,"config/metadata";
@@ -74,12 +78,13 @@ getModel:{[modelDetails]
   }
 
 // @kind function
-// @fileoverview Delete an individual model or set of models from the output directory
-// @param config {dict} configuration outlining what models are to be deleted, the provided
-//   input must contain `savedModelName mapping to a string (potentially wildcarded)
-//   or a combination of `startDate`startTime where startDate
-//   and startTime can be a date and time respectively or a wildcarded string.
-// @return {null} does not return any output unless as a result of an error
+// @desc Delete an individual model or set of models from the output directory
+// @param config {dictionary} configuration outlining what models are to be 
+//   deleted, the provided input must contain `savedModelName mapping to a 
+//   string (potentially wildcarded) or a combination of `startDate`startTime 
+//   where startDate and startTime can be a date and time respectively or a 
+//   wildcarded string.
+// @return {::} does not return any output unless as a result of an error
 deleteModels:{[config]
   pathStem:raze path,"/outputs/";
   configKey:key config;
@@ -93,10 +98,10 @@ deleteModels:{[config]
 
 // @kind function
 // @category automl
-// @fileoverview Generate a new JSON file for use in the application of AutoML
+// @desc Generate a new JSON file for use in the application of AutoML
 //   via command line or as an alternative to the param file in .automl.fit.
-// @param fileName {str/sym/hsym} Name for generated JSON file to be stored in
-//   'code/customization/configuration/customConfig'
+// @param fileName {string|symbol} Name for generated JSON file to be 
+//   stored in 'code/customization/configuration/customConfig'
 // @return {::} Returns generic null on successful invocation and saves a copy
 //   of the file 'code/customization/configuration/default.json' to the 
 //   appropriately named file
@@ -124,7 +129,7 @@ newConfig:{[fileName]
 
 // @kind function
 // @category automl
-// @fileoverview Run AutoML based on user provided custom JSON files. This 
+// @desc Run AutoML based on user provided custom JSON files. This 
 //   function is triggered when executing the automl.q file. Invoking the 
 //   functionality is based on the presence of an appropriately named 
 //   configuration file and presence of the run command line argument on 
@@ -134,8 +139,8 @@ newConfig:{[fileName]
 //   artifacts to be used in process. Instead it executes the entirety of the
 //   AutoML pipeline saving the report/model images/metadata to disc and exits
 //   the process
-// @param testRun {bool} Is the run being completed a test or not, running in
-//   test mode results in an 'exit 1' from the process to indicate that the
+// @param testRun {boolean} Is the run being completed a test or not, running
+//   in test mode results in an 'exit 1' from the process to indicate that the
 //   test failed, otherwise for debugging purposes the process is left 'open'
 //   to allow a user to drill down into any potential issues.
 runCommandLine:{[testRun]
@@ -157,13 +162,13 @@ runCommandLine:{[testRun]
 
 // @kind function
 // @category Utility
-// @fileoverview Update print warning severity level
+// @desc Update print warning severity level
 // @param warningLevel {long} 0, 1 or 2 long denoting how severely warnings are
 //   to be handled.
 //   - 0 = Ignore warnings completely and continue evaluation
 //   - 1 = Highlight to a user that a warning was being flagged but continue
 //   - 2 = Exit evaluation of AutoML highlighting to the user why this happened
-// @return {null} update the global utils.ignoreWarnings with new level
+// @return {::} Update the global utils.ignoreWarnings with new level
 updateIgnoreWarnings:{[warningLevel]
   if[not warningLevel in til 3;
     '"Warning severity level must a long 0, 1 or 2."
@@ -173,8 +178,8 @@ updateIgnoreWarnings:{[warningLevel]
 
 // @kind function
 // @category Utility
-// @fileoverview Update logging and printing states
-// @return {null} Change the boolean representation of utils.logging
+// @desc Update logging and printing states
+// @return {::} Change the boolean representation of utils.logging
 //   and .automl.utils.printing respectively
 updateLogging :{utils.logging ::not utils.logging}
 updatePrinting:{utils.printing::not utils.printing}

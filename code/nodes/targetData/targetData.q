@@ -1,16 +1,19 @@
-\d .automl
-
+// code/nodes/targetData/targetData.q - Target data node
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Loading of the target dataset, data can be loaded from in process or 
-//   alternative data sources
+// alternative data sources
+
+\d .automl
 
 // @kind function
 // @category node
-// @fileoverview Load target dataset from a location defined by a user 
+// @desc Load target dataset from a location defined by a user 
 //   provided dictionary and in accordance with the function .ml.i.loaddset
-// @param config {dict} Location and method by which to retrieve the data
-// @return {(num[];sym[])} Numerical or symbol target vector
+// @param config {dictionary} Location and method by which to retrieve the data
+// @return {number[]|symbol[]} Numerical or symbol target vector
 targetData.node.function:{[config]
-  dset:.ml.i.loaddset config;
+  dset:.ml.i.loadDataset config;
   $[.Q.ty[dset]in"befhijs";
     dset;
     '`$"Dataset not of a suitable type only 'befhijs' currently supported"

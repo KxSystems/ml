@@ -1,13 +1,17 @@
-\d .automl
-
+// code/nodes/saveGraph/saveGraph.q - Save graph node
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Save all the graphs required for report generation
+
+\d .automl
 
 // @kind function
 // @category node
-// @fileoverview Save all graphs needed for reports 
-// @param params {dict} All data generated during the preprocessing and
+// @desc Save all graphs needed for reports 
+// @param params {dictionary} All data generated during the preprocessing and
 //   prediction stages
-// @return {null} All graphs needed for reports are saved to appropriate location
+// @return {::} All graphs needed for reports are saved to appropriate 
+//   location
 saveGraph.node.function:{[params]
   if[params[`config;`saveOption]in 0 1;:params];
   savePath:params[`config;`imagesSavePath];
@@ -22,7 +26,7 @@ saveGraph.node.function:{[params]
   }
 
 // Input information
-saveGraph.node.inputs  :"!"
+saveGraph.node.inputs:"!"
 
 // Output information
-saveGraph.node.outputs :"!"
+saveGraph.node.outputs:"!"

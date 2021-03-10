@@ -1,25 +1,30 @@
-\d .automl
+// code/nodes/runModels/utils.q - Utilities for the runModels node
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Utility functions specific the the runModels node implementation
 
-// Utility functions for runmodels
+\d .automl
 
 // @kind function
 // @category runModelsUtility
-// @fileoverview Extraction of data from a file
-// @param filePath {str} File path from which to extract the data from 
-// @return {dict} parsed from file
+// @desc Extraction of data from a file
+// @param filePath {string} File path from which to extract the data from 
+// @return {dictionary} parsed from file
 runModels.i.readFile:{[filePath]
   key(!).("S=;")0:filePath
   }
 
 // @kind function
 // @category runModelsUtility
-// @fileoverview Fit and score custom model to holdout set
-// @param bestModel {sym} The best scorinng model from xval
-// @param tts       {dict} Feature and target data split into training and testing set
-// @param modelTab  {tab}  Models to be applied to feature data
+// @desc Fit and score custom model to holdout set
+// @param bestModel {symbol} The best scorinng model from xval
+// @param tts {dictionary} Feature and target data split into training 
+//   and testing set
+// @param modelTab {table}  Models to be applied to feature data
 // @param scoreFunc {<} Scoring metric applied to evaluate the model
-// @param cfg       {dict} Configuration information assigned by the user and related to the current run
-// @return {dict} The fitted model along with the predictions
+// @param cfg {dictionary} Configuration information assigned by the 
+//   user and related to the current run
+// @return {dictionary} The fitted model along with the predictions
 runModels.i.customModel:{[bestModel;tts;modelTab;scoreFunc;cfg]
   modelLib:first exec lib from modelTab where model=bestModel;
   modelType:first exec typ from modelTab where model=bestModel;
@@ -37,21 +42,23 @@ runModels.i.customModel:{[bestModel;tts;modelTab;scoreFunc;cfg]
 
 // @kind function
 // @category runModelsUtility
-// @fileoverview One hot encodes target values and converts to Numpy array
-// @param tts       {dict} Feature and target data split into training and testing set
-// @return {dict} Preprocessed target values
+// @desc One hot encodes target values and converts to Numpy array
+// @param tts {dictionary} Feature and target data split into training
+//   and testing set
+// @return {dictionary} Preprocessed target values
 runModels.i.prepMultiTarget:{[tts]
-  models.i.npArray flip value .ml.i.onehot1 tts`ytrain
+  models.i.npArray flip value .ml.i.oneHot tts`ytrain
   }
 
 
 // @category runModelsUtility
-// @fileoverview Fit and score sklearn model to holdout set
-// @param bestModel {sym} The best scorinng model from xval
-// @param tts       {dict} Feature and target data split into training and testing set
-// @param modelTab  {tab}  Models to be applied to feature data
+// @desc Fit and score sklearn model to holdout set
+// @param bestModel {symbol} The best scorinng model from xval
+// @param tts {dictionary} Feature and target data split into training
+//   and testing set
+// @param modelTab {table}  Models to be applied to feature data
 // @param scoreFunc {<} Scoring metric applied to evaluate the model
-// @return {dict} The fitted model along with the predictions
+// @return {dictionary} The fitted model along with the predictions
 runModels.i.sklModel:{[bestModel;tts;modelTab;scoreFunc]
   model:utils.bestModelDef[modelTab;bestModel;`minit][][];
   model[`:fit]. tts`xtrain`ytrain;

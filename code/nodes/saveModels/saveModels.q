@@ -1,13 +1,16 @@
-\d .automl
-
+// code/nodes/saveModels/saveModels.q - Save model node
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Save encoded representation of best model retrieved during run of AutoML
+
+\d .automl
 
 // @kind function
 // @category node
-// @fileoverview Save all models needed to predict on new data
-// @param params {dict} All data generated during the preprocessing and
+// @desc Save all models needed to predict on new data
+// @param params {dictionary} All data generated during the preprocessing and
 //   prediction stages
-// @return {null} All models saved to appropriate location
+// @return {::} All models saved to appropriate location
 saveModels.node.function:{[params]
   saveOpt:params[`config]`saveOption;
   if[0~saveOpt;:(::)];
@@ -17,7 +20,7 @@ saveModels.node.function:{[params]
   }
 
 // Input information
-saveModels.node.inputs  :"!"
+saveModels.node.inputs:"!"
 
 // Output information
-saveModels.node.outputs :"!"
+saveModels.node.outputs:"!"

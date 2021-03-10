@@ -18,7 +18,7 @@ system"mkdir",$[.z.o like "w*";" ";" -p "],savePath;
 // Generate confusion matrix
 preds:10?0b
 yTest:10?0b
-confMatrix:.ml.confmat[preds;yTest]
+confMatrix:.ml.confMatrix[preds;yTest]
 
 // Generate impact dictionary
 colIndex  :0 2 1
@@ -81,5 +81,5 @@ passingTest[.automl.saveGraph.node.function;paramDictConfigReg2;1b;paramDictConf
 -1"\nRemoving any directories created";
 
 // Remove any directories made
-rmPath:.automl.utils.ssrWindows .automl.path,"/outputs/testing/";
-system"rm -r ",rmPath;
+rmPath: .automl.path,"/outputs/testing/";
+.automl.utils.deleteRecursively hsym `$rmPath;

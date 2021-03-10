@@ -2,7 +2,7 @@
 .automl.loadfile`:init.q
 .automl.loadfile`:code/tests/utils.q
 
-// Load Python version of .ml.traintestsplit
+// Load Python version of .ml.trainTestSplit
 \l code/nodes/dataCheck/tests/pythonTTS.p
 
 // Suitable feature data and configuration for testing of configuration update
@@ -71,10 +71,10 @@ failingTest[.automl.dataCheck.functions;inapprFuncPrf;1b;inapprFuncPrfPrint]
 -1"\nTesting appropriate function inputs to overwrite default behaviour";
 
 // appropriate function inputs
-apprFunc   :normalConfig,`crossValidationFunction`crossValidationArgument!(`.ml.xv.pcsplit;0.2)
-apprFuncs  :normalConfig,`crossValidationFunction`crossValidationArgument`gridSearchFunction`gridSearchArgument!(`.ml.xv.pcsplit;0.2;`.ml.gs.mcsplit;0.2)
+apprFunc   :normalConfig,`crossValidationFunction`crossValidationArgument!(`.ml.xv.pcSplit;0.2)
+apprFuncs  :normalConfig,`crossValidationFunction`crossValidationArgument`gridSearchFunction`gridSearchArgument!(`.ml.xv.pcSplit;0.2;`.ml.gs.mcSplit;0.2)
 apprPyFuncs:normalConfig,`trainTestSplit`testingSize!(`python_train_test_split;.2)
-.automl.newSigfeat:{.ml.fresh.significantfeatures[x;y;.ml.fresh.ksigfeat 2]}
+.automl.newSigfeat:{.ml.fresh.significantFeatures[x;y;.ml.fresh.kSigFeat 2]}
 apprSigFeat:normalConfig,enlist[`significantFeatures]!enlist `.automl.newSigfeat
 
 // Testing of appropriate function inputs

@@ -70,7 +70,7 @@ def python_latex(dict,paths,dscrb,score,grid,exclude):
  
   with doc.create(Section('Initial Scores')):
     # Check how cross validation was completed and tailor output appropriately
-    if(configDict['crossValidationFunction'] in ['.ml.xv.mcsplit','.ml.xv.pcsplit']):
+    if(configDict['crossValidationFunction'] in ['.ml.xv.mcSplit','.ml.xv.pcSplit']):
       doc.append('Percentage based cross validation, '+ configDict['crossValidationFunction'] + ', was performed with a testing set created from ' + str(100*int(configDict['crossValidationArgument'])))
       doc.append('% of the training data.\n')
     else:
@@ -111,7 +111,7 @@ def python_latex(dict,paths,dscrb,score,grid,exclude):
   # If appropriate return the output from a completed hyperparameter search
   if(not dict['modelName'] in exclude):
     with doc.create(Section(typ_upper + ' search for a ' + dict['modelName'] + ' model.')):
-      if(configDict[typ_key_long+'SearchFunction'] in ['.ml.gs.mcsplit','.ml.gs.pcsplit']):
+      if(configDict[typ_key_long+'SearchFunction'] in ['.ml.gs.mcSplit','.ml.gs.pcSplit']):
         doc.append('The hyperparameter search was completed using '+ configDict[typ_key_long+'SearchFunction'] + ' with a percentage of '+ configDict[typ_key_long+'SearchArgument'] + '% of training data used for validation\n')
       else:
         doc.append('A ' + configDict[typ_key_long+'SearchArgument'] + '-fold ' + configDict['hyperparameterSearchType'] + ' search was performed on the training set to find the best model using ' + configDict[typ_key_long+'SearchFunction'] + '.\n')

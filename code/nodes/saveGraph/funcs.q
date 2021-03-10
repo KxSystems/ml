@@ -1,14 +1,17 @@
-\d .automl
-
+// code/nodes/saveGraph/funcs.q - Functions called in saveGraph node
+// Copyright (c) 2021 Kx Systems Inc
+//
 // Definitions of the main callable functions used in the application of
-//   .automl.saveGraph
+// .automl.saveGraph
+
+\d .automl
 
 // @kind function
 // @category saveGraph
-// @fileoverview Save down target distribution plot
-// @param params {dict} All data generated during the process
-// @param savePath {str} Path where images are to be saved
-// return {null} Save target distribution plot to appropriate location
+// @desc Save down target distribution plot
+// @param params {dictionary} All data generated during the process
+// @param savePath {string} Path where images are to be saved
+// return {::} Save target distribution plot to appropriate location
 saveGraph.targetPlot:{[params;savePath]
   problemTyp:string params[`config;`problemType];
   plotFunc:".automl.saveGraph.i.",problemTyp,"TargetPlot";
@@ -17,10 +20,10 @@ saveGraph.targetPlot:{[params;savePath]
 
 // @kind function
 // @category saveGraph
-// @fileoverview Save down result plot depending on problem type
-// @param params {dict} All data generated during the process
-// @param savePath {str} Path where images are to be saved
-// return {null} Save confusion matrix or residual plot to appropriate location
+// @desc Save down result plot depending on problem type
+// @param params {dictionary} All data generated during the process
+// @param savePath {string} Path where images are to be saved
+// return {::} Save confusion matrix or residual plot to appropriate location
 saveGraph.resultPlot:{[params;savePath]
   problemTyp:params[`config;`problemType];
   $[`class~problemTyp;
@@ -31,10 +34,10 @@ saveGraph.resultPlot:{[params;savePath]
 
 // @kind function
 // @category saveGraph
-// @fileoverview Save down confusion matrix
-// @param params {dict} All data generated during the process
-// @param savePath {str} Path where images are to be saved
-// return {null} Save confusion matrix to appropriate location
+// @desc Save down confusion matrix
+// @param params {dictionary} All data generated during the process
+// @param savePath {string} Path where images are to be saved
+// return {::} Save confusion matrix to appropriate location
 saveGraph.confusionMatrix:{[params;savePath]
   confMatrix:params[`analyzeModel;`confMatrix];
   modelName:params`modelName;
@@ -44,10 +47,10 @@ saveGraph.confusionMatrix:{[params;savePath]
 
 // @kind function
 // @category saveGraph
-// @fileoverview Save down residual plot
-// @param params {dict} All data generated during the process
-// @param savePath {str} Path where images are to be saved
-// return {null} Save residual plot to appropriate location
+// @desc Save down residual plot
+// @param params {dictionary} All data generated during the process
+// @param savePath {string} Path where images are to be saved
+// return {::} Save residual plot to appropriate location
 saveGraph.residualPlot:{[params;savePath]
   residuals:params[`analyzeModel;`residuals];
   modelName:params`modelName;
@@ -57,10 +60,10 @@ saveGraph.residualPlot:{[params;savePath]
 
 // @kind function
 // @category saveGraph
-// @fileoverview Save down impact plot
-// @param params {dict} All data generated during the process
-// @param savePath {str} Path where images are to be saved
-// return {null} Save impact plot to appropriate location
+// @desc Save down impact plot
+// @param params {dictionary} All data generated during the process
+// @param savePath {string} Path where images are to be saved
+// return {::} Save impact plot to appropriate location
 saveGraph.impactPlot:{[params;savePath]
   modelName:params`modelName;
   sigFeats:params`sigFeats;
@@ -73,10 +76,10 @@ saveGraph.impactPlot:{[params;savePath]
 
 // @kind function
 // @category saveGraph
-// @fileoverview Save down data split plot
-// @param params {dict} All data generated during the process
-// @param savePath {str} Path where images are to be saved
-// return {null} Save data split plot to appropriate location
+// @desc Save down data split plot
+// @param params {dictionary} All data generated during the process
+// @param savePath {string} Path where images are to be saved
+// return {::} Save data split plot to appropriate location
 saveGraph.dataSplitPlot:{[params;savePath]
   config:params`config;
   fileName:savePath,"Data_Split.png";

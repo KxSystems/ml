@@ -10,13 +10,13 @@ configDefault:defaultKeys!
   (();`.ml.accuracy;`.ml.mse;`.automl.utils.fitPredict;1234;8;.2)
 
 gridKeys:`gridSearchFunction`gridSearchArgument`hyperparameterSearchType
-configGrid:configDefault,gridKeys!(`.automl.gs.kfshuff;2;`grid)
+configGrid:configDefault,gridKeys!(`.automl.gs.kfShuff;2;`grid)
 
 randomKeys:`randomSearchFunction`randomSearchArgument`hyperparameterSearchType
-configRandom:configDefault,randomKeys!(`.automl.rs.kfshuff;2;`random)
+configRandom:configDefault,randomKeys!(`.automl.rs.kfShuff;2;`random)
 
 sobolKeys:`randomSearchFunction`randomSearchArgument`hyperparameterSearchType
-configSobol:configDefault,sobolKeys!(`.automl.rs.kfshuff;5;`sobol)
+configSobol:configDefault,sobolKeys!(`.automl.rs.kfShuff;5;`sobol)
 
 // Problem specific configs
 

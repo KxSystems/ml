@@ -1,14 +1,17 @@
-\d .automl
-
+// code/nodes/featureCreation/normal/funcs.q - Normal feature creation
+// Copyright (c) 2021 Kx Systems Inc
+//
 // The functionality contained in this file covers the required and optional
-//   utilities for normal feature creation within the automated machine 
-//   learning library.
+// utilities for normal feature creation within the automated machine 
+// learning library.
+
+\d .automl
 
 // @kind function
 // @category featureCreation
-// @fileoverview Used in the recursive application of functions to data 
-// @param features {tab} Feature data as a table 
-// @param func {(lambda;str)} Function to be applied to the table
+// @desc Used in the recursive application of functions to data 
+// @param features {table} Feature data as a table 
+// @param func {fn|string} Function to be applied to the table
 // return {table} Data with the desired transforms applied recursively
 featureCreation.normal.applyFunc:{[features;func]
   typ:type func;
@@ -29,12 +32,12 @@ featureCreation.normal.applyFunc:{[features;func]
 
 // @kind function
 // @category featureCreation
-// @fileoverview Default behaviour for the system is to pass through the table
+// @desc Default behaviour for the system is to pass through the table
 //   without the application of any feature extraction procedures, this is for
 //   computational efficiency in initial builds of the system and may be 
 //   augmented with a more intelligent system moving forward.
-// @param features {tab} Feature data as a table
-// return {tab} Original table
+// @param features {table} Feature data as a table
+// return {table} Original table
 featureCreation.normal.default:{[features]
   features
   }
@@ -46,33 +49,34 @@ featureCreation.normal.default:{[features]
 
 // @kind function
 // @category featureCreation
-// @fileoverview Perform bulk transformations of hij columns for all unique 
+// @desc Perform bulk transformations of hij columns for all unique 
 //   linear combinations of such columns
-// @param features {tab} Feature data as a table
-// return {tab} Bulk transformtions applied to appropriate columns
+// @param features {table} Feature data as a table
+// return {table} Bulk transformtions applied to appropriate columns
 featureCreation.normal.bulkTransform:{[features]
-  bulkCols:.ml.i.fndcols[features;"hij"];
+  bulkCols:.ml.i.findCols[features;"hij"];
   stringFunc:("_multi";"_sum";"_div";"_sub");
   // Name the columns based on the unique combinations
   bulkCols@:.ml.combs[count bulkCols;2];
   joinCols:raze(,'/)`$("_"sv'string each bulkCols),\:/:stringFunc;
   // Apply transforms based on naming conventions chosen and re-form the table 
-  //   with these appended
+  // with these appended
   funcList:(prd;sum;{first(%)x};{last deltas x});
   flip flip[features],joinCols!(,/)funcList@/:\:features bulkCols
   }
 
 // @kind function
 // @category featureCreation
-// @fileoverview Perform a truncated single value decomposition on unique 
+// @desc Perform a truncated single value decomposition on unique 
 //   linear combinations of float columns
 //   https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html
-// @param features {tab} Feature data as a table
-// return {tab} Truncated single value decomposition applied to feature table
+// @param features {table} Feature data as a table
+// return {table} Truncated single value decomposition applied to feature table
 featureCreation.normal.truncSingleDecomp:{[features]
-  truncCols:.ml.i.fndcols[features;"f"];
+  truncCols:.ml.i.findCols[features;"f"];
   truncCols@:.ml.combs[count truncCols,:();2];
-  decomposition:.p.import[`sklearn.decomposition;`:TruncatedSVD;`n_components pykw 1];
+  decomposition:.p.import[`sklearn.decomposition;`:TruncatedSVD;
+     `n_components pykw 1];
   fitTransform:{raze x[`:fit_transform][flip y]`};
   fitDecomp:fitTransform[decomposition]each features truncCols;
   colsDecomp:`$("_" sv'string each truncCols),\:"_trsvd";
