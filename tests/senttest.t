@@ -7,19 +7,11 @@ sent.i.amplifyEP[enlist "!"]~.292
 sent.i.amplifyQM[""]~0f
 sent.i.amplifyQM[enlist "?"]~0f
 0 0 0.36 0.54 0.96 0.96~sent.i.amplifyQM each ("yes"; "oh?"; "oh? really?"; "you don't say???"; "forsooth????"; "????????????")
-all (sent.i.findSequence[`a`b`c`d;enlist`c]~enlist 2;sent.i.findSequence[`c`b`c`d; enlist `c] ~ 0 2)
-all (sent.i.findSequence[`a`b`c`d`e`f;`c`d]~enlist 2;sent.i.findSequence[`a`b`c`d`e`f`c`d; `c`d] ~ 2 6;sent.i.findSequence[`a`b`c`d`e`f`a`b`c`d`e`g`a`b`c`d; `a`b`c`d] ~ 0 6 12)
-sent.i.findSequence[`a`b`c`d;`c]~enlist 2;
-sent.i.findSequence[`$();`a`b`c]~`long$()
-all(sent.i.findSequence[enlist`a;`a]~enlist 0;sent.i.findSequence[enlist`a;`b]~`long$())
-sent.i.findSequence[`a`b`c`d`e`a;`a]~0 5
-sent.i.findSequence[0 0 4 5 1 2 4 5;4 5]~2 6
-sent.i.findSequence["Facebook,Tim Cook";"oo"]~5 14
 sent.i.butCheck[`$(); `float$()] ~ `float$()
 all(sent.i.butCheck[enlist `good; enlist 2f] ~ enlist 2f;sent.i.butCheck[enlist`but;enlist 0f]~enlist 0f)
 all(sent.i.butCheck[`that`was`good`but; 0 0 1 0f] ~ 0 0 .5 0f;sent.i.butCheck[`that`was`good`but`it; 0 0 1 0 0f] ~ 0 0 .5 0 0f;sent.i.butCheck[`but`it`was`ok; 0 0 0 1f] ~ 0 0 0 1.5f;sent.i.butCheck[`tasty`but`it`smelled`bad; 2 0 0 -1.5 -2f] ~ 1 0 0 -2.25 -3f)
 sent.i.butCheck[`it`was`good`and`useful`but`boring`and`gross;0 0 1 0 1.5 0 -1 0 -2]~0 0 .5 0 .75 0 -1.5 0 -3
-compare:{value (floor 1000* sent.score x) % 1000}
+compare:{value (floor 1000* sentiment x) % 1000}
 all(compare[""]~0 0 0 0f;compare["\t\t\r\n\n"]~0 0 0 0f;compare["a  b  c 1"]~0 0 0 0f)
 all(compare["bad"]~-.543 0 1 0f;compare["racist"]~-.613 0 1 0f;compare["good"]~.44 1 0 0f;compare["free"] ~.51 1 0 0f;compare["those"]~0 0 0 1f;compare["123"]~0 0 0 1f)
 all(compare["ugly smile"]~-0.203 0.431 0.568 0;compare["free sadness"]~0.102 0.532 0.467 0)
@@ -33,8 +25,8 @@ all(compare["Paul Anka is cool"]~0.318 0.433 0 0.566;compare["Paul Anka is cool,
 all(compare["Jethro Tull is dorkier"]~-0.274 0 0.411 0.588;compare["But Jethro Tull is dorkier"]~-0.392 0 0.398 0.601)
 all(compare["Paul Anka is a dork"]~-0.34 0 0.444 0.555;compare["Paul Anka isn't a dork"]~.258 .404 0 0.595)
 all(compare["Paul Anka is a nerd"]~-0.296 0 0.423 0.576;compare["Paul Anka is kind of a nerd"]~-0.229 0 0.322 0.677)
-all(sent.score["Paul Anka is the GREATEST"][`compound`pos])>sent.score["Paul Anka is thegreatest"][`compound`pos]
-(sent.score["PAUL ANKA IS THE GREATEST"])~sent.score["Paul Anka is the greatest"]
+all(sentiment["Paul Anka is the GREATEST"][`compound`pos])>sentiment["Paul Anka is thegreatest"][`compound`pos]
+(sentiment["PAUL ANKA IS THE GREATEST"])~sentiment["Paul Anka is the greatest"]
 all(compare["中国 is beautiful"]~0.599 0.661 0 0.338;compare["Best φαλάφελ in Greece"]~0.636 0.583 0 0.416;compare["Paul Anka…king of the dorks"]~-0.129 0 0.23 0.769)
 compare["Paul Anka's singing is beautiful- especially Black Hole Sun"]~compare["Paul Anka's singing is beautiful especially Black Hole Sun"]
 \d .

@@ -15,9 +15,6 @@ keywords[0; `billion] > keywords[0; `transacting]
 enlist[(`u#`$())!()]~TFIDF([]tokens:enlist `$(); isStop:enlist `boolean$());
 keywords:TFIDF enlist corpus 1;
 98h~type keywords
-keywords_tot:TFIDF_tot corpus
-keywords_tot[`erv]~keywords_tot[`published]
-keywords_tot[`mpr] > keywords_tot[`attached]
 p:newParser[`en;`keywords];
 corpus:p text;
 1f~compareDocs . corpus[`keywords]0 0
@@ -96,10 +93,10 @@ getSentences[first sentenceParser enlist"This is my sentence"]~enlist "This is m
 (getSentences first sentenceParser enlist "There's no train to Guysborough. Though I know there'll be one in time")~("There's no train to Guysborough."; "Though I know there'll be one in time")
 truncate:{[precision; x]coefficient: 10 xexp precision;reciprocal[coefficient]*`long$coefficient*x}
 /jaroWinkler
-all(.961~truncate[3] i.jaroWinkler["martha";"marhta"];.840~truncate[3] i.jaroWinkler["dwayne"; "duane"];.813~truncate[3] i.jaroWinkler["dixon";"dicksonx"];.743~truncate[3] i.jaroWinkler["johnson"; "jannsen"];.562~truncate[3] i.jaroWinkler["johnson";"jannsenberg"];.906~truncate[3] i.jaroWinkler["aahahahahahahhaahah"; "ahahahahhahahahahaha"])   
-all(0f~i.jaroWinkler["benjamin";enlist"z"];0f~i.jaroWinkler["benjamin";enlist"a"])
-all(0f~i.jaroWinkler["";enlist"a"];0f~i.jaroWinkler["ben";""])
-.75~i.jaroWinkler["abcd"; enlist "b"]
+all(.961~truncate[3] jaroWinkler["martha";"marhta"];.840~truncate[3] jaroWinkler["dwayne"; "duane"];.813~truncate[3] jaroWinkler["dixon";"dicksonx"];.743~truncate[3] jaroWinkler["johnson"; "jannsen"];.562~truncate[3] jaroWinkler["johnson";"jannsenberg"];.906~truncate[3] jaroWinkler["aahahahahahahhaahah"; "ahahahahhahahahahaha"])   
+all(0f~jaroWinkler["benjamin";enlist"z"];0f~jaroWinkler["benjamin";enlist"a"])
+all(0f~jaroWinkler["";enlist"a"];0f~jaroWinkler["ben";""])
+.75~jaroWinkler["abcd"; enlist "b"]
 p:newParser[`en; `tokens`isStop];
 corpus:p text;       
 (()!())~keywordsContinuous 0#corpus  
@@ -109,9 +106,9 @@ keywords:keywordsContinuous enlist doc;
 99h ~ type keywords
 keywords:keywordsContinuous corpus;
 {x~desc x} keywords `chairman`chief`group`enron`thanks`mountains
-(1 1f,(2%3),(1%3),0.5 0.5 0.5 0.5 0.5 0.5)~value 10#ngram[enlist first corpus;2]
-1 1 .5 .5 1 1 1 1 1 1f~value 10#ngram[enlist first corpus;3]
-((`enrononline`management`report);(`management`report`june);(`report`june`attached))~key 3#ngram[enlist first corpus;3]
+(1 1f,(2%3),(1%3),0.5 0.5 0.5 0.5 0.5 0.5)~value 10#nGram[enlist first corpus;2]
+1 1 .5 .5 1 1 1 1 1 1f~value 10#nGram[enlist first corpus;3]
+((`enrononline`management`report);(`management`report`june);(`report`june`attached))~key 3#nGram[enlist first corpus;3]
 emails:email.loadEmails["tests/data/test.mbox"]
 `sender`to`date`subject`contentType`payload`text~cols emails
 (last emails`text)~"Your email client does not support HTML mails."
@@ -124,16 +121,16 @@ parseURLs["https://www.google.ca:1234/test/index.html;myParam?foo=bar&quux=blort
 all(parseURLs["google.ca/test/index.html"][`scheme`domainName`path]~("http";"google.ca";"/test/index.html");parseURLs["www.google.co.uk"][`scheme`domainName`path]~("http";"www.google.co.uk";""))
 parseURLs["https://网站.中国.com"]~`scheme`domainName`path`parameters`query`fragment!("https";"网站.中国.com";"";"";"";"")
 (parseURLs each ("https://travel.gc.ca/";"https://www.canada.ca/en/revenue-agency.html"))~([]scheme:("https"; "https");domainName:("travel.gc.ca"; "www.canada.ca");path:(enlist "/";"/en/revenue-agency.html");parameters: (""; "");query:(""; "");fragment:(""; ""))
-seq:bi_gram[corpus]
+seq:biGram[corpus]
 seq[`enrononline`management]~1f
 seq[`management`report]>seq[`report`june]
 `en~detectLang["This is a sentence"]
 `de~detectLang["Das ist ein Satz"]
 `fr~detectLang["C'est une phrase"]
-ascii["This is ä senteñcê"]~"This is  sentec"
+removeNonAscii["This is ä senteñcê"]~"This is  sentec"
 rmv_list   :("http*";"*,";"*&*";"*[0-9]*")
-rmv_custom["https//:google.com & https//:bing.com are 2 search engines!";rmv_list]~"are search engines!"
-rmv_main["https//:google.com & https//:bing.com are 2 search engines!";",.:?!/@'\n";""]~"httpsgooglecom & httpsbingcom are 2 search engines"
+removeCustom["https//:google.com & https//:bing.com are 2 search engines!";rmv_list]~"are search engines!"
+removeReplace["https//:google.com & https//:bing.com are 2 search engines!";",.:?!/@'\n";""]~"httpsgooglecom & httpsbingcom are 2 search engines"
 loadDir:loadTextFromDir["tests/data/test.mbox"]
 `fileName`path`text~cols loadDir
 loadDir[`fileName]~enlist `test.mbox
@@ -144,5 +141,5 @@ phonecall:corpus n:where corpus[`text] like "*Telephone Call*"
 remaining:corpus til[count corpus]except n
 (`message`murdock`erica`error`jerry;`enron`know`let,`meeting`company)~key each 5#/:compareCorpora[phonecall;remaining]
 txt:"You can call the number 123 456 7890 or email us on name@email.com in book an appoinment for January,February and March for £30.00"
-findRegex[txt;`phoneNumber`emailAddress`yearmonthList`money]~`phoneNumber`emailAddress`yearmonthList`money!(enlist (" 123 456 7890";23;36);enlist("name@email.com";52;66);(("January";93;100);("February";101;109);("March";114;119);("30";125;127);("00";128;130));enlist("\302\24330.00";124;130))
+findRegex[txt;`phoneNumber`emailAddress`yearMonthList`money]~`phoneNumber`emailAddress`yearMonthList`money!(enlist (" 123 456 7890";23;36);enlist("name@email.com";52;66);(("January";93;100);("February";101;109);("March";114;119);("30";125;127);("00";128;130));enlist("\302\24330.00";124;130))
 \d .

@@ -1,66 +1,201 @@
+// code/utils.q - NLP utilities
+// Copyright (c) 2021 Kx Systems Inc
+//
+// General nlp utility functions
+
 \d .nlp
 \l p.q
-{.p.import[`sys;x][:;`:write;{x y;count y}y]}'[`:stdout`:stderr;1 2]; / redundant in latest embedPy
+
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Import python functions
 i.np:.p.import`numpy
 i.str:.p.import[`builtins]`:str
 i.bool:.p.import[`builtins]`:bool
 
-// Fast sum list of dicts (3 experimentally determined optimal number iterations)
-i.fastSum:{[it;d]sum$[it;.z.s it-1;sum]each(ceiling sqrt count d)cut d}2
+// @private
+// @kind function
+// @category nlpUtility
+// @desc A fast way to sum a list of dictionaries in 
+//   certain cases
+// @param iter {long} The number of iterations. Note that within this
+//   library iter is set explicitly to 2 for all present invocations
+// @param dict {dictionary[]} A list of dictionaries
+// @returns {dictionary} The dictionary values summed together
+i.fastSum:{[iter;dict]
+  // Summing a large number of dictionaries is expensive if there are many 
+  // distinct keys.
+  // This splits them into groups, which have fewer distinct keys, and then 
+  // adds those groups.
+  dictGroup:(ceiling sqrt count dict)cut dict;
+  sum$[iter;.z.s iter-1;sum]each dictGroup
+  }[2]
 
-// Replace empty dicts with (,`)!,0f 
-i.fillEmptyDocs:{[docs]$[98=type docs;0^docs;@[docs;i;:;count[i:where not count each docs]#enlist(1#`)!1#0f]]}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Replace empty dicts with (,`)!,0f 
+// @param docs {dictionary[]} Documents of text
+// @returns {dictionary[]} Any empty dictionaries are filled
+i.fillEmptyDocs:{[docs]
+  $[98=type docs;
+    0^docs;
+    @[docs;i;:;count[i:where not count each docs]#enlist(1#`)!1#0f]
+    ]
+  }
 
-// Given monotonic increasing int list, return runs of consecutive numbers
-i.findRuns:{(where x<>1+prev x)_ x@:where r|:next r:x=1+prev x}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Given a monotonically increasing list of integral numbers,
+//   this finds any runs of consecutive numbers
+// @param array {number[]} Array of values 
+// @returns {long[][]} A list of runs of consecutive indices
+i.findRuns:{[array]
+  prevVals:array=1+prev array;
+  inRun:where prevVals|next prevVals;
+  (where array<>1+prev array)_ array@:inRun
+  }
 
-// Get all sentences for doc
-i.getSentences:{[doc](sublist[;doc`text]deltas@)each doc`sentChars}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Index of the first occurrence of the minimum
+//   value of an array
+// @param array {number[]} Array of values 
+// @return {number} The index of the minimum element of the array
+i.minIndex:{[array]
+  array?min array
+  }
 
-// Index of min element
-i.minIndex:{x?min x}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Index of the first occurrence of the maximum
+//   value of the array
+// @param array {number[]} Array of values 
+// @return {number} The index of the maximum element of the array
+i.maxIndex:{[array]
+  array?max array
+  }
 
-// Index of max element
-i.maxIndex:{x?max x}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Calculate the harmonic mean
+// @param array {number[]} Array of values 
+// @returns {float} The harmonic mean of the input
+i.harmonicMean:{[array]
+  1%avg 1%array
+  }
 
-// Calc harmonic mean
-i.harmonicMean:{1%avg 1%x}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Calculate a vector's magnitude
+// @param array {number[]} Array of values 
+// @returns {float} The magnitude of the vector
+i.magnitude:{[array]
+  sqrt sum array*array
+  }
 
-// Calc a vector's magnitude
-i.magnitude:{sqrt sum x*x}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Normalize a list or dictionary so the highest value is 1f
+// @param vals {float[]|dictionary} A list or dictionary of numbers
+// @returns {float[]|dictionary} The input, normalized
+i.normalize:{[vals]
+  vals%max vals
+  }
 
-// Normalize list or dict so the highest value is 1f
-i.normalize:{x%max x}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Takes the largest N values
+// @param n {long} The number of elements to take
+// @param vals {any[]} A list of values
+// @returns {any[]} The largest N values
+i.takeTop:{[n;vals]
+  n sublist desc vals
+  }
 
-// Take largest N values
-i.takeTop:{[n;x]n sublist desc x}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Calculate the Jaro similarity score of two strings
+// @param str1 {string|string[]} A string of text
+// @param str2 {string|string[]} A string of text
+// @returns {Float} The similarity score of two strings
+i.jaro:{[str1;str2]
+  lenStr1:count str1;
+  lenStr2:count str2;
+  if[0=lenStr1;:0f];
+  // The range to search for matching characters
+  range:1|-1+floor .5*lenStr1|lenStr2;
+  // The low end of each window
+  lowWin:deltas 0|til[lenStr1]+/:(-1 1)*range;
+  k:lowWin[0]+where each str1='sublist\:[flip lowWin]str2;
+  j:raze k[0;0]{x,(y except x)0}/1_k;
+  nonNull:where not null j;
+  n:count nonNull;
+  // Find the number of transpositions
+  trans:.5*sum str1[nonNull]<>str2 asc j nonNull;
+  avg(n%lenStr1;n%lenStr2;(n-trans)%n)
+  }
 
-// Jaro distance of 2 strings
-i.jaro:{[s1;s2]
-  if[0=l1:count s1;:0f];
-  d:1|-1+floor .5*l1|l2:count s2;
-  k:l[0]+where each s1='sublist\:[flip l:deltas 0|til[l1]+/:(-1 1)*d]s2;
-  m:count i:$[1=count j:k[0;0]{x,(y except x)0}/1_k;where not null j:enlist[j];where not null j];
-  t:.5*sum s1[i]<>s2 asc j i;
-  avg(m%l1;m%l2;(m-t)%m)}
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Generating symmetric matrix from triangle (ragged list)
+//   This is used to save time when generating a matrix where the upper 
+//   triangular component is the mirror of the lower triangular component
+// @param raggedList {float[][]} A list of lists of floats representing
+//   an upper triangular matrix where the diagonal values are all 0.
+//   eg. (2 3 4f; 5 6f; 7f) for a 4x4 matrix
+// @returns {float[][]} An n x n two dimensional array
+//   The input, mirrored across the diagonal, with all diagonal values being 1
+i.matrixFromRaggedList:{[raggedList]
+  // Pad the list with 0fs to make it an array,and set the diagonal values to 
+  // .5 which become 1 when the matrix is added to its flipped value
+  matrix:((til count raggedList)#'0.),'.5,'raggedList;
+  matrix+flip matrix
+  }
 
-// Jaro-Winkler distance of 2 strings
-i.jaroWinkler:{$[0.7<w:i.jaro[x;y];w+(sum mins(4#x)~'4#y)*.1*1-w;w]}
-
-// Generating symmetric matrix from triangle (ragged list)
-i.matrixFromRaggedList:{m+flip m:((til count x)#'0.),'.5,'x}
-
-// Parts-of-speech not useful as keywords
+// @private
+// @kind data
+// @category nlpUtility
+// @desc Parts-of-speech not useful as keywords
+// @type symbol[]
 i.stopUniPOS:asc`ADP`PART`AUX`CONJ`DET`SYM`NUM`PRON`SCONJ
-i.stopPennPOS:asc`CC`CD`DT`EX`IN`LS`MD`PDT`POS`PRP`SYM`TO`WDT`WP`WRB`,`$("PRP$";"WP$";"$") /add in ` for symbols
+i.stopPennPOS:asc`CC`CD`DT`EX`IN`LS`MD`PDT`POS`PRP`SYM`TO`WDT`WP`WRB`,
+  `$("PRP$";"WP$";"$")
 
-// Parse urls
-p)from urllib.parse import urlparse
-p)import re
-p)seReg=re.compile('([a-z0-9]+:)?//')
-i.parseURLs:.p.eval["lambda url: urlparse(url if seReg.match(url) else 'http://' + url)";<]
+// @private
+// @kind function
+// @category nlpUtility
+// @desc Get the count of individual terms in a corpus
+// @param parsedTab {table} A parsed document containing keywords and their
+//   associated significance scores
+// @returns {dictionary} The count of terms in the corpus
+i.getTermCount:{[parsedTab]
+  tokens:parsedTab[`tokens]@'where each not parsedTab`isStop;
+  i.fastSum{1+log count each group x}each tokens
+  }
 
-// Calc cosine similarity between doc and entire corpus
-i.compareDocToCorpus:{[keywords;idx]compareDocs[keywords idx]each(idx+1)_ keywords}
-
-
+// @kind function
+// @category nlpUtility
+// @desc Calculate the probability of words appearing in a text
+// @param tokens {symbol[]} The tokens in the text
+// @param occurance {dictionary} The total times a token appears in the text
+// @param token {symbol} A single token
+// @param nextToken {symbol} The next token in the list of tokens
+// @returns {dictionary} The probability that the secondary word in the 
+//   sequence follows the primary word.
+i.biGram:{[tokens;occurance;token;nextToken]
+  returnKeys:enlist(token;nextToken);
+  countToken:count where nextToken=tokens 1+where token=tokens;
+  returnVals:countToken%occurance[token];
+  returnKeys!enlist returnVals
+  }
