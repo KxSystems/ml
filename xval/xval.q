@@ -426,5 +426,5 @@ loadfile`:util/mproc.q
 loadfile`:util/pickle.q
 
 //  If multiple processes are available, multi-process cross validation library
-if[0>system"s";mproc.init[abs system"s"]enlist".ml.loadfile`:util/pickle.q"];
+if[0>system"s";multiProc.init[abs system"s"]enlist".ml.loadfile`:util/pickle.q"];
 xv.picklewrap:{picklewrap[(0>system"s")&.p.i.isw x]x}
