@@ -28,17 +28,6 @@ ymb:100 10#yb
 plaintab:([]4 5 6.;1 2 3.;-1 -2 -3.;0.4 0.5 0.6)
 plaintabn:plaintab,'([]x4:1 3 0n)
 
-.ml.range[til 63] ~ 62
-.ml.range[5] ~ 0
-.ml.range[0 1 3 2f]~3f
-.ml.range[0 1 0n 2]~2f
-.ml.percentile[x;0.75]~np[`:percentile][x;75]`
-.ml.percentile[x;0.02]~np[`:percentile][x;2]`
-.ml.percentile[xf;0.5]~np[`:percentile][xf;50]`
-.ml.percentile[3 0n 4 4 0n 4 4 3 3 4;0.5]~3.5
-("f"$flip value .ml.describe[plaintab])~flip .ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]
-("f"$flip value .ml.describe[plaintabn])~flip (.ml.df2tab .p.import[`pandas][`:DataFrame.describe][.ml.tab2df[plaintab]]),'"f"$([]x4:3 2,sdev[1 3 0n],1 0 1 2 3)
-
 .ml.accuracy[x;y] ~ skmetric[`:accuracy_score][x;y]`
 .ml.accuracy[xb;yb] ~ 0.5
 .ml.accuracy[3 2 2 0n 4;0n 4 3 2 4]~0.2
@@ -65,45 +54,45 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.specificity[10#1b;10#0b;1b]~0f
 .ml.specificity[10#1b;10#1b;0b]~1f
 
-.ml.fbscore[xb;yb;1b;0.02] ~ fbscore[yb;xb;`beta pykw 0.02]`
-.ml.fbscore[xb;yb;1b;0.5] ~ fbscore[yb;xb;`beta pykw 0.5]`
-.ml.fbscore[xb;yb;1b;1.5] ~ fbscore[yb;xb;`beta pykw 1.5]`
-.ml.fbscore[xb;yb;0b;1.5] ~ 0.493670886075949
-.ml.fbscore[1000#1b;yb;0b;.5]~0f
-.ml.fbscore[xb;1000#1b;0b;.5]~0f
-.ml.fbscore[1000#0b;1000#1b;1b;.2]~0f
+.ml.fBetaScore[xb;yb;1b;0.02] ~ fbscore[yb;xb;`beta pykw 0.02]`
+.ml.fBetaScore[xb;yb;1b;0.5] ~ fbscore[yb;xb;`beta pykw 0.5]`
+.ml.fBetaScore[xb;yb;1b;1.5] ~ fbscore[yb;xb;`beta pykw 1.5]`
+.ml.fBetaScore[xb;yb;0b;1.5] ~ 0.493670886075949
+.ml.fBetaScore[1000#1b;yb;0b;.5]~0f
+.ml.fBetaScore[xb;1000#1b;0b;.5]~0f
+.ml.fBetaScore[1000#0b;1000#1b;1b;.2]~0f
 
-.ml.f1score[xb;yb;0b] ~ f1[xb;yb;`pos_label pykw 0]`
-.ml.f1score[xb;yb;1b] ~ f1[xb;yb;`pos_label pykw 1]`
-.ml.f1score[xb;1000#0b;1b]~0f
-.ml.f1score[1000#1b;yb;1b]~f1[1000#1b;yb;`pos_label pykw 1]`
-.ml.f1score[10#1b;10#0b;1b]~f1[10#1b;10#0b;`pos_label pykw 1]`
+.ml.f1Score[xb;yb;0b] ~ f1[xb;yb;`pos_label pykw 0]`
+.ml.f1Score[xb;yb;1b] ~ f1[xb;yb;`pos_label pykw 1]`
+.ml.f1Score[xb;1000#0b;1b]~0f
+.ml.f1Score[1000#1b;yb;1b]~f1[1000#1b;yb;`pos_label pykw 1]`
+.ml.f1Score[10#1b;10#0b;1b]~f1[10#1b;10#0b;`pos_label pykw 1]`
 
-.ml.matcorr[xb;yb]~mcoeff[xb;yb]`
-.ml.matcorr[110010b;111111b]~0n
-.ml.matcorr[111111b;110010b]~0n
+.ml.matthewCorr[xb;yb]~mcoeff[xb;yb]`
+.ml.matthewCorr[110010b;111111b]~0n
+.ml.matthewCorr[111111b;110010b]~0n
 
-(value .ml.confmat[xb;yb])~(300 400;100 200)
-(value .ml.confmat[2 3# 0 0 1 1 0 0;2 3# 1 0 1 0 0 1]) ~ (0 1 0;0 0 0;1 0 0)
-(value .ml.confmat[1 2 3;3 2 1])~(0 0 1;0 1 0;1 0 0)
-(value .ml.confmat[1 2 3f;3 2 1f])~(0 0 1;0 1 0;1 0 0)
-(value .ml.confmat[3#1b;3#0b])~(0 3;0 0)
+(value .ml.confMatrix[xb;yb])~(300 400;100 200)
+(value .ml.confMatrix[2 3# 0 0 1 1 0 0;2 3# 1 0 1 0 0 1]) ~ (0 1 0;0 0 0;1 0 0)
+(value .ml.confMatrix[1 2 3;3 2 1])~(0 0 1;0 1 0;1 0 0)
+(value .ml.confMatrix[1 2 3f;3 2 1f])~(0 0 1;0 1 0;1 0 0)
+(value .ml.confMatrix[3#1b;3#0b])~(0 3;0 0)
 
-.ml.confdict[xb;yb;1b] ~ `tn`fp`fn`tp!300 400 100 200
-.ml.confdict[3#0b;3#1b;0b] ~`tn`fp`fn`tp!0 3 0 0
-.ml.confdict[3#1b;3#0b;0b]~`tn`fp`fn`tp!0 0 3 0
+.ml.confDict[xb;yb;1b] ~ `tn`fp`fn`tp!300 400 100 200
+.ml.confDict[3#0b;3#1b;0b] ~`tn`fp`fn`tp!0 3 0 0
+.ml.confDict[3#1b;3#0b;0b]~`tn`fp`fn`tp!0 0 3 0
 
-.ml.classreport[110b;101b]~1!flip`class`precision`recall`f1_score`support!((`$string each 0 1),`$"avg/total";0 0.5 0.25; 0 0.5 0.25;0.0 0.5 0.25;1 2 3i)
-.ml.classreport[3 3 5 2 5 1;3 5 2 3 5 1]~1!flip`class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 1 2 2 6i)
-.ml.classreport[3 3 5 2 5 1f;3 5 2 3 5 1f]~1!flip`class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 1 2 2 6i)
-.ml.classreport[3 3 5 0n 5 1;3 5 2 3 5 0n]~1!flip`class`precision`recall`f1_score`support!((`$string each 0n 2 3 5),`$"avg/total";0 0n 0.5 0.5 0.33333333333333;0 0 0.5 0.5 0.25;0 0 0.5 0.5 0.25;1 1 2 2 6i)
+.ml.classReport[110b;101b]~1!flip`class`precision`recall`f1_score`support!((`$string each 0 1),`$"avg/total";0 0.5 0.25; 0 0.5 0.25;0.0 0.5 0.25;1 2 3i)
+.ml.classReport[3 3 5 2 5 1;3 5 2 3 5 1]~1!flip`class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 1 2 2 6i)
+.ml.classReport[3 3 5 2 5 1f;3 5 2 3 5 1f]~1!flip`class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 1 2 2 6i)
+.ml.classReport[3 3 5 0n 5 1;3 5 2 3 5 0n]~1!flip`class`precision`recall`f1_score`support!((`$string each 0n 2 3 5),`$"avg/total";0 0n 0.5 0.5 0.33333333333333;0 0 0.5 0.5 0.25;0 0 0.5 0.5 0.25;1 1 2 2 6i)
 
-{.ml.logloss[x;y]~logloss[x;y]`}[1000?0b;(1-p),'p:1000?1f]
-{.ml.logloss[x;y]~logloss[x;y]`}[1000?0b;(1-p),'p:1000?1i]
-.ml.logloss[10#0b;(1-p),'p:10?1i]~-0f
-(floor .ml.logloss[10110b;(2 0n;1 1; 3 1;0n 2; 3 3)])~floor 6
-(floor .ml.logloss[1000?0b;(1-p),'p:1000#0n])~34
-{.ml.crossentropy[x;y]~logloss[x;y]`}[(first idesc@)each p;p%:sum each p:1000 5#5000?1f]
+{.ml.logLoss[x;y]~logloss[x;y]`}[1000?0b;(1-p),'p:1000?1f]
+{.ml.logLoss[x;y]~logloss[x;y]`}[1000?0b;(1-p),'p:1000?1i]
+.ml.logLoss[10#0b;(1-p),'p:10?1i]~-0f
+(floor .ml.logLoss[10110b;(2 0n;1 1; 3 1;0n 2; 3 3)])~floor 6
+(floor .ml.logLoss[1000?0b;(1-p),'p:1000#0n])~34
+{.ml.crossEntropy[x;y]~logloss[x;y]`}[(first idesc@)each p;p%:sum each p:1000 5#5000?1f]
 .ml.mse[x;y] ~ skmetric[`:mean_squared_error][x;y]`
 .ml.mse[xf;yf] ~ skmetric[`:mean_squared_error][xf;yf]`
 .ml.mse[x;x]~0f
@@ -138,35 +127,35 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.smape[xm;ym]~{smape[x;y]}'[flip xm;flip ym]
 .ml.smape[x;x]~0f
 .ml.smape[1 0n 4 2 0n;1 2 4 3 1]~6.666666666666666667
-.ml.r2score[xf;yf] ~ r2[yf;xf]`
-.ml.r2score[xf;xf] ~ r2[xf;xf]`
-.ml.r2score[2 2 2;1 2 3] ~ r2[1 2 3;2 2 2]`
-.ml.r2score[x;x]~1f
-.ml.r2score[1 0n 4 2 0n;1 2 4 2 1]~1f
-.ml.tscore[x;y] ~first stats[`:ttest_1samp][x;y]`
-.ml.tscore[xf;yf]~first stats[`:ttest_1samp][xf;yf]`
-.ml.tscore[xb;yb]~first stats[`:ttest_1samp][xb;yb]`
-.ml.tscore[x;x]~first stats[`:ttest_1samp][x;x]`
-.ml.tscoreeq[x;y]~abs first stats[`:ttest_ind][x;y]`
-.ml.tscoreeq[xf;yf]~abs first stats[`:ttest_ind][xf;yf]`
-.ml.tscoreeq[xb;yb]~abs first stats[`:ttest_ind][xb;yb]`
-.ml.tscoreeq[x;x]~abs first stats[`:ttest_ind][x;x]`
-.ml.cvm[flip value flip plaintab]~np[`:cov][flip value flip  plaintab;`bias pykw 1b]`
-.ml.cvm[(10110b;01110b)]~(0.24 0.04;0.04 0.24)
-.ml.cvm[(10110b;11111b)]~(0.24 0f;0 0f)
-.ml.cvm[(11111b;11111b)]~(0 0f;0 0f)
-.ml.cvm[(10110b;1101b,0n)]~(0.24 0n;2#0n)
-.ml.crm[(1 2;2 1)]~(2 2#1 -1 -1 1f)
-.ml.crm[(011b;001b)]~(1 0.5;0.5 1)
-.ml.crm[(1111b;1111b)]~(2 2#4#0n)
-.ml.crm[(1 1 2;1 2 0n)]~(1 0n;2#0n)
-(value .ml.corrmat[plaintab]) ~ "f"$([]1 1 -1 1;1 1 -1 1;-1 -1 1 -1;1 1 -1 1)
-.ml.corrmat[(0011b;1010b)]~(1 0f;0 1f)
-.ml.corrmat[(0011b;1111b)]~(1 0n;2#0n)
-.ml.corrmat[(1111b;1111b)]~(2 2#2#0n)
-.ml.corrmat[(1 1 2;1 2 0n)]~(1 0n;2#0n)
-{.ml.rocaucscore[x;y]~rocau[x;y]`}[10?0b;10?1f]
-.ml.rocaucscore[10#01b;10#1f]~0.5
-.ml.rocaucscore[10#0b;10?1f]~0f
-.ml.rocaucscore[10#1b;10#0f]~0f
-.ml.rocaucscore[1011000110b;0n 0.1 0.2 0.1 0.3 0.4 0.2 0.4 0.3 0.2]~0.525
+.ml.r2Score[xf;yf] ~ r2[yf;xf]`
+.ml.r2Score[xf;xf] ~ r2[xf;xf]`
+.ml.r2Score[2 2 2;1 2 3] ~ r2[1 2 3;2 2 2]`
+.ml.r2Score[x;x]~1f
+.ml.r2Score[1 0n 4 2 0n;1 2 4 2 1]~1f
+.ml.tScore[x;y] ~first stats[`:ttest_1samp][x;y]`
+.ml.tScore[xf;yf]~first stats[`:ttest_1samp][xf;yf]`
+.ml.tScore[xb;yb]~first stats[`:ttest_1samp][xb;yb]`
+.ml.tScore[x;x]~first stats[`:ttest_1samp][x;x]`
+.ml.tScoreEqual[x;y]~abs first stats[`:ttest_ind][x;y]`
+.ml.tScoreEqual[xf;yf]~abs first stats[`:ttest_ind][xf;yf]`
+.ml.tScoreEqual[xb;yb]~abs first stats[`:ttest_ind][xb;yb]`
+.ml.tScoreEqual[x;x]~abs first stats[`:ttest_ind][x;x]`
+.ml.covMatrix[flip value flip plaintab]~np[`:cov][flip value flip  plaintab;`bias pykw 1b]`
+.ml.covMatrix[(10110b;01110b)]~(0.24 0.04;0.04 0.24)
+.ml.covMatrix[(10110b;11111b)]~(0.24 0f;0 0f)
+.ml.covMatrix[(11111b;11111b)]~(0 0f;0 0f)
+.ml.covMatrix[(10110b;1101b,0n)]~(0.24 0n;2#0n)
+.ml.corrMatrix[(1 2;2 1)]~(2 2#1 -1 -1 1f)
+.ml.corrMatrix[(011b;001b)]~(1 0.5;0.5 1)
+.ml.corrMatrix[(1111b;1111b)]~(2 2#4#0n)
+.ml.corrMatrix[(1 1 2;1 2 0n)]~(1 0n;2#0n)
+(value .ml.corrMatrix[plaintab]) ~ "f"$([]1 1 -1 1;1 1 -1 1;-1 -1 1 -1;1 1 -1 1)
+.ml.corrMatrix[(0011b;1010b)]~(1 0f;0 1f)
+.ml.corrMatrix[(0011b;1111b)]~(1 0n;2#0n)
+.ml.corrMatrix[(1111b;1111b)]~(2 2#2#0n)
+.ml.corrMatrix[(1 1 2;1 2 0n)]~(1 0n;2#0n)
+{.ml.rocAucScore[x;y]~rocau[x;y]`}[10?0b;10?1f]
+.ml.rocAucScore[10#01b;10#1f]~0.5
+.ml.rocAucScore[10#0b;10?1f]~0f
+.ml.rocAucScore[10#1b;10#0f]~0f
+.ml.rocAucScore[1011000110b;0n 0.1 0.2 0.1 0.3 0.4 0.2 0.4 0.3 0.2]~0.525

@@ -1,5 +1,28 @@
+// util/pickle.q - Pickle file utilities 
+// Copyright (c) 2021 Kx Systems Inc
+//
+// Save and load python objects to and from pickle files
+
 \d .ml
 
-pickledump:.p.import[`pickle;`:dumps;<]
-pickleload:.p.import[`pickle;`:loads]
-picklewrap:{[b;x]$[b;{.ml.pickleload y}[;pickledump x];{y}[;x]]}
+// @kind function
+// @cateogory pickle
+// @desc Generate python pickle dump module to save a python object
+pickleDump:.p.import[`pickle;`:dumps;<]
+
+// @kind function
+// @cateogory pickle
+// @desc Generate python pickle lodas module to load a python object
+pickleLoad:.p.import[`pickle;`:loads]
+
+// @kind function
+// @cateogory pickle
+// @desc A wrapper function to load and save python
+//   objects using pickle 
+// @param module {boolean} Whether the pickle load module (1b) or 
+//   dump module (0b) is to be invoked
+// @param obj {<} Python object to be saved/loaded
+// @return {::;<} Object is saved/loaded  
+pickleWrap:{[module;obj]
+  $[module;{.ml.pickleLoad y}[;pickleDump obj];{y}[;obj]]
+  }

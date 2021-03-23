@@ -12,8 +12,8 @@ equivalent significance tests implemented previously in python.
 \
 
 \l p.q
-\l fresh/extract.q
-\l fresh/select.q
+\l ml.q
+\l fresh/init.q
 \l fresh/tests/significancetests.p
 
 xf:5000?1000f
@@ -28,7 +28,7 @@ yb:5000#0101101011b
 .ml.fresh.i.ks[yb;xf] ~ target_binary_feature_real_test[yb;xf]
 
 / 1c.
-.ml.fresh.i.ktau[xf;yf] ~ target_real_feature_real_test[xf;yf]
+.ml.fresh.i.kTau[xf;yf] ~ target_real_feature_real_test[xf;yf]
 
 /
 2.
@@ -49,7 +49,7 @@ pdmatrix:{pddf[benjamini_hochberg_test[y;"FALSE";x]][`:values]}
 k:{pdmatrix[x;y]`}
 vec:{k[x;y][;2]}
 bhfn:{[table;target]
-	pdict:.ml.fresh.sigfeat[table;target];
+	pdict:.ml.fresh.sigFeat[table;target];
 	ptable:([]label:key pdict;p_value:value pdict);
 	dfptable:tab2df[ptable];
 	("i"$count .ml.fresh.benjhoch[0.05;pdict]) ~ sum vec[0.05;dfptable]=1b
