@@ -32,7 +32,7 @@ q).ml.loadfile`:util/init.q
 
 ## Documentation
 
-Documentation is available on the [Utilities](https://code.kx.com/v2/ml/toolkit/utils/) homepage.
+Documentation is available on the [Utilities](https://code.kx.com/q/ml/toolkit/utilities/metric/) homepage.
 
 ## Status
   
