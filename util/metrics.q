@@ -329,9 +329,10 @@ corrMatrix:{[data]
 // @returns {number[]} The coordinates of the true-positive and false-positive 
 //   values associated with the ROC curve
 roc:{[label;prob]
+  if[not 1h=type label;label:label=max label];
   tab:(update sums label from`prob xdesc([]label;prob));
   probDict:exec 1+i-label,label from tab where prob<>next prob;
-  {0.,x%last x}each value probDict
+  0^{0.,x%last x}each value probDict
   }
 
 // @kind function
