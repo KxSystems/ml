@@ -11,6 +11,8 @@ numpy    :.p.import`numpy
 pyStats  :.p.import`scipy.stats
 signal   :.p.import`scipy.signal
 stattools:.p.import`statsmodels.tsa.stattools
+stats_ver:"F"$"." vs (.p.import`statsmodels)[`:__version__]`
+stats_break:$[((stats_ver[0]=0)&stats_ver[1]>=12)|stats_ver[0]>0;1b;0b]
 
 // @private
 // @kind function 
