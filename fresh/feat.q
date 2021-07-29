@@ -33,9 +33,10 @@ fresh.feat.absSumChange:{[data]
 //   and standard deviation) of an auto-correlation
 fresh.feat.aggAutoCorr:{[data]
   n:count data;
+  statsACF:$[.ml.stats_break;`adjusted;`unbiased];
   autoCorrFunc:$[(abs[var data]<1e-10)|1=n;
     0;
-    1_fresh.i.acf[data;$[.ml.stats_break;`adjusted;`unbiased] pykw 1b;`fft pykw n>1250]`
+    1_fresh.i.acf[data;statsACF pykw 1b;`fft pykw n>1250]`
     ];
   `mean`variance`median`dev!(avg;var;med;dev)@\:autoCorrFunc
   }
