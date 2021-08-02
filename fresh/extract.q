@@ -58,7 +58,8 @@ fresh.createFeatures:{[data;idCol;cols2Extract;params]
   colMapping:fresh.i.colMap each calcs;
   colMapping:(`$ssr[;".";"o"]@''"_"sv''string raze@''calcs)!'colMapping;
   toApply:((cols2Extract,\:idCol:idCol,())#\:data;colMapping);
-  res:(uj/).[?[;();idCol!idCol;]]peach flip toApply;
+  protect:fresh.i.protect[;;idCol];
+  res:(uj/)raze .[protect]peach flip toApply;
   idCol xkey fresh.i.expandResults/[0!res;exec c from meta[res]where null t]
   }
 
