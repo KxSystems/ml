@@ -113,6 +113,21 @@ fresh.i.colMap:{[map]
   }
 
 // @private
+// @kind function
+// @category freshUtility
+// @desc Returns features given data and function params with error handling
+// @param data {table} Data on which to generate features
+// @param funcs {dictionary} Function names with functions to execute
+// @param idCol {list} Columns to index
+// @return {table} Unexpanded list of features
+fresh.i.protect:{[data;funcs;idCol]
+  {@[
+    {?[x;();z!z;enlist[y 0]!enlist 1_y]}[x;;z];
+    y;
+    {-1"Error generating function : ",string[x 0]," with error ",y;()}[y]
+  ]}[data;;idCol]'[key[funcs],'value funcs]};
+
+// @private
 // @kind function 
 // @category freshUtility
 // @desc Returns the length of each sequence
