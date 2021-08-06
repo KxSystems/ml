@@ -344,3 +344,14 @@ roc:{[label;prob]
 rocAucScore:{[label;prob]
   i.auc . i.curvePts . roc[label;prob]
   }
+
+// @kind function
+// @category metric
+// @desc Sharpe ratio anualized based on daily predictions
+// @param pred {int[]|boolean[]|string[]} A vector/matrix of predicted labels 
+// @param true {int[]|boolean[]|string[]} A vector/matrix of true labels 
+// @returns {float} The sharpe ratio of predictions made
+sharpe:{[pred;true]
+  sqrt[252]*avg[pred*true]%dev pred*true
+  }
+
