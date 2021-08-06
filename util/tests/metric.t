@@ -159,3 +159,5 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.rocAucScore[10#0b;10?1f]~0f
 .ml.rocAucScore[10#1b;10#0f]~0f
 .ml.rocAucScore[1011000110b;0n 0.1 0.2 0.1 0.3 0.4 0.2 0.4 0.3 0.2]~0.525
+.ml.sharpe[0 1 0 1; 1 1 1 1]~sqrt[252]
+.ml.sharpe[0 0 0 0; 1 1 1 1]~0n
