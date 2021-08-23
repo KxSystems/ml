@@ -52,7 +52,8 @@ fresh.createFeatures:{[data;idCol;cols2Extract;params]
   calcs:param0,raze param1[`f]cross'param1[`pnames],'/:'allParams;
   cols2Extract:$[n:"j"$abs system"s";
     $[n<m:count cols2Extract;(n;0N);m]#;
-    enlist]cols2Extract;
+    enlist
+    ]cols2Extract;
   calcs:cols2Extract cross\:calcs;
   colMapping:fresh.i.colMap each calcs;
   colMapping:(`$ssr[;".";"o"]@''"_"sv''string raze@''calcs)!'colMapping;
