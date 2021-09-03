@@ -46,6 +46,7 @@ fresh.loadparams"/fresh/hyperparameters.json";
 // @return {table} Table keyed by ID column and containing the features 
 //   extracted from the subset of the data identified by the ID column.
 fresh.createFeatures:{[data;idCol;cols2Extract;params]
+  params:$[99h~type params;params;fresh.util.featureList[params]]; 
   param0:exec f from params where valid,pnum=0;
   param1:exec f,pnames,pvals from params where valid,pnum>0;
   allParams:(cross/)each param1`pvals;
