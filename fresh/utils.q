@@ -225,9 +225,22 @@ fresh.i.ksYX:{[target;feature]
 // @param features {symbol|symbol[]|null} Features to remove
 // @return {table} Updated table of features
 fresh.util.featureList:{[features]
-  noHP:`aggLinTrend`autoCorr`binnedEntropy`c3`cidCe`eRatioByChunk`fftCoeff`indexMassQuantile`largestDev`numCrossing`numCwtPeaks`numPeaks`partAutoCorrelation`quantile`ratioBeyondRSigma`spktWelch`symmetricLooking`treverseAsymStat`valCount`rangeCount`changeQuant;
-  noPY:`aggAutoCorr`fftAggreg`fftCoeff`numCwtPeaks`partAutoCorrelation`spktWelch;
-  cat:`absEnergy`absSumChange`aggAutoCorr`autoCorr`binnedEntropy`changeQuant`count`countAboveMean`countBelowMean`eRatioByChunk`firstMax`firstMin`fftAggreg`fftCoeff`hasDup`hasDupMax`hasDupMin`indexMassQuantile`kurtosis`largestDev`lastMax`lastMin`longStrikeAboveMean`longStrikeBelowMean`max`mean`meanAbsChange`meanChange`med`min`numCrossing`numCwtPeaks`numPeaks`partAutoCorrelation`quantile`rangeCount`ratioBeyondRSigma`ratioValNumToSeriesLength`skewness`spktWelch`stdDev`sumRecurringDataPoint`sumRecurringVal`sumVal`valCount`var`varAboveStdDev;
+  noHP:`aggLinTrend`autoCorr`binnedEntropy`c3`cidCe`eRatioByChunk`fftCoeff,
+  `indexMassQuantile`largestDev`numCrossing`numCwtPeaks`numPeaks,
+  `partAutoCorrelation`quantile`ratioBeyondRSigma`spktWelch,
+  `symmetricLooking`treverseAsymStat`valCount`rangeCount`changeQuant;
+  noPY:`aggAutoCorr`fftAggreg`fftCoeff`numCwtPeaks`partAutoCorrelation,
+  `spktWelch;
+  cat:`absEnergy`absSumChange`aggAutoCorr`autoCorr`binnedEntropy,
+  `changeQuant`count`countAboveMean`countBelowMean`eRatioByChunk,
+  `firstMax`firstMin`fftAggreg`fftCoeff`hasDup`hasDupMax`hasDupMin,
+  `indexMassQuantile`kurtosis`largestDev`lastMax`lastMin,
+  `longStrikeAboveMean`longStrikeBelowMean`max`mean`meanAbsChange,
+  `meanChange`med`min`numCrossing`numCwtPeaks`numPeaks,
+  `partAutoCorrelation`quantile`rangeCount`ratioBeyondRSigma,
+  `ratioValNumToSeriesLength`skewness`spktWelch`stdDev,
+  `sumRecurringDataPoint`sumRecurringVal`sumVal`valCount`var,
+  `varAboveStdDev;
   $[(features~(::))|features~`regression;
      :.ml.fresh.params;
     features~`noHyperparameters;
