@@ -226,31 +226,23 @@ fresh.i.ksYX:{[target;feature]
 // @return {table} Updated table of features
 fresh.util.featureList:{[features]
   noHP:`aggLinTrend`autoCorr`binnedEntropy`c3`cidCe`eRatioByChunk`fftCoeff,
-  `indexMassQuantile`largestDev`numCrossing`numCwtPeaks`numPeaks,
-  `partAutoCorrelation`quantile`ratioBeyondRSigma`spktWelch,
-  `symmetricLooking`treverseAsymStat`valCount`rangeCount`changeQuant;
+    `indexMassQuantile`largestDev`numCrossing`numCwtPeaks`numPeaks,
+    `partAutoCorrelation`quantile`ratioBeyondRSigma`spktWelch,
+    `symmetricLooking`treverseAsymStat`valCount`rangeCount`changeQuant;
   noPY:`aggAutoCorr`fftAggreg`fftCoeff`numCwtPeaks`partAutoCorrelation,
-  `spktWelch;
-  cat:`absEnergy`absSumChange`aggAutoCorr`autoCorr`binnedEntropy,
-  `changeQuant`count`countAboveMean`countBelowMean`eRatioByChunk,
-  `firstMax`firstMin`fftAggreg`fftCoeff`hasDup`hasDupMax`hasDupMin,
-  `indexMassQuantile`kurtosis`largestDev`lastMax`lastMin,
-  `longStrikeAboveMean`longStrikeBelowMean`max`mean`meanAbsChange,
-  `meanChange`med`min`numCrossing`numCwtPeaks`numPeaks,
-  `partAutoCorrelation`quantile`rangeCount`ratioBeyondRSigma,
-  `ratioValNumToSeriesLength`skewness`spktWelch`stdDev,
-  `sumRecurringDataPoint`sumRecurringVal`sumVal`valCount`var,
-  `varAboveStdDev;
+    `spktWelch;
+  noClass:`aggLinTrend`aggFuller`c3`cidCe`linTrend`mean2DerCentral,
+    `perRecurToAllData`perRecurToAllVal`symmetricLooking`treverseAsymStat;
   $[(features~(::))|features~`regression;
      :.ml.fresh.params;
     features~`noHyperparameters;
      :update valid:0b from .ml.fresh.params where f in noHP;
     features~`noPython;
      :update valid:0b from .ml.fresh.params where f in noPY;
-    features~`categorical;
-     :update valid:0b from .ml.fresh.params where not f in cat;
+    features~`classification;
+     :update valid:0b from .ml.fresh.params where f in noClass;
     (11h~abs type[features])& all ((),features) in\: key[.ml.fresh.params]`f;
-       :update valid:0b from .ml.fresh.params where not f in ((),features);
-       '"Params not recognized"
+     :update valid:0b from .ml.fresh.params where not f in ((),features);
+     '"Params not recognized"
     ];
   };

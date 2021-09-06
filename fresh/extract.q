@@ -41,8 +41,14 @@ fresh.loadparams"/fresh/hyperparameters.json";
 // @param idCol {symbol[]} ID column(s) name
 // @param cols2Extract {symbol[]} Columns on which extracted features will
 //   be calculated (these columns must be numerical)
-// @param params {table} Functions/parameters to be applied to cols2Extract.
-//   This should be a modified version of .ml.fresh.params
+// @param params {table|symbol|symbol[]|null} 
+//   table - Should be a modified version of '.ml.fresh.params' table defining
+//     the functions to be applied. 
+//   symbol|symbol[] - The functions to be applied when running feature 
+//     extraction or one of 'noHyperparameters', 'noPython', 'regression' or 
+//     'classification' defining a subset of features appropriate for various 
+//     use-cases
+//   null - Apply all features contained within the table '.ml.fresh.params'
 // @return {table} Table keyed by ID column and containing the features 
 //   extracted from the subset of the data identified by the ID column.
 fresh.createFeatures:{[data;idCol;cols2Extract;params]
