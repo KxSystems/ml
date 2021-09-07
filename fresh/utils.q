@@ -217,3 +217,32 @@ fresh.i.ks:{[feature;target]
 fresh.i.ksYX:{[target;feature]
   fresh.i.ks[feature;target]
   }
+
+// @private
+// @kind function
+// @category freshUtility
+// @desc Generate features for fresh feature creation 
+// @param features {symbol|symbol[]|null} Features to remove
+// @return {table} Updated table of features
+fresh.util.featureList:{[features]
+  noHP:`aggLinTrend`autoCorr`binnedEntropy`c3`cidCe`eRatioByChunk`fftCoeff,
+    `indexMassQuantile`largestDev`numCrossing`numCwtPeaks`numPeaks,
+    `partAutoCorrelation`quantile`ratioBeyondRSigma`spktWelch,
+    `symmetricLooking`treverseAsymStat`valCount`rangeCount`changeQuant;
+  noPY:`aggAutoCorr`fftAggreg`fftCoeff`numCwtPeaks`partAutoCorrelation,
+    `spktWelch;
+  noClass:`aggLinTrend`aggFuller`c3`cidCe`linTrend`mean2DerCentral,
+    `perRecurToAllData`perRecurToAllVal`symmetricLooking`treverseAsymStat;
+  $[(features~(::))|features~`regression;
+     :.ml.fresh.params;
+    features~`noHyperparameters;
+     :update valid:0b from .ml.fresh.params where f in noHP;
+    features~`noPython;
+     :update valid:0b from .ml.fresh.params where f in noPY;
+    features~`classification;
+     :update valid:0b from .ml.fresh.params where f in noClass;
+    (11h~abs type[features])& all ((),features) in\: key[.ml.fresh.params]`f;
+     :update valid:0b from .ml.fresh.params where not f in ((),features);
+     '"Params not recognized"
+    ];
+  };
