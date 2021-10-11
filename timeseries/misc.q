@@ -105,7 +105,7 @@ ts.laggedFeatures:{[tab;colNames;lags]
 // @param n {int} Number of lags to include in the graph
 // @return {graph} display to standard out the autocorrelation bar plot
 ts.acfPlot:{[data;n;width]
-  acf:ts.i.autoCorrFunction[data;]each n;
+  acf:ts.i.autoCorrFunction[data;]each n:til n;
   ts.i.plotFunction[data;acf;n;width;"AutoCorrelation"];
   }
 
