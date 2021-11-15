@@ -71,8 +71,8 @@ i.timezoneConvert:{[tab;local]
 i.dateConvert:{[dataFrame]
   nullCols:where any each dataFrame[`:isnull;::][`:to_dict;<;`list];
   $[count nullCols;
-    [npCols:`$dateFrame[`:columns.to_numpy][]`;
-     dropCols:dataFrame[`:drop;npCols except nulCols;`axis pykw 1];
+    [npCols:`$dataFrame[`:columns.to_numpy][]`;
+     dropCols:dataFrame[`:drop;npCols except nullCols;`axis pykw 1];
      nullData:"P"$dropCols[`:astype;`str][`:to_dict;<;`list];
      nonNullData:i.dateDict dataFrame[`:drop;nullCols;`axis pykw 1];
      nullData,nonNullData+1970.01.01D0

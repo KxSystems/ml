@@ -68,6 +68,8 @@ first[.ml.eye[1]] ~ enlist 1f
 .ml.df2tabTimezone[t5;1b;0b]~([]dt:dt1;dt_with_tz:dt1)
 .ml.df2tabTimezone[t5;0b;0b]~([]dt:dt1;dt_with_tz:dt1-"T"$"01:00:00")
 
+@[{.ml.df2tab x;1b};.ml.tab2df ([]10?1f;"p"$0N,9?1000);0b]
+
 tt~update`$scol from .ml.df2tab df
 tj~update`$scol from .ml.df2tab dfj
 ts~update`$scol from .ml.df2tab dfs
