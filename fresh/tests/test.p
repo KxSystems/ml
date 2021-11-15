@@ -225,7 +225,7 @@ p)def< agg_autocorrelation(x,y):
     if np.abs(var) < 10**-10 or n == 1:
         a = 0
     else:
-        a = acf(x, unbiased=True, fft=n > 1250)[1:]
+        a = acf(x, adjusted=True, fft=n > 1250)[1:]
     return getattr(np, y)(a)
 
 p)def< augmented_dickey_fuller(x):
