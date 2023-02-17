@@ -21,9 +21,8 @@
 
 Distinguish _endogenous_ and _exogenous_ variables.
 
-_Endogenous_ The values of the variable are determined by the model, i.e. form the basis for predicting a ‘target’ variable
-
-_Exogenous_ Any variable whose value is determined outside of the model and which may impose an effect on the endogenous variable, i.e. if there is a national holiday this may affect the endogenous variable, but is completely independent of its behavior.
+-   **Endogenous** The values of the variable are determined by the model, i.e. form the basis for predicting a ‘target’ variable
+-   **Exogenous** Any variable whose value is determined outside of the model and which may impose an effect on the endogenous variable, i.e. if there is a national holiday this may affect the endogenous variable, but is completely independent of its behavior.
 
 
 ## AutoRegressive (AR)
@@ -82,7 +81,7 @@ Where:
 -   $\epsilon_{t-i}$ is the residual error term at time $t-i$
 -   $\theta_{i}$ is the residual error parameter at time $t-i$
 
-:fontawesome-solid-hand-point-right:
+:point_right:
 [`.ml.ts.ARMA.fit`](#mltsarmafit)
 
 

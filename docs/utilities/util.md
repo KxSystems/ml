@@ -90,11 +90,7 @@ _Convert pandas dataframe to q table_
 .ml.df2tab[tab]
 ```
 
-Where  
-
--  `tab` is an embedPy representation of a Pandas dataframe
-
-returns `tab` as a q table.
+Where `tab` is an embedPy representation of a Pandas dataframe, returns `tab` as a q table.
 
 ```q
 q)p)import pandas as pd
@@ -200,7 +196,7 @@ time                 timed                 datetime                      dt_with
 _Create identity matrix_
 
 ```txt
-.ml.eye[n]
+.ml.eye n
 ```
 
 Where `n` is the width/height of identity matrix, returns an identity matrix of height/width `n`.
@@ -219,7 +215,7 @@ q).ml.eye 5
 _Index of maximum element of a list_
 
 ```txt
-.ml.iMax[array]
+.ml.iMax array
 ```
 
 Where `array` is a numerical array of values, returns the index of the maximum element of the array
@@ -302,7 +298,7 @@ q).ml.linearSpace[0.5;15.25;12]
 _Range of values_
 
 ```txt
-.ml.range[array]
+.ml.range array
 ```
 
 Where `array` is a numerical array, returns the range of its values.
@@ -323,7 +319,7 @@ q).ml.range mat
 _Shape of a matrix_
 
 ```txt
-.ml.shape[matrix]
+.ml.shape matrix
 ```
 
 Where `matrix` is a matrix of values, returns its shape as a list of dimensions.
@@ -353,12 +349,10 @@ q).ml.shape ([]c1:til 10;c2:0)
 _Convert q table to Pandas dataframe_
 
 ```txt
-.ml.tab2df[tab]
+.ml.tab2df tab
 ```
 
-Where  `tab` is a table
-
-returns a Pandas dataframe.
+Where  `tab` is a table, returns a Pandas dataframe.
 
 ```q
 q)n:5

@@ -64,26 +64,26 @@ q ml/ml.q -s -4 -p 5001
 q).ml.loadfile`:init.q
 q).ml.loadfile`:multip.q
 
-q)// Check this function exists in the central process
+// Check this function exists in the central process
 q)func
 {npf[x]`}
 
-q)// Execute on central process
+// Execute on central process
 q)func each 1+til 3
 0 0.25 0.5 0.75 1
 0 0.5  1   1.5  2
 0 0.75 1.5 2.25 3
 
-q)// attempt to execute over distributed processes 
-q)// fails due to function not existing on processes
+// attempt to execute over distributed processes 
+// fails due to function not existing on processes
 q)func peach 1+til 3
 'func
   [0]  fnc peach til 3
 
-q)// load this functionality on each process
+// load this functionality on each process
 q).ml.multiProc.init[abs system"s"]enlist".ml.loadfile`:multip.q"
 
-q)// distribute execution
+// distribute execution
 q)func peach 1+til 3
 0 0.25 0.5 0.75 1
 0 0.5  1   1.5  2

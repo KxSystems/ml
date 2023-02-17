@@ -6,31 +6,31 @@
 **Algorithms**
     
 Affinity Propagation (AP):<br>
-[ap.fit](#mlclustapfit)                   Fit AP algorithm<br>
+[`ap.fit`](#mlclustapfit)                   Fit AP algorithm<br>
 
 Clustering Using REpresentatives (CURE):<br>
-[cure.fit](#mlclustcurefit)                 Fit CURE algorithm<br>
-[cure.fitPredict](#mlclustcurefitpredict)          Fit CURE algorithm to data and convert dendrogram to clusters<br>
+[`cure.fit`](#mlclustcurefit)                 Fit CURE algorithm<br>
+[`cure.fitPredict`](#mlclustcurefitpredict)          Fit CURE algorithm to data and convert dendrogram to clusters<br>
 
 Density-Based Spatial Clustering of Applications with Noise (DBSCAN):<br>
-[dbscan.fit](#mlclustdbscanfit)               Fit DBSCAN algorithm<br>
+[`dbscan.fit`](#mlclustdbscanfit)               Fit DBSCAN algorithm<br>
 
 Hierarchical Clustering (HC):<br>
-[hc.fit](#mlclusthcfit)                   Fit HC algorithm<br>
-[hc.fitPredict](#mlclustcurefitpredict)   	       Fit HC algorithm to data and convert dendrogram to clusters<br>
+[`hc.fit`](#mlclusthcfit)                   Fit HC algorithm<br>
+[`hc.fitPredict`](#mlclustcurefitpredict)   	       Fit HC algorithm to data and convert dendrogram to clusters<br>
 
 K-Means:<br>
-[kmeans.fit](#mlclustkmeansfit)               Fit K-Means algorithm
+[`kmeans.fit`](#mlclustkmeansfit)               Fit K-Means algorithm
 
 **Dendrogram cutting functionality**
 
 Clustering Using REpresentatives (CURE):<br>
-[cure.cutK](#mlclustcurecutk)               Cut dendrogram to k clusters<br>
-[cure.cutDist](#mlclustcurecutdist)            Cut dendrogram to clusters based on distance threshold
+[`cure.cutK`](#mlclustcurecutk)               Cut dendrogram to k clusters<br>
+[`cure.cutDist`](#mlclustcurecutdist)            Cut dendrogram to clusters based on distance threshold
 
 Hierarchical Clustering (HC):<br>
-[hc.cutK](#mlclusthccutk)                 Cut dendrogram to k clusters<br>
-[hc.cutDist](#mlclusthccutdist)              Cut dendrogram to clusters based on distance threshold
+[`hc.cutK`](#mlclusthccutk)                 Cut dendrogram to k clusters<br>
+[`hc.cutDist`](#mlclusthccutdist)              Cut dendrogram to clusters based on distance threshold
     
 
 

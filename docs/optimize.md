@@ -117,7 +117,7 @@ Test minimization on a function which has multiple minima, demonstrate functiona
 
 1.  Define a sinusoidal equation to be minimized:
 
-	  $$ f(x) = sin(x)$$
+	  $$f(x) = sin(x)$$
 
 2.  Test at starting point `x0 = 7` and displaying per iteration output
 3.  Test at starting point `x1 = 8.5`
@@ -189,7 +189,7 @@ Test minimization of a multi-dimensional function, showing the effect of modifyi
 
 1.  Define a function which optimizes on two arguments
 
-  	$$f(x) = (x[0]-1)^2 + (x[1]-2.5)^2$$
+    $$f(x) = (x[0]-1)^2 + (x[1]-2.5)^2$$
 
 2.  Test at starting point `x[0] = 10, x[1] = 20` with an unconstrained number of iterations
 3.  Test at starting point `x[0] = 10, x[1] = 20` with an a maximum of 3 iterations allowed 

@@ -37,7 +37,7 @@ As of toolkit version 0.1.3, the distribution of cross-validation functions is i
 
 > Tip: **Interactive notebook implementations**
 > 
-> Interactive notebook implementations of a large number of the functions outlined here are available within [KxSystems/mlnotebooks](> https://github.com/KxSystems/mlnotebooks)
+> Interactive notebook implementations of a large number of the functions outlined here are available within [KxSystems/mlnotebooks](https://github.com/KxSystems/mlnotebooks)
 
 
 ## Grid search
@@ -50,9 +50,9 @@ When applying the grid-search functionality provided within the toolkit, a user 
 
 ```q
 / grid search hyperparameter dictionary for an AdaBoostRegressor
-q)p:`n_estimators`learning_rate!(10 20 50 100;0.1 0.5 0.9)
+p:`n_estimators`learning_rate!(10 20 50 100;0.1 0.5 0.9)
 / grid search hyperparameter dictionary for a DecisionTreeClassifier
-q)p:enlist[`max_depth]!enlist(::;1;2;3;4;5)
+p:enlist[`max_depth]!enlist(::;1;2;3;4;5)
 ```
 
 
@@ -62,9 +62,9 @@ Random and quasi-random search methods replace the need for exhaustive searching
 
 Such methods commonly outperform grid search both with respect to finding the optimal parameters in particular in cases where a small number of parameters disproportionately affect the performance of the machine learning algorithm. This library contains two different implementations following the ethos of random search namely
 
-**Random search** The completely random selection of hyperparameters across a defined continuous or discreet search space
+-   **Random search** The completely random selection of hyperparameters across a defined continuous or discreet search space
 
-**Quasi-random Sobol sequence search** The selection of hyperparameters across a user defined continuous or discreet space using a quasi-random selection method based on Sobol sequences. This method ensures that the hyperparameters searched encompass a more even representation of the hyperparameter space than is the case in purely random or grid-search methods.
+-   **Quasi-random Sobol sequence search** The selection of hyperparameters across a user defined continuous or discreet space using a quasi-random selection method based on Sobol sequences. This method ensures that the hyperparameters searched encompass a more even representation of the hyperparameter space than is the case in purely random or grid-search methods.
 
 :globe_with_meridians:
 [Sobol sequence](https://en.wikipedia.org/wiki/Sobol_sequence "Wikipedia")
@@ -102,17 +102,17 @@ A practical example:
 
 ```q
 // Example random dictionary for a Decision Tree Classifier
-q)typ:`random
-q)randomState:283
-q)n:10
-q)p:`max_depth`criterion!((`uniform;1;30;"j");(`symbol;`gini`entropy))
-q)pr:`typ`randomState`n`p!(typ;randomState;n;p)
+typ:`random
+randomState:283
+n:10
+p:`max_depth`criterion!((`uniform;1;30;"j");(`symbol;`gini`entropy))
+pr:`typ`randomState`n`p!(typ;randomState;n;p)
 // Example Sobol dictionary for an SGD Classifier
-q)typ:`sobol
-q)randomState:93
-q)n:512  // must equal 2^n
-q)prms:`average`l1_ratio`alpha!(`boolean;(`uniform;0;1;"f");(`loguniform;-5;2;"f"))
-q)ps:`typ`randomState`n`p!(typ;randomState;n;p)
+typ:`sobol
+randomState:93
+n:512  // must equal 2^n
+prms:`average`l1_ratio`alpha!(`boolean;(`uniform;0;1;"f");(`loguniform;-5;2;"f"))
+ps:`typ`randomState`n`p!(typ;randomState;n;p)
 ```
 
 
@@ -197,13 +197,13 @@ returns the scores for hyperparameter sets on each of the `k` folds for all valu
 q)m:10000
 q)x:(m;10)#(m*10)?1f
 q)yc:(raze flip(0N;4)#m#`a`b`c`d)rank x[;0]
-q)// Algos
+// Algos
 q)cf:{.p.import[`sklearn.tree]`:DecisionTreeClassifier}
 
-q)// Params
+// Params
 q)pc:enlist[`max_depth]!enlist(::;1;2;3;4;5)
 
-q)// 5 fold cross-validation no holdout
+// 5 fold cross-validation no holdout
 q).ml.gs.kfSplit[5;1;x;yc;.ml.xv.fitScore cf;pc;0]
 max_depth|
 ---------| ---------------------------------
@@ -214,14 +214,14 @@ max_depth|
 4        | 1     0.999  1      1      0.9995
 5        | 1     0.999  1      1      0.9995
 
-q)// 5 fold cross-validated grid search fitted on 20% holdout set
+// 5 fold cross-validated grid search fitted on 20% holdout set
 q).ml.gs.kfSplit[5;1;x;yc;.ml.xv.fitScore cf;pc;.2]
 (+(,`max_depth)!,(::;1;2;3;4;5))!(0.99875 1 0.999375 0.999375 1;0.500625 0.48..
 (,`max_depth)!,::
 1f
 
-q)// 10 fold cross-validated grid search fitted on 10% holdout
-q)// with initial data shuffle
+// 10 fold cross-validated grid search fitted on 10% holdout
+// with initial data shuffle
 q).ml.gs.kfSplit[10;1;x;yc;.ml.xv.fitScore cf;pc;-.1]
 (+(,`max_depth)!,(::;1;2;3;4;5))!(1 1 1 1 1 1 1 1 0.9988889 0.9977778;0.48555..
 (,`max_depth)!,::
@@ -1061,7 +1061,7 @@ q).ml.xv.mcSplit[p;n;x;yr;mdlFunc]
 
 This form of cross validation is also known as _repeated random sub-sampling validation_. This has advantages over k-fold when equi-sized bins of observations are not wanted or where outliers could heavily bias the classifier.
 
-:fontawesome-brands-wikipedia-w:
+:globe_with_meridians:
 [Repeated random sub-sampling validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)#Repeated_random_sub-sampling_validation "Wikipedia")
 
 > :warning: **Deprecated**

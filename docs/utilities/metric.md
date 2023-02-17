@@ -194,11 +194,7 @@ _Calculate the correlation of a matrix or table_
 .ml.corrMatrix data
 ```
 
-Where 
-
--  `data`  is a sample from a distribution as a matrix or simple table
-
-returns the covariance of the data
+Where `data` is a sample from a distribution as a matrix or simple table, returns the covariance of the data.
 
 ```q
 q)tab:([]A:asc 100?1f;B:desc 100?1000f;C:100?100)
@@ -257,11 +253,7 @@ _Covariance of a matrix_
 .ml.covMatrix matrix
 ```
 
-Where
-
--  `matrix`  is a sample from a distribution
-
-returns the covariance matrix.
+Where `matrix` is a sample from a distribution, returns the covariance matrix.
 
 ```q
 q)show mat:(5?10;5?10;5?10)
@@ -769,11 +761,7 @@ _T-test for independent samples with equal variances and equal sample size_
 .ml.tScoreEqual[sample1;sample2]
 ```
 
-Where 
-
--   `sample1` and `sample2` are independent sample sets with equal variance and sample size
-
-returns their t-test score.
+Where `sample1` and `sample2` are independent sample sets with equal variance and sample size, returns their t-test score.
 
 ```q
 q)x:10+(-.5+avg each 0N 20#1000?1f)*sqrt 20*12 / ~N(10,1)

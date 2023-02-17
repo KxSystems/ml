@@ -45,16 +45,16 @@ The following image shows a graphical representation of such a node followed by 
 
 ```q
 // Node taking one input of float type and outputting one float type 
-q)nodeInputs:"f"
-q)nodeOutputs:"f"
-q)nodeFunction:{x wsum x}
-q)node:`inputs`outputs`function!(nodeInputs;nodeOutputs;nodeFunction)
+nodeInputs:"f"
+nodeOutputs:"f"
+nodeFunction:{x wsum x}
+node:`inputs`outputs`function!(nodeInputs;nodeOutputs;nodeFunction)
 
 // Node taking multiple inputs and returning multiple values
-q)nodeInputs:`xIn`yIn`zIn!"sF!"
-q)nodeOutputs:`xOut`yOut`zOut!"sF!"
-q)nodeFunction:{[x;y;z]`xOut`yOut`zOut!(x;y;z)}
-q)node:`inputs`outputs`function!(nodeInputs;nodeOutputs;nodeFunction)
+nodeInputs:`xIn`yIn`zIn!"sF!"
+nodeOutputs:`xOut`yOut`zOut!"sF!"
+nodeFunction:{[x;y;z]`xOut`yOut`zOut!(x;y;z)}
+node:`inputs`outputs`function!(nodeInputs;nodeOutputs;nodeFunction)
 ```
 
 

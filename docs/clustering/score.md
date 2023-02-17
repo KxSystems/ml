@@ -15,12 +15,17 @@
 
 Scoring metrics allow you to validate the performance of your clustering algorithms in three distinct use cases.
 
+-   **Unsupervised learning** 
 
-**Unsupervised learning** These metrics analyze how well data has been assigned to clusters, measuring intra-cluster similarity (cohesion) and differences (separation). In general, clustering is said to be successful if clusters are well spaced and densely packed. Used when the true cluster assignment is not known.
+    These metrics analyze how well data has been assigned to clusters, measuring intra-cluster similarity (cohesion) and differences (separation). In general, clustering is said to be successful if clusters are well spaced and densely packed. Used when the true cluster assignment is not known.
 
-**Supervised learning** If the true and predicted labels of the dataset are known, clusters can be analyzed in a supervised manner by comparing true and predicted labels.
+-   **Supervised learning** 
 
-**Optimum number of clusters** The optimum number of clusters can be found manually in a number of ways using techniques above. If the required number of clusters is not known prior to clustering, the Elbow Method is used to estimate the optimum number of clusters within the dataset using K-means clustering.
+    If the true and predicted labels of the dataset are known, clusters can be analyzed in a supervised manner by comparing true and predicted labels.
+
+-   **Optimum number of clusters** 
+
+    The optimum number of clusters can be found manually in a number of ways using techniques above. If the required number of clusters is not known prior to clustering, the Elbow Method is used to estimate the optimum number of clusters within the dataset using K-means clustering.
 
 ---
 
@@ -48,7 +53,7 @@ q)show clusts1:10?3
 q)show clusts2:10?3
 2 2 1 0 2 2 1 2 0 0
 
-q)// Lower values indicate better clustering
+// Lower values indicate better clustering
 q).ml.clust.daviesBouldin[data;clusts1]
 9.014795
 q).ml.clust.daviesBouldin[data;clusts2]
@@ -83,7 +88,7 @@ q)show clusts1:10?3
 q)show clusts2:10?3
 0 0 1 1 0 2 0 2 1 2
 
-q)// Higher values indicate better clustering
+// Higher values indicate better clustering
 q).ml.clust.dunn[data;`edist;clusts1]
 0.5716933
 q).ml.clust.dunn[data;`e2dist;clusts2]
@@ -180,13 +185,13 @@ q)show clusts1:10?3
 q)show clusts2:10?3
 0 0 1 1 0 2 0 2 1 2
 
-q)// Return the averaged coefficients across all points
+// Return the averaged coefficients across all points
 q).ml.clust.silhouette[data;`edist;clusts1;1b]
 0.3698386
 q).ml.clust.silhouette[data;`e2dist;clusts2;1b]
 0.2409856
 
-q)// Return the individual coefficients for each point
+// Return the individual coefficients for each point
 q).ml.clust.silhouette[data;`e2dist;clusts2;0b]
 -0.4862092 -0.6652588 0.8131323 0.595948 -0.2540023 0.5901292 -0.2027718 0.61..
 ```

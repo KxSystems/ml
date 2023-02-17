@@ -44,7 +44,7 @@ leaf left self parent children axis midval   idxs
 1    1    5    4      `long$()               0 7
 1    0    6    4      `long$()               5 8 9
 
-q)// Point to search
+// Point to search
 q)show pt:2?10f
 3.414991 9.516746
 
@@ -116,7 +116,7 @@ leaf left self parent children axis midval  idxs
 1    0    2    0      `long$()              0 5 6 7 8
 ```
 
-!!! tip "The value of `leafSize` can affect the speed when searching for nearest neighbors."
+> Tip: The value of `leafSize` can affect the speed when searching for nearest neighbors.
 
 
 ## `.ml.clust.kd.nn`
@@ -152,7 +152,7 @@ q).ml.clust.kd.nn[tree;data;`e2dist;();1 2f]
 closestPoint| 4
 closestDist | 3.694579
 
-q)// finds nearest neighbor excluding point 4
+// finds nearest neighbor excluding point 4
 q).ml.clust.kd.nn[tree;data;`e2dist;4;1 2f]
 closestPoint| 3
 closestDist | 9.4059

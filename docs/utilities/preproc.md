@@ -297,7 +297,7 @@ A B  C
 
 
 
-##`.ml.labelEncode.fit`
+## `.ml.labelEncode.fit`
 
 _Fit a label encoder model_
 
@@ -346,7 +346,7 @@ q)symEncode.transform[newSym,`aaa]
 ```
 
 
-##`.ml.labelEncode.fitTransform`
+## `.ml.labelEncode.fitTransform`
 
 _Encode categorical data to an integer value representation_
 
