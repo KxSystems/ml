@@ -32,7 +32,7 @@ q).ml.loadfile`:fresh/init.q
 
 ## Documentation
 
-Documentation is available on the [FRESH](https://code.kx.com/v2/ml/toolkit/fresh/) homepage.
+Documentation is available on the [FRESH](../docs/fresh.md) homepage.
 
 ## Status
   

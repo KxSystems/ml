@@ -6,18 +6,23 @@ You will need [Docker installed](https://www.docker.com/community-edition) on yo
 
 Check out a copy of the project with:
 
-    git clone https://github.com/KxSystems/ml.git
+```bash
+git clone https://github.com/KxSystems/ml.git
+```
 
 ## Building
 
 To build the project locally you run:
 
-    docker build -t ml -f docker/Dockerfile .
+```bash
+docker build -t ml -f docker/Dockerfile .
+```
 
 Once built, you should have a local `ml toolkit` image, you can run the following to use it:
 
-    docker run -it ml
-
+```bash
+docker run -it ml
+```
 
 **N.B.** if you wish to use an alternative source for [embedPy](https://github.com/KxSystems/embedPy) then you can append `--build-arg embedpy_img=embedpy` to your argument list.
 
@@ -31,10 +36,11 @@ This is all done server side as the resulting image is large.
 
 To do a deploy, you simply tag and push your releases as usual:
 
-    git push
-    git tag 0.7
-    git push --tag
-
+```bash
+git push
+git tag 0.7
+git push --tag
+```
 
 ## Related Links
 
