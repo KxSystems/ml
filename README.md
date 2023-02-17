@@ -11,7 +11,7 @@ The Machine Learning Toolkit is at the core of kdb+/q-centered machine-learning 
 *  A graphing and pipeline library for the creation of modularized executable workflow based on a structure described by a mathematical directed graph.
 *  Utility functions relating to areas including statistical analysis, data preprocessing and array manipulation.
 
-These sections are explained in greater depth within the [FRESH](https://code.kx.com/v2/ml/toolkit/fresh/), [cross validation](https://code.kx.com/v2/ml/toolkit/xval), [clustering](https://code.kx.com/v2/ml/toolkit/clustering/algos/), [time series](https://code.kx.com/v2/ml/toolkit/timeseries), [optimization](https://code.kx.com/v2/ml/toolkit/optimize/), [graph/pipeline](https://code.kx.com/v2/ml/toolkit/graph) and [utilities](https://code.kx.com/v2/ml/toolkit/utilities/metric) documentation.
+These sections are explained in greater depth within the [FRESH](docs/fresh.md), [cross validation](docs/xval.md), [clustering](docs/clustering/algos.md), [timeseries](docs/timeseries/README.md), [optimization](docs/optimize.md), [graph/pipeline](docs/graph/README.md) and [utilities](docs/utilities/metric.md) documentation.
 
 ## Requirements
 
