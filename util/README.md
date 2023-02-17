@@ -1,8 +1,8 @@
 # Utilities
 
-The machine-learning utilities library contains a range of functions to aid kdb+/q users in applying machine-learning techniques to their datasets.
+The machine-learning utilities library contains a range of functions to help you apply machine-learning techniques to your datasets.
 
-Functions are divided into three scripts, dealing with different aspects of machine learning
+Functions are divided into three scripts, dealing with different aspects of machine learning:
 
 1.  Statistical functions for testing the performance of machine learning models, including confusion matrices, t-scores, logloss, specificity and accuracy.
 
@@ -25,14 +25,15 @@ Place the `ml` library in `$QHOME` and load into a q instance using `ml/ml.q`
 ### Load
 
 The following will load utility functionality into the `.ml` namespace  
+
 ```q
-q)\l ml/ml.q
-q).ml.loadfile`:util/init.q
+\l ml/ml.q
+.ml.loadfile`:util/init.q
 ```
 
 ## Documentation
 
-Documentation is available on the [Utilities](https://code.kx.com/q/ml/toolkit/utilities/metric/) homepage.
+Documentation is available on the [Utilities](../docs/utilities/metric.md) homepage.
 
 ## Status
   

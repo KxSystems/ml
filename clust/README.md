@@ -14,17 +14,17 @@ Place the `ml` library in `$QHOME` and load into a q instance using `ml/ml.q`
 
 ### C Build (optional)
 
-To run the CURE single or centroid algorithms using the C implementation of the k-d tree, additional files must be downloaded. Instructions can be found at [code.kx.com](https://code.kx.com/v2/interfaces/c-client-for-q/#linux). The shared libraries must then be compiled by running below:
+To run the CURE single or centroid algorithms using the C implementation of the k-d tree, additional files must be downloaded. Instructions can be found at [code.kx.com](https://code.kx.com/q/interfaces/c-client-for-q/#linux). The shared libraries must then be compiled by running below:
 
-__Mac & Linux__:
+__macOS & Linux__:
 
-```
+```bash
 make && make install && make clean
 ```
 
 __Windows__ (within `build`):
 
-```
+```shell
 call build.bat
 ```
 **Note**: `build.bat` runs with Visual Studio 2017 and 2019 64 bit. For other versions, please set an environment variable named `VSDIR` pointing to the path of your Visual Studio batch file (vcvars32.bat, vcvars64.bat etc).
@@ -33,13 +33,13 @@ call build.bat
 
 The following will load clustering functionality into the `.ml` namespace  
 ```q
-q)\l ml/ml.q
-q).ml.loadfile`:clust/init.q
+\l ml/ml.q
+.ml.loadfile`:clust/init.q
 ```
 
 ## Documentation
 
-Documentation is available on the [clustering](https://code.kx.com/v2/ml/toolkit/clustering/algos/) homepage.
+Documentation is available on the [clustering](../docs/clustering/algos.md) homepage.
 
 ## Status
   

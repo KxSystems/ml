@@ -19,14 +19,15 @@ Place the `ml` library in `$QHOME` and load into a q instance using `ml/ml.q`
 ### Load
 
 The following will load the optimization functionality into the `.ml` namespace
+
 ```q
-q)\l ml/ml.q
-q).ml.loadfile`:optimize/init.q
+\l ml/ml.q
+.ml.loadfile`:optimize/init.q
 ```
 
 ## Documentation
 
-Documentation is available on the [Optimization](https://code.kx.com/q/ml/toolkit/optimize/) homepage.
+Documentation is available on the [Optimization](../docs/optimize.md) homepage.
 
 ## Status
 

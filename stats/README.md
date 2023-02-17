@@ -25,7 +25,7 @@ q).ml.loadfile`:stats/init.q
 
 ## Documentation
 
-Documentation is available on the [Statistics](https://code.kx.com/q/ml/toolkit/statistics/) homepage.
+Documentation is available on the [Statistics](../docs/stats.md) homepage.
 
 ## Status
 
