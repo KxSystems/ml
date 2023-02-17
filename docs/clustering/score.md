@@ -1,44 +1,26 @@
----
-title: Scoring metrics reference | Clustering | Machine Learning Toolkit | Documentation for kdb+ and q
-author: Deanna Morgan
-date: May 2019
-keywords: machine learning, ml, clustering, k-means, dbscan, hierarchical, cure, scoring, davies-bouldin, dunn, silhouette, homogeneity, elbow
----
+# Scoring metrics reference
 
-# :fontawesome-solid-share-alt: Scoring metrics reference
+`.ml.clust`   **Scoring metrics**
 
-<div markdown="1" class="typewriter">
-.ml.clust   **Scoring metrics**
+**Unsupervised learning**<br>
+[`daviesBouldin`](#mlclustdaviesbouldin)          Davies-Bouldin index<br>
+[`dunn`](#mlclustdunn)                   Dunn index<br>
+[`silhouette`](#mlclustsilhouette)             Silhouette score
 
-Unsupervised learning
-  [daviesBouldin](#mlclustdaviesbouldin)          Davies-Bouldin index
-  [dunn](#mlclustdunn)                   Dunn index
-  [silhouette](#mlclustsilhouette)             Silhouette score
+**Supervised learning**<br>
+[`homogeneity`](#mlclusthomogeneity)            Homogeneity score between predictions and actual value
 
-Supervised learning
-  [homogeneity](#mlclusthomogeneity)            Homogeneity score between predictions and actual value
-
-Optimum number of clusters
-  [elbow](#mlclustelbow)                  Distortion scores for increasing numbers of clusters
-</div>
-
-:fontawesome-brands-github:
-[KxSystems/ml/clust/score.q](https://github.com/KxSystems/ml/blob/master/clust/score.q)
+**Optimum number of clusters**<br>
+[`elbow`](#mlclustelbow)                  Distortion scores for increasing numbers of clusters
 
 Scoring metrics allow you to validate the performance of your clustering algorithms in three distinct use cases.
 
 
-Unsupervised learning 
+**Unsupervised learning** These metrics analyze how well data has been assigned to clusters, measuring intra-cluster similarity (cohesion) and differences (separation). In general, clustering is said to be successful if clusters are well spaced and densely packed. Used when the true cluster assignment is not known.
 
-: These metrics analyze how well data has been assigned to clusters, measuring intra-cluster similarity (cohesion) and differences (separation). In general, clustering is said to be successful if clusters are well spaced and densely packed. Used when the true cluster assignment is not known.
+**Supervised learning** If the true and predicted labels of the dataset are known, clusters can be analyzed in a supervised manner by comparing true and predicted labels.
 
-Supervised learning 
-
-: If the true and predicted labels of the dataset are known, clusters can be analyzed in a supervised manner by comparing true and predicted labels.
-
-Optimum number of clusters 
-
-: The optimum number of clusters can be found manually in a number of ways using techniques above. If the required number of clusters is not known prior to clustering, the Elbow Method is used to estimate the optimum number of clusters within the dataset using K-means clustering.
+**Optimum number of clusters** The optimum number of clusters can be found manually in a number of ways using techniques above. If the required number of clusters is not known prior to clustering, the Elbow Method is used to estimate the optimum number of clusters within the dataset using K-means clustering.
 
 ---
 
@@ -46,7 +28,7 @@ Optimum number of clusters
 
 _Davies-Bouldin index_
 
-```syntax
+```txt
 .ml.clust.daviesBouldin[data;clusts]
 ```
 
@@ -79,7 +61,7 @@ The Davies-Bouldin index works by calculating the ratio of how scattered data po
 ## `.ml.clust.dunn`
 _Dunn index_
 
-```syntax
+```txt
 .ml.clust.dunn[data;df;clusts]
 ```
 
@@ -115,7 +97,7 @@ The Dunn index is calculated based on the minimum inter-cluster distance divided
 
 _The elbow method_
 
-```syntax
+```txt
 .ml.clust.elbow[data;df;k]
 ```
 
@@ -146,7 +128,7 @@ It is clear that the elbow score occurs when the data should be grouped into 3 c
 
 _Homogeneity score_
 
-```syntax
+```txt
 .ml.clust.homogeneity[pred;true]
 ```
 
@@ -175,7 +157,7 @@ Homogeneity score works on the basis that a cluster should contain only samples 
 
 _Silhouette coefficient_
 
-```syntax
+```txt
 .ml.clust.silhouette[data;df;clusts;isAvg]
 ```
 

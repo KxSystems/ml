@@ -36,8 +36,8 @@ Place the `ml` folder in `$QHOME` and load into a q instance using `ml/ml.q`
 
 The following will load **all** functionality into the `.ml` namespace  
 ```q
-q)\l ml/ml.q
-q).ml.loadfile`:init.q
+\l ml/ml.q
+.ml.loadfile`:init.q
 ```
 
 ## Examples

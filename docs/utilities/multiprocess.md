@@ -1,32 +1,21 @@
----
-title: Multi-processing – Machine Learning – kdb+ and q documentation
-description: Documentation for the execution of work across multiple processes via embedPy or q.
-author: Diane O'Donoghue
-date: March 2020
-keywords: machine learning, ml, utilitites, multi-threading, kdb+, q
----
-# :fontawesome-solid-share-alt: Multiprocess distribution framework
+# Multiprocess distribution framework
 
 
-:fontawesome-brands-github:
-[KxSystems/ml](https://github.com/kxsystems/ml/)
-
-
-The framework described below is designed to provide a user-friendly interface for the execution of both q and Python code across multiple processes. This is currently utilized by default in both the FRESH and cross-validation procedures outlined within this toolkit, provided the process is located on a defined port and with a specified number of secondary processes.
+The framework described below provides a user-friendly interface for the execution of both q and Python code across multiple processes. This is currently utilized by default in both the FRESH and cross-validation procedures outlined within this toolkit, provided the process is located on a defined port and with a specified number of secondary processes.
 
 The following workflow shows how FRESH can be initialized exclusively, without loading of the entire toolkit.
 
 Initialize a q process with four workers on a user-defined central port.
 
 ``` bash
-$ q ml/ml.q -s -4 -p 1234
+q ml/ml.q -s -4 -p 1234
 ```
 
 The above command sets four secondary processes with the central process on port 1234. The below must be executed to load the relevant functionality contained in `util/mproc.q` and to load the appropriate functionality for the FRESH algorithm on each of the processes.
 
 ```q
-q).ml.loadfile`:util/mproc.q
-q).ml.multiProc.init[abs system"s"]enlist".ml.loadfile`:fresh/init.q"
+.ml.loadfile`:util/mproc.q
+.ml.multiProc.init[abs system"s"]enlist".ml.loadfile`:fresh/init.q"
 ```
 
 This results in the following architecture.
@@ -69,7 +58,7 @@ func:{npf[x]`}
 Initialize a q process with multiple workers.
 
 ```bash
-$ q ml/ml.q -s -4 -p 5001
+q ml/ml.q -s -4 -p 5001
 ```
 ```q
 q).ml.loadfile`:init.q

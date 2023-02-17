@@ -1,50 +1,40 @@
----
-author: Conor McCarthy
-description: The Machine Learning Toolkit contains functions used regularly within pipelines for the manipulation of data. Such functions are often applied prior to the application of algorithms. They ensure data is in the correct format and does not contain uninformative information or datatypes the algorithms cannot handle.
-date: April 2019
-keywords: preprocessing, linear combinations, polynomial creation, infinite replace, scaler, data filling, encoding, one-hot, frequency, lexigraphical, time splitting 
----
-# :fontawesome-solid-share-alt: Data preprocessing 
+# Data preprocessing 
 
 
-<div markdown="1" class="typewriter">
-.ml   **Data preprocessing**
-  [applyLabelEncode](#mlapplylabelencode)           Transform integer data to label encode representation
-  [dropConstant](#mldropconstant)               Constant columns removed
-  [fillTab](#mlfilltab)                     Tailored filling of null values for a simple matrix
-  [freqEncode](#mlfreqencode)                 Numerically encode frequency of category occurrence
-  [infReplace](#mlinfreplace)                 Replace +/- infinities with max/min of column
+`.ml`   **Data preprocessing**<br>
+[`applyLabelEncode`](#mlapplylabelencode)           Transform integer data to label encode representation<br>
+[`dropConstant`](#mldropconstant)               Constant columns removed<br>
+[`fillTab`](#mlfilltab)                     Tailored filling of null values for a simple matrix<br>
+[`freqEncode`](#mlfreqencode)                 Numerically encode frequency of category occurrence<br>
+[`infReplace`](#mlinfreplace)                 Replace +/- infinities with max/min of column
 
-  labelEncode       Encode list of symbols to integer values and produce mapping
-	[labelEncode.fit](#mllabelencodefit)           Fit a label encoder model
-	[labelEncode.fitTransform](#mllabelencodefittransform)  Encode categorical data to an integer value 
-                             representation
+**`labelEncode`**       Encode list of symbols to integer values and produce mapping<br>
+[`labelEncode.fit`](#mllabelencodefit)           Fit a label encoder model<br>
+[`labelEncode.fitTransform`](#mllabelencodefittransform)  Encode categorical data to an integer value representation<br>
 
-  lexiEncode        Label categories based on lexigraphical order
-	[lexiEncode.fit](#mllexiencodefit)            Fit lexigraphical ordering model to cateogorical data
-	[lexiEncode.fitTransform](#mllexiencodefittransform)   Encode categorical features based on lexigraphical order
+**`lexiEncode`**        Label categories based on lexigraphical order<br>
+[`lexiEncode.fit`](#mllexiencodefit)            Fit lexigraphical ordering model to cateogorical data<br>
+[`lexiEncode.fitTransform`](#mllexiencodefittransform)   Encode categorical features based on lexigraphical order
 
-  minMaxScaler      Data scaled between 0-1
-	[minMaxScaler.fit](#mlminmaxscalerfit)          Fit min max scaling model
-	[minMaxScaler.fitTransform](#mlminmaxscalerfittransform) Scale data between 0-1 based on fitted model
+**`minMaxScaler`**      Data scaled between 0-1<br>
+[`minMaxScaler.fit`](#mlminmaxscalerfit)          Fit min max scaling model<br>
+[`minMaxScaler.fitTransform`](#mlminmaxscalerfittransform) Scale data between 0-1 based on fitted model
 
-  oneHot            One-hot encoding of table or array
-	[oneHot.fit](#mlonehotfit)                Fit one-hot encoding model to categorical data
-	[oneHot.fitTransform](#mlonehotfittransform)       Encode categorical features using one-hot encoding
-	
-  polyTab           Polynomial features of degree n from a table
-	[polyTab](#mlpolytab)                  Polynomial feature generation  
+**`oneHot`**            One-hot encoding of table or array<br>
+[`oneHot.fit`](#mlonehotfit)                Fit one-hot encoding model to categorical data<br>
+[`oneHot.fitTransform`](#mlonehotfittransform)       Encode categorical features using one-hot encoding
 
-  stdScaler         Standard scaler transform-based representation of a table
-	[stdScaler.fit](#mlstdscalerfit)             Fit standard scaler model
-	[stdScaler.fitTransform](#mlstdscalerfittransform)    Standard scaler transform based representation of data
+**`polyTab`**           Polynomial features of degree n from a table<br>
+[`polyTab`](#mlpolytab)                  Polynomial feature generation  
 
-  timeSplit         Decompose time columns into constituent parts
-    [timeSplit](#mltimesplit)                Split Time series data into constituent parts
-</div>
+**`stdScaler`**         Standard scaler transform-based representation of a table<br>
+[`stdScaler.fit`](#mlstdscalerfit)             Fit standard scaler model<br>
+[`stdScaler.fitTransform`](#mlstdscalerfittransform)    Standard scaler transform based representation of data
 
-:fontawesome-brands-github:
-[KxSystems/ml/util/preproc.q](https://github.com/kxsystems/ml/blob/master/util/preproc.q)
+**`timeSplit`**         Decompose time columns into constituent parts<br>
+[`timeSplit`](#mltimesplit)                Split Time series data into constituent parts
+
+
 
 The Machine Learning Toolkit contains functions used regularly within pipelines for the manipulation of data. Such functions are often applied prior to the application of algorithms. They ensure data is in the correct format and does not contain uninformative information or datatypes the algorithms cannot handle.
 
@@ -53,7 +43,7 @@ The Machine Learning Toolkit contains functions used regularly within pipelines 
 
 _Transform a list of integers based on a previously generated label encoding_
 
-```syntax
+```txt
 .ml.applyLabelEncode[data;map]
 ```
 
@@ -64,8 +54,9 @@ Where
 
 returns a list with the integer values of `data` replaced by their appropriate 'true' representation. Values that do not appear in the mapping supplied by `map` are returned as null values
 
-!!!Note
-	This function is primarily used when attempting to convert classification predictions from a fitted model to their underlying representation. It is often the case that a user will convert a symbol list to an integer list in order to allow their machine learning model to fit the data appropriately.
+> Note
+>
+> This function is primarily used when attempting to convert classification predictions from a fitted model to their underlying representation. It is often the case that a user will convert a symbol list to an integer list in order to allow their machine learning model to fit the data appropriately.
 
 ```q
 // List of symbols to be encoded
@@ -89,17 +80,18 @@ q).ml.applyLabelEncode[newList;schema`modelInfo]
 `a`a`b`c`c`c`a`b`
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.applylabelencode`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.applylabelencode`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.dropConstant`
 
 _Remove constant columns_
 
-```syntax
+```txt
 .ml.dropConstant data
 ```
 
@@ -127,17 +119,18 @@ q).ml.dropConstant flip tab	// dictionary input
 x| 33.35067 23.52469 95.13262 64.67595 57.13359 4.249854 34.68608 6..
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.dropconstant`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.dropconstant`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.fillTab`
 
 _Tunable filling of null data for a simple table_
 
-```syntax 
+```txt 
 .ml.fillTab[tab;groupCol;timeCol;dict]
 ```
 
@@ -195,17 +188,18 @@ B   18:16:47.740 0.6288875  0.4052153 0.04499967  1      0       1
 B   23:10:44.297 0.6288875  0.5513535 0.2213819   1      0       0      
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.filltab`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.filltab`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.freqEncode`
 
 _Encoded frequency of individual category occurrences_
 
-```syntax
+```txt
 .ml.freqEncode[tab;symCols]
 ```
 
@@ -258,17 +252,18 @@ x1        x_freq x2_freq
 8.35521   0.2    0.4    
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.freqencode`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.freqencode`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.infReplace`
 
 _Replace +/- infinities with data max/min_
 
-```syntax
+```txt
 .ml.infReplace data
 ```
 
@@ -295,33 +290,34 @@ A B  C
 9 50 3
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.infreplace`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.infreplace`.
-    That is still callable but will be removed after version 3.0.
 
 
 ##`.ml.labelEncode.fit`
 
 _Fit a label encoder model_
 
-```syntax
+```txt
 .ml.labelEncode.fit data
 ```
 
 Where `data` is a list of any type to encode,
 returns a dictionary providing the schema mapping values for the input data (`modelInfo`) and a transform function to be used on new data (`transform`).
 
-??? "Result dictionary"
-
-	The schema mapping values are contained within `modelInfo` and map each symbol to its integer representation
-	
-	```
-	`a`b`c!0 1 2
-	```
-	
-	The transform functionality is contained within the `transform` key. The function takes as argument a list of any type to be encoded, and
-	returns the data encoded to an integer representation based on the mapping schema created during the fitting of the model. Any values not contained within the schema mapping return -1.
+> **Result dictionary**
+> 
+> The schema mapping values are contained within `modelInfo` and map each symbol to its integer representation
+> 
+> ```q
+> `a`b`c!0 1 2
+> ```
+> 
+> The transform functionality is contained within the `transform` key. The function takes as argument a list of any type to be encoded, and
+> returns the data encoded to an integer representation based on the mapping schema created during the fitting of the model. Any values not contained within the schema mapping return -1.
 
 ```q
 q)sym:`cab`acb`abc`bac`bca
@@ -354,7 +350,7 @@ q)symEncode.transform[newSym,`aaa]
 
 _Encode categorical data to an integer value representation_
 
-```syntax
+```txt
 .ml.labelEncode.fitTransform data
 ```
 
@@ -372,17 +368,18 @@ q)show floatEncode:.ml.labelEncode.fitTransform[floats]
 1 2 3 4 0
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.labelencode`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.labelencode`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.lexiEncode.fit`
 
 _Fit lexigraphical ordering model to cateogorical data_
 
-```syntax
+```txt
 .ml.lexiEncode.fit[tab;symCols]
 ```
 Where
@@ -392,21 +389,21 @@ Where
 
 returns a dictionary containing mapping information (`modelInfo`) and a projection of the transformation function to be used on new data (`transform`)
 
-??? "Result dictionary"
-
-	The schema mapping values are contained within `modelInfo` and map each symbol to its integer representation for each column in the input table
-	
-	```
-	`col1!`a`b`c!0 1 2
-	`col2!`e`f`g!0 1 2
-	```
-	
-	The transform functionality is contained within the `transform` key. The function takes as arguments
-	
-	-  `tab` is a simple table
-	-  `symDict` is a dictionary where each key indicates the columns in `tab` to be encoded, while the values indicate what mapping from the fitted data to use when encoding. If (::) is used, it is assumed that the columns in the fit and transform table are the same
-	
-	returns the table with lexigraphical ordering of symbol column. Any values not contained within the schema mapping return -1
+> **Result dictionary**
+> 
+> The schema mapping values are contained within `modelInfo` and map each symbol to its integer representation for each column in the input table
+> 
+> ```q
+> `col1!`a`b`c!0 1 2
+> `col2!`e`f`g!0 1 2
+> ```
+> 
+> The transform functionality is contained within the `transform` key. The function takes as arguments
+> 
+> -  `tab` is a simple table
+> -  `symDict` is a dictionary where each key indicates the columns in `tab` to be encoded, while the values indicate what mapping from the fitted data to use when encoding. If (::) is used, it is assumed that the columns in the fit and transform table are the same
+>
+> returns the table with lexigraphical ordering of symbol column. Any values not contained within the schema mapping return -1
 
 ```q
 q)show tab:([]5?10f;5?`a`b`c;5?`e`f`g)
@@ -471,7 +468,7 @@ x         x1_lexi
 
 _Encode categorical features based on lexigraphical order_
 
-```syntax
+```txt
 .ml.lexiEncode.fitTransform[tab;symCols]
 ```
 
@@ -510,33 +507,34 @@ x         x2 x1_lexi
 6.618763  f  1   
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.lexiencode`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.lexiencode`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.minMaxScaler.fit`
 
 _Fit min max scaling model_
 
-```syntax 
+```txt 
 .ml.minMaxScaler.fit data
 ```
 
 Where `data` is a numerical table, matrix or list,
 returns a dictionary containing the min and max values of the fitted data (`modelInfo`) along with a transform function projection (`transform`).
 
-??? "Result dictionary"
-
-	The min/max value of the data calculated during the fitting process is contained within `modelInfo`
-	
-	```
-	`minData`maxData!5 10
-	```
-	
-	The transform functionality is contained within the `transform` key. The function takes as argument a numerical table, matrix or list, and
-	returns the min-max scaled representation of the new data based on the values of the fitted model.
+> **Result dictionary**
+> 
+> The min/max value of the data calculated during the fitting process is contained within `modelInfo`
+> 
+> ```q
+> `minData`maxData!5 10
+> ```
+> 
+> The transform functionality is contained within the `transform` key. The function takes as argument a numerical table, matrix or list, and
+> returns the min-max scaled representation of the new data based on the values of the fitted model.
 
 ```q
 q)n:5
@@ -586,7 +584,7 @@ x         x1        x2         x3
 
 _Scale data between 0-1_
 
-```syntax 
+```txt 
 .ml.minMaxScaler.fitTransform data
 ```
 
@@ -628,17 +626,18 @@ q).ml.minMaxScaler.fitTransform[list]
 0.2525253 0.7373737 0 0.06060606 0.3838384 0.7272727 0.1313131 0.7777778 0.64..
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.minmaxscaler`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.minmaxscaler`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.oneHot.fit`
 
 _Fit one-hot encoding model to categorical data_
 
-```syntax
+```txt
 oneHot.fit[tab;symCols]
 ```
 
@@ -649,20 +648,20 @@ Where
 
 returns a dictionary containing mapping information (`modelInfo`) and a projection of the transformation function to be applied to new data (`transform`).
 
-??? "Result dictionary"
-
-	The mapping values are contained within `modelInfo`. These values map the distinct symbol values found within each column
-	
-	```
-	`col1`col2!(`a`b;`c`d)
-	```
-	
-	The transform functionality is contained within the `transform` key. The function takes as arguments
-	
-	-  `tab` is a simple table
-	-  `symDict` is a dictionary where each key indicates the columns in `tab` to be encoded, while the values indicate what mapping to use when encoding. If (::) is used, it is assumed that the columns in the fit and transform table are the same 
-
-	returns the one hot encoded version of the data based on the values of the fitted model. Any values not contained within the schema mapping return a zero vector in the ohe feature space. 
+> **Result dictionary**
+> 
+> The mapping values are contained within `modelInfo`. These values map the distinct symbol values found within each column
+> 
+> ```q
+> `col1`col2!(`a`b;`c`d)
+> ```
+> 
+> The transform functionality is contained within the `transform` key. The function takes as arguments
+> 
+> -  `tab` is a simple table
+> -  `symDict` is a dictionary where each key indicates the columns in `tab` to be encoded, while the values indicate what mapping to use when encoding. If (::) is used, it is assumed that the columns in the fit and transform table are the same 
+> 
+> returns the one hot encoded version of the data based on the values of the fitted model. Any values not contained within the schema mapping return a zero vector in the ohe feature space. 
 
 ```q
 q)5#tab:([]5?`a`b`c;5?2;5?10f)
@@ -709,7 +708,7 @@ x x2       x1_a x1_b
 
 _Encode categorical features using one-hot encoded fitted model_
 
-```syntax
+```txt
 oneHot.fitTransform[tab;symCols]
 ```
 
@@ -747,17 +746,18 @@ x2        x_a x_b x1_0 x1_1
 5.611439  1   0   1    0 
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.onehot`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.onehot`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.polyTab`
 
 _Tunable polynomial features from an input table_
 
-```syntax
+```txt
 .ml.polyTab[tab;n]
 ```
 
@@ -808,33 +808,34 @@ val          n  x        x1       x2 val_n        val_x      val_x1  ..
 0.003999989  4  45.02587 694.5211 8  0.01599996   0.180103   2.778077..
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.polytab`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.polytab`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.stdScaler.fit`
 
 _Fit standard scaler model_
 
-```syntax
+```txt
 .ml.stdScaler.fit data
 ```
 
 Where `data` is a simple numerical table, matrix or list,
 returns a dictionary containing average and deviation values of the fitted data (`modelInfo`) along with a transform function projection to be used on new data (`transform`).
 
-??? "Result dictionary"
-
-	The avg/dev value of the data used during the fitting process is contained within `modelInfo`
-	
-	```
-	`avgData`devData!8 2
-	```
-	
-	The transform functionality is contained within the `transform` key. The function takes as argument a numerical table, matrix or list, and
-	returns the standard scaled representation of the data based on the input values of the fitted model
+> **Result dictionary**
+> 
+> The avg/dev value of the data used during the fitting process is contained within `modelInfo`
+> 
+> ```q
+> `avgData`devData!8 2
+> ```
+> 
+> The transform functionality is contained within the `transform` key. The function takes as argument a numerical table, matrix or list, and
+> returns the standard scaled representation of the data based on the input values of the fitted model
 
 ```q
 q)n:5
@@ -885,7 +886,7 @@ x          x1         x2         x3
 
 _Standard scaler transform-based representation of data_
 
-```syntax
+```txt
 .ml.stdScaler.fitTransform data
 ```
 
@@ -927,17 +928,18 @@ q).ml.stdScaler.fitTransform[list]
 -0.1968835 1.653525 0.06217373 -1.455161 0.2842228 -1.418153 1.542501 -0.5669..
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.stdscaler`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.stdscaler`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.timeSplit`
 
 _Break specified time columns into constituent components_
 
-```syntax
+```txt
 .ml.timeSplit[tab;timeCols]
 ```
 
@@ -975,7 +977,8 @@ x1    x2 x3 x_dow x_year x_mm x_dd x_qtr x_wd x_hh x_uu x_ss
 13:50 4  5  4     2000   1    5    1     1    0    0    0   
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.timesplit`.
+> That is still callable but will be deprecated after version 3.0.
 
-    This function was previously defined as `.ml.timesplit`.
-    That is still callable but will be removed after version 3.0.

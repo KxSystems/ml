@@ -1,22 +1,11 @@
----
-title: K-dimensional tree reference | Clustering | Machine Learning Toolkit | Documentation for kdb+ and q
-author: Deanna Morgan
-date: May 2019
-keywords: machine learning, ml, clustering, k-means, dbscan, hierarchical, cure, kdtree, k-dimensional tree
----
+# K-D tree reference
 
-# :fontawesome-solid-share-alt: K-D tree reference
+`.ml.clust.kd`   **k-d tree functions**
 
-<div markdown="1" class="typewriter">
-.ml.clust.kd   **k-d tree functions**
+[`findLeaf`](#mlclustkdfindleaf)       Find the leaf node to which a datapoint belongs<br>
+[`newTree`](#mlclustkdnewtree)       Build a k-d tree<br>
+[`nn`](#mlclustkdnn)            Find the nearest neighbor for a datapoint
 
-\  [findLeaf](#mlclustkdfindleaf)       Find the leaf node to which a datapoint belongs
-  [newTree](#mlclustkdnewtree)       Build a k-d tree
-  [nn](#mlclustkdnn)            Find the nearest neighbor for a datapoint
-</div>
-
-:fontawesome-brands-github:
-[KxSystems/ml/clust/kdtree.q](https://github.com/kxsystems/ml/blob/master/clust/kdtree.q)
 
 A k-dimensional tree (k-d tree) is a special case of a binary search tree, commonly used in computer science to organize data points in k-dimensional space. Each leaf node in the tree contains a set of k-dimensional points, while each non-leaf node generates a splitting hyperplane which divides the surrounding space.
 
@@ -27,7 +16,7 @@ At each non-leaf node, the dataset is split roughly in two. A splitting dimensio
 
 _Find the tree index of the leaf that a datapoint belongs to_
 
-```syntax
+```txt
 .ml.clust.kd.findLeaf[tree;pt;node]
 ```
 
@@ -72,8 +61,7 @@ idxs    | 2 3 4
 
 Both `.ml.clust.kd.nn` and `.ml.clust.kd.findLeaf` functions can use either q or C code in their implementations. 
 
-:fontawesome-brands-github:
-[Instructions to build C code](https://github.com/KxSystems/ml/blob/master/clust/README.md)
+[Instructions to build C code](../../clust/README.md)
 
 To switch between the implementations, `.ml.clust.kd.qC[b]` can be used, where `b` is a boolean indicating whether to use the q (`1b`) or C (`0b`) code. If the C code is not available, the function will default to q regardless of the input.
 
@@ -82,7 +70,7 @@ To switch between the implementations, `.ml.clust.kd.qC[b]` can be used, where `
 
 _Build k-d tree_
 
-```syntax
+```txt
 .ml.clust.kd.newTree[data;leafSize]
 ```
 
@@ -135,7 +123,7 @@ leaf left self parent children axis midval  idxs
 
 _Find the nearest neighbor for a data point_
 
-```syntax
+```txt
 .ml.clust.kd.nn[tree;data;df;xidxs;pt]
 ```
 

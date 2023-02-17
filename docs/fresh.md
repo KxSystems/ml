@@ -1,10 +1,10 @@
 # FRESH: a feature-extraction and feature-significance toolkit
 
 
-`.ml.fresh` **Feature extraction and significance**
-
-[`.ml.fresh.createFeatures`](#mlfreshcreatefeatures)       Apply functions to subsets of initial data to create features<br>
-[`.ml.fresh.significantFeatures`](#mlfreshsignificantfeatures)   Statistically significant features
+> `.ml.fresh` **Feature extraction and significance**
+> 
+> [`.ml.fresh.createFeatures`](#mlfreshcreatefeatures)       Apply functions to subsets of initial data to create features<br>
+> [`.ml.fresh.significantFeatures`](#mlfreshsignificantfeatures)   Statistically significant features
 
 
 Feature extraction and selection are vital components of many machine-learning pipelines. Here we outline an implementation of the [FRESH](https://arxiv.org/pdf/1610.07717v3.pdf) (FeatuRe Extraction and Scalable Hypothesis testing) algorithm.
@@ -53,63 +53,63 @@ Feature extraction functions are defined in the script `fresh.q` and found withi
 
 function                         | returns 
 :--------------------------------|:--------------
-absEnergy[data]                               | Sum of squares
-absSumChange[data]                            | Absolute sum of the differences between successive datapoints
-aggAutoCorr[data]                             | Aggregation (mean, median, variance and standard deviation) of an autocorrelation over all possible lags (1 - count[x]) 
-aggLinTrend[data;chunkLen]                    | Slope, intercept and rvalue for the series over aggregated max, min, variance or average for chunks of size `chunklen`
-augFuller[data]                               | Hypothesis test to check for a unit root in series
-autoCorr[data;lag]                            | Autocorrelation over specified lag
-binnedEntropy[data;numBins]                   | Entropy of the series binned into `nbins` equidistant bins
-c3[data;lag]                                  | Measure of the non-linearity of the series lagged by `lag`
-changeQuant[data;lowerQuant;upperQuant;isAbs] | Aggregated value of successive changes within corridor specified by lower quantile `lowerQuant` and upper quantile `upperQuant` (boolean `isAbs` defines whether absolute values are considered)
-cidCe[data;isAbs]                             | Measure of series complexity based on peaks and troughs in the dataset (boolean `isAbs` defines whether absolute values are considered)
-count[data]                                   | Number of values within the series
-countAboveMean[data]                          | Number of values in the series with a value greater than the mean
-countBelowMean[data]                          | Number of values in the series with a value less than the mean
-eRatioByChunk[data;numSeg]                    | Sum of squares of each region of the series split into `numsegments` segments, divided by the sum of squares for the entire series
-firstMax[data]                                | Position of the first occurrence of the maximum value in the series relative to the series length 
-firstMin[data]                                | Position of the first occurrence of the minimum value in the series relative to the series length
-fftAggReg[data]                               | Spectral centroid (mean), variance, skew, and kurtosis of the absolute Fourier-transform spectrum
-fftCoeff[data;coeff]                          | Fast-Fourier transform `coeff` coefficient, given real inputs and extracting real, imaginary, absolute and angular components
-hasDup[data]                                  | Boolean: the series contains any duplicate values
-hasDupMax[data]                               | Boolean: a duplicate of the maximum value exists in the series
-hasDupMin[data]                               | Boolean: a duplicate of the minimum value exists in the series
-indexMassQuantile[data;quantile]              | Relative index such that `q`% of the series' mass lies to the left
-kurtosis[data]                                | Adjusted G2 Fisher-Pearson kurtosis of the series
-largestDev[data;ratio]                        | Boolean: the standard deviation is `ratio` times larger than the max - min values of the series
-lastMax[data]                                 | Position of the last occurrence of the maximum value in the series relative to the series length
-lastMin[data]                                 | Position of the last occurrence of the minimum value in the series relative to the series length
-linTrend[data]                                | Slope, intercept and r-value associated with the series
-longStrikeAboveMean[data]                     | Length of the longest subsequence in the series greater than the series mean
-longStrikeBelowMean[data]                     | Length of the longest subsequence in the series less than the series mean
-max[data]                                     | Maximum value of the series
-mean[data]                                    | Mean value of the series
-meanAbsChange[data]                           | Mean over the absolute difference between subsequent series values
-meanChange[data]                              | Mean over the difference between subsequent series values
-mean2DerCentral[data]                         | Mean value of the central approximation of the second derivative of the series
-med[data]                                     | Median value of the series
-min[data]                                     | Minimum value of the series
-numCrossing[data;crossVal]                    | Number of crossings in the series over the value `crossval`
-numCwtPeaks[data;width]                       | Number of peaks in the series following data smoothing via application of a Ricker wavelet of defined `width`
-numPeaks[data;support]                        | Number of peaks in the series with a specified `support`
-partAutoCorrelation[data;lag]                 | Partial autocorrelation of the series with a specified `lag`
-perRecurToAllData[data]                       | Ratio of count of values occurring more than once to count of different values
-perRecurToAllVal[data]                        | Ratio of count of values occurring more than once to count of data
-quantile[data;quantile]                       | The value of series greater than the `quantile` percent of the ordered series
-rangeCount[data;minVal;maxVal]                | The number of values greater than or equal to `minval` and less than `maxval`
-ratioBeyondRSigma[data;r]                     | Ratio of values more than `r*dev[x]` from the mean
-ratioValNumToSeriesLength[data]               | Ratio of number of unique values to total number of values
-skewness[data]                                | Skew of the series indicating asymmetry within the series
-spktWelch[data;coeff]                         | Cross power spectral density of the series at given `coeff`
-stdDev[data]                                  | Standard deviation of series
-sumRecurringDataPoint[data]                   | Sum of all points present in the series more than once
-sumRecurringVal[data]                         | Sum of all the values present within the series more than once
-sumVal[data]                                  | Sum of values within the series
-symmetricLooking[data;ratio]                  | Measure of symmetry in the series `|mean(x)-median(x)|-y*(max[x]-min[x])` with y in range 0-&gt;1
-treverseAsymStat[data;lag]                    | Measure of asymmetry of the series based on `lag`
-valCount[data;val]                            | Number of occurrences of `val` within the series
-var[data]                                     | Variance of the series
-varAboveStdDev[data]                          | Boolean: the variance of the dataset is larger than the standard deviation
+`absEnergy[data]`                               | Sum of squares
+`absSumChange[data]`                            | Absolute sum of the differences between successive datapoints
+`aggAutoCorr[data]`                             | Aggregation (mean, median, variance and standard deviation) of an autocorrelation over all possible lags (1 - count[x]) 
+`aggLinTrend[data;chunkLen]`                    | Slope, intercept and rvalue for the series over aggregated max, min, variance or average for chunks of size `chunklen`
+`augFuller[data] `                              | Hypothesis test to check for a unit root in series
+`autoCorr[data;lag]`                            | Autocorrelation over specified lag
+`binnedEntropy[data;numBins]`                   | Entropy of the series binned into `nbins` equidistant bins
+`c3[data;lag]`                                  | Measure of the non-linearity of the series lagged by `lag`
+`changeQuant[data;lowerQuant;upperQuant;isAbs]` | Aggregated value of successive changes within corridor specified by lower quantile `lowerQuant` and upper quantile `upperQuant` (boolean `isAbs` defines whether absolute values are considered)
+`cidCe[data;isAbs]`                             | Measure of series complexity based on peaks and troughs in the dataset (boolean `isAbs` defines whether absolute values are considered)
+`count[data]`                                   | Number of values within the series
+`countAboveMean[data]`                          | Number of values in the series with a value greater than the mean
+`countBelowMean[data]`                          | Number of values in the series with a value less than the mean
+`eRatioByChunk[data;numSeg]`                    | Sum of squares of each region of the series split into `numsegments` segments, divided by the sum of squares for the entire series
+`firstMax[data]`                                | Position of the first occurrence of the maximum value in the series relative to the series length 
+`firstMin[data] `                               | Position of the first occurrence of the minimum value in the series relative to the `series length`
+`fftAggReg[data] `                              | Spectral centroid (mean), variance, skew, and kurtosis of the absolute Fourier-transform spectrum
+`fftCoeff[data;coeff] `                         | Fast-Fourier transform `coeff` coefficient, given real inputs and extracting real, imaginary, absolute and angular components
+`hasDup[data] `                                 | Boolean: the series contains any duplicate values
+`hasDupMax[data]`                               | Boolean: a duplicate of the maximum value exists in the series
+`hasDupMin[data] `                              | Boolean: a duplicate of the minimum value exists in the series
+`indexMassQuantile[data;quantile]`              | Relative index such that `q`% of the series' mass lies to the left
+`kurtosis[data] `                               | Adjusted G2 Fisher-Pearson kurtosis of the series
+`largestDev[data;ratio]`                        | Boolean: the standard deviation is `ratio` times larger than the max - min values of the series
+`lastMax[data] `                                | Position of the last occurrence of the maximum value in the series relative to the series length
+`lastMin[data]`                                 | Position of the last occurrence of the minimum value in the series relative to the series length
+`linTrend[data]`                                | Slope, intercept and r-value associated with the series
+`longStrikeAboveMean[data]`                     | Length of the longest subsequence in the series greater than the series mean
+`longStrikeBelowMean[data]`                     | Length of the longest subsequence in the series less than the series mean
+`max[data]`                                     | Maximum value of the series
+`mean[data]`                                    | Mean value of the series
+`meanAbsChange[data]`                           | Mean over the absolute difference between subsequent series values
+`meanChange[data]`                              | Mean over the difference between subsequent series values
+`mean2DerCentral[data]`                         | Mean value of the central approximation of the second derivative of the series
+`med[data] `                                    | Median value of the series
+`min[data] `                                    | Minimum value of the series
+`numCrossing[data;crossVal] `                   | Number of crossings in the series over the value `crossval`
+`numCwtPeaks[data;width]`                       | Number of peaks in the series following data smoothing via application of a Ricker wavelet of defined `width`
+`numPeaks[data;support]`                        | Number of peaks in the series with a specified `support`
+`partAutoCorrelation[data;lag]`                 | Partial autocorrelation of the series with a specified `lag`
+`perRecurToAllData[data]`                       | Ratio of count of values occurring more than once to count of different values
+`perRecurToAllVal[data]`                        | Ratio of count of values occurring more than once to count of data
+`quantile[data;quantile]`                       | The value of series greater than the `quantile` percent of the ordered series
+`rangeCount[data;minVal;maxVal]`                | The number of values greater than or equal to `minval` and less than `maxval`
+`ratioBeyondRSigma[data;r]`                     | Ratio of values more than `r*dev[x]` from the mean
+`ratioValNumToSeriesLength[data]`               | Ratio of number of unique values to total number of values
+`skewness[data]`                                | Skew of the series indicating asymmetry within the series
+`spktWelch[data;coeff]`                         | Cross power spectral density of the series at given `coeff`
+`stdDev[data]`                                  | Standard deviation of series
+`sumRecurringDataPoint[data]`                   | Sum of all points present in the series more than once
+`sumRecurringVal[data]`                         | Sum of all the values present within the series more than once
+`sumVal[data]`                                  | Sum of values within the series
+`symmetricLooking[data;ratio]`                  | Measure of symmetry in the series `|mean(x)-median(x)|-y*(max[x]-min[x])` with y in range 0-&gt;1
+`treverseAsymStat[data;lag]`                    | Measure of asymmetry of the series based on `lag`
+`valCount[data;val]`                            | Number of occurrences of `val` within the series
+`var[data] `                                    | Variance of the series
+`varAboveStdDev[data] `                         | Boolean: the variance of the dataset is larger than the standard deviation
 
 > :warning: **Some of the above functions are deprecated**
 > 

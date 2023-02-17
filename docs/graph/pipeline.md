@@ -1,19 +1,11 @@
----
-title: ML Pipeline | Toolkit | Machine Learning  | Documentation for kdb+ and q
-description: How to convert a Graph into an executable code structure.
-author: Conor McCarthy
-date: August 2020
----
-# :fontawesome-solid-share-alt: ML Pipeline
+# ML Pipeline
 
 
 
-<div markdown="1" class="typewriter">
-ML Pipeline
-  [.ml.createPipeline](#mlcreatepipeline)      Generate a pipeline from a graph
-  [.ml.execPipeline](#mlexecpipeline)        Execute a valid pipeline
-  [.ml.updDebug](#mlupddebug)            Update debugging mode
-</div>
+**ML Pipeline**<br>
+[`.ml.createPipeline`](#mlcreatepipeline)      Generate a pipeline from a graph<br>
+[`.ml.execPipeline`](#mlexecpipeline)        Execute a valid pipeline<br>
+[`.ml.updDebug`](#mlupddebug)            Update debugging mode
 
 
 After [generating a graph](graph.md), convert it into an executable code structure, a _pipeline_. Use this library to validate the graph, then generate and execute an ML pipeline as follows.
@@ -30,13 +22,13 @@ The inputs to a node and the outputs to which they connect must have the same ty
 
 Once the graph has been validated, generate the optimal execution path for the graph. 
 
-??? detail "Algorithm for creating the path"
-
-    1. Generate all paths required by each node to be executed.
-    1. Retrieve the longest path for each node in the graph.
-    1. Find all dependencies for each of the longest paths.
-    1. Reverse the ordering of the longest paths to ensure they are in the correct execution order.
-    1. Retrieve the optimal execution order of nodes defined by 'razing' the longest paths (longest first) together and taking the distinct elements.
+> **Algorithm for creating the path**
+> 
+> 1. Generate all paths required by each node to be executed.
+> 1. Retrieve the longest path for each node in the graph.
+> 1. Find all dependencies for each of the longest paths.
+> 1. Reverse the ordering of the longest paths to ensure they are in the correct execution order.
+> 1. Retrieve the optimal execution order of nodes defined by 'razing' the longest paths (longest first) together and taking the distinct elements.
 
 Generate a schema, based on the graph structure, containing the following information.
 
@@ -67,7 +59,7 @@ Repeat steps 1 to 3 until either all rows in the graph have been successfully ex
 _Generate a execution pipeline based on a valid graph_
 
 
-```syntax
+```txt
 .ml.createPipeline graph
 ```
 
@@ -119,7 +111,7 @@ corr  | 0              ![,`output]@[enlist]{x[`xData] cor y}          ..
 _Execute a generated pipeline_
 
 
-```syntax
+```txt
 .ml.execPipeline pipeline
 ```
 
@@ -175,7 +167,7 @@ corr  | 0        rank  ![,`output]@[enlist]{x[`xData] cor string y}   ..
 ## `.ml.updDebug`
 _Update debugging mode_
 
-```syntax
+```txt
 .ml.updDebug[]
 ```
 

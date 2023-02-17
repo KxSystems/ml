@@ -1,32 +1,20 @@
----
-author: Conor McCarthy
-description: The toolkit contains utility functions, used in many applications and not limited to categories such as statistics or preprocessing.
-date: April 2019
-keywords: pandas manipulation, dataframe, train test split, .
----
-# :fontawesome-solid-share-alt: Utility functions 
+# Utility functions 
 
 
 
-<div markdown="1" class="typewriter">
-.ml   **Utility functions**
-  [arange](#mlarange)             Evenly-spaced values within a range
-  [combs](#mlcombs)              n linear combinations of k numbers
-  [df2tab](#mldf2tab)             kdb+ table from a pandas dataframe
-  [df2tabTimezone](#mldf2tabtimezone)     Pandas dataframe to kdb+ conversion handling
-                     dates/times/timezones
-  [eye](#mleye)                Identity matrix
-  [iMax](#mlimax)               Index of maximum element of a list
-  [iMin](#mlimin)               Index of minimum element of a list
-  [linearSpace](#mllinearspace)        List of evenly-spaced values
-  [range](#mlrange)              Range of values
-  [shape](#mlshape)              Shape of a matrix
-  [tab2df](#mltab2df)             Pandas dataframe from a q table
-  [trainTestSplit](#mltraintestsplit)     Split into training and test sets
-</div>
-
-:fontawesome-brands-github:
-[KxSystems/ml/util/utilities.q](https://github.com/kxsystems/ml/blob/master/util/utilities.q)
+`.ml`   **Utility functions**<br>
+[`arange`](#mlarange)             Evenly-spaced values within a range<br>
+[`combs`](#mlcombs)              n linear combinations of k numbers<br>
+[`df2tab`](#mldf2tab)             kdb+ table from a pandas dataframe<br>
+[`df2tabTimezone`](#mldf2tabtimezone)     Pandas dataframe to kdb+ conversion handling dates/times/timezones<br>
+[`eye`](#mleye)                Identity matrix<br>
+[`iMax`](#mlimax)               Index of maximum element of a list<br>
+[`iMin`](#mlimin)               Index of minimum element of a list<br>
+[`linearSpace`](#mllinearspace)        List of evenly-spaced values<br>
+[`range`](#mlrange)              Range of values<br>
+[`shape`](#mlshape)              Shape of a matrix<br>
+[`tab2df`](#mltab2df)             Pandas dataframe from a q table<br>
+[`trainTestSplit`](#mltraintestsplit)     Split into training and test sets
 
 The toolkit contains utility functions, used in many applications and not limited to categories such as statistics or preprocessing.
 
@@ -145,8 +133,9 @@ jcol| fcol
 
 **Index columns** This function assumes a single unnamed Python index column is to be removed. It returns an unkeyed table. All other variants of Python index columns map to q key columns. For example any instance with two or more indexes will map to two or more Python keys, while any named single-index Python column be associated with a q key in a keyed table.
 
-!!!note
-	This function is a wrapper around `.ml.df2tabTimezone`, conversions within this function will default to convert `datetime.date` and `datetime.time` types to foreign objects, numpy timezone types are converted to their UTC representation. These conversion choices have been made due to python related computational inefficiencies in converting to native q types and local-time representations respectively.
+> Note
+> 
+> This function is a wrapper around `.ml.df2tabTimezone`, conversions within this function will default to convert `datetime.date` and `datetime.time` types to foreign objects, numpy timezone types are converted to their UTC representation. These conversion choices have been made due to python related computational inefficiencies in converting to native q types and local-time representations respectively.
 
 ## `.ml.df2tabTimezone`
 
@@ -200,9 +189,11 @@ time                 timed                 datetime                      dt_with
 0D12:10:30.000500000 -0D05:00:00.000000000 2005.02.25D03:30:00.000000000 2005.02.25D02:30:00.000000000
 0D12:13:30.000200000 0D00:16:40.000000000  2015.12.22D00:00:00.000000000 2015.12.21D23:00:00.000000000
 ``` 
-!!! warning "`.ml.df2tab_tz` deprecated"
-    The above function was previously defined as `.ml.df2tab_tz`.
-    It is still callable but will be deprecated after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.df2tab_tz`.
+> That is still callable but will be deprecated after version 3.0.
+
 
 ## `.ml.eye`
 
@@ -212,11 +203,7 @@ _Create identity matrix_
 .ml.eye[n]
 ```
 
-Where  
-
-- `n` is the width/height of identity matrix 
-
-returns an identity matrix of height/width `n`.
+Where `n` is the width/height of identity matrix, returns an identity matrix of height/width `n`.
 
 ```q
 q).ml.eye 5
@@ -235,11 +222,7 @@ _Index of maximum element of a list_
 .ml.iMax[array]
 ```
 
-Where 
-
-- `array` is a numerical array of values
-
-returns the index of the maximum element of the array
+Where `array` is a numerical array of values, returns the index of the maximum element of the array
 
 ```q
 q)show a:8?5.
@@ -251,9 +234,11 @@ q)show b:8?100
 q).ml.iMax b
 6
 ```
-!!! warning "`.ml.imax` deprecated"
-    The above function was previously defined as `.ml.imax`.
-    It is still callable but will be deprecated after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.imax`.
+> That is still callable but will be deprecated after version 3.0.
+
 
 ## `.ml.iMin`
 
@@ -263,11 +248,7 @@ _Index of maximum element of a list_
 .ml.iMin[array]
 ```
 
-Where 
-
--  `array` is a numerical array of values
-
-returns the index of the minimum element of the array
+Where `array` is a numerical array of values, returns the index of the minimum element of the array.
 
 
 ```q
@@ -281,9 +262,11 @@ q).ml.iMin b
 2
 ```
 
-!!! warning "`.ml.imin` deprecated"
-    The above function was previously defined as `.ml.imin`.
-    It is still callable but will be deprecated after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.imin`.
+> That is still callable but will be deprecated after version 3.0.
+
 
 ## `.ml.linearSpace`
 
@@ -307,9 +290,11 @@ q).ml.linearSpace[10;20;9]
 q).ml.linearSpace[0.5;15.25;12]
 0.5 1.840909 3.181818 4.522727 5.863636 7.204545 8.545455 9.886364 11.22727 1..
 ```
-!!! warning "`.ml.linspace` deprecated"
-    The above function was previously defined as `.ml.linspace`.
-    It is still callable but will be deprecated after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.linspace`.
+> That is still callable but will be deprecated after version 3.0.
+
 
 
 ## `.ml.range`
@@ -320,11 +305,7 @@ _Range of values_
 .ml.range[array]
 ```
 
-Where 
-
--  `array` is a numerical array
-
-returns the range of its values.
+Where `array` is a numerical array, returns the range of its values.
 
 ```q
 q).ml.range 1000?100000f
@@ -345,11 +326,7 @@ _Shape of a matrix_
 .ml.shape[matrix]
 ```
 
-Where 
-
--  `matrix` is a matrix of values
-
-returns its shape as a list of dimensions.
+Where `matrix` is a matrix of values, returns its shape as a list of dimensions.
 
 ```q
 q).ml.shape 10
@@ -368,7 +345,7 @@ q).ml.shape ([]c1:til 10;c2:0)
 10 2
 ```
 
-!!! warning "Behavior of `.ml.shape` is undefined for ragged/jagged arrays."
+> :warning: **Behavior of `.ml.shape` is undefined for ragged/jagged arrays.**
 
 
 ## `.ml.tab2df`
@@ -443,6 +420,8 @@ xtest | 0.3692275 0.4192985 0.1573064 0.9121564 0.28237 0.07992544
 ytest | 0.3821462 0.9177309 0.3572827 0.1110881 0.9807582 0.5132051
 ```
 
-!!! warning "`.ml.traintestsplit` deprecated"
-    The above function was previously defined as `.ml.traintestsplit`.
-    It is still callable but will be deprecated after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.traintestsplit`.
+> That is still callable but will be deprecated after version 3.0.
+

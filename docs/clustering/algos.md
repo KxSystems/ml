@@ -1,72 +1,59 @@
----
-title: Clustering algorithms reference | Clustering | Machine Learning Toolkit | Documentation for kdb+ and q
-author: Deanna Morgan
-date: May 2019
-keywords: machine learning, ml, clustering, k-means, dbscan, hierarchical, cure, affinity propagation, dendrogram
----
-
-# :fontawesome-solid-share-alt: Clustering algorithms 
+# Clustering algorithms 
 
 
-<div markdown="1" class="typewriter">
-.ml.clust   **Clustering**
+`.ml.clust`   **Clustering**
 
 **Algorithms**
     
-\  Affinity Propagation (AP):
-    [ap.fit](#mlclustapfit)                   Fit AP algorithm
-    
-\  Clustering Using REpresentatives (CURE):
-    [cure.fit](#mlclustcurefit)                 Fit CURE algorithm
-    [cure.fitPredict](#mlclustcurefitpredict)          Fit CURE algorithm to data and convert dendrogram to 
-                            clusters
-    
-\  Density-Based Spatial Clustering of Applications with Noise (DBSCAN):
-    [dbscan.fit](#mlclustdbscanfit)               Fit DBSCAN algorithm
-    
-\  Hierarchical Clustering (HC):
-    [hc.fit](#mlclusthcfit)                   Fit HC algorithm
-    [hc.fitPredict](#mlclustcurefitpredict)   	       Fit HC algorithm to data and convert dendrogram to 
-                            clusters
-    
-\  K-Means:
-    [kmeans.fit](#mlclustkmeansfit)               Fit K-Means algorithm
+Affinity Propagation (AP):<br>
+[ap.fit](#mlclustapfit)                   Fit AP algorithm<br>
+
+Clustering Using REpresentatives (CURE):<br>
+[cure.fit](#mlclustcurefit)                 Fit CURE algorithm<br>
+[cure.fitPredict](#mlclustcurefitpredict)          Fit CURE algorithm to data and convert dendrogram to clusters<br>
+
+Density-Based Spatial Clustering of Applications with Noise (DBSCAN):<br>
+[dbscan.fit](#mlclustdbscanfit)               Fit DBSCAN algorithm<br>
+
+Hierarchical Clustering (HC):<br>
+[hc.fit](#mlclusthcfit)                   Fit HC algorithm<br>
+[hc.fitPredict](#mlclustcurefitpredict)   	       Fit HC algorithm to data and convert dendrogram to clusters<br>
+
+K-Means:<br>
+[kmeans.fit](#mlclustkmeansfit)               Fit K-Means algorithm
 
 **Dendrogram cutting functionality**
 
-\  Clustering Using REpresentatives (CURE):
-    [cure.cutK](#mlclustcurecutk)               Cut dendrogram to k clusters
-    [cure.cutDist](#mlclustcurecutdist)            Cut dendrogram to clusters based on distance threshold
-    
-\  Hierarchical Clustering (HC):
-    [hc.cutK](#mlclusthccutk)                 Cut dendrogram to k clusters
-    [hc.cutDist](#mlclusthccutdist)              Cut dendrogram to clusters based on distance threshold
-    
-</div>
+Clustering Using REpresentatives (CURE):<br>
+[cure.cutK](#mlclustcurecutk)               Cut dendrogram to k clusters<br>
+[cure.cutDist](#mlclustcurecutdist)            Cut dendrogram to clusters based on distance threshold
 
-:fontawesome-brands-github:
-[KxSystems/ml/clust](https://github.com/KxSystems/ml/tree/master/clust)
+Hierarchical Clustering (HC):<br>
+[hc.cutK](#mlclusthccutk)                 Cut dendrogram to k clusters<br>
+[hc.cutDist](#mlclusthccutdist)              Cut dendrogram to clusters based on distance threshold
+    
+
 
 The clustering library provides q implementations of a number of common clustering algorithms, with fit and predict functions provided for each. Update functions are also available for K-Means and DBSCAN.
 
 In addition to the fit/predict functionality provided for all methods, for hierarchical clustering methods (including CURE) which produce dendrograms, functions to _cut_ the dendrogram at a given count or distance are also provided allowing a user to produce appropriate clusters.
 
 
-## Affinity Propagation
+## Affinity propagation
 
-Affinity Propagation groups data based on the similarity between points and subsequently finds _exemplars_, which best represent the points in each cluster. The algorithm does not require the number of clusters be provided at run time, but determines the optimum solution by exchanging real-valued messages between points until a high-valued set of exemplars is produced.
+Affinity propagation groups data based on the similarity between points and subsequently finds _exemplars_, which best represent the points in each cluster. The algorithm does not require the number of clusters be provided at run time, but determines the optimum solution by exchanging real-valued messages between points until a high-valued set of exemplars is produced.
 
 The algorithm uses a user-specified damping coefficient to reduce the availability and responsibility of messages passed between points, while a preference value is used to set the diagonal values of the similarity matrix. 
 
-:fontawesome-solid-globe:
+:globe_with_meridians:
 [Affinity Propagation Algorithm Explained](https://towardsdatascience.com/unsupervised-machine-learning-affinity-propagation-algorithm-explained-d1fef85f22c8)
 
 
-## Clustering Using Representatives
+## Clustering Using REpresentatives
 
 Clustering Using REpresentatives (CURE) is a technique used to deal with datasets containing outliers and clusters of varying sizes and shapes. Each cluster is represented by a specified number of representative points. These points are chosen by taking the most scattered points in each cluster and shrinking them towards the cluster center using a compression ratio. 
 
-:fontawesome-solid-globe:
+:globe_with_meridians:
 [Introduction to Clustering Techniques, Ch.7](http://infolab.stanford.edu/~ullman/mmds/ch7a.pdf) p.242
 
 
@@ -84,7 +71,7 @@ Unlike many clustering algorithms, which require the user to input the desired n
 
 Agglomerative hierarchical clustering iteratively groups data, using a bottom-up approach that initially treats all data points as individual clusters. 
 
-:fontawesome-solid-globe:
+:globe_with_meridians:
 [Introduction to Clustering Techniques, Ch.7](http://infolab.stanford.edu/~ullman/mmds/ch7a.pdf) p.225
 
 There are five possible linkages in hierarchical clustering: single, complete, average, centroid and ward. Euclidean or Manhattan distances can be used with each linkage except for ward (which only works with Euclidean squared distances) and centroid (which only works with Euclidean distances).
@@ -118,9 +105,9 @@ q)plt[`:show][];
 
 ![dendro_plot](img/dendrogram_example.png)
 
-!!! warning "Ward linkage"
-
-    Ward linkage only works in conjunction with Euclidean squared distances (`e2dist`), while centroid linkage only works with Euclidean distances (`e2dist`, `edist`). If use a different distance metric as argument, an error is signalled, as shown in the examples.
+> :warning: **Ward linkage**
+> 
+> Ward linkage only works in conjunction with Euclidean squared distances (`e2dist`), while centroid linkage only works with Euclidean > distances (`e2dist`, `edist`). If use a different distance metric as argument, an error is signalled, as shown in the examples.
 
 
 ## K-means
@@ -129,7 +116,7 @@ K-means clustering begins by selecting $k$ data points as cluster centers and as
 
 The algorithm follows an iterative refinement process which runs a specified number of times, updating the cluster centers and assigned points to a cluster at each iteration based on the nearest cluster center.
 
-:fontawesome-solid-globe:
+:globe_with_meridians:
 [The K-means algorithm](https://www.edureka.co/blog/k-means-clustering/)
 
 The distance metrics that can be used with the K-means algorithm are the Euclidean distances (`e2dist`,`edist`). The use of any other distance metric will result in an error.
@@ -140,7 +127,7 @@ The distance metrics that can be used with the K-means algorithm are the Euclide
 
 The distance functions available in the clustering library are:
 
-```syntax
+```txt
 edist       Euclidean distance
 e2dist      squared Euclidean distance
 nege2dist   negative squared Euclidean distance 
@@ -148,21 +135,21 @@ nege2dist   negative squared Euclidean distance
 mdist       Manhattan distance
 ```
 
-!!! danger "If you use an invalid distance metric, an error will occur."
+> :exclamation: **If you use an invalid distance metric, an error will occur.**
 
 
 
 
 ---
 
-!!! detail "Point matrix: a matrix in which  each column represents a single datapoint"
+> Point matrix: a matrix in which  each column represents a single datapoint
 
 
 ## `.ml.clust.ap.fit`
 
 _Fit Affinity Propagation algorithm_
 
-```syntax
+```txt
 .ml.clust.ap.fit[data;df;damp;diag;iter]
 ```
 
@@ -176,17 +163,17 @@ Where
 
 returns a dictionary containing information collected during the fitting process (`modelInfo`) along with a projection of the prediction function to use on new data (`predict`).
 
-??? "Result dictionary"
-
-	All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
-	
-	-   `data`      – original data used to fit the model
-	-   `inputs`    – original input parameters to the fitted model
-	-   `clust`     – cluster index each data point belongs to
-	-   `exemplars` – indices of the exemplar points
-	
-	The predict functionality is contained within the `predict` key. 
-    This function takes a point matrix argument and returns the predicted clusters of the new data.
+> **Result dictionary**
+> 
+> All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
+> 
+> -   `data`      – original data used to fit the model
+> -   `inputs`    – original input parameters to the fitted model
+> -   `clust`     – cluster index each data point belongs to
+> -   `exemplars` – indices of the exemplar points
+> 
+> The predict functionality is contained within the `predict` key. 
+> This function takes a point matrix argument and returns the predicted clusters of the new data.
 
 ```q
 q)show data:2 10#20?10.
@@ -220,7 +207,7 @@ q)APfit.predict newData
 
 _Fit CURE algorithm_
 
-```syntax
+```txt
 .ml.clust.cure.fit[data;df;n;c]
 ```
 
@@ -233,20 +220,20 @@ Where
 
 returns a dictionary containing information collected during the fitting process (`modelInfo`), along with a projection of the prediction function to use on new data (`predict`)
 
-??? "Result dictionary"
-
-	All relevant information needed to evaluate the model is contained within `modelInfo`. This includes the following information:
-	
-	- `data`   – original data used to fit the model
-	- `inputs` – original input parameters to the fitted model
-	- `dgram`  – dendrogram generated during the fitting process
-	
-	The predict functionality is contained within the `predict` key. This function takes arguments
-	
-	-   `data` is a point matrix
-	-   `cutDict` is a dictionary where the key defines what cutting algo to use when splitting the data into clusters (`k`/`dist`) and the value defines the cutting threshold. (See [cutDist](#mlclustcurecutDist) and [cutK](#mlclustcurecutK))
-	
-	and returns the predicted clusters of the new data.
+> **Result dictionary**
+> 
+> All relevant information needed to evaluate the model is contained within `modelInfo`. This includes the following information:
+> 
+> - `data`   – original data used to fit the model
+> - `inputs` – original input parameters to the fitted model
+> - `dgram`  – dendrogram generated during the fitting process
+> 
+> The predict functionality is contained within the `predict` key. This function takes arguments
+> 
+> -   `data` is a point matrix
+> -   `cutDict` is a dictionary where the key defines what cutting algo to use when splitting the data into clusters (`k`/`dist`) and the value defines the cutting threshold. (See [cutDist](#mlclustcurecutDist) and [cutK](#mlclustcurecutK))
+> 
+> and returns the predicted clusters of the new data.
 
 ```q
 q)show data:2 10#20?10.
@@ -298,7 +285,7 @@ q)CUREfit.predict[test;enlist[`dist]!enlist 1]
 
 _Generate clusters - cutting the dendrogram based on a threshold distance_
 
-```syntax
+```txt
 .ml.clust.cure.cutDist[config;dist]
 ```
 
@@ -349,7 +336,7 @@ q)cutDgram`clust
 
 _Generate clusters - cutting dendrogram into k clusters_
 
-```syntax
+```txt
 .ml.clust.hc.cutK[config;k]
 ```
 
@@ -400,7 +387,7 @@ q)cutDgram`clust
 
 _Fit CURE algorithm to data and convert dendrogram to clusters_
 
-```syntax
+```txt
 .ml.clust.cure.fitPredict[data;df;n;c;cutDict]
 ```
 
@@ -414,22 +401,22 @@ Where
 
 returns a dictionary containing information collected during the fitting process (`modelInfo`), a projection of the prediction function to use on new data (`predict`) and the cluster to which each data point belongs (`clust`)
 
-??? "Result dictionary"
-
-	All relevant information needed to evaluate the model is contained within `modelInfo`. This includes the following information:
-
-	-   `data`   – original data used to fit the model
-	-   `inputs` – original input parameters to the fitted model
-	-   `dgram`  – dendrogram generated during the fitting process
-	
-	The predict functionality is contained within the `predict` key. This function takes arguments
-	
-	-   `data` is a point matrix
-	-   `cutDict` is a dictionary where the key defines what cutting algo to use when splitting the data into clusters (`k`/`dist`) and the value defines the cutting threshold. (See [cutDist](#mlclustcurecutDist) and [cutK](#mlclustcurecutK))
-	
-	and returns the predicted clusters of the new data.
-
-	The cluster each data point belongs to is contained within ` clust`.
+> **Result dictionary**
+> 
+> All relevant information needed to evaluate the model is contained within `modelInfo`. This includes the following information:
+> 
+> -   `data`   – original data used to fit the model
+> -   `inputs` – original input parameters to the fitted model
+> -   `dgram`  – dendrogram generated during the fitting process
+> 
+> The predict functionality is contained within the `predict` key. This function takes arguments
+> 
+> -   `data` is a point matrix
+> -   `cutDict` is a dictionary where the key defines what cutting algo to use when splitting the data into clusters (`k`/`dist`) and the value defines the cutting threshold. (See [cutDist](#mlclustcurecutDist) and [cutK](#mlclustcurecutK))
+> 
+> and returns the predicted clusters of the new data.
+> 
+> The cluster each data point belongs to is contained within ` clust`.
 
 ```q
 q)show data:2 10#20?10.
@@ -449,7 +436,7 @@ clust    | 0 0 0 1 1 2 1 0 1 0
 
 _Fit DBSCAN algorithm_
 
-```syntax
+```txt
 .ml.clust.dbscan.fit[data;df;minPts;eps]
 ```
 
@@ -462,18 +449,18 @@ Where
 
 returns a dictionary containing information collected during the fitting process (`modelInfo`), a projection of the prediction function to use on new data (`predict`) along with a projection of the update function (`update`)
 
-??? "Result dictionary"
-
-	All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
-	
-	-   `data`   – original data used to fit the model
-	-   `inputs` – original input parameters to the fitted model
-	-   `clust`  – cluster index each data point belongs to. Any outliers in the data will return a value of -1 as their cluster.
-	-   `tab`    – neighborhood table defining information about the clusters
-
-	The predict functionality is contained within the `predict` key. This function takes a point matrix argument, and returns the predicted clusters of the new data.
-
-	The `update` function can be used to update the cluster centres such that the model can react to new data. This function takes a point matrix argument, and returns the updated dictionary (the result of `.ml.clust.dbscan.fit`) with new data points added.
+> **Result dictionary**
+> 
+> All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
+> 
+> -   `data`   – original data used to fit the model
+> -   `inputs` – original input parameters to the fitted model
+> -   `clust`  – cluster index each data point belongs to. Any outliers in the data will return a value of -1 as their cluster.
+> -   `tab`    – neighborhood table defining information about the clusters
+> 
+> The predict functionality is contained within the `predict` key. This function takes a point matrix argument, and returns the predicted clusters of the new data.
+> 
+> The `update` function can be used to update the cluster centres such that the model can react to new data. This function takes a point matrix argument, and returns the updated dictionary (the result of `.ml.clust.dbscan.fit`) with new data points added.
 
 ```q
 q)show data:2 10#20?10.
@@ -526,7 +513,7 @@ q)DBSCANfit.predict[newData]
 
 _Fit HC Algorithm_
 
-```syntax
+```txt
 .ml.clust.hc.fit[data;df;lf]
 ```
 
@@ -538,20 +525,20 @@ Where
 
 returns a dictionary containing information collected during the fitting process (`modelInfo`), along with a projection of the prediction function to use on new data (`predict`)
 
-??? "Result dictionary"
-
-	All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
-
-	-   `data`   – original data used to fit the model
-	-   `inputs` – original input parameters to the fitted model
-	-   `dgram`  – dendrogram generated during the fitting process
-	
-	The predict functionality is contained within the `predict` key. This function takes arguments
-	
-	-   `data` is a point matrix
-	-   `cutDict` is a dictionary where the key defines what cutting algo to use when splitting the data into clusters (`k`/`dist`) and the value defines the cutting threshold. (See [cutDist](#mlclustcurecutDist) and [cutK](#mlclustcurecutK))
-	
-	and returns the predicted clusters of the new data.
+> **Result dictionary**
+> 
+> All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
+> 
+> -   `data`   – original data used to fit the model
+> -   `inputs` – original input parameters to the fitted model
+> -   `dgram`  – dendrogram generated during the fitting process
+> 
+> The predict functionality is contained within the `predict` key. This function takes arguments
+> 
+> -   `data` is a point matrix
+> -   `cutDict` is a dictionary where the key defines what cutting algo to use when splitting the data into clusters (`k`/`dist`) and the value defines the cutting threshold. (See [cutDist](#mlclustcurecutDist) and [cutK](#mlclustcurecutK))
+> 
+> and returns the predicted clusters of the new data.
 
 ```q
 q)show data:2 10#20?10.
@@ -619,7 +606,7 @@ idx1 idx2 dist      n
 
 _Generate clusters - cutting the dendrogram based on a threshold distance_
 
-```syntax
+```txt
 .ml.clust.hc.cutDist[config;dist]
 ```
 
@@ -670,7 +657,7 @@ q)cutDgram`clust
 
 _Generate clusters - cutting the dendrogram into k clusters_
 
-```syntax
+```txt
 .ml.clust.hc.cutK[config;k]
 ```
 
@@ -721,7 +708,7 @@ q)cutDgram`clust
 
 _Fit HC algorithm to data and convert dendrogram to clusters_
 
-```syntax
+```txt
 .ml.clust.hc.fitPredict[data;df;lf]
 ```
 
@@ -733,22 +720,22 @@ Where
 
 returns a dictionary containing information collected during the fitting process (`modelInfo`), a projection of the prediction function to use on new data (`predict`) and the cluster to which each data point belongs (`clust`).
 
-??? "Result dictionary"
-
-	All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
-
-	-   `data`   – original data used to fit the model
-	-   `inputs` – original input parameters to the fitted model
-	-   `dgram`  – dendrogram generated during the fitting process
-	
-	The predict functionality is contained within the `predict` key. This function takes arguments
-	
-	-   `data` is a point matrix
-	-   `cutDict` is a dictionary where the key defines what cutting algo to use when splitting the data into clusters (`k`/`dist`) and the value defines the cutting threshold. (See [cutDist](#mlclustcurecutDist) and [cutK](#mlclustcurecutK))
-	
-	and returns the predicted clusters of the new data.
-
-	The cluster each data point belongs to is contained in `clust`.
+> **Result dictionary**
+> 
+> All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
+> 
+> -   `data`   – original data used to fit the model
+> -   `inputs` – original input parameters to the fitted model
+> -   `dgram`  – dendrogram generated during the fitting process
+> 
+> The predict functionality is contained within the `predict` key. This function takes arguments
+> 
+> -   `data` is a point matrix
+> -   `cutDict` is a dictionary where the key defines what cutting algo to use when splitting the data into clusters (`k`/`dist`) and the value defines the cutting threshold. (See [`cutDist`](#mlclustcurecutDist) and [`cutK`](#mlclustcurecutK))
+> 
+> and returns the predicted clusters of the new data.
+> 
+> The cluster each data point belongs to is contained in `clust`.
 
 ```q
 q)show data:2 10#20?10.
@@ -768,7 +755,7 @@ clust    | 0 2 2 0 1 3 0 0 0 1
 
 _Fit K-means Algorithm_
 
-```syntax
+```txt
 .ml.clust.kmeans.fit[data;df;k;config]
 ```
 
@@ -784,18 +771,18 @@ Where
 
 returns a dictionary containing information collected during the fitting process (`modelInfo`), a projection of the prediction function to use on new data (`predict`) along with a projection of the update function (`update`)
 
-??? "Result dictionary"
-
-	All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
-	
-	-   `data`   – original data used to fit the model
-	-   `df`     – distance metric used
-	-   `repPts` – calculated k centers 
-	-   `clust`  – cluster index each data point belongs to.
-
-	The predict functionality is contained within the `predict` key. This function takes a matrix argument representing the points being analyzed in matrix format, where each column is an individual datapoint, and returns the predicted clusters of the new data.
-
-	The `update` function can be used to update the cluster centres such that the model can react to new data. This function takes a point matrix argument, and returns the updated dictionary (the result of `.ml.clust.kmeans.fit`) with new data points added.
+> **Result dictionary**
+> 
+> All relevant information needed to evaluate the model is contained within `modelInfo`. This includes
+> 
+> -   `data`   – original data used to fit the model
+> -   `df`     – distance metric used
+> -   `repPts` – calculated k centers 
+> -   `clust`  – cluster index each data point belongs to.
+> 
+> The predict functionality is contained within the `predict` key. This function takes a matrix argument representing the points being analyzed in matrix format, where each column is an individual datapoint, and returns the predicted clusters of the new data.
+> 
+> The `update` function can be used to update the cluster centres such that the model can react to new data. This function takes a point matrix argument, and returns the updated dictionary (the result of `.ml.clust.kmeans.fit`) with new data points added.
 
 ```q
 show data:2 10#20?10.

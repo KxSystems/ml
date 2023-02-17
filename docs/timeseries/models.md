@@ -1,45 +1,29 @@
----
-title: Models | Timeseries | Toolkit | Machine Learning | Documentation for kdb+ and q
-description: The kdb+ Machine Learning Toolkit implements commonly-used statistical forecasting algorithms
-author: Diane O'Donoghue
-date: August 2020
----
-# :fontawesome-solid-share-alt: Timeseries models
+# Timeseries models
 
 
-<div markdown="1" class="typewriter">
-.ml.ts   **Timeseries models**
+`.ml.ts`   **Timeseries models**
 
-**AR**: AutoRegressive
-  [AR.fit](#mltsarfit)          Fit an AR model
+**AR**: AutoRegressive<br>
+[`AR.fit`](#mltsarfit)          Fit an AR model
 
-**ARCH**: AutoRegressive Conditional Heteroskedasticity
-  [ARCH.fit](#mltsarchfit)        Fit an ARCH model
+**ARCH**: AutoRegressive Conditional Heteroskedasticity<br>
+[`ARCH.fit`](#mltsarchfit)        Fit an ARCH model
 
-**ARMA**: AutoRegressive Moving Average
-  [ARMA.fit](#mltsarmafit)        Fit an ARMA model
+**ARMA**: AutoRegressive Moving Average<br>
+[`ARMA.fit`](#mltsarmafit)        Fit an ARMA model
 
-**ARIMA**: AutoRegressive Integrated Moving Average
-  [ARIMA.aicParam](#mltsarimaaicparam) Optimal input parameters for an ARIMA model
-                 based on Akaike Information Criterion score
-  [ARIMA.fit](#mltsarimafit)       Fit an ARIMA model
+**ARIMA**: AutoRegressive Integrated Moving Average<br>
+[`ARIMA.aicParam`](#mltsarimaaicparam) Optimal input parameters for an ARIMA model based on Akaike Information Criterion score<br>
+[`ARIMA.fit`](#mltsarimafit)       Fit an ARIMA model
 
-**SARIMA**: Seasonal AutoRegressive Integrated Moving Average
-  [SARIMA.fit](#mltssarimafit)      Fit a SARIMA model
-</div>
-
-:fontawesome-brands-github:
-[KxSystems/ml/timeseries](https://github.com/KxSystems/ml/tree/master/timeseries)
+**SARIMA**: Seasonal AutoRegressive Integrated Moving Average<br>
+[`SARIMA.fit`](#mltssarimafit)      Fit a SARIMA model
 
 Distinguish _endogenous_ and _exogenous_ variables.
 
-Endogenous
+_Endogenous_ The values of the variable are determined by the model, i.e. form the basis for predicting a ‘target’ variable
 
-: The values of the variable are determined by the model, i.e. form the basis for predicting a ‘target’ variable
-
-Exogenous
-
-: Any variable whose value is determined outside of the model and which may impose an effect on the endogenous variable, i.e. if there is a national holiday this may affect the endogenous variable, but is completely independent of its behavior.
+_Exogenous_ Any variable whose value is determined outside of the model and which may impose an effect on the endogenous variable, i.e. if there is a national holiday this may affect the endogenous variable, but is completely independent of its behavior.
 
 
 ## AutoRegressive (AR)
@@ -57,7 +41,7 @@ where
 -   $\mu$ is the trend value
 -   $\phi_{i}$ is the lag parameter at time $t-i$
 
-:fontawesome-solid-hand-point-right:
+:point_right:
 [`.ml.ts.AR.fit`](#mltsarfit)
 
 
@@ -75,7 +59,7 @@ where
 -  $\hat{\alpha}_{0}$ is the mean term
 -  $\hat{\alpha}_{i}$ is past error squared coefficient
 
-:fontawesome-solid-hand-point-right:
+:point_right:
 [`.ml.ts.ARCH.fit`](#mltsarchfit)
 
 
@@ -126,34 +110,34 @@ Where:
 -   $\theta_{i}$ is the residual error parameter at time $t-i$
 
 
-Stationary timeseries
+### Stationary timeseries
 
-: A timeseries is _stationary_ if its statistical properties such as mean, variance and autocorrelation do not change over time. A timeseries with trends or seasonality are not stationary.
+A timeseries is _stationary_ if its statistical properties such as mean, variance and autocorrelation do not change over time. A timeseries with trends or seasonality are not stationary.
 
-: Differencing can be applied to a non-stationary timeseries in order to make it stationary. This involves computing the difference between consecutive observations in the timeseries a number of times.
+Differencing can be applied to a non-stationary timeseries in order to make it stationary. This involves computing the difference between consecutive observations in the timeseries a number of times.
 
-: [`stationarity`](misc.md#mltsstationarity) is a function to test if a timeseries or set of timeseries are stationary.
+[`stationarity`](misc.md#mltsstationarity) is a function to test if a timeseries or set of timeseries are stationary.
 
 
-Akaike Information Criterion
+### Akaike Information Criterion
 
-: The Akaike Information Criterion (AIC) is an estimator of in-sample prediction error. It is often used as a means of model selection. Given a collection of models for a dataset, AIC estimates the quality of each model relative to each of the other models and chooses that which minimizes the AIC score.
+The Akaike Information Criterion (AIC) is an estimator of in-sample prediction error. It is often used as a means of model selection. Given a collection of models for a dataset, AIC estimates the quality of each model relative to each of the other models and chooses that which minimizes the AIC score.
 
-: In cases where the out-of-sample prediction error is expected to differ from in-sample prediction error it is better to use [cross-validation](../xval.md).
+In cases where the out-of-sample prediction error is expected to differ from in-sample prediction error it is better to use [cross-validation](../xval.md).
 
-: The equation for calculation of the AIC score for a large sample size is given by:
+The equation for calculation of the AIC score for a large sample size is given by:
 
-    $$AIC = 2(k - \hat{L})$$
+$$AIC = 2(k - \hat{L})$$
 
-: where
+where
 
-    -   `k` is the number of estimated parameters for the model.
-    -   $\hat{L}$ is the maximum value of the likelihood function for the model being fitted.
+-   `k` is the number of estimated parameters for the model.
+-   $\hat{L}$ is the maximum value of the likelihood function for the model being fitted.
 
-:fontawesome-solid-hand-point-right:
+:point_right:
 [`.ml.ts.ARIMA.AicParam`](#mltsarimaaicparam)
 <br>
-:fontawesome-solid-hand-point-right:
+:point_right: 
 [`.ml.ts.ARIMA.fit`](#mltsarimafit)
 
 
@@ -180,10 +164,10 @@ $$ARIMA(p,d,q)(P,D,Q)_{m}$$
 
 where the upper-case components are as defined above, and $m$ refers to the number of periods in each season.
 
-:fontawesome-solid-globe:
+:globe_with_meridians:
 [Outline of SARIMA model generation and use](https://www.statsmodels.org/dev/examples/notebooks/generated/statespace_sarimax_stata.html#ARIMA-Example-3:-Airline-Model "www.statsmodels.org")
 <br>
-:fontawesome-solid-hand-point-right:
+:point_right:
 [`.ml.ts.SARIMA.fit`](#mltssarimafit)
 
 
@@ -195,7 +179,7 @@ where the upper-case components are as defined above, and $m$ refers to the numb
 
 _Fit an AR forecasting model based on a timeseries dataset_
 
-```syntax
+```txt
 .ml.ts.AR.fit[endog;exog;p;trend]
 ```
 
@@ -208,22 +192,22 @@ Where
 
 returns a dictionary containing all information collected during the fitting of a model (`modelInfo`), along with a prediction function which forecasts future values of the timeseries (`predict`)
 
-??? "Result dictionary"
-
-	The information collected during the fitting of the model is contained within `modelInfo` and includes:
-
-	-   `coefficients` – model coefficients for future predictions
-	-   `trendCoeff`   – trend coefficient
-	-   `exogCoeff`    – exog coefficients
-	-   `pCoeff`       – p value coefficients
-	-   `lagVals`      – lagged values from the training set
-
-	The predict functionality is contained within the `predict` key. The function takes arguments
-
-	-   `exog` is a table of exogenous variables; if `(::)/()` then exogenous variables ignored
-	-   `len` is the number of values that are to be predicted (integer)
-
-	and returns the predicted values.
+> **Result dictionary**
+> 
+> The information collected during the fitting of the model is contained within `modelInfo` and includes:
+> 
+> -   `coefficients` – model coefficients for future predictions
+> -   `trendCoeff`   – trend coefficient
+> -   `exogCoeff`    – exog coefficients
+> -   `pCoeff`       – p value coefficients
+> -   `lagVals`      – lagged values from the training set
+> 
+> The predict functionality is contained within the `predict` key. The function takes arguments
+> 
+> -   `exog` is a table of exogenous variables; if `(::)/()` then exogenous variables ignored
+> -   `len` is the number of values that are to be predicted (integer)
+> 
+> and returns the predicted values.
 
 ```q
 // Example timeseries
@@ -268,7 +252,7 @@ q)AR2.predict[exogFuture;10]
 
 _Fit an ARCH model based on a set of residual errors from a fitted AR model_
 
-```syntax
+```txt
 .ml.ts.ARCH.fit[residuals;p]
 ```
 
@@ -279,17 +263,17 @@ Where
 
 returns a dictionary containing all information collected during the fitting of a model (`modelInfo`), along with a prediction function which forecasts future values of the timeseries (`predict`)
 
-??? "Result dictionary"
-
-	The information collected during the fitting of the model is contained within `modelInfo` and includes:
-
-	-   `params`       – Model coefficients for future predictions
-	-   `trendCoeff`   – Trend coefficient
-	-   `exogCoeff`    – Exog coefficients
-	-   `pCoeff`       – Lag value coefficients
-	-   `residualVals` – Lagged residual errors from the input training set
-
-	The predict functionality is contained within the `predict` key. The function takes as argument the number of values that are to be predicted (integer) and	returns the predicted values.
+> **Result dictionary**
+> 
+> The information collected during the fitting of the model is contained within `modelInfo` and includes:
+> 
+> -   `params`       – Model coefficients for future predictions
+> -   `trendCoeff`   – Trend coefficient
+> -   `exogCoeff`    – Exog coefficients
+> -   `pCoeff`       – Lag value coefficients
+> -   `residualVals` – Lagged residual errors from the input training set
+> 
+> The predict functionality is contained within the `predict` key. The function takes as argument the number of values that are to be predicted (integer) and	returns the predicted values.
 
 ```q
 q)residuals:100?10f
@@ -318,7 +302,7 @@ q)ARCH.predict[10]
 
 _Use AIC score to determine the optimal model parameters for an ARIMA model_
 
-```syntax
+```txt
 .ml.ts.ARIMA.aicParam[train;test;len;dict]
 ```
 
@@ -359,7 +343,7 @@ score| 30.69017
 
 _Fit an ARIMA forecasting model based on a timeseries dataset_
 
-```syntax
+```txt
 .ml.ts.ARIMA.fit[endog;exog;p;d;q;trend]
 ```
 
@@ -374,29 +358,29 @@ Where
 
 returns a dictionary containing all information collected during the fitting of a model (`modelInfo`), along with a prediction function which forecasts future values of the timeseries (`predict`)
 
-??? "Result dictionary"
+> **Result dictionary**
+> 
+> The information collected during the fitting of the model are contained within `modelInfo` and include:
+> 
+> -   `coefficients`   – model coefficients for future predictions
+> -   `trendCoeff`     – trend coefficient
+> -   `exogCoeff`      – exog coefficients
+> -   `pCoeff`         – lag value coefficients
+> -   `qCoeff`         – error coefficients
+> -   `lagVals`        – lagged values from the training set
+> -   `residualVals`   – q residual errors calculated from training set using the params
+> -   `residualCoeffs` – coefficients used to estimate resid errors
+> -   `paramDict`      – a dictionary containing information about the model used for fitting
+> -   `originalData`   – original values to use to transform seasonal differencing to original format
+> 
+> The predict functionality is contained within the `predict` key. The function takes the following inputs:
+> 
+> -   `exog` is a table of exogenous variables; if `(::)/()` then exogenous variables ignored
+> -   `len` is the number of values that are to be predicted (integer)
+> 
+> returns the predicted values
 
-	The information collected during the fitting of the model are contained within `modelInfo` and include:
-
-	-   `coefficients`   – model coefficients for future predictions
-	-   `trendCoeff`     – trend coefficient
-	-   `exogCoeff`      – exog coefficients
-	-   `pCoeff`         – lag value coefficients
-	-   `qCoeff`         – error coefficients
-	-   `lagVals`        – lagged values from the training set
-	-   `residualVals`   – q residual errors calculated from training set using the params
-	-   `residualCoeffs` – coefficients used to estimate resid errors
-	-   `paramDict`      – a dictionary containing information about the model used for fitting
-	-   `originalData`   – original values to use to transform seasonal differencing to original format
-
-	The predict functionality is contained within the `predict` key. The function takes the following inputs:
-
-	-   `exog` is a table of exogenous variables; if `(::)/()` then exogenous variables ignored
-	-   `len` is the number of values that are to be predicted (integer)
-
-	returns the predicted values
-
-!!! tip "In general, differencing (`d`) of order 2 or less suffices to make a timeseries stationary for an ARIMA model."
+> Tip: In general, differencing (`d`) of order 2 or less suffices to make a timeseries stationary for an ARIMA model.
 
 ```q
 q)timeSeries:100?10f
@@ -432,7 +416,7 @@ q)ARIMA.predict[exogFuture;10]
 
 _Fit an ARMA forecasting model based on a timeseries dataset_
 
-```syntax
+```txt
 .ml.ts.ARMA.fit[endog;exog;p;q;trend]
 ```
 
@@ -446,26 +430,26 @@ Where
 
 returns a dictionary containing all information collected during the fitting of a model, along with a prediction function which forecasts future values of the timeseries
 
-??? "Result dictionary"
+> **Result dictionary**
+> 
+> The information collected during the fitting of the model are contained within `modelInfo` and include:
+> 
+> -   `coefficients`   – model coefficients for future predictions
+> -   `trendCoeff`     – trend coefficient
+> -   `exogCoeff`      – exog coefficients
+> -   `pCoeff`         – p value coefficients
+> -   `qCoeff`         – q coefficients
+> -   `lagVals`        – lagged values from the training set
+> -   `residualVals`   – q residual errors calculated from training set using the params
+> -   `residualCoeffs` – coefficients used to estimate resid errors
+> -   `paramDict`      – a dictionary containing information about the model used for fitting
+> 
+> The predict functionality is contained within the `predict` key. The function takes arguments
+> 
+> -   `exog` is a table of exogenous variables; if `(::)/()` then exogenous variables ignored
+> -   `len` is the number of values that are to be predicted (integer)
 
-	The information collected during the fitting of the model are contained within `modelInfo` and include:
-
-	-   `coefficients`   – model coefficients for future predictions
-	-   `trendCoeff`     – trend coefficient
-	-   `exogCoeff`      – exog coefficients
-	-   `pCoeff`         – p value coefficients
-	-   `qCoeff`         – q coefficients
-	-   `lagVals`        – lagged values from the training set
-	-   `residualVals`   – q residual errors calculated from training set using the params
-	-   `residualCoeffs` – coefficients used to estimate resid errors
-	-   `paramDict`      – a dictionary containing information about the model used for fitting
-
-	The predict functionality is contained within the `predict` key. The function takes arguments
-
-	-   `exog` is a table of exogenous variables; if `(::)/()` then exogenous variables ignored
-	-   `len` is the number of values that are to be predicted (integer)
-
-	and returns the predicted values.
+and returns the predicted values.
 
 ```q
 q)timeSeries:100?10f
@@ -501,7 +485,7 @@ q)ARMA.predict[exogFuture;10]
 
 _Fit an SARIMA forecasting model based on a timeseries dataset_
 
-```syntax
+```txt
 .ml.ts.SARIMA.fit[endog;exog;p;d;q;trend;season]
 ```
 
@@ -517,39 +501,39 @@ Where
 
 returns a dictionary containing all information collected during the fitting of a model (`modelInfo`), along with a prediction function which forecasts future values of the timeseries (`predict`)
 
-??? "Result dictionary"
+> **Result dictionary**
+> 
+> The information collected during the fitting of the model are contained within `modelInfo` and include:
+> 
+> -   `coefficients`   –  model coefficients for future predictions
+> -   `trendCoeff`     –  trend coefficient
+> -   `exogCoeff`      –  exog coefficients
+> -   `pCoeff`         –  lag value coefficients
+> -   `qCoeff`         –  error coefficients
+> -   `PCoeff`         –  seasonal lag value coefficients
+> -   `QCoeff`         –  seasonal error coefficients
+> -   `lagVals`        –  lagged values from the training set
+> -   `residualVals`   –  q residual errors calculated from training set using the params
+> -   `residualCoeffs` –  coefficients used to estimate resid errors
+> -   `paramDict`      –  a dictionary containing information about the model used for fitting
+> -   `originalData`   –  original values of input values before being differentiated
+> -   `seasonData`     –  original values to transform seasonal differencing to original format
+> 
+> The predict functionality is contained within the `predict` key. The function takes arguments
+> 
+> -   `exog` is a table of exogenous variables; if `(::)/()` then exogenous variables ignored
+> -   `len` is the number of values that are to be predicted (integer)
+> 
+> and returns the predicted values.
 
-	The information collected during the fitting of the model are contained within `modelInfo` and include:
-
-	-   `coefficients`   –  model coefficients for future predictions
-	-   `trendCoeff`     –  trend coefficient
-	-   `exogCoeff`      –  exog coefficients
-	-   `pCoeff`         –  lag value coefficients
-	-   `qCoeff`         –  error coefficients
-	-   `PCoeff`         –  seasonal lag value coefficients
-	-   `QCoeff`         –  seasonal error coefficients
-	-   `lagVals`        –  lagged values from the training set
-	-   `residualVals`   –  q residual errors calculated from training set using the params
-	-   `residualCoeffs` –  coefficients used to estimate resid errors
-	-   `paramDict`      –  a dictionary containing information about the model used for fitting
-	-   `originalData`   –  original values of input values before being differentiated
-	-   `seasonData`     –  original values to transform seasonal differencing to original format
-
-	The predict functionality is contained within the `predict` key. The function takes arguments
-
-	-   `exog` is a table of exogenous variables; if `(::)/()` then exogenous variables ignored
-	-   `len` is the number of values that are to be predicted (integer)
-
-	and returns the predicted values.
-
-!!! warning "Consistency across platforms"
-
-    When applying optimization algorithms in kdb+, subtracting small values from large to generate deltas to find the optimization direction may result in inconsistent results across operating systems.
-
-    This is due to potential floating-point precision differences at the machine level and issues with subtractions of floating point numbers more generally. These issues may be seen in the application of `.ml.ts.SARIMA` and `.ml.optimize.BFGS`.
-
-    :fontawesome-solid-book-open:
-    [Precision](../../../basics/precision.md)
+> :warning: **Consistency across platforms**
+> 
+> When applying optimization algorithms in kdb+, subtracting small values from large to generate deltas to find the optimization direction may result in inconsistent results across operating systems.
+> 
+> This is due to potential floating-point precision differences at the machine level and issues with subtractions of floating point numbers more generally. These issues may be seen in the application of `.ml.ts.SARIMA` and `.ml.optimize.BFGS`.
+> 
+> :point_right:
+> [Precision](https://code.kx.com/q/basics/precision.md)
 
 ```q
 q)timeSeries:100?10f

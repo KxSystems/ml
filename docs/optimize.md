@@ -2,9 +2,9 @@
 
 
 
-`.ml.optimize`   **Optimization functions**
-
-[`BFGS`](#mloptimizebfgs)      The Broyden-Fletcher-Goldfarb-Shanno algorithm
+> `.ml.optimize`   **Optimization functions**
+> 
+> [`BFGS`](#mloptimizebfgs)      The Broyden-Fletcher-Goldfarb-Shanno algorithm
 
 
 The `.ml.optimize` namespace contains functions that relate to the application of numerical optimization techniques. Such techniques are used to find local or global minima of user-provided objective functions and are central to many statistical models.
@@ -57,16 +57,16 @@ Optional entries for `params`:
 
 key        |  type   | default  | explanation
 -----------|---------|----------|--------
-display    | boolean |    0b    | are the results at each optimization iteration to be printed to standard output
-optimIter  | integer |    0W    | maximum number of iterations before optimization procedure is terminated
-zoomIter   | integer |    10    | maximum number of iterations when finding optimal zoom position
-wolfeIter  | integer |    10    | maximum number of iterations when attempting to calculate strong Wolfe conditions
-norm       | integer |    0W    | order of function used to calculate the gradient norm. This can be `0W = maximum value`, `-0W = minimum value` otherwise calculated via `sum[abs[vec]xexp norm]xexp 1%norm`
-gtol       |  float  |   1e-5   | gradient norm must be less than this value before successful termination
-geps       |  float  |  1.5e-8  | the absolute step size used for numerical approximation of the jacobian via forward differencing 
-stepSize   |  float  |    0W    | the maximum allowable ‘alpha’ step size between calculations during the Wolfe condition search
-c1         |  float  |   1e-4   | Armijo rule condition used in calculation of strong Wolfe conditions
-c2         |  float  |   0.9    | curvature rule condition used in calculation of the strong Wolfe condition search
+`display`    | boolean |    0b    | are the results at each optimization iteration to be printed to standard output
+`optimIter`  | integer |    0W    | maximum number of iterations before optimization procedure is terminated
+`zoomIter`   | integer |    10    | maximum number of iterations when finding optimal zoom position
+`wolfeIter`  | integer |    10    | maximum number of iterations when attempting to calculate strong Wolfe conditions
+`norm`       | integer |    0W    | order of function used to calculate the gradient norm. This can be `0W = maximum value`, `-0W = minimum value` otherwise calculated via `sum[abs[vec]xexp norm]xexp 1%norm`
+`gtol`       |  float  |   1e-5   | gradient norm must be less than this value before successful termination
+`geps`       |  float  |  1.5e-8  | the absolute step size used for numerical approximation of the jacobian via forward differencing 
+`stepSize`   |  float  |    0W    | the maximum allowable ‘alpha’ step size between calculations during the Wolfe condition search
+`c1`         |  float  |   1e-4   | Armijo rule condition used in calculation of strong Wolfe conditions
+`c2`         |  float  |   0.9    | curvature rule condition used in calculation of the strong Wolfe condition search
 
 The following examples outline the optimization algorithm in use across a number of functions and with various starting points in 1-D and 2-D space.
 

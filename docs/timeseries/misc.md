@@ -1,32 +1,21 @@
----
-title: Feature engineering | Time Series | Toolkit | Machine Learning | Documentation for kdb+ and q
-description: Feature-engineering and miscellaneous functions in the kdb+ Machine Leraning Toolkit
-author: Diane O'Donoghue
-date: September 2020
----
-# :fontawesome-solid-share-alt: Miscellaneous timeseries functionality
+# Miscellaneous timeseries functionality
 
 
-<div markdown="1" class="typewriter">
-.ml.ts
+**`.ml.ts`**
 
-**Feature engineering**
-  [laggedFeatures](#mltslaggedfeatures)   Create lagged features from a time series
-  [windowFeatures](#mltswindowfeatures)   Create windowed features from a time series
+**Feature engineering**<br>
+[`laggedFeatures`](#mltslaggedfeatures)   Create lagged features from a time series<br>
+[`windowFeatures`](#mltswindowfeatures)   Create windowed features from a time series
 
-**Miscellaneous**
-  [stationarity](#mltsstationarity)     Whether timeseries data is stationary
-</div>
-
-:fontawesome-brands-github:
-[KxSystems/ml/timeseries](https://github.com/KxSystems/ml/tree/master/timeseries)
+**Miscellaneous**<br>
+[`stationarity`](#mltsstationarity)     Whether timeseries data is stationary
 
 
 ## `.ml.ts.laggedFeatures`
 
 _Create lagged features from an equispaced tabular time series dataset_
 
-```syntax
+```txt
 .ml.ts.laggedFeatures[tab;colNames;lags]
 ```
 
@@ -38,10 +27,10 @@ Where
 
 returns a table with additional columns containing the historical values for each row.
 
-!!! warning "Null values present in any lagged columns"
-
-	The original data contained within the timeseries remains in the table. As such, null values are present in any lagged columns.
-    To apply a machine-learning algorithm, handle this data appropriately to the use case.
+> :warning: **Null values present in any lagged columns**
+> 
+> The original data contained within the timeseries remains in the table. As such, null values are present in any lagged columns.
+> To apply a machine-learning algorithm, handle this data appropriately to the use case.
 
 
 ```q
@@ -92,7 +81,7 @@ x                             x1       x2 x1_xprev_1 x2_xprev_1 x1_xprev_7 x2..
 
 _Summary of the stationarity of a set of timeseries data using an augmented Dickey-Fuller test_
 
-```syntax
+```txt
 .ml.ts.stationarity data
 ```
 
@@ -128,7 +117,7 @@ x2| 0.3685454 0.9802798    0          -3.498198        -2.891208        -2.58259
 
 _Create windowed features from an equispaced tabular timeseries_
 
-```syntax
+```txt
 .ml.ts.windowFeatures[tab;colNames;funcs;wins]
 ```
 
@@ -141,7 +130,7 @@ Where
 
 returns a table with additional columns containing the functions applied over appropriate window lengths.
 
-!!! detail "The first `max[wins]` rows of the table are removed as these are produced with insufficient data to provide accurate results"
+> The first `max[wins]` rows of the table are removed as these are produced with insufficient data to provide accurate results.
 
 
 ```q

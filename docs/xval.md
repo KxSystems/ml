@@ -1,45 +1,33 @@
----
-author: Conor McCarthy
-title: Cross validation procedures - Machine Learning – Machine Learning – kdb+ and q documentation
-description: The .ml.xv, .ml.gs and .ml.rs namespaces contain functions related to cross-validation and grid search algorithms. These algorithms test how robust or stable a model is to changes in the volume of data or the specific subsets of data used for validation.
-date: March 2019
-keywords: time-series, cross validation, grid search, random search, Sobol sequences, sobol-random search, roll-forward, chain-forward, grid search fit, data splitting, stratified splitting, kdb+, q
----
-# :fontawesome-solid-share-alt: Cross validation procedures
+# Cross-validation procedures
 
 
+`.ml.gs`   **Grid-search functions**<br>
+[`kfShuff`](#mlgskfshuff)      K-Fold cross validation with randomized indices<br>
+[`kfSplit`](#mlgskfsplit)      K-Fold cross validation with sequential indices<br>
+[`kfStrat`](#mlgskfstrat)      K-Fold cross validation with stratified indices<br>
+[`mcSplit`](#mlgsmcsplit)      Monte-Carlo cross validation with random split indices<br>
+[`pcSplit`](#mlgspcsplit)      Percentage-split cross validation<br>
+[`tsChain`](#mlgstschain)      Chain-forward cross validation<br>
+[`tsRolls`](#mlgstsrolls)      Roll-forward cross validation<br>
+<br>
+`.ml.rs`   **Random-search functions**<br>
+[`kfShuff`](#mlrskfshuff)      K-Fold cross validation with randomized indices<br>
+[`kfSplit`](#mlrskfsplit)      K-Fold cross validation with sequential indices<br>
+[`kfStrat`](#mlrskfstrat)      K-Fold cross validation with stratified indices<br>
+[`mcSplit`](#mlrsmcsplit)      Monte-Carlo cross validation with random split indices<br>
+[`pcSplit`](#mlrspcsplit)      Percentage-split cross validation<br>
+[`tsChain`](#mlrstschain)      Chain-forward cross validation<br>
+[`tsRolls`](#mlrstsrolls)      Roll-forward cross validation<br>
+<br>
+`.ml.xv `  **Cross-validation functions**<br>
+[`kfShuff`](#mlxvkfshuff)      K-Fold cross validation with randomized indices<br>
+[`kfSplit`](#mlxvkfsplit)      K-Fold cross validation with sequential indices<br>
+[`kfStrat`](#mlxvkfstrat)      K-Fold cross validation with stratified indices<br>
+[`mcSplit`](#mlxvmcsplit)      Monte-Carlo cross validation with random split indices<br>
+[`pcSplit`](#mlxvpcsplit)      Percentage-split cross validation<br>
+[`tsChain`](#mlxvtschain)      Chain-forward cross validation<br>
+[`tsRolls`](#mlxvtsrolls)      Roll-forward cross validation
 
-<div markdown="1" class="typewriter">
-.ml.gs   **Grid-search functions**
-  [kfShuff](#mlgskfshuff)      K-Fold cross validation with randomized indices
-  [kfSplit](#mlgskfsplit)      K-Fold cross validation with sequential indices
-  [kfStrat](#mlgskfstrat)      K-Fold cross validation with stratified indices
-  [mcSplit](#mlgsmcsplit)      Monte-Carlo cross validation with random split indices
-  [pcSplit](#mlgspcsplit)      Percentage-split cross validation
-  [tsChain](#mlgstschain)      Chain-forward cross validation
-  [tsRolls](#mlgstsrolls)      Roll-forward cross validation
-
-.ml.rs   **Random-search functions**
-  [kfShuff](#mlrskfshuff)      K-Fold cross validation with randomized indices
-  [kfSplit](#mlrskfsplit)      K-Fold cross validation with sequential indices
-  [kfStrat](#mlrskfstrat)      K-Fold cross validation with stratified indices
-  [mcSplit](#mlrsmcsplit)      Monte-Carlo cross validation with random split indices
-  [pcSplit](#mlrspcsplit)      Percentage-split cross validation
-  [tsChain](#mlrstschain)      Chain-forward cross validation
-  [tsRolls](#mlrstsrolls)      Roll-forward cross validation
-
-.ml.xv   **Cross-validation functions**
-  [kfShuff](#mlxvkfshuff)      K-Fold cross validation with randomized indices
-  [kfSplit](#mlxvkfsplit)      K-Fold cross validation with sequential indices
-  [kfStrat](#mlxvkfstrat)      K-Fold cross validation with stratified indices
-  [mcSplit](#mlxvmcsplit)      Monte-Carlo cross validation with random split indices
-  [pcSplit](#mlxvpcsplit)      Percentage-split cross validation
-  [tsChain](#mlxvtschain)      Chain-forward cross validation
-  [tsRolls](#mlxvtsrolls)      Roll-forward cross validation
-</div>
-
-:fontawesome-brands-github:
-[KxSystems/ml/xval](https://github.com/kxsystems/ml/tree/master/xval/)
 
 The `.ml.xv`, `.ml.gs` and `.ml.rs` namespaces contain functions related to cross validation, grid search, random/Sobol-random search algorithms respectively. These algorithms are used in machine learning to test how robust or stable a model is to changes in the volume of data or to the specific subsets of data used for model generation.
 
@@ -47,9 +35,9 @@ Within the following examples, `.ml.xv.fitScore` is used extensively to fit mode
 
 As of toolkit version 0.1.3, the distribution of cross-validation functions is invoked at console initialization. If a process is started with `$q -s -4 -p 4321` and `xval.q` is loaded into the process, then the cross-validation library will automatically make 4 worker processes available to execute jobs.
 
-!!! tip "Interactive notebook implementations"
-
-  	Interactive notebook implementations of a large number of the functions outlined here are available within :fontawesome-brands-github: [KxSystems/mlnotebooks](https://github.com/KxSystems/mlnotebooks)
+> Tip: **Interactive notebook implementations**
+> 
+> Interactive notebook implementations of a large number of the functions outlined here are available within [KxSystems/mlnotebooks](> https://github.com/KxSystems/mlnotebooks)
 
 
 ## Grid search
@@ -74,16 +62,12 @@ Random and quasi-random search methods replace the need for exhaustive searching
 
 Such methods commonly outperform grid search both with respect to finding the optimal parameters in particular in cases where a small number of parameters disproportionately affect the performance of the machine learning algorithm. This library contains two different implementations following the ethos of random search namely
 
-Random search
+**Random search** The completely random selection of hyperparameters across a defined continuous or discreet search space
 
-: The completely random selection of hyperparameters across a defined continuous or discreet search space
+**Quasi-random Sobol sequence search** The selection of hyperparameters across a user defined continuous or discreet space using a quasi-random selection method based on Sobol sequences. This method ensures that the hyperparameters searched encompass a more even representation of the hyperparameter space than is the case in purely random or grid-search methods.
 
-Quasi-random Sobol sequence search
-
-: The selection of hyperparameters across a user defined continuous or discreet space using a quasi-random selection method based on Sobol sequences. This method ensures that the hyperparameters searched encompass a more even representation of the hyperparameter space than is the case in purely random or grid search methods.
-
-    :fontawesome-brands-wikipedia-w:
-    [Sobol sequence](https://en.wikipedia.org/wiki/Sobol_sequence "Wikipedia")
+:globe_with_meridians:
+[Sobol sequence](https://en.wikipedia.org/wiki/Sobol_sequence "Wikipedia")
 
 
 ### Hyperparameter dictionary
@@ -97,21 +81,21 @@ The random and Sobol searching methods follow the same syntax as grid search, wi
 
 -   `params` is a dictionary of hyperparameters to search, which must have the following forms:
 
-Numerical
+    -   Numerical
 
-:    ``enlist[`hyperparamName]!enlist(spaceType;loBound;hiBound;hpType)``
+        ``enlist[`hyperparamName]!enlist(spaceType;loBound;hiBound;hpType)``
 
-:    where `spaceType` is `uniform` or `loguniform`, `loUpper` and `hiBound` are the limits of the hyperparameter space and `hpTyp` is the type to cast the hyperparameters to.
+        where `spaceType` is `uniform` or `loguniform`, `loUpper` and `hiBound` are the limits of the hyperparameter space and `hpTyp` is the type to cast the hyperparameters to.
 
-Symbol
+    -   Symbol
 
-:    ``enlist[`hyperparamName]!enlist(`symbol;symbolsToSearch)``
+        ``enlist[`hyperparamName]!enlist(`symbol;symbolsToSearch)``
 
-:    where `symbol` is given as the type followed by the list of possible symbol values.
+        where `symbol` is given as the type followed by the list of possible symbol values.
 
-Boolean
+    -   Boolean
 
-:    ``enlist[`hyperparamName]!enlist`boolean``
+        ``enlist[`hyperparamName]!enlist`boolean``
 
 
 A practical example:
@@ -134,7 +118,7 @@ q)ps:`typ`randomState`n`p!(typ;randomState;n;p)
 
 ## Cross validation
 
-Cross-validation is a technique used to gain a statistical understanding of how well a machine-learning model generalizes to independent datasets. This is used to limit overfitting and selection bias, especially when dealing with small datasets.
+Cross validation is a technique used to gain a statistical understanding of how well a machine-learning model generalizes to independent datasets. This is used to limit overfitting and selection bias, especially when dealing with small datasets.
 
 
 ---
@@ -144,7 +128,7 @@ Cross-validation is a technique used to gain a statistical understanding of how 
 
 _Cross-validated parameter grid search applied to data with shuffled split indices_
 
-```syntax
+```txt
 .ml.gs.kfShuff[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -183,17 +167,17 @@ q).ml.gs.kfShuff[5;1;x;yr;.ml.xv.fitScore rf;pr;.2]
 0.9975171
 ```
 
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.gs.kfshuff`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.gs.kfshuff`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.gs.kfSplit`
 
 _Cross-validated parameter grid search applied to data with ascending split indices_
 
-```syntax
+```txt
 .ml.gs.kfSplit[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -244,17 +228,17 @@ q).ml.gs.kfSplit[10;1;x;yc;.ml.xv.fitScore cf;pc;-.1]
 0.998
 ```
 
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.gs.kfsplit`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.gs.kfsplit`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.gs.kfStrat`
 
 _Cross-validated parameter grid search applied to data with an equi-distributions of targets per fold_
 
-```syntax
+```txt
 .ml.gs.kfStrat[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -295,17 +279,18 @@ q).ml.gs.kfStrat[4;1;x;yc;.ml.xv.fitScore cf;pc;.2]
 1f
 ```
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.gs.kfstrat`.
+> That is still callable but will be removed after version 3.0.
 
-    This function was previously defined as `.ml.gs.kfstrat`.
-    That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.gs.mcSplit`
 
 _Cross-validated parameter grid search applied to randomly shuffled data and validated on a percentage holdout set_
 
-```syntax
+```txt
 .ml.gs.mcSplit[pc;n;features;target;function;params;tstTyp]
 ```
 
@@ -344,17 +329,17 @@ q).ml.gs.mcSplit[0.1;3;x;yr;.ml.xv.fitScore rf;pr;.2]
 0.997549
 ```
 
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.gs.mcsplit`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.gs.mcsplit`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.gs.pcSplit`
 
 _Cross-validated parameter grid search applied to percentage split dataset_
 
-```syntax
+```txt
 .ml.gs.pcSplit[pc;n;features;target;function;params;tstTyp]
 ```
 
@@ -394,20 +379,20 @@ q).ml.gs.pcSplit[0.1;3;x;yr;.ml.xv.fitScore rf;pr;.2]
 ```
 This form of cross validation is also known as _repeated random sub-sampling validation_. This has advantages over K-fold when observations are not wanted in equi-sized bins or where outliers could heavily bias a classifier.
 
-:fontawesome-brands-wikipedia-w:
+:globe_with_meridians:
 [Repeated random sub-sampling validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)#Repeated_random_sub-sampling_validation)
 
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.gs.pcsplit`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.gs.pcsplit`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.gs.tsChain`
 
 _Cross-validated parameter grid search applied to chain forward time-series sets_
 
-```syntax
+```txt
 .ml.gs.tsChain[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -454,16 +439,17 @@ This works as shown in the following image:
 
 The data is split into equi-sized bins with increasing amounts of the data incorporated into the testing set at each step. This avoids testing a model on historical information which would be counter-productive for time-series forecasting. It also allows users to test the robustness of the model when passed increasing volumes of data.
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.gs.tschain`.
+> That is still callable but will be removed after version 3.0.
 
-    This function was previously defined as `.ml.gs.tschain`.
-    That is still callable but will be removed after version 3.0.
 
 ## `.ml.gs.tsRolls`
 
 _Cross-validated parameter grid search applied to roll forward time-series sets_
 
-```syntax
+```txt
 .ml.gs.tsRolls[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -509,16 +495,16 @@ This works as shown in the following image:
 
 Successive equi-sized bins are taken as training and validation sets at each step. This avoids testing a model on historical information which would be counter-productive for time-series forecasting.
 
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.gs.tsrolls`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.gs.tsrolls`.
+> That is still callable but will be removed after version 3.0.
 
 ## `.ml.rs.kfShuff`
 
 _Cross-validated parameter random search applied to data with shuffled split indices_
 
-```syntax
+```txt
 .ml.rs.kfShuff[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -562,10 +548,10 @@ q).ml.rs.kfShuff[5;1;x;yc;.ml.xv.fitScore cf;pr;.2]
 (,`max_depth)!,5
 1f
 ```
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.rs.kfshuff`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.gs.kfshuff`.
+> That is still callable but will be removed after version 3.0.
 
 
 ---
@@ -575,7 +561,7 @@ q).ml.rs.kfShuff[5;1;x;yc;.ml.xv.fitScore cf;pr;.2]
 
 _Cross-validated parameter random search applied to data with ascending split indices_
 
-```syntax
+```txt
 .ml.rs.kfSplit[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -628,16 +614,17 @@ q).ml.rs.kfSplit[10;1;x;yc;.ml.xv.fitScore cf;ps;-.1]
 `average`l1_ratio`alpha!(1b;0.625;7.498942e-005)
 0.894
 ```
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.gs.kfsplit`.
+> That is still callable but will be removed after version 3.0.
 
-    This function was previously defined as `.ml.rs.kfsplit`.
-    That is still callable but will be removed after version 3.0.
 
 ## `.ml.rs.kfStrat`
 
 _Cross-validated parameter random search applied to data with an equi-distributions of targets per fold_
 
-```syntax
+```txt
 .ml.rs.kfStrat[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -682,16 +669,17 @@ q).ml.rs.kfStrat[4;1;x;yc;.ml.xv.fitScore cf;pr;.2]
 `n_estimators`learning_rate!(1;0.007257519)
 0.491
 ```
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.rs.kfstrat`.
+> That is still callable but will be removed after version 3.0.
 
-    This function was previously defined as `.ml.rs.kfstrat`.
-    That is still callable but will be removed after version 3.0.
 
 ## `.ml.rs.mcSplit`
 
 _Cross-validated parameter random search applied to randomly shuffled data and validated on a percentage holdout set_
 
-```syntax
+```txt
 .ml.rs.mcSplit[pc;n;features;target;function;params;tstTyp]
 ```
 
@@ -738,16 +726,17 @@ q).ml.rs.mcSplit[0.1;3;x;yr;.ml.xv.fitScore dt;ps;.2]
 (,`max_depth)!,6
 0.9970801
 ```
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.rs.mcsplit`.
+> That is still callable but will be removed after version 3.0.
 
-    This function was previously defined as `.ml.rs.mcsplit`.
-    That is still callable but will be removed after version 3.0.
 
 ## `.ml.rs.pcSplit`
 
 _Cross-validated parameter random search applied to percentage split dataset_
 
-```syntax
+```txt
 .ml.rs.pcSplit[pc;n;features;target;function;params;tstTyp]
 ```
 
@@ -798,16 +787,17 @@ This form of cross validation is also known as _repeated random sub-sampling val
 :fontawesome-brands-wikipedia-w:
 [Repeated random sub-sampling validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)#Repeated_random_sub-sampling_validation)
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.rs.pcsplit`.
+> That is still callable but will be removed after version 3.0.
 
-    This function was previously defined as `.ml.rs.pcsplit`.
-    That is still callable but will be removed after version 3.0.
 
 ## `.ml.rs.tsChain`
 
 _Cross-validated parameter random search applied to chain forward time-series sets_
 
-```syntax
+```txt
 .ml.rs.tsChain[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -861,16 +851,17 @@ This works as shown in the following image:
 
 The data is split into equi-sized bins with increasing amounts of the data incorporated into the testing set at each step. This avoids testing a model on historical information which would be counter-productive for time-series forecasting. It also allows users to test the robustness of the model when passed increasing volumes of data.
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.rs.tschain`.
+> That is still callable but will be removed after version 3.0.
 
-    This function was previously defined as `.ml.rs.tschain`.
-    That is still callable but will be removed after version 3.0.
 
 ## `.ml.rs.tsRolls`
 
 _Cross-validated parameter random search applied to roll forward time-series sets_
 
-```syntax
+```txt
 .ml.rs.tsRolls[k;n;features;target;functions;params;tstTyp]
 ```
 
@@ -923,10 +914,10 @@ This works as shown in the following image:
 
 Successive equi-sized bins are taken as training and validation sets at each step. This avoids testing a model on historical information which would be counter-productive for time-series forecasting.
 
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.rs.tsrolls`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.rs.tsrolls`.
+> That is still callable but will be removed after version 3.0.
 
 ---
 
@@ -934,7 +925,7 @@ Successive equi-sized bins are taken as training and validation sets at each ste
 
 _K-Fold cross validation for randomized non-repeating indices_
 
-```syntax
+```txt
 .ml.xv.kfShuff[k;n;features;target;function]
 ```
 
@@ -959,17 +950,17 @@ q)mdlFunc:.ml.xv.fitScore[ar][]
 q).ml.xv.kfShuff[k;n;x;yr;mdlFunc]
 0.9999935 0.9999934 0.9999935 0.9999935 0.9999935
 ```
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.xv.kfshuff`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.xv.kfshuff`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.xv.kfSplit`
 
 _K-Fold cross-validation for ascending indices split into K-folds_
 
-```syntax
+```txt
 .ml.xv.kfSplit[k;n;features;target;function]
 ```
 
@@ -994,17 +985,17 @@ q)mdlFunc:.ml.xv.fitScore[ar][]
 q).ml.xv.kfSplit[k;n;x;yr;mdlFunc]
 0.9953383 0.9995422 0.9985156 0.9995144 0.9952133
 ```
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.xv.kfsplit`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.xv.kfsplit`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.xv.kfStrat`
 
 _Stratified K-Fold cross-validation with an approximately equal distribution of classes per fold_
 
-```syntax
+```txt
 .ml.xv.kfStrat[k;n;features;target;function]
 ```
 
@@ -1032,17 +1023,17 @@ q).ml.xv.kfSplit[k;n;x;yc;mdlFunc]
 
 This is used extensively where the distribution of classes in the data is unbalanced.
 
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.xv.kfstrat`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.xv.kfstrat`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.xv.mcSplit`
 
 _Monte-Carlo cross validation using randomized non-repeating indices_
 
-```syntax
+```txt
 .ml.xv.mcSplit[pc;n;features;target;function]
 ```
 
@@ -1073,17 +1064,17 @@ This form of cross validation is also known as _repeated random sub-sampling val
 :fontawesome-brands-wikipedia-w:
 [Repeated random sub-sampling validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)#Repeated_random_sub-sampling_validation "Wikipedia")
 
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.xv.mcsplit`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.xv.mcsplit`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.xv.pcSplit`
 
 _Percentage split cross-validation procedure_
 
-```syntax
+```txt
 .ml.xv.pcSplit[pc;n;features;target;function]
 ```
 
@@ -1108,17 +1099,17 @@ q)mdlFunc:.ml.xv.fitScore[ar][]
 q).ml.xv.pcSplit[p;n;x;yr;mdlFunc]
 0.9975171 0.9975171 0.9975171 0.9975171
 ```
-!!! warning "Deprecated"
-
-    This function was previously defined as `.ml.xv.pcsplit`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.xv.pcsplit`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.xv.tsChain`
 
 _Chain-forward cross-validation procedure_
 
-```syntax
+```txt
 .ml.xv.tsChain[k;n;features;target;function]
 ```
 
@@ -1150,16 +1141,17 @@ This works as shown in the following image.
 
 The data is split into equi-sized bins with increasing amounts of the data incorporated in the testing set at each step. This avoids testing a model on historical information which would be counter-productive for time-series forecasting. It also allows users to test the robustness of the model with data of increasing volumes.
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.xv.tschain`.
+> That is still callable but will be removed after version 3.0.
 
-    This function was previously defined as `.ml.xv.tschain`.
-    That is still callable but will be removed after version 3.0.
 
 ## `.ml.xv.tsRolls`
 
 _Roll-forward cross-validation procedure_
 
-```syntax
+```txt
 .ml.xv.tsRolls[k;n;features;target;function]
 ```
 
@@ -1191,7 +1183,8 @@ This works as shown in the following image.
 
 Successive equi-sized bins are taken as validation and training sets for each step. This avoids testing a model on historical information which would be counter-productive for time-series forecasting.
 
-!!! warning "Deprecated"
+> :warning: **Deprecated**
+> 
+> This function was previously defined as `.ml.xv.tsrolls`.
+> That is still callable but will be removed after version 3.0.
 
-    This function was previously defined as `.ml.xv.tsrolls`.
-    That is still callable but will be removed after version 3.0.

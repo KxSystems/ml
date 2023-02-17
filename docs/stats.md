@@ -1,26 +1,15 @@
----
-title: Statistical Methods | Machine Learning | Machine Learning | kdb+ and q documentation
-author: Diane O'Donoghue
-description: Descriptive statistical methods to gain more insight into data, and linear regression estimation methods to investigate unknown parameters in a model
-date: February 2021
----
-# :fontawesome-solid-share-alt: Statistical analysis
+# Statistical analysis
 
-<div markdown="1" class="typewriter">
-.ml.stats   **Statistical functions**
-
-**Descriptive statistics**
-  [describe](#mlstatsdescribe)         Descriptive information about a table
-  [percentile](#mlstatspercentile)       Percentile calculation for an array
-
-**Statistical estimation methods**
-  [describeFuncs](#mlstatsdescribefuncs)    Modify statistical functions applied to data
-  [OLS.fit](#mlstatsolsfit)           Train an ordinary least squares model on data
-  [WLS.fit](#mlstatswlsfit)           Train a weighted least squares model on data
-</div>
-
-:fontawesome-brands-github:
-[KxSystems/ml/stats](https://github.com/KxSystems/ml/tree/master/stats)
+>`.ml.stats`   **Statistical functions**
+>
+>**Descriptive statistics**<br>
+>  [`describe`](#mlstatsdescribe)         Descriptive information about a table<br>
+>  [`percentile`](#mlstatspercentile)       Percentile calculation for an array<br>
+><br>
+>**Statistical estimation methods**<br>
+>  [`describeFuncs`](#mlstatsdescribefuncs)    Modify statistical functions applied to data<br>
+>  [`OLS.fit`](#mlstatsolsfit)           Train an ordinary least squares model on data<br>
+>  [`WLS.fit`](#mlstatswlsfit)           Train a weighted least squares model on data
 
 This statistical library contains functionality ranging from descriptive statistical methods to gain more insight into your data, to linear-regression estimation methods to investigate unknown parameters in a model.
 
@@ -113,10 +102,10 @@ mode         | 2000.03.09T00:00:00.000 2000.01.05
 freq         | 3                       187
 ```
 
-!!! warning "Deprecated"
-
-    The above function was previously defined as `.ml.describe`.
-    That is still callable but will be removed after version 3.0.
+> :warning: **Deprecated**
+> 
+> The above function was previously defined as `.ml.describe`.
+> That is still callable but will be removed after version 3.0.
 
 
 ## `.ml.stats.describeFuncs`
@@ -153,7 +142,7 @@ other    All other remaining types
 
 _Percentile calculation for an array_
 
-```syntax
+```txt
 .ml.stats.percentile[array;perc]
 ```
 
@@ -176,7 +165,7 @@ q).ml.stats.percentile[10000?1f;0.6]
 
 _Train an ordinary least squares model on data_
 
-```syntax
+```txt
 .ml.stats.OLS.fit[endog;exog;trend]
 ```
 
@@ -190,28 +179,28 @@ returns the coefficients and statistical values calculated during the fitting pr
 
 More info on endogenous and exogenous variables can be found within the [timeseries](#../timeseries/models/) section of the toolkit
 
-??? "Result dictionary"
-
-	The information contained within `modelInfo` has three parts
-
-	-  `coef` The coefficients calculated during the fitting process
-	-  `variables` Statistical values calculated for each coefficient
-	-  `statsDict` Descriptive statistics for the regression model. These include:
-
-	key        | description
-	-----------|------------
-	dfTotal    | Total degrees of freedom
-	dfModel    | The degrees of freedom of the model
-	dfResidual | The degrees of freedom of the residuals
-	sumSquares | Sum of squares between the true and predicted values
-	meanSquares| Mean squares between the true and predicted values using degrees of freedom
-	fStat      | F statistic
-	r2         | r2 score
-	r2Adj      | r2 Adjusted score
-	mse        | Mean squared error
-	rse        | Residual squared error
-	pValue     | p Value
-	logLike    | log liklihood
+> **Result dictionary**
+> 
+> The information contained within `modelInfo` has three parts
+> 
+> -  `coef` The coefficients calculated during the fitting process
+> -  `variables` Statistical values calculated for each coefficient
+> -  `statsDict` Descriptive statistics for the regression model. These include:
+> 
+> key        | description
+> -----------|------------
+> `dfTotal`    | Total degrees of freedom
+> `dfModel`    | The degrees of freedom of the model
+> `dfResidual` | The degrees of freedom of the residuals
+> `sumSquares` | Sum of squares between the true and predicted values
+> `meanSquares`| Mean squares between the true and predicted values using degrees of freedom
+> `fStat`      | F statistic
+> `r2`         | r2 score
+> `r2Adj`      | r2 Adjusted score
+> `mse`        | Mean squared error
+> `rse`        | Residual squared error
+> `pValue`     | p Value
+> `logLike`    | log liklihood
 
 
 ```q
@@ -254,7 +243,7 @@ q)mdl.predict newData
 
 _Train a weighted least squares model on data_
 
-```syntax
+```txt
 .ml.stats.WLS.fit[endog;exog;weights;trend]
 ```
 
@@ -267,29 +256,29 @@ Where
 
 returns the coefficients and statistical values calculated during the fitting process (`modelInfo`) and a projection of the fit function allowing for prediction on new data (`predict`)
 
-??? "Result dictionary"
-
-	The information in `modelInfo` has four parts
-
-	-  `coef` The coefficients calculated during the fitting process
-	-  `variables` Statistical values calculated for each coefficient
-	-  `statsDict` Descriptive statistics for the regression model. These include:
-	-  `weights` The weights used for fitting the model
-
-	key        | description
-	-----------|------------
-	dfTotal    | Total degrees of freedom
-	dfModel    | The degrees of freedom of the model
-	dfResidual | The degrees of freedom of the residuals
-	sumSquares | Sum of squares between the true and predicted values
-	meanSquares| Mean squares between the true and predicted values using degrees of freedom
-	fStat      | F statistic
-	r2         | r2 score
-	r2Adj      | r2 Adjusted score
-	mse        | Mean squared error
-	rse        | Residual squared error
-	pValue     | p Value
-	logLike    | log likelihood
+> **Result dictionary**
+> 
+> The information in `modelInfo` has four parts
+> 
+> -  `coef` The coefficients calculated during the fitting process
+> -  `variables` Statistical values calculated for each coefficient
+> -  `statsDict` Descriptive statistics for the regression model. These include:
+> -  `weights` The weights used for fitting the model
+> 
+> key        | description
+> -----------|------------
+> `dfTotal`    | Total degrees of freedom
+> `dfModel`    | The degrees of freedom of the model
+> `dfResidual` | The degrees of freedom of the residuals
+> `sumSquares` | Sum of squares between the true and predicted values
+> `meanSquares`| Mean squares between the true and predicted values using degrees of freedom
+> `fStat`      | F statistic
+> `r2`         | r2 score
+> `r2Adj`      | r2 Adjusted score
+> `mse`        | Mean squared error
+> `rse`        | Residual squared error
+> `pValue`     | p Value
+> `logLike`    | log likelihood
 
 ```q
 q)exog:til 10
