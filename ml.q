@@ -4,7 +4,10 @@
 // Define version, path, and loadfile 
 
 
-\l p.q /embedPy
+@[{system"l ",x;.pykx.loaded:1b};"pykx.q";{@[{system"l ",x;.pykx.loaded:0b};"p.q";{'"Failed to load PyKX or embedPy with error: ",x}]}]
+if[.pykx.loaded;.p:.pykx];
+if[not `toraw in key `.p;.p.toraw:(::)]
+
 \d .ml
 version:@[{TOOLKITVERSION};`;`development]
 path:{string`ml^`$@[{"/"sv -1_"/"vs ssr[;"\\";"/"](-3#get .z.s)0};`;""]}`
