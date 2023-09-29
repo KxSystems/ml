@@ -175,7 +175,7 @@ fresh.i.expandResults:{[results;column]
 // @return {float} Kendall’s tau - Close to 1 shows strong agreement, close to
 //   -1 shows strong disagreement
 fresh.i.kTau:{[target;feature]
-  fresh.i.kendallTau[<;target;feature]1
+  fresh.i.kendallTau[target;feature][`:pvalue]`
   }
 
 // @private

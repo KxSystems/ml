@@ -116,15 +116,15 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.mae[xf;yf]~mae[xf;yf]`
 .ml.mae[xb;yb]~mae["i"$xb;"i"$yb]`
 .ml.mae[xb;xb]~0f
-(.ml.mape[x;y])~mean_absolute_percentage_error[y;x]
-.ml.mape[xf;yf]~mean_absolute_percentage_error[yf;xf]
-.ml.mape[xm;ym]~{mean_absolute_percentage_error[x;y]}'[flip ym;flip xm]
+(.ml.mape[x;y])~.p.get[`mean_absolute_percentage_error;<][y;x]
+.ml.mape[xf;yf]~.p.get[`mean_absolute_percentage_error;<][yf;xf]
+.ml.mape[xm;ym]~{.p.get[`mean_absolute_percentage_error;<][x;y]}'[flip ym;flip xm]
 .ml.mape[x;x]~0f
 .ml.mape[1 0n 4 2 0n;1 2 4 3 1]~11.11111111111
 
-.ml.smape[x;y]~smape[x;y]
-.ml.smape[xf;yf]~smape[xf;yf]
-.ml.smape[xm;ym]~{smape[x;y]}'[flip xm;flip ym]
+.ml.smape[x;y]~.p.get[`smape][x;y]`
+.ml.smape[xf;yf]~.p.get[`smape][xf;yf]`
+.ml.smape[xm;ym]~{.p.get[`smape][x;y]`}'[flip xm;flip ym]
 .ml.smape[x;x]~0f
 .ml.smape[1 0n 4 2 0n;1 2 4 3 1]~6.666666666666666667
 .ml.r2Score[xf;yf] ~ r2[yf;xf]`

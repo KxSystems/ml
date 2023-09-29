@@ -108,6 +108,7 @@ trainTestSplit:{[data;target;size]
 // @param tab {table} A q table
 // @return {<} a Pandas dataframe
 tab2df:{[tab]
+  if[.pykx.loaded;:.p.eval["lambda x:x"].p.topd tab];
   updTab:@[flip 0!tab;i.findCols[tab;"c"];enlist each];
   transformTab:@[updTab;i.findCols[tab]"pmdznuvt";i.q2npDate];
   pandasDF:i.pandasDF[transformTab][@;cols tab];
