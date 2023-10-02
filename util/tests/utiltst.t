@@ -35,10 +35,12 @@ dfc:.ml.tab2df ([]s:`a`b`c;j:1 2 3;c:"ABC")
 (dfxj:.ml.tab2df tx)[`:index][:;`:names;(::;`jcol)]
 (dfxx:.ml.tab2df tx)[`:index][:;`:names;(::;::)]
 tt2:([]date:2005.07.14 2005.07.15;timesp:("N"$"12:10:30.000500000";"N"$"12:13:30.000200007");time:20:30:00.001 19:23:20.201;str:enlist each ("h";"i");ind:1.3 2.5;bool:10b)
-112 112 112 10 -9 -1h~type each first (.ml.tab2df tt2)[`:values]`
-(dfc[`:c.values]`)~enlist each "ABC"
+col_types:$[.pykx.loaded;-12 112 112 -10 -9 -1h;112 112 112 10 -9 -1h];
+col_types~type each first (.ml.tab2df tt2)[`:values]`
+ret_value:$[.pykx.loaded;"ABC";enlist each "ABC"]
+ret_value~dfc[`:c.values]`;
 
-.ml.shape[1 2 3*/:til 10] ~ np[`:shape][1 2 3*/:til 10]`
+.ml.shape[1 2 3*/:til 10] ~ np[`:shape][.p.toraw 1 2 3*/:til 10]`
 .ml.shape[enlist 1] ~ np[`:shape][enlist 1]`
 .ml.shape[1 2] ~ np[`:shape][1 2]`
 .ml.shape[plaintab]~3 4
@@ -70,13 +72,15 @@ first[.ml.eye[1]] ~ enlist 1f
 
 @[{.ml.df2tab x;1b};.ml.tab2df ([]10?1f;"p"$0N,9?1000);0b]
 
-tt~update`$scol from .ml.df2tab df
-tj~update`$scol from .ml.df2tab dfj
-ts~update`$scol from .ml.df2tab dfs
-tx~update`$scol from .ml.df2tab dfsj
-tx~update`$scol from`scol`jcol xcol .ml.df2tab dfsx
-tx~update`$scol from`scol`jcol xcol .ml.df2tab dfxj
-tx~update`$scol from`scol`jcol xcol .ml.df2tab dfxx
+convertScol:{$[.pykx.loaded;x;update `$scol from x]}
+convertSJcol:{$[.pykx.loaded;;{update`$scol from x}]`scol`jcol xcol x}
+tt~convertScol .ml.df2tab df
+tj~convertScol .ml.df2tab dfj
+ts~convertScol .ml.df2tab dfs
+tx~convertScol .ml.df2tab dfsj
+tx~convertSJcol .ml.df2tab dfsx
+tx~convertSJcol .ml.df2tab dfxj
+tx~convertSJcol .ml.df2tab dfxx
 
 \S 43
 .ml.trainTestSplit[til 10;1+til 10;0.2]~`xtrain`ytrain`xtest`ytest!(2 3 7 1 6 4 9 5;3 4 8 2 7 5 10 6;0 8;1 9)

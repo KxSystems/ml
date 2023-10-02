@@ -108,7 +108,7 @@ trainTestSplit:{[data;target;size]
 // @param tab {table} A q table
 // @return {<} a Pandas dataframe
 tab2df:{[tab]
-  if[.pykx.loaded;:.p.eval["lambda x:x"].p.topd tab];
+  if[.pykx.loaded;:.pykx.eval["lambda x:x"].p.topd tab];
   updTab:@[flip 0!tab;i.findCols[tab;"c"];enlist each];
   transformTab:@[updTab;i.findCols[tab]"pmdznuvt";i.q2npDate];
   pandasDF:i.pandasDF[transformTab][@;cols tab];
@@ -129,6 +129,7 @@ tab2df:{[tab]
 //   objects are returned as q (1b) or foreign objects (0b)
 // @return {<} a q table
 df2tabTimezone:{[tab;local;qObj]
+  if[.pykx.loaded;:.pykx.toq tab];
   index:$[enlist[::]~tab[`:index.names]`;0;tab[`:index.nlevels]`];
   tab:$[index;tab[`:reset_index][];tab];
   numpyCols:`$tab[`:columns.to_numpy][]`;

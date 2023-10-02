@@ -6,7 +6,7 @@
 
 @[{system"l ",x;.pykx.loaded:1b};"pykx.q";{@[{system"l ",x;.pykx.loaded:0b};"p.q";{'"Failed to load PyKX or embedPy with error: ",x}]}]
 if[.pykx.loaded;.p:.pykx];
-if[not `toraw in key `.p;.p.toraw:(::)]
+if[not all `topy`toraw in key `.p;.p.toraw:.p.topy:(::)]
 
 \d .ml
 version:@[{TOOLKITVERSION};`;`development]
