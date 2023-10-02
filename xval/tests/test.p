@@ -1,24 +1,24 @@
-p)def< kfsplit(x,y):
+p)def kfsplit(x,y):
         from sklearn.model_selection import KFold
         kf=KFold(n_splits=y)
         split=kf.split(x)
         return split
 
-p)def< kfoldr(x,y):
+p)def kfoldr(x,y):
         from sklearn.model_selection import cross_val_score
         from sklearn.linear_model import ElasticNet
         clf = ElasticNet()
         scores = cross_val_score(clf,x,y,cv=3)
         return scores
         
-p)def< kfoldc(x,y):
+p)def kfoldc(x,y):
         from sklearn.model_selection import cross_val_score
         from sklearn.tree import DecisionTreeClassifier
         clf = DecisionTreeClassifier()
         scores = cross_val_score(clf,x,y,cv=3)
         return scores
 
-p)def< crossvalr(x,y,z,k,m):
+p)def crossvalr(x,y,z,k,m):
         from sklearn.linear_model import LinearRegression
         model=LinearRegression()
         lst=[]
@@ -35,7 +35,7 @@ p)def< crossvalr(x,y,z,k,m):
                 lst.append(score)
         return lst
         
-p)def< crossvalc(x,y,z,k,m):
+p)def crossvalc(x,y,z,k,m):
         from sklearn.tree import DecisionTreeClassifier
         model=DecisionTreeClassifier()
         lst=[]
@@ -52,7 +52,7 @@ p)def< crossvalc(x,y,z,k,m):
                 lst.append(score)
         return lst
 
-p)def< gridsearchr(x,y):
+p)def gridsearchr(x,y):
         from sklearn.model_selection import GridSearchCV
         from sklearn.linear_model import ElasticNet
         regr = ElasticNet()
@@ -63,7 +63,7 @@ p)def< gridsearchr(x,y):
         p=clf.best_params_
         return(acc, p)
 
-p)def< gridsearchc(x,y):
+p)def gridsearchc(x,y):
         from sklearn.model_selection import GridSearchCV
         from sklearn.tree import DecisionTreeClassifier
         clf = DecisionTreeClassifier()
@@ -74,7 +74,7 @@ p)def< gridsearchc(x,y):
         p=clf.best_params_
         return (acc, p)
 
-p)def< fitscore(xtrain,ytrain,xtest,ytest):
+p)def fitscore(xtrain,ytrain,xtest,ytest):
         from sklearn.linear_model import ElasticNet
         regr = ElasticNet()
         regr.fit(xtrain, ytrain)
