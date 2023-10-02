@@ -46,6 +46,7 @@ fr:first each ridx
 fc:first each cidx
 lr:last each ridx
 lc:last each cidx
+.p.list:.p.import[`builtins;`:list]
 
 / utils
 
@@ -54,10 +55,10 @@ not(count[s]~count[yi])&(s:.ml.xv.i.shuffle[yi])~yi
 not(count[s]~count[yb])&(s:.ml.xv.i.shuffle[yb])~yb
 not(count[s]~count[yc])&(s:.ml.xv.i.shuffle[yc])~yc
 
-(`int$.ml.xv.i.splitIdx[2;yf])~`int$reverse first(.p.list kfsplit[yf;2])`
-(`int$.ml.xv.i.splitIdx[2;yi])~`int$reverse first(.p.list kfsplit[yi;2])`
-(`int$.ml.xv.i.splitIdx[2;yb])~`int$reverse first(.p.list kfsplit[yb;2])`
-(`int$.ml.xv.i.splitIdx[2;yc])~`int$reverse first(.p.list kfsplit[yc;2])`
+(`int$.ml.xv.i.splitIdx[2;yf])~`int$reverse first(.p.list .p.get[`kfsplit][yf;2])`
+(`int$.ml.xv.i.splitIdx[2;yi])~`int$reverse first(.p.list .p.get[`kfsplit][yi;2])`
+(`int$.ml.xv.i.splitIdx[2;yb])~`int$reverse first(.p.list .p.get[`kfsplit][yb;2])`
+(`int$.ml.xv.i.splitIdx[2;yc])~`int$reverse first(.p.list .p.get[`kfsplit][yc;2])`
 
 (.ml.shape .ml.xv.i.shuffIdx[k;yf])~3 333
 (.ml.shape .ml.xv.i.shuffIdx[5;yi])~5 200
@@ -74,10 +75,10 @@ not(count[s]~count[yc])&(s:.ml.xv.i.shuffle[yc])~yc
 
 / xval
 
-(avg[.ml.xv.kfSplit[k;1;xf;yf;fs[net][]]]-avg .p.get[`kfoldr;<][xf;yf])<.05
-(avg[.ml.xv.kfSplit[k;1;xi;yi;fs[net][]]]-avg .p.get[`kfoldr;<][xi;yi])<.05
-(avg[.ml.xv.kfSplit[k;1;xb;yb;fs[dtc][]]]-avg .p.get[`kfoldc;<][xb;yb])<.05
-(avg[.ml.xv.kfSplit[k;1;xc;yc;fs[dtc][]]]-avg .p.get[`kfoldc;<][xc;yc])<.05
+(avg[.ml.xv.kfSplit[k;1;xf;yf;fs[net][]]]-avg .p.get[`kfoldr;<] . .p.toraw@/:(xf;yf))<.05
+(avg[.ml.xv.kfSplit[k;1;xi;yi;fs[net][]]]-avg .p.get[`kfoldr;<] . .p.toraw@/:(xi;yi))<.05
+(avg[.ml.xv.kfSplit[k;1;xb;yb;fs[dtc][]]]-avg .p.get[`kfoldc;<] . .p.toraw@/:(xb;yb))<.05
+(avg[.ml.xv.kfSplit[k;1;xc;yc;fs[dtc][]]]-avg .p.get[`kfoldc;<] . .p.toraw@/:(xc;yc))<.05
 
 count[.ml.xv.kfShuff[k;1;xf;yf;fs[net][]]]~3
 count[.ml.xv.kfShuff[k;1;xi;yi;fs[net][]]]~3
@@ -115,17 +116,17 @@ count[.ml.xv.kfStrat[k;1;xc;yc;fs[dtc][]]]~3
 
 / grid search
 
-(bp .ml.gs.kfSplit[k;1;xf;yf;fs net;gs_pr;0])~@[;1].p.get[`gridsearchr;<][xf;yf]
-(bp .ml.gs.kfSplit[k;1;xi;yi;fs net;gs_pr;0])~@[;1].p.get[`gridsearchr;<][xi;yi]
-(rnd[(avg/).ml.gs.kfSplit[k;1;xf;yf;fs net;gs_pr;0]]-rnd@[;0].p.get[`gridsearchr;<][xf;yf])<.05
-(rnd[(avg/).ml.gs.kfSplit[k;1;xi;yi;fs net;gs_pr;0]]-rnd@[;0].p.get[`gridsearchr;<][xi;yi])<.05
-(rnd[(avg/).ml.gs.kfSplit[k;1;xb;yb;fs dtc;gs_pc;0]]-rnd@[;0].p.get[`gridsearchc;<][xb;yb])<.05
-(rnd[(avg/).ml.gs.kfSplit[k;1;xc;yc;fs dtc;gs_pc;0]]-rnd@[;0].p.get[`gridsearchc;<][xc;yc])<.05
+(bp .ml.gs.kfSplit[k;1;xf;yf;fs net;gs_pr;0])~@[;1].p.get[`gridsearchr;<] . .p.toraw@/:(xf;yf)
+(bp .ml.gs.kfSplit[k;1;xi;yi;fs net;gs_pr;0])~@[;1].p.get[`gridsearchr;<] . .p.toraw@/:(xi;yi)
+(rnd[(avg/).ml.gs.kfSplit[k;1;xf;yf;fs net;gs_pr;0]]-rnd@[;0].p.get[`gridsearchr;<] . .p.toraw@/:(xf;yf))<.05
+(rnd[(avg/).ml.gs.kfSplit[k;1;xi;yi;fs net;gs_pr;0]]-rnd@[;0].p.get[`gridsearchr;<] . .p.toraw@/:(xi;yi))<.05
+(rnd[(avg/).ml.gs.kfSplit[k;1;xb;yb;fs dtc;gs_pc;0]]-rnd@[;0].p.get[`gridsearchc;<] . .p.toraw@/:(xb;yb))<.05
+(rnd[(avg/).ml.gs.kfSplit[k;1;xc;yc;fs dtc;gs_pc;0]]-rnd@[;0].p.get[`gridsearchc;<] . .p.toraw@/:(xc;yc))<.05
 
-((@[;2].ml.gs.kfSplit[k;1;xf;yf;fs net;gs_pr;.2])-@[;0].p.get[`gridsearchr;<][xf;yf])<.05
-((@[;2].ml.gs.kfSplit[k;1;xi;yi;fs net;gs_pr;.2])-@[;0].p.get[`gridsearchr;<][xi;yi])<.06
-((@[;2].ml.gs.kfSplit[k;1;xb;yb;fs dtc;gs_pc;.2])-@[;0].p.get[`gridsearchc;<][xb;yb])<.05
-((@[;2].ml.gs.kfSplit[k;1;xc;yc;fs dtc;gs_pc;.2])-@[;0].p.get[`gridsearchc;<][xc;yc])<.05
+((@[;2].ml.gs.kfSplit[k;1;xf;yf;fs net;gs_pr;.2])-@[;0].p.get[`gridsearchr;<] . .p.toraw@/:(xf;yf))<.05
+((@[;2].ml.gs.kfSplit[k;1;xi;yi;fs net;gs_pr;.2])-@[;0].p.get[`gridsearchr;<] . .p.toraw@/:(xi;yi))<.06
+((@[;2].ml.gs.kfSplit[k;1;xb;yb;fs dtc;gs_pc;.2])-@[;0].p.get[`gridsearchc;<] . .p.toraw@/:(xb;yb))<.05
+((@[;2].ml.gs.kfSplit[k;1;xc;yc;fs dtc;gs_pc;.2])-@[;0].p.get[`gridsearchc;<] . .p.toraw@/:(xc;yc))<.05
 
 (key@[;1].ml.gs.kfSplit[k;1;xf;yf;fs net;gs_pr;.2])~`alpha`max_iter
 (key@[;1].ml.gs.kfSplit[k;1;xi;yi;fs net;gs_pr;.2])~`alpha`max_iter
@@ -150,10 +151,10 @@ count[.ml.xv.kfStrat[k;1;xc;yc;fs[dtc][]]]~3
 .ml.shape[.ml.rs.kfSplit[ 4;2;xf;yf;.ml.xv.fitScore net;rs_pr_rdm; .2]]~3 8 8
 .ml.shape[.ml.rs.kfShuff[ 4;2;xf;yf;.ml.xv.fitScore net;rs_pr_rdm;-.2]]~3 8 8
 .ml.shape[.ml.rs.kfStrat[ 4;2;xb;yb;.ml.xv.fitScore dtc;rs_pc_rdm;-.2]]~3 7 8
-.ml.shape[.ml.rs.tsRolls[ 2;5;xb;yb;.ml.xv.fitScore dtc;rs_pc_rdm; .2]]~3 7 5
-.ml.shape[.ml.rs.tsChain[ 2;5;xb;yb;.ml.xv.fitScore dtc;rs_pc_rdm; .2]]~3 7 5
-.ml.shape[.ml.rs.pcSplit[.3;5;xf;yf;.ml.xv.fitScore net;rs_pr_rdm; .2]]~3 8 5
-.ml.shape[.ml.rs.mcSplit[.3;5;xf;yf;.ml.xv.fitScore net;rs_pr_rdm;-.2]]~3 8 5
+any .ml.shape[.ml.rs.tsRolls[ 2;5;xb;yb;.ml.xv.fitScore dtc;rs_pc_rdm; .2]]~/:(3 7 5; 3 8 5)
+any .ml.shape[.ml.rs.tsChain[ 2;5;xb;yb;.ml.xv.fitScore dtc;rs_pc_rdm; .2]]~/:(3 7 5; 3 8 5)
+any .ml.shape[.ml.rs.pcSplit[.3;5;xf;yf;.ml.xv.fitScore net;rs_pr_rdm; .2]]~/:(3 7 5; 3 8 5)
+any .ml.shape[.ml.rs.mcSplit[.3;5;xf;yf;.ml.xv.fitScore net;rs_pr_rdm;-.2]]~/:(3 7 5; 3 8 5)
 
 / sobol search
 
@@ -180,6 +181,6 @@ $[0b=@[{.ml.rs.mcSplit[ 4;2;xf;yf;.ml.xv.fitScore dtc;x;-.2];};rs_pr_err;{[err]e
 
 / scoring
 
-fs[net;::;df]~.p.get[`fitscore;<][df[0]0;df[0]1;df[1]0;df[1]1]
-fs[net;::;di]~.p.get[`fitscore;<][di[0]0;di[0]1;di[1]0;di[1]1]
-fs[net;::;db]~.p.get[`fitscore;<][db[0]0;db[0]1;db[1]0;db[1]1]
+fs[net;::;df]~.p.get[`fitscore;<] . .p.toraw@/:(df[0]0;df[0]1;df[1]0;df[1]1)
+fs[net;::;di]~.p.get[`fitscore;<] . .p.toraw@/:(di[0]0;di[0]1;di[1]0;di[1]1)
+fs[net;::;db]~.p.get[`fitscore;<] . .p.toraw@/:(db[0]0;db[0]1;db[1]0;db[1]1)
