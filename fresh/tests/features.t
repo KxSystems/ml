@@ -122,13 +122,13 @@ np:.p.import[`numpy]
 .ml.fresh.feat.firstMax[x2] ~ .p.get[`first_location_of_maximum][x2]`
 .ml.fresh.feat.firstMax[xnull] ~ 1f
 
-.ml.fresh.feat.firstMin[xj] ~ .p.get[`first_location_of_maximum][xj]`
-.ml.fresh.feat.firstMin[xf] ~ .p.get[`first_location_of_maximum][xf]`
-.ml.fresh.feat.firstMin[xb] ~ .p.get[`first_location_of_maximum][xb]`
-.ml.fresh.feat.firstMin[xi] ~ .p.get[`first_location_of_maximum][xi]`
+.ml.fresh.feat.firstMin[xj] ~ .p.get[`first_location_of_minimum][xj]`
+.ml.fresh.feat.firstMin[xf] ~ .p.get[`first_location_of_minimum][xf]`
+.ml.fresh.feat.firstMin[xb] ~ .p.get[`first_location_of_minimum][xb]`
+.ml.fresh.feat.firstMin[xi] ~ .p.get[`first_location_of_minimum][xi]`
 .ml.fresh.feat.firstMin[x0] ~ 0n
-.ml.fresh.feat.firstMin[x1] ~ .p.get[`first_location_of_maximum][x1]`
-.ml.fresh.feat.firstMin[x2] ~ .p.get[`first_location_of_maximum][x2]`
+.ml.fresh.feat.firstMin[x1] ~ .p.get[`first_location_of_minimum][x1]`
+.ml.fresh.feat.firstMin[x2] ~ .p.get[`first_location_of_minimum][x2]`
 .ml.fresh.feat.firstMin[xnull] ~ 1f
 
 .ml.fresh.feat.ratioValNumToSeriesLength[xj] ~ .p.get[`ratio_val_num_to_t_series][xj]`
@@ -173,12 +173,12 @@ np:.p.import[`numpy]
 .ml.fresh.feat.perRecurToAllData[x2] ~ .p.get[`percentage_recurring_all_data][x2]`
 .ml.fresh.feat.perRecurToAllData[xnull] ~ 1f
 
-.ml.fresh.feat.perRecurToAllVal[xj] ~ .p.get[`percentage_recurring_all_data][xj]`
-.ml.fresh.feat.perRecurToAllVal[xf] ~ .p.get[`percentage_recurring_all_data][xf]`
-.ml.fresh.feat.perRecurToAllVal[xb] ~ .p.get[`percentage_recurring_all_data][xb]`
-.ml.fresh.feat.perRecurToAllVal[xi] ~ .p.get[`percentage_recurring_all_data][xi]`
-.ml.fresh.feat.perRecurToAllVal[x1] ~ .p.get[`percentage_recurring_all_data][x1]`
-.ml.fresh.feat.perRecurToAllVal[x2] ~ .p.get[`percentage_recurring_all_data][x2]`
+.ml.fresh.feat.perRecurToAllVal[xj] ~ .p.get[`percentage_recurring_all_val][xj]`
+.ml.fresh.feat.perRecurToAllVal[xf] ~ .p.get[`percentage_recurring_all_val][xf]`
+.ml.fresh.feat.perRecurToAllVal[xb] ~ .p.get[`percentage_recurring_all_val][xb]`
+.ml.fresh.feat.perRecurToAllVal[xi] ~ .p.get[`percentage_recurring_all_val][xi]`
+.ml.fresh.feat.perRecurToAllVal[x1] ~ .p.get[`percentage_recurring_all_val][x1]`
+.ml.fresh.feat.perRecurToAllVal[x2] ~ .p.get[`percentage_recurring_all_val][x2]`
 .ml.fresh.feat.perRecurToAllVal[xnull] ~ 1f
 
 .ml.fresh.feat.largestDev[xj;0.5] ~ .p.get[`large_standard_deviation][xj;0.5]`
@@ -292,12 +292,12 @@ np:.p.import[`numpy]
 .ml.fresh.feat.sumRecurringVal[x0] ~ 0f
 .ml.fresh.feat.sumRecurringVal[xnull] ~ 0f
 
-.ml.fresh.feat.sumRecurringDataPoint[xj] ~ .p.get[`sum_recurring_values;<][xj]
-.ml.fresh.feat.sumRecurringDataPoint[xf] ~ .p.get[`sum_recurring_values;<][xf]
-.ml.fresh.feat.sumRecurringDataPoint[xb] ~ .p.get[`sum_recurring_values;<][xb]
-.ml.fresh.feat.sumRecurringDataPoint[xi] ~ .p.get[`sum_recurring_values;<][xi]
-.ml.fresh.feat.sumRecurringDataPoint[x1] ~ .p.get[`sum_recurring_values;<][x1]
-.ml.fresh.feat.sumRecurringDataPoint[x2] ~ .p.get[`sum_recurring_values;<][x2]
+.ml.fresh.feat.sumRecurringDataPoint[xj] ~ .p.get[`sum_recurring_data_points;<][xj]
+.ml.fresh.feat.sumRecurringDataPoint[xf] ~ .p.get[`sum_recurring_data_points;<][xf]
+.ml.fresh.feat.sumRecurringDataPoint[xb] ~ .p.get[`sum_recurring_data_points;<][xb]
+.ml.fresh.feat.sumRecurringDataPoint[xi] ~ .p.get[`sum_recurring_data_points;<][xi]
+.ml.fresh.feat.sumRecurringDataPoint[x1] ~ .p.get[`sum_recurring_data_points;<][x1]
+.ml.fresh.feat.sumRecurringDataPoint[x2] ~ .p.get[`sum_recurring_data_points;<][x2]
 .ml.fresh.feat.sumRecurringDataPoint[xnull] ~ 0f
 
 .ml.fresh.feat.c3[xj;2] ~ .p.get[`c3_py;<][xj;2]
@@ -428,14 +428,14 @@ abs[.ml.fresh.feat.binnedEntropy[xnull;50]] ~ 0f
 (value .ml.fresh.feat.changeQuant[xj;0.25;0.7;0b]) ~ .p.get[`change_quantiles;<][xj;0.25;0.7;0b;]each changequantkeys
 (value .ml.fresh.feat.changeQuant[xj;0.2;0.65;0b]) ~ .p.get[`change_quantiles;<][xj;0.2;0.65;0b;]each changequantkeys
 (value .ml.fresh.feat.changeQuant[xj;0.2;0.775;0b]) ~ .p.get[`change_quantiles;<][xj;0.2;0.775;0b;]each changequantkeys
-(value .ml.fresh.feat.changeQuant[xi;0.2;0.8;1b]) ~ .p.get[`change_quantiles;<][xi;0.2;0.8;1b;]each changequantkeys
-(value .ml.fresh.feat.changeQuant[xi;0.25;0.7;1b]) ~ .p.get[`change_quantiles;<][xi;0.25;0.7;1b;]each changequantkeys
-(value .ml.fresh.feat.changeQuant[xi;0.2;0.65;1b]) ~ .p.get[`change_quantiles;<][xi;0.2;0.65;1b;]each changequantkeys
-(value .ml.fresh.feat.changeQuant[xi;0.2;0.775;1b]) ~ .p.get[`change_quantiles;<][xi;0.2;0.775;1b;]each changequantkeys
-(value .ml.fresh.feat.changeQuant[xi;0.2;0.8;0b]) ~ .p.get[`change_quantiles;<][xi;0.2;0.8;0b;]each changequantkeys
-(value .ml.fresh.feat.changeQuant[xi;0.25;0.7;0b]) ~ .p.get[`change_quantiles;<][xi;0.25;0.7;0b;]each changequantkeys
-(value .ml.fresh.feat.changeQuant[xi;0.2;0.65;0b]) ~ .p.get[`change_quantiles;<][xi;0.2;0.65;0b;]each changequantkeys
-(value .ml.fresh.feat.changeQuant[xi;0.2;0.775;0b]) ~ .p.get[`change_quantiles;<][xi;0.2;0.775;0b;]each changequantkeys
+all (value .ml.fresh.feat.changeQuant[xi;0.2;0.8;1b]) = .p.get[`change_quantiles;<][xi;0.2;0.8;1b;]each changequantkeys
+all (value .ml.fresh.feat.changeQuant[xi;0.25;0.7;1b]) = .p.get[`change_quantiles;<][xi;0.25;0.7;1b;]each changequantkeys
+all (value .ml.fresh.feat.changeQuant[xi;0.2;0.65;1b]) = .p.get[`change_quantiles;<][xi;0.2;0.65;1b;]each changequantkeys
+all (value .ml.fresh.feat.changeQuant[xi;0.2;0.775;1b]) = .p.get[`change_quantiles;<][xi;0.2;0.775;1b;]each changequantkeys
+all (value .ml.fresh.feat.changeQuant[xi;0.2;0.8;0b]) = .p.get[`change_quantiles;<][xi;0.2;0.8;0b;]each changequantkeys
+all (value .ml.fresh.feat.changeQuant[xi;0.25;0.7;0b]) = .p.get[`change_quantiles;<][xi;0.25;0.7;0b;]each changequantkeys
+all (value .ml.fresh.feat.changeQuant[xi;0.2;0.65;0b]) = .p.get[`change_quantiles;<][xi;0.2;0.65;0b;]each changequantkeys
+all (value .ml.fresh.feat.changeQuant[xi;0.2;0.775;0b]) = .p.get[`change_quantiles;<][xi;0.2;0.775;0b;]each changequantkeys
 (value .ml.fresh.feat.changeQuant[x0;0.2;0.775;1b]) ~ (-0w 0w,4#0n)
 (value .ml.fresh.feat.changeQuant[x1;0.2;0.775;1b]) ~ (-0w 0w,4#0n)
 (value .ml.fresh.feat.changeQuant[x2;0.2;0.775;1b]) ~ (-0w 0w,4#0n)

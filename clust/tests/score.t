@@ -27,14 +27,14 @@ rnd1:count[flip d1]?4
 rnd2:count[flip d2]?4
 
 // Dave Bouldin Score
-passingTest[.ml.clust.daviesBouldin;(d1;clt1`clust);0b;pydb[flip d1;clt1`clust]`]
-passingTest[.ml.clust.daviesBouldin;(d2;clt2`clust);0b;pydb[flip d2;clt2`clust]`]
-passingTest[.ml.clust.daviesBouldin;(d2;clt3`clust);0b;pydb[flip d2;clt3`clust]`]
+passingTest[.ml.clust.daviesBouldin;(d1;clt1`clust);0b;pydb[.p.toraw flip d1;clt1`clust]`]
+passingTest[.ml.clust.daviesBouldin;(d2;clt2`clust);0b;pydb[.p.toraw flip d2;clt2`clust]`]
+passingTest[.ml.clust.daviesBouldin;(d2;clt3`clust);0b;pydb[.p.toraw flip d2;clt3`clust]`]
 
 // Silhouette Score
-passingTest[.ml.clust.silhouette;(d1;`edist;clt1`clust;1b);0b;pysil[flip d1;clt1`clust]`]
-passingTest[.ml.clust.silhouette;(d2;`edist;clt2`clust;1b);0b;pysil[flip d2;clt2`clust]`]
-passingTest[.ml.clust.silhouette;(d2;`edist;clt3`clust;1b);0b;pysil[flip d2;clt3`clust]`]
+passingTest[.ml.clust.silhouette;(d1;`edist;clt1`clust;1b);0b;pysil[.p.toraw flip d1;clt1`clust]`]
+passingTest[.ml.clust.silhouette;(d2;`edist;clt2`clust;1b);0b;pysil[.p.toraw flip d2;clt2`clust]`]
+passingTest[.ml.clust.silhouette;(d2;`edist;clt3`clust;1b);0b;pysil[.p.toraw flip d2;clt3`clust]`]
 
 // Dunn Score
 passingTest[applyScoring[.ml.clust.dunn;1  ];(d1;`e2dist;clt1`clust);1b;20]

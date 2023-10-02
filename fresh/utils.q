@@ -187,7 +187,7 @@ fresh.i.kTau:{[target;feature]
 // @return {float} Results of Fisher exact test
 fresh.i.fisher:{[target;feature]
   g:group@'target value group feature;
-  fresh.i.fisherExact[<;count@''@\:[g]distinct target]1
+  fresh.i.fisherExact[<;.p.toraw count@''@\:[g]distinct target]1
   }
 
 // @private

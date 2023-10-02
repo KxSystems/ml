@@ -1,5 +1,6 @@
 p)import numpy as np
 p)import pandas as pd
+p)import itertools
 p)from scipy.signal import welch, cwt, ricker, find_peaks_cwt
 p)from scipy.stats import linregress
 p)from statsmodels.tsa.stattools import acf, adfuller, pacf

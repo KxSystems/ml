@@ -44,14 +44,16 @@ table3:([]desc 1000000?1f;1000000?10f;asc 1000000?1f)
 table4:([]1000000?0b;1000000?1f;1000000?1f)
 target1:asc 1000000?100f;target2:desc 1000000?1f;target3:target4:1000000?0b
 bintest:{2=count distinct x}
-pdmatrix:{pddf[.p.get[`benjamini_hochberg_test;<][.p.topd y;"FALSE";x]][`:values]}
-k:{pdmatrix[x;y]`}
+pdmatrix:{pddf[.p.get[`benjamini_hochberg_test][.p.topd y;$[.pykx.loaded;0b;"FALSE"];x]][`:values]`}
+k:{t:pdmatrix[x;y];@[{x`};t;{[x;y]x}[t]]}
 vec:{k[x;y][;2]}
 bhfn:{[table;target]
 	pdict:.ml.fresh.sigFeat[table;target];
 	ptable:([]label:key pdict;p_value:value pdict);
-	dfptable:tab2df[ptable];
-	("i"$count .ml.fresh.benjhoch[0.05;pdict]) ~ sum vec[0.05;dfptable]=1b
+	dfptable:$[.pykx.loaded;;tab2df]ptable;
+        vecret:vec[0.05;dfptable];
+        vecret:$[11h=type vecret;`True=;0<]vecret;
+        ("i"$count .ml.fresh.benjhoch[0.05;pdict]) ~ sum vecret=1b
 	}
 bhfn[table1;target1]
 bhfn[table2;target2]
