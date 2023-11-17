@@ -53,7 +53,7 @@ keyedinfs:([k:1 2]x:0 0W)
 .ml.dropConstant[nt]~([]101b;x2:1 2 0n)
 .ml.dropConstant[nulltab]~select x,x1,x2,x3 from nulltab
 
-MinMaxScaler[`:fit][.p.toraw flip plainmat];
+MinMaxScaler[`:fit][flip plainmat];
 minMaxKeys:`minData`maxData
 minMax1:.ml.minMaxScaler.fit[plainmat]
 minMax2:.ml.minMaxScaler.fit[scale1]
@@ -67,7 +67,7 @@ minMax3[`modelInfo]~minMaxKeys!1 5f
 minMax4[`modelInfo]~minMaxKeys!01b
 minMax5[`modelInfo]~minMaxKeys!(3 1 4f;5 1 4f)
 
-.ml.minMaxScaler.fitTransform[plainmat]~flip"f"$MinMaxScaler[`:transform][.p.toraw flip plainmat]`
+.ml.minMaxScaler.fitTransform[plainmat]~flip"f"$MinMaxScaler[`:transform][flip plainmat]`
 .ml.minMaxScaler.fitTransform[scale1]~(0 1f;1 0f;1 0f)
 .ml.minMaxScaler.fitTransform[scale2]~0.5 0.25 1 0.75 0f
 .ml.minMaxScaler.fitTransform[scale3]~0 0 1 1f
@@ -75,7 +75,7 @@ minMax5[`modelInfo]~minMaxKeys!(3 1 4f;5 1 4f)
 minMax2.transform[scale4]~(1 3f;-0.5 0n;0.5 0n)
 minMax3.transform[5#y]~5.75 1.75 9.5 5.5 4.25
 
-StdScaler[`:fit][.p.toraw flip plainmat];
+StdScaler[`:fit][flip plainmat];
 stdScaleKeys:`avgData`devData
 stdScale1:.ml.stdScaler.fit[plainmat]
 stdScale2:.ml.stdScaler.fit[scale1]
@@ -91,7 +91,7 @@ key[stdScale4[`modelInfo]]~stdScaleKeys
 key[stdScale5[`modelInfo]]~stdScaleKeys
 key[stdScale6[`modelInfo]]~stdScaleKeys
 
-stdScale1.transform[plainmat]~flip"f"$StdScaler[`:transform][.p.toraw flip plainmat]`
+stdScale1.transform[plainmat]~flip"f"$StdScaler[`:transform][flip plainmat]`
 stdScale2.transform[scale1]~(-1 1f;1 -1f;1 -1f)
 stdScale3.transform[xf]~scale[xf]`
 stdScale4.transform[y]~scale[y]`

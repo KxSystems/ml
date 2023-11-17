@@ -2,7 +2,7 @@ p)def kfsplit(x,y):
         from sklearn.model_selection import KFold
         kf=KFold(n_splits=y)
         split=kf.split(x)
-        return split
+        return list(split)
 
 p)def kfoldr(x,y):
         from sklearn.model_selection import cross_val_score

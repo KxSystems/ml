@@ -40,7 +40,7 @@ col_types~type each first (.ml.tab2df tt2)[`:values]`
 ret_value:$[.pykx.loaded;"ABC";enlist each "ABC"]
 ret_value~dfc[`:c.values]`;
 
-.ml.shape[1 2 3*/:til 10] ~ np[`:shape][.p.toraw 1 2 3*/:til 10]`
+.ml.shape[1 2 3*/:til 10] ~ np[`:shape][1 2 3*/:til 10]`
 .ml.shape[enlist 1] ~ np[`:shape][enlist 1]`
 .ml.shape[1 2] ~ np[`:shape][1 2]`
 .ml.shape[plaintab]~3 4

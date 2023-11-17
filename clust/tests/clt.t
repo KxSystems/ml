@@ -22,8 +22,8 @@ qDendrogram:{asc each x(y . z)[`modelInfo;`dgram]}
 algoOutputs:{asc key x . y}
 algoOutputsFit:{asc key first x . y}
 countOutput:{count x y}
-pythonRes  :{[fclust;mat;t;clust;param]value group fclust[.p.toraw mat t[`modelInfo;`dgram];clust;param]`}[fclust;mat]
-pythonDgram:{[lnk;d;lf;df]asc each lnk[.p.toraw flip d;lf;df]`}[lnk]
+pythonRes  :{[fclust;mat;t;clust;param]value group fclust[mat t[`modelInfo;`dgram];clust;param]`}[fclust;mat]
+pythonDgram:{[lnk;d;lf;df]asc each lnk[flip d;lf;df]`}[lnk]
 qDgramDists:{(x . y)[`modelInfo;`dgram]`dist}
 
 // Datasets
@@ -160,11 +160,11 @@ tab1:.ml.clust.hc.fit[d1;`mdist ;`single]
 tab2:.ml.clust.hc.fit[d1;`e2dist;`average]
 tab3:.ml.clust.hc.fit[d2;`e2dist;`centroid]
 tab4:.ml.clust.hc.fit[d2;`edist ;`complete]
-hct1fit:"j"$fclust[.p.toraw mat tab1[`modelInfo;`dgram];4;`maxclust]`
+hct1fit:"j"$fclust[mat tab1[`modelInfo;`dgram];4;`maxclust]`
 hcd1pred1:1 2 1 1 2 2 1 1 1 1 1 2 1 2 2
 hcd1pred2:1 3 1 1 3 3 1 1 1 1 1 3 1 3 3
 hcd1pred3:1 3 1 1 3 3 1 1 1 1 1 3 1 3 3
-pyDgramDists:(lnk[.p.toraw flip d2;`single;`sqeuclidean]`)[;2]
+pyDgramDists:(lnk[flip d2;`single;`sqeuclidean]`)[;2]
 
 // Fit
 passingTest[clusterAdd1[.ml.clust.hc.cutK   ];(tab1;4);1b;hct1fit]

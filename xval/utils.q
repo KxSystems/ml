@@ -152,7 +152,8 @@ xv.i.idxN:{[func1;func2;k;n;features;target]
 // @return {any} Output of func with idx applied to data
 xv.i.applyIdx:{[idx;k;n;features;target;function]
   splitData:raze idx[k;n;features;target];
-  {[function;data]function data[]}[function]peach splitData
+  convFunc:$[.pykx.loaded & type[raze target]in 10 -11h;{`e+1;x[;1]:.pykx.toraw each x[;1];x};::];
+  {[function;data]function convFunc data[]}[function;convFunc]peach splitData
   }
 
 // Python utilities required for xval.q

@@ -140,7 +140,7 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.tScoreEqual[xf;yf]~abs stats[`:ttest_ind][xf;yf][`:statistic]`
 .ml.tScoreEqual[xb;yb]~abs stats[`:ttest_ind][xb;yb][`:statistic]`
 .ml.tScoreEqual[x;x]~abs stats[`:ttest_ind][x;x][`:statistic]`
-.ml.covMatrix[flip value flip plaintab]~np[`:cov][.pykx.topy flip value flip  plaintab;`bias pykw 1b]`
+.ml.covMatrix[flip value flip plaintab]~np[`:cov][flip value flip  plaintab;`bias pykw 1b]`
 .ml.covMatrix[(10110b;01110b)]~(0.24 0.04;0.04 0.24)
 .ml.covMatrix[(10110b;11111b)]~(0.24 0f;0 0f)
 .ml.covMatrix[(11111b;11111b)]~(0 0f;0 0f)
