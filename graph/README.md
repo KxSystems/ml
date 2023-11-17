@@ -1,4 +1,4 @@
-# Graphing and Pipeline interface
+# Graphing and pipeline interface
 
 The functionality contained in this folder surrounds the implementation of a graph and pipeline execution structural form of kdb+. This functionality is intended to provide a common structural template and execution mechanism for complex code bases require ease of modification which is common within machine learning use cases.
 
@@ -6,8 +6,8 @@ The functionality contained in this folder surrounds the implementation of a gra
 
 Within this folder are two scripts that contains the entirity of this graph and pipeline functionality. These scripts are:
 
-1. graph.q: This contains all functionality required for the creation, deletion and update of nodes and edges within the graph structure.
-2. pipeline.q: This contains functionality for both the compilation and execution of a user generated graph.
+1. `graph.q`: This contains all functionality required for the creation, deletion and update of nodes and edges within the graph structure.
+2. `pipeline.q`: This contains functionality for both the compilation and execution of a user generated graph.
 
 ## Requirements
 
@@ -21,13 +21,13 @@ Place the `ml` library in `$QHOME` and load into a q instance using `ml/ml.q`
 
 The following will load the graphing and pipeline functionality into the `.ml` namespace  
 ```q
-q)\l ml/ml.q
-q).ml.loadfile`:graph/init.q
+\l ml/ml.q
+.ml.loadfile`:graph/init.q
 ```
 
 ## Documentation
 
-Documentation is available on the [Graph](https://code.kx.com/q/ml/toolkit/graph/) homepage.
+Documentation is available on the [Graph](../docs/graph/README.md) homepage.
 
 ## Status
 
