@@ -11,7 +11,6 @@ In each case significance tests implemented within freshq are compared to
 equivalent significance tests implemented previously in python.
 \
 
-\l p.q
 \l ml.q
 \l fresh/init.q
 \l fresh/tests/significancetests.p
@@ -22,13 +21,13 @@ xb:5000#0101101011b
 yb:5000#0101101011b
 
 / 1a.
-.ml.fresh.i.fisher[xb;yb] ~ binary_feature_binary_test[xb;yb]
+.ml.fresh.i.fisher[xb;yb] ~ .p.get[`binary_feature_binary_test;<][xb;yb]
 
 / 1b.
-.ml.fresh.i.ks[yb;xf] ~ target_binary_feature_real_test[yb;xf]
+.ml.fresh.i.ks[yb;xf] ~ .p.get[`target_binary_feature_real_test;<][yb;xf]
 
 / 1c.
-.ml.fresh.i.kTau[xf;yf] ~ target_real_feature_real_test[xf;yf]
+.ml.fresh.i.kTau[xf;yf] ~ .p.get[`target_real_feature_real_test;<][xf;yf]
 
 /
 2.
@@ -45,14 +44,16 @@ table3:([]desc 1000000?1f;1000000?10f;asc 1000000?1f)
 table4:([]1000000?0b;1000000?1f;1000000?1f)
 target1:asc 1000000?100f;target2:desc 1000000?1f;target3:target4:1000000?0b
 bintest:{2=count distinct x}
-pdmatrix:{pddf[benjamini_hochberg_test[y;"FALSE";x]][`:values]}
-k:{pdmatrix[x;y]`}
+pdmatrix:{pddf[.p.get[`benjamini_hochberg_test][.p.topd y;$[.pykx.loaded;0b;"FALSE"];x]][`:values]`}
+k:{t:pdmatrix[x;y];@[{x`};t;{[x;y]x}[t]]}
 vec:{k[x;y][;2]}
 bhfn:{[table;target]
 	pdict:.ml.fresh.sigFeat[table;target];
 	ptable:([]label:key pdict;p_value:value pdict);
-	dfptable:tab2df[ptable];
-	("i"$count .ml.fresh.benjhoch[0.05;pdict]) ~ sum vec[0.05;dfptable]=1b
+	dfptable:$[.pykx.loaded;;tab2df]ptable;
+        vecret:vec[0.05;dfptable];
+        vecret:$[11h=type vecret;`True=;0<]vecret;
+        ("i"$count .ml.fresh.benjhoch[0.05;pdict]) ~ sum vecret=1b
 	}
 bhfn[table1;target1]
 bhfn[table2;target2]

@@ -205,7 +205,7 @@ fresh.feat.firstMin:{[data]
 // @param data {number[]} Numerical data points
 // @return {dictionary} Spectral centroid, variance, skew and kurtosis
 fresh.feat.fftAggreg:{[data]
-  a:fresh.i.abso[fresh.i.rfft data]`;
+  a:fresh.i.abso[.p.toraw fresh.i.rfft data]`;
   l:"f"$til count a;
   mean:1.,(sum each a*/:3(l*)\l)%sum a;
   m1:mean 1;m2:mean 2;m3:mean 3;m4:mean 4;
@@ -227,7 +227,7 @@ fresh.feat.fftCoeff:{[data;coeff]
   r:(fresh.i.angle[fx;`deg pykw 1b]`;
     fresh.i.real[fx]`;
     fresh.i.imag[fx]`;
-    fresh.i.abso[fx:fresh.i.rfft data]`
+    fresh.i.abso[fx:.p.toraw fresh.i.rfft data]`
     );
   fftKeys:`$"_"sv'string raze(`coeff,/:til coeff),\:/:`angle`real`imag`abs;
   fftVals:raze coeff#'r,\:coeff#0n;

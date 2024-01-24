@@ -104,8 +104,8 @@ xv.mcSplit:xv.i.applyIdx{[pc;n;features;target]
 // @return {float[]} Scores outputted by function applied to p and data
 xv.fitScore:{[function;p;data]
   fitFunc:function[][p]`:fit;
-  scoreFunc:.[fitFunc;numpyArray each data 0]`:score;
-  .[scoreFunc;numpyArray each data 1]`
+  scoreFunc:.[fitFunc;{.p.toraw numpyArray .p.toraw x}each data 0]`:score;
+  .[scoreFunc;{.p.toraw numpyArray x}each data 1]`
   }
 
 // Hyperparameter search procedures

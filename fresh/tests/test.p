@@ -1,53 +1,54 @@
 p)import numpy as np
 p)import pandas as pd
+p)import itertools
 p)from scipy.signal import welch, cwt, ricker, find_peaks_cwt
 p)from scipy.stats import linregress
 p)from statsmodels.tsa.stattools import acf, adfuller, pacf
 p)from numpy.linalg import LinAlgError
 
-p)def< _get_length_sequences_where(x):
+p)def _get_length_sequences_where(x):
         if len(x) == 0:
                 return [0]
         else:
                 res = [len(list(group)) for value, group in itertools.groupby(x) if value == 1]
                 return res if len(res) > 0 else [0]
-p)def< aggregate_on_chunks(x, f_agg, chunk_len):return [getattr(x[i * chunk_len: (i + 1) * chunk_len], f_agg)() for i in range(int(np.ceil(len(x) / chunk_len)))]
+p)def aggregate_on_chunks(x, f_agg, chunk_len):return [getattr(x[i * chunk_len: (i + 1) * chunk_len], f_agg)() for i in range(int(np.ceil(len(x) / chunk_len)))]
 
-p)def< hasduplicate(x):return len(x) != len(set(x))
-p)def< hasduplicatemin(x):return sum(np.asarray(x) == min(x)) >= 2
-p)def< hasduplicatemax(x):return sum(np.asarray(x) == max(x)) >= 2
-p)def< abs_energy(x):x = np.asarray(x); return sum(x * x)
-p)def< mean_change(x):return np.mean(np.diff(x))
-p)def< mean_abs_change(x):return np.mean(np.abs(np.diff(x)))
-p)def< count_above_mean(x): x = np.asarray(x); m = np.mean(x); return np.where(x > m)[0].shape[0]
-p)def< count_below_mean(x): x = np.asarray(x); m = np.mean(x); return np.where(x < m)[0].shape[0]
-p)def< first_location_of_maximum(x): x = np.asarray(x); return np.argmax(x) / len(x) if len(x) > 0 else np.NaN
-p)def< first_location_of_minimum(x): x = np.asarray(x); return np.argmin(x) / len(x) if len(x) > 0 else np.NaN
-p)def< last_location_of_minimum(x): x = np.asarray(x); return 1.0 - (1+np.argmin(x[::-1]))/ len(x) if len(x) > 0 else np.NaN
-p)def< last_location_of_maximum(x): x = np.asarray(x); return 1.0 - (1+np.argmax(x[::-1]))/ len(x) if len(x) > 0 else np.NaN
-p)def< ratio_val_num_to_t_series(x):return len(set(x))/len(x)
-p)def< ratio_beyond_r_sigma(x,r):return sum(abs(x - np.mean(x)) > r * np.std(x))/len(x)
-p)def< large_standard_deviation(x,r):x = np.asarray(x);return np.std(x) > (r * (max(x) - min(x)))
-p)def< absolute_sum_of_changes(x):return np.sum(abs(np.diff(x)))
-p)def< longest_strike_below_mean(x):return max(_get_length_sequences_where(x <= np.mean(x))) if len(x) > 0 else 0
-p)def< longest_strike_above_mean(x):return max(_get_length_sequences_where(x >= np.mean(x))) if len(x) > 0 else 0
-p)def< skewness_py(x):x = pd.Series(x);return pd.Series.skew(x)
-p)def< kurtosis_py(x):x = pd.Series(x);return pd.Series.kurtosis(x)
-p)def< range_count(x,min,max):return np.sum((x >= min) & (x < max))
-p)def< variance_larger_than_standard_deviation(x):return np.var(x) > np.std(x)
-p)def< number_cwt_peaks(x,n):return len(find_peaks_cwt(vector=x, widths=np.array(list(range(1, n + 1))), wavelet=ricker)) 
-p)def< quantile_py(x, q):x = pd.Series(x);return pd.Series.quantile(x, q)
-p)def< value_count(x, value):
+p)def hasduplicate(x):return len(x) != len(set(x))
+p)def hasduplicatemin(x):return sum(np.asarray(x) == min(x)) >= 2
+p)def hasduplicatemax(x):return sum(np.asarray(x) == max(x)) >= 2
+p)def abs_energy(x):x = np.asarray(x); return sum(x * x)
+p)def mean_change(x):return np.mean(np.diff(x))
+p)def mean_abs_change(x):return np.mean(np.abs(np.diff(x)))
+p)def count_above_mean(x): x = np.asarray(x); m = np.mean(x); return np.where(x > m)[0].shape[0]
+p)def count_below_mean(x): x = np.asarray(x); m = np.mean(x); return np.where(x < m)[0].shape[0]
+p)def first_location_of_maximum(x): x = np.asarray(x); return np.argmax(x) / len(x) if len(x) > 0 else np.NaN
+p)def first_location_of_minimum(x): x = np.asarray(x); return np.argmin(x) / len(x) if len(x) > 0 else np.NaN
+p)def last_location_of_minimum(x): x = np.asarray(x); return 1.0 - (1+np.argmin(x[::-1]))/ len(x) if len(x) > 0 else np.NaN
+p)def last_location_of_maximum(x): x = np.asarray(x); return 1.0 - (1+np.argmax(x[::-1]))/ len(x) if len(x) > 0 else np.NaN
+p)def ratio_val_num_to_t_series(x):return len(set(x))/len(x)
+p)def ratio_beyond_r_sigma(x,r):return sum(abs(x - np.mean(x)) > r * np.std(x))/len(x)
+p)def large_standard_deviation(x,r):x = np.asarray(x);return np.std(x) > (r * (max(x) - min(x)))
+p)def absolute_sum_of_changes(x):return np.sum(abs(np.diff(x)))
+p)def longest_strike_below_mean(x):return max(_get_length_sequences_where(x <= np.mean(x))) if len(x) > 0 else 0
+p)def longest_strike_above_mean(x):return max(_get_length_sequences_where(x >= np.mean(x))) if len(x) > 0 else 0
+p)def skewness_py(x):x = pd.Series(x);return pd.Series.skew(x)
+p)def kurtosis_py(x):x = pd.Series(x);return pd.Series.kurtosis(x)
+p)def range_count(x,min,max):return np.sum((x >= min) & (x < max))
+p)def variance_larger_than_standard_deviation(x):return np.var(x) > np.std(x)
+p)def number_cwt_peaks(x,n):return len(find_peaks_cwt(vector=x, widths=np.array(list(range(1, n + 1))), wavelet=ricker)) 
+p)def quantile_py(x, q):x = pd.Series(x);return pd.Series.quantile(x, q)
+p)def value_count(x, value):
         if np.isnan(value):
                 return np.isnan(x)
         else:
                 return x[x == value].shape[0]
 
-p)def< percentage_recurring_all_data(x):
+p)def percentage_recurring_all_data(x):
         unique, counts = np.unique(x, return_counts=True)
         return np.sum(counts > 1) / float(counts.shape[0])
 
-p)def< percentage_recurring_all_val(x):
+p)def percentage_recurring_all_val(x):
         x = pd.Series(x)
         if len(x) == 0:
                 return np.nan
@@ -55,7 +56,7 @@ p)def< percentage_recurring_all_val(x):
         value_counts = x.value_counts()
         return value_counts[value_counts > 1].sum() / len(x)
 
-p)def< number_peaks(x, n):
+p)def number_peaks(x, n):
         x = np.asarray(x)
         x_reduced = x[n:-n]
         res = None
@@ -68,7 +69,7 @@ p)def< number_peaks(x, n):
                 res &= (x_reduced > np.roll(x, -i)[n:-n])
         return sum(res)
 
-p)def< cid_ce(x, normalize):
+p)def cid_ce(x, normalize):
         x = np.asarray(x)
         if normalize:
                 s = np.std(x)
@@ -79,22 +80,22 @@ p)def< cid_ce(x, normalize):
         x = np.diff(x)
         return np.sqrt(np.sum((x * x)))
 
-p)def< mean_second_derivative_central(x):
+p)def mean_second_derivative_central(x):
         diff = (np.roll(x, 1) - 2 * np.array(x) + np.roll(x, -1)) / 2.0
         return np.mean(diff[1:-1])
 
-p)def< sum_recurring_values(x):
+p)def sum_recurring_values(x):
         unique, counts = np.unique(x, return_counts=True)
         counts[counts < 2] = 0
         counts[counts > 1] = 1
         return np.sum(counts * unique)
 
-p)def< sum_recurring_data_points(x):
+p)def sum_recurring_data_points(x):
         unique, counts = np.unique(x, return_counts=True)
         counts[counts < 2] = 0
         return np.sum(counts * unique)
 
-p)def< c3_py(x, lag):
+p)def c3_py(x, lag):
         n = len(x)
         x = np.asarray(x)
         if 2 * lag >= n:
@@ -102,20 +103,20 @@ p)def< c3_py(x, lag):
         else:
                 return np.mean((np.roll(x, 2 * -lag) * np.roll(x, -lag) * x)[0:(n - 2 * lag)])
 
-p)def< number_crossing_m(x, m):
+p)def number_crossing_m(x, m):
         if not isinstance(x, (np.ndarray, pd.Series)):
                 x = np.asarray(x)
         positive = x > m
         return np.where(np.bitwise_xor(positive[1:], positive[:-1]))[0].size
 
-p)def< binned_entropy(x, max_bins):
+p)def binned_entropy(x, max_bins):
         if not isinstance(x, (np.ndarray, pd.Series)):
                 x = np.asarray(x)
         hist, bin_edges = np.histogram(x, bins=max_bins)
         probs = hist / x.size
         return - np.sum(p * np.math.log(p) for p in probs if p != 0)
 
-p)def< autocorrelation(x, lag):
+p)def autocorrelation(x, lag):
         if type(x) is pd.Series:
                 x = x.values
         if len(x) < lag:
@@ -126,7 +127,7 @@ p)def< autocorrelation(x, lag):
         sum_product = np.sum((y1-x_mean)*(y2-x_mean))
         return sum_product / ((len(x) - lag) * np.var(x))
 
-p)def< energy_ratio_by_chunks(x,y,z):
+p)def energy_ratio_by_chunks(x,y,z):
         full_series_energy = np.sum(x ** 2)
         num_segments = y
         segment_focus = z
@@ -137,7 +138,7 @@ p)def< energy_ratio_by_chunks(x,y,z):
         res_data=(np.sum(x[start:end]**2.0)/full_series_energy)
         return res_data 
 
-p)def< change_quantiles(x, ql, qh, isabs, f_agg):
+p)def change_quantiles(x, ql, qh, isabs, f_agg):
         if ql >= qh:
                 ValueError("ql={} should be lower than qh={}".format(ql, qh))
         div = np.diff(x)
@@ -156,7 +157,7 @@ p)def< change_quantiles(x, ql, qh, isabs, f_agg):
                 aggregator = getattr(np, f_agg)
                 return aggregator(div[ind_inside_corridor])
 
-p)def< time_reversal_asymmetry_statistic(x, lag):
+p)def time_reversal_asymmetry_statistic(x, lag):
     n = len(x)
     x = np.asarray(x)
     if 2 * lag >= n:
@@ -165,7 +166,7 @@ p)def< time_reversal_asymmetry_statistic(x, lag):
         return np.mean((np.roll(x, 2 * -lag) * np.roll(x, 2 * -lag) * np.roll(x, -lag) -
                         np.roll(x, -lag) * x * x)[0:(n - 2 * lag)])
 
-p)def< index_mass_quantile(x, q):
+p)def index_mass_quantile(x, q):
 
     x = np.asarray(x)
     abs_x = np.abs(x)
@@ -177,13 +178,13 @@ p)def< index_mass_quantile(x, q):
         mass_centralized = np.cumsum(abs_x) / s
         return (np.argmax(mass_centralized >= q)+1)/len(x)
 
-p)def< linear_trend(x):
+p)def linear_trend(x):
     linReg = linregress(range(len(x)), x)
     return linReg
 
-p)def< get_moment(y, moment):return y.dot(np.arange(len(y))**moment) / y.sum()
-p)def< get_centroid(y):return get_moment(y, 1)
-p)def< get_variance(y):return get_moment(y, 2) - get_centroid(y) ** 2
+p)def get_moment(y, moment):return y.dot(np.arange(len(y))**moment) / y.sum()
+p)def get_centroid(y):return get_moment(y, 1)
+p)def get_variance(y):return get_moment(y, 2) - get_centroid(y) ** 2
 
 p)def get_skew(y):
     variance = get_variance(y)
@@ -193,7 +194,7 @@ p)def get_skew(y):
         return (
             get_moment(y, 3) - 3*get_centroid(y)*variance - get_centroid(y)**3
         ) / get_variance(y)**(1.5)
-p)def< get_kurtosis(y):
+p)def get_kurtosis(y):
     variance = get_variance(y)
     if variance < 0.5:
         return np.nan
@@ -203,11 +204,11 @@ p)def< get_kurtosis(y):
             + 6*get_moment(y, 2)*get_centroid(y)**2 - 3*get_centroid(y)
         ) / get_variance(y)**2
 
-p)def< fft_aggregated(x):
+p)def fft_aggregated(x):
     fft_abs = abs(np.fft.rfft(x))
     return get_centroid(fft_abs),get_variance(fft_abs),get_skew(fft_abs),get_kurtosis(fft_abs)
 
-p)def< index_mass_quantile(x, q):
+p)def index_mass_quantile(x, q):
 
     x = np.asarray(x)
     abs_x = np.abs(x)
@@ -219,7 +220,7 @@ p)def< index_mass_quantile(x, q):
         mass_centralized = np.cumsum(abs_x) / s
         return (np.argmax(mass_centralized >= q)+1)/len(x)
 
-p)def< agg_autocorrelation(x,y):
+p)def agg_autocorrelation(x,y):
     var = np.var(x)
     n = len(x)
     if np.abs(var) < 10**-10 or n == 1:
@@ -228,7 +229,7 @@ p)def< agg_autocorrelation(x,y):
         a = acf(x, adjusted=True, fft=n > 1250)[1:]
     return getattr(np, y)(a)
 
-p)def< augmented_dickey_fuller(x):
+p)def augmented_dickey_fuller(x):
     res = None
     try:
         res = adfuller(x)
@@ -241,11 +242,11 @@ p)def< augmented_dickey_fuller(x):
 
     return res 
 
-p)def< spkt_welch_density(x, y):
+p)def spkt_welch_density(x, y):
     freq, pxx = welch(x)
     return pxx[y]
 
-p)def< fft_coefficient(x,y,z):
+p)def fft_coefficient(x,y,z):
 
     fft = np.fft.rfft(x)
 
@@ -263,7 +264,7 @@ p)def< fft_coefficient(x,y,z):
 
     return res
 
-p)def< partial_autocorrelation(x, param):
+p)def partial_autocorrelation(x, param):
     max_demanded_lag = max(param)
     n = len(x)
     if n <= 1:

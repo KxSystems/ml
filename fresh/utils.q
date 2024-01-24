@@ -6,12 +6,12 @@
 \d .ml 
 
 // Python imports
-sci_ver  :1.5<="F"$3#.p.import[`scipy][`:__version__]`
+sci_ver  :1.5<="F"$3#$[-11h=type x;string;]x:.p.import[`scipy][`:__version__]`
 numpy    :.p.import`numpy
 pyStats  :.p.import`scipy.stats
 signal   :.p.import`scipy.signal
 stattools:.p.import`statsmodels.tsa.stattools
-stats_ver:"F"$"." vs (.p.import`statsmodels)[`:__version__]`
+stats_ver:"F"$"." vs $[-11h=type x;string;]x:.p.import[`statsmodels][`:__version__]`
 stats_break:$[((stats_ver[0]=0)&stats_ver[1]>=12)|stats_ver[0]>0;1b;0b]
 
 // @private
@@ -175,7 +175,7 @@ fresh.i.expandResults:{[results;column]
 // @return {float} Kendall’s tau - Close to 1 shows strong agreement, close to
 //   -1 shows strong disagreement
 fresh.i.kTau:{[target;feature]
-  fresh.i.kendallTau[<;target;feature]1
+  fresh.i.kendallTau[target;feature][`:pvalue]`
   }
 
 // @private
