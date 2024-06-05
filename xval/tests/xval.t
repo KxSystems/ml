@@ -151,7 +151,7 @@ count[.ml.xv.kfStrat[k;1;xc;yc;fs[dtc][]]]~3
 .ml.shape[.ml.rs.kfShuff[ 4;2;xf;yf;.ml.xv.fitScore net;rs_pr_rdm;-.2]]~3 8 8
 .ml.shape[.ml.rs.kfStrat[ 4;2;xb;yb;.ml.xv.fitScore dtc;rs_pc_rdm;-.2]]~3 7 8
 .ml.shape[.ml.rs.tsRolls[ 2;5;xb;yb;.ml.xv.fitScore dtc;rs_pc_rdm; .2]]~3 7 5
-.ml.shape[.ml.rs.tsChain[ 2;5;xb;yb;.ml.xv.fitScore dtc;rs_pc_rdm; .2]]~3 7 5
+any .ml.shape[.ml.rs.tsChain[ 2;5;xb;yb;.ml.xv.fitScore dtc;rs_pc_rdm; .2]]~/:(3 7 5;3 8 5)
 .ml.shape[.ml.rs.pcSplit[.3;5;xf;yf;.ml.xv.fitScore net;rs_pr_rdm; .2]]~3 8 5
 .ml.shape[.ml.rs.mcSplit[.3;5;xf;yf;.ml.xv.fitScore net;rs_pr_rdm;-.2]]~3 8 5
 

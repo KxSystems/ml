@@ -4,6 +4,7 @@ p)from scipy.signal import welch, cwt, ricker, find_peaks_cwt
 p)from scipy.stats import linregress
 p)from statsmodels.tsa.stattools import acf, adfuller, pacf
 p)from numpy.linalg import LinAlgError
+p)import math
 
 p)def< _get_length_sequences_where(x):
         if len(x) == 0:
@@ -113,7 +114,7 @@ p)def< binned_entropy(x, max_bins):
                 x = np.asarray(x)
         hist, bin_edges = np.histogram(x, bins=max_bins)
         probs = hist / x.size
-        return - np.sum(p * np.math.log(p) for p in probs if p != 0)
+        return - np.sum(p * math.log(p) for p in probs if p != 0)
 
 p)def< autocorrelation(x, lag):
         if type(x) is pd.Series:

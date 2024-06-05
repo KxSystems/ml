@@ -274,14 +274,15 @@ hp.i.rsGen:{[params]
 hp.i.hpGen:{[randomType;n;params]
   // Split parameters
   params:@[;0;first](0;1)_params,();
+  targetType:params[1;2];
   // Respective parameter generation
   $[(typ:params 0)~`boolean;n?0b;
     typ in`rand`symbol;
       n?(),params[1]0;
     typ~`uniform;
-      hp.i.uniform[randomType]. params 1;
+      targetType$hp.i.uniform[randomType]. params 1;
     typ~`loguniform;
-      hp.i.logUniform[randomType]. params 1;
+      targetType$hp.i.logUniform[randomType]. params 1;
     '"please enter a valid type"
     ]
   }
