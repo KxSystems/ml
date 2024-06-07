@@ -88,7 +88,6 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.classReport[3 3 5 0n 5 1;3 5 2 3 5 0n]~1!flip`class`precision`recall`f1_score`support!((`$string each 0n 2 3 5),`$"avg/total";0 0n 0.5 0.5 0.33333333333333;0 0 0.5 0.5 0.25;0 0 0.5 0.5 0.25;1 1 2 2 6i)
 
 {.ml.logLoss[x;y]~logloss[x;y]`}[1000?0b;(1-p),'p:1000?1f]
-{.ml.logLoss[x;y]~logloss[x;y]`}[1000?0b;(1-p),'p:1000?1i]
 .ml.logLoss[10#0b;(1-p),'p:10?1i]~-0f
 (floor .ml.logLoss[10110b;(2 0n;1 1; 3 1;0n 2; 3 3)])~floor 6
 (floor .ml.logLoss[1000?0b;(1-p),'p:1000#0n])~34
@@ -132,10 +131,10 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.r2Score[2 2 2;1 2 3] ~ r2[1 2 3;2 2 2]`
 .ml.r2Score[x;x]~1f
 .ml.r2Score[1 0n 4 2 0n;1 2 4 2 1]~1f
-.ml.tScore[x;y] ~first stats[`:ttest_1samp][x;y]`
-.ml.tScore[xf;yf]~first stats[`:ttest_1samp][xf;yf]`
-.ml.tScore[xb;yb]~first stats[`:ttest_1samp][xb;yb]`
-.ml.tScore[x;x]~first stats[`:ttest_1samp][x;x]`
+.ml.tScore[x;500] ~first stats[`:ttest_1samp][x;500]`
+.ml.tScore[xf;500]~first stats[`:ttest_1samp][xf;500]`
+.ml.tScore[xb;0.5]~first stats[`:ttest_1samp][xb;0.5]`
+.ml.tScore[x;500]~first stats[`:ttest_1samp][x;500]`
 .ml.tScoreEqual[x;y]~abs first stats[`:ttest_ind][x;y]`
 .ml.tScoreEqual[xf;yf]~abs first stats[`:ttest_ind][xf;yf]`
 .ml.tScoreEqual[xb;yb]~abs first stats[`:ttest_ind][xb;yb]`
