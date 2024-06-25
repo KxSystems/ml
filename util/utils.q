@@ -20,17 +20,6 @@ i.combFunc:{[n;vals]
 // @private
 // @kind function
 // @category utilitiesUtility
-// @desc Transform q object to numpy date
-// @param date {date} q datetime object
-// @return {<} Numpy datetime object
-i.q2npDate:{[date]
-  dateConvert:("p"$@[4#+["d"$0];-16+type date]date)-"p"$1970.01m;
-  .p.import[`numpy;`:array;dateConvert;"datetime64[ns]"]`.
-  }
-
-// @private
-// @kind function
-// @category utilitiesUtility
 // @desc  Convert python float32 function to produce correct precision
 //   Note check for x~()!() which is required in cases where underlying 
 //   representation is float32 for dates/times
@@ -196,6 +185,12 @@ i.dateTime:.p.import`datetime
 // @category utilitiesUtility
 // @desc Python pandas dataframe module
 i.pandasDF:.p.import[`pandas]`:DataFrame
+
+// @private
+// @kind function
+// @category utilitiesUtility
+// @desc Numpy array function
+i.npArray:.p.import[`numpy]`:array
 
 // @private
 // @kind function
