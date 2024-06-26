@@ -108,6 +108,7 @@ trainTestSplit:{[data;target;size]
 // @param tab {table} A q table
 // @return {<} a Pandas dataframe
 tab2df:{
+  keyTab:keys x;
   c:cols x:0!x;
   c1:i.findCols[x;"bxhijef"]; 
   df:i.pandasDF[{$[count y;y!x y;()!()]}[x;c1]];
@@ -127,7 +128,7 @@ tab2df:{
   // Reorder the columns based on initial input
   df:df[`:reindex][`columns pykw c];
   // Index the table if originally keyed
-  $[count keyTab:keys x;
+  $[count keyTab;
     df[`:set_index]keyTab;
     df
     ]
