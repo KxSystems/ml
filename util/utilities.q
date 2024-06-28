@@ -107,15 +107,32 @@ trainTestSplit:{[data;target;size]
 // @desc Convert q table to Pandas dataframe
 // @param tab {table} A q table
 // @return {<} a Pandas dataframe
-tab2df:{[tab]
-  updTab:@[flip 0!tab;i.findCols[tab;"c"];enlist each];
-  transformTab:@[updTab;i.findCols[tab]"pmdznuvt";i.q2npDate];
-  pandasDF:i.pandasDF[transformTab][@;cols tab];
-  $[count keyTab:keys tab;
-    pandasDF[`:set_index]keyTab;
-    pandasDF
+tab2df:{
+  keyTab:keys x;
+  c:cols x:0!x;
+  c1:i.findCols[x;"bxhijef"]; 
+  df:i.pandasDF[{$[count y;y!x y;()!()]}[x;c1]];
+  cls:c except c1;
+  // Early exit if only numeric columns existed
+  if[0=count cls;:df];
+  updTab:@[flip x;i.findCols[x;"c"];enlist each];
+  // Convert temporal columns to timestamps and
+  // assign as datetime64[ns] columns
+  timeCols:i.findCols[x;"pmdznuvt"];
+  timeTab:?[updTab;();0b;timeCols!timeCols];
+  timeTab:@[timeTab;timeCols;{("p"$@[4#+["d"$0];-16+type x]x)-"p"$1970.01m}];
+  df:{x[`:assign][z pykw i.npArray[y z;"datetime64[ns]"]]}/[df;count[timeCols]#enlist timeTab;timeCols];
+  // Convert symbols to strings (both reconcile to same type, char vector conversions are faster)
+  // otherwise assign the underlying datatype
+  {x[=;z;enlist $[11h=type dat:y z;string dat;dat]]}[df;updTab]each cls except timeCols;
+  // Reorder the columns based on initial input
+  df:df[`:reindex][`columns pykw c];
+  // Index the table if originally keyed
+  $[count keyTab;
+    df[`:set_index]keyTab;
+    df
     ]
-  }
+ }
 
 // @kind function
 // @category utilities
