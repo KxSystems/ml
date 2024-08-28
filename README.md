@@ -1,35 +1,23 @@
-# Automated machine learning in kdb+
+# Machine Learning Toolkit
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/automl)](https://github.com/kxsystems/automl/releases) [![Build Status](https://travis-ci.com/KxSystems/automl.svg?branch=master)](https://travis-ci.com/KxSystems/automl)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/ml?include_prereleases)](https://github.com/kxsystems/ml/releases) [![Build Status](https://travis-ci.com/KxSystems/ml.svg?branch=master)](https://travis-ci.com/KxSystems/ml)
 
+The Machine Learning Toolkit is at the core of kdb+/q-centered machine-learning functionality. This library contains functions that cover the following areas:
+*  An implementation of the FRESH (FeatuRe Extraction and Scalable Hypothesis testing) algorithm for use in the extraction of features from time series data and the reduction in the number of features through statistical testing. 
+*  Cross-validation and grid-search functions allowing for testing of the stability of models to changes in the volume of data or the specific subsets of data used in training.
+*  Clustering algorithms used to group data points and to identify patterns in their distributions. The algorithms make use of a k-dimensional tree to store points and scoring functions to analyze how well they performed.
+*  Statistical timeseries models and feature-extraction techniques used for the application of machine learning to timeseries problems. These models allow for the forecasting of the future behavior of a system under various conditions.
+*  Numerical techniques for calculating the optimal parameters for an objective function.
+*  A graphing and pipeline library for the creation of modularized executable workflow based on a structure described by a mathematical directed graph.
+*  Utility functions relating to areas including statistical analysis, data preprocessing and array manipulation.
 
-The automated machine learning library described here is built largely on the tools available within the [Machine Learning Toolkit](https://github.com/kxsystems/ml). The purpose of this framework is help you automate the process of applying machine learning techniques to real-world problems. In the absence of expert machine-learning engineers this handles the following processes within a traditional workflow.
-
-- Data preprocessing
-- Feature engineering and feature selection
-- Model selection
-- Hyperparameter Tuning
-- Report generation and model persistence
-
-Each of these steps is outlined in depth within the [documentation](docs).
-This allows you to understand how decisions are being made and the transformations which their data undergo during the production of the output models.
-
-At present the machine learning frameworks supported for this are based on:
-
-1. One-to-one feature to target non time-series
-2. FRESH based feature extraction and model production
-3. NLP-based feature creation and word2vec transformation.
-
-The problems which can be solved by this framework will be expanded over time as will the available functionality.
+These sections are explained in greater depth within the [FRESH](docs/fresh.md), [cross validation](docs/xval.md), [clustering](docs/clustering/algos.md), [timeseries](docs/timeseries/README.md), [optimization](docs/optimize.md), [graph/pipeline](docs/graph/README.md) and [utilities](docs/utilities/metric.md) documentation.
 
 ## Requirements
 
-The following requirements cover all those needed to run the libraries in the current build of the toolkit.
+- embedPy
 
-- [embedPy](https://github.com/KxSystems/embedPy)
-- ML-Toolkit ≥ 3.0.0
-
-A number of Python dependencies also exist for the running of embedPy functions within both the the machine-learning utilities and FRESH libraries. Install  as follows:
+The Python packages required to allow successful execution of all functions within the machine learning toolkit can be installed via:
 
 pip:
 ```bash
@@ -41,58 +29,38 @@ or via conda:
 conda install --file requirements.txt
 ```
 
-### Optional requirements for advanced modules
-
-The above requirements allow you to access the base functionality of AutoML. Additional modules are available – including Sobol sequence hyperparameter search, LaTeX report generation and Keras, PyTorch and NLP models. However, given the large memory requirement for the dependencies of these modules, they are not included in the base functionality and must be installed if required.
-
-**Sobol search** - via pip (see package details [here](https://pypi.org/project/sobol-seq/)):
-```bash
-sobol-seq
-```
-
-**LaTeX** - via conda or pip:
-```bash
-pylatex
-```
-
-**Keras** - via conda or pip:
-```bash
-keras
-tensorflow
-```
-
-**PyTorch** - via conda or pip:
-```bash
-torch
-```
-
-**Theano** - via conda or pip:
-```bash
-theano
-```
-
-**NLP**
-
-The NLP functionality in AutoML requires the [KX NLP library](https://github.com/KxSystems/nlp) along with `gensim` which can be installed using conda or pip.
-
 
 ## Installation
 
-Place the library file in `$QHOME` and load into a q instance using `automl/automl.q`
+Place the `ml` folder in `$QHOME` and load into a q instance using `ml/ml.q`
 
-This will load all the functions contained within the `.ml` namespace  
+The following will load **all** functionality into the `.ml` namespace  
 ```q
-$q automl/automl.q
-q).automl.loadfile`:init.q
+\l ml/ml.q
+.ml.loadfile`:init.q
 ```
 
+## Examples
+
+Examples showing implementations of several components of this toolkit can be found [here](https://github.com/KxSystems/mlnotebooks/). These notebooks include examples of the following sections of the toolkit.
+
+*  Pre-processing functions
+*  Implementations of the FRESH algorithm
+*  Cross validation and grid search capabilities
+*  Results Scoring functionality
+*  Clustering methods applied to datasets
+*  Timeseries modeling examples
+
 ## Documentation
+
+Documentation for all sections of the Machine Learning Toolkit:
 
 :open_file_folder: [`docs`](docs)
 
 ## Status
 
-Automated machine learning in kdb+ is still in development and is available here as a beta release, further functionality and improvements will be made to the library in the coming months.
+The Machine Learning Toolkit is provided here under an Apache 2.0 license.
 
-Any issues with the framework should be raised in the issues section of this repository. Functionality suggestions or more general questions should be submitted via email to ai@kx.com
+If you find issues with the interface or have feature requests, please [raise an issue](https://github.com/KxSystems/ml/issues).
 
+To contribute to this project, please follow the [contributing guide](CONTRIBUTING.md).
