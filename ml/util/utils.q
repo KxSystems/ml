@@ -47,7 +47,7 @@ i.float32Convert:{[data;local]
 i.timezoneConvert:{[tab;local]
   $[local~0b;
     i.dateConvert tab;
-    "P"$neg[6]_/:'tab[`:astype;`str][`:to_dict;<;`list]
+    "P"$neg[6]_/:'cstring tab[`:astype;`str][`:to_dict;<;`list]
     ]
   }
 
@@ -60,9 +60,9 @@ i.timezoneConvert:{[tab;local]
 i.dateConvert:{[dataFrame]
   nullCols:where any each dataFrame[`:isnull;::][`:to_dict;<;`list];
   $[count nullCols;
-    [npCols:`$dataFrame[`:columns.to_numpy][]`;
+    [npCols:csym dataFrame[`:columns.to_numpy][]`;
      dropCols:dataFrame[`:drop;npCols except nullCols;`axis pykw 1];
-     nullData:"P"$dropCols[`:astype;`str][`:to_dict;<;`list];
+     nullData:"P"$cstring dropCols[`:astype;`str][`:to_dict;<;`list];
      nonNullData:i.dateDict dataFrame[`:drop;nullCols;`axis pykw 1];
      nullData,nonNullData+1970.01.01D0
     ];

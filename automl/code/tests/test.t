@@ -1,4 +1,4 @@
-\l automl.q
+\l automl/automl.q
 .automl.loadfile`:init.q
 .automl.loadfile`:code/tests/utils.q
 

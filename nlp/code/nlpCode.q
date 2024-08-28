@@ -65,7 +65,11 @@ newParser:{[spacyModel;fieldNames]
   model:parser.i.newSubParser[spacyModel;options;disabled];
   tokenAttrs:parser.i.q2spacy key[parser.i.q2spacy]inter options;
   pyParser:parser.i.parseText[model;tokenAttrs;options;];
-  stopWords:(`$.p.list[model`:Defaults.stop_words]`),`$"-PRON-";
+
+  listfn:$[.pykx.loaded;.pykx.eval["lambda x:list(x)";<];{`$.p.list[x]`}];
+  //! KXI-49361 is `$"-PRON-" still valid post en->en_core_web_sm update?
+  stopWords:(listfn model`:Defaults.stop_words),`$"-PRON-";
+
   parser.i.runParser[pyParser;fieldNames;options;stopWords]
   }
 
@@ -412,7 +416,7 @@ removeReplace:{[text;char;replace]
 // @param text {string} A string of text
 // @returns {symbol} The language of the text
 detectLang:{[text]
-  `$.p.import[`langdetect][`:detect;<][text]
+  csym .p.import[`langdetect][`:detect;<][pydstr text]
   }
 
 // @kind function

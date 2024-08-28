@@ -268,7 +268,7 @@ Some examples:
 "RandomForestRegressor":{
   "Parameters":{
     "n_estimators":[10,20,50,100,250],
-    "criterion":["mse","mae"],
+    "criterion":["squared_error","absolute_error"],
     "min_samples_leaf":[1,2,3,4]
   },
   "meta":{
@@ -310,13 +310,12 @@ Examples:
 "Lasso":{
   "Parameters":{
     "alpha":[0.1,1.0],
-    "normalize":[0,1],
     "max_iter":[100,1000],
     "tol":[0.0001,0.1]
   },
   "meta":{
-    "randomType":["uniform","boolean","uniform","uniform"],
-    "typeConvert":["float","boolean","long","float"]
+    "randomType":["uniform","uniform","uniform"],
+    "typeConvert":["float","long","float"]
   }
 }
 ```

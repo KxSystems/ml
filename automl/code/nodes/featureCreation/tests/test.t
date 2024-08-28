@@ -1,4 +1,4 @@
-\l automl.q
+\l automl/automl.q
 .automl.loadfile`:init.q
 .automl.loadfile`:code/tests/utils.q
   
@@ -67,7 +67,9 @@ passingTest[featCreate;(nlpCfg;nlpMultiData;`count);0b;62        ]
 
 -1"\nTesting inappropriate NLP feature creation";
 
-nlpErr:"\nGensim returned the following error\ncall: you must first build vocabulary before training the model\nPlease review your input NLP data\n"
+nlpErr:$[.pykx.loaded;
+    "\nGensim returned the following error\nRuntimeError('you must first build vocabulary before training the model')\nPlease review your input NLP data\n";
+    "\nGensim returned the following error\ncall: you must first build vocabulary before training the model\nPlease review your input NLP data\n"];
 
 failingTest[featCreate;(nlpCfg;nlpErrData;`count);0b;nlpErr]
 

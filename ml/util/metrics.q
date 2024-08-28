@@ -144,7 +144,9 @@ classReport:{[pred;true]
 //   each class
 // @returns {float} Total logarithmic loss
 crossEntropy:logLoss:{[class;prob]
-  EPS:1e-15;
+  // Formerly EPS:1e-15, new value from print(np.finfo(prob.dtype).eps)
+  // Updated post scikit learn 1.5.1
+  EPS:2.220446049250313e-16;
   neg avg log EPS|prob@'class
   }
 

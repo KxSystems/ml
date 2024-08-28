@@ -38,6 +38,7 @@ models.torch.NN.fit:{[data;model]
   dataY:models.i.numpy[models.i.npArray[data`ytrain]][`:float][];
   tensorXY:models.i.tensorData[dataX;dataY];
   modelArgs:`batch_size`shuffle`num_workers!(count first data`xtrain;1b;0);
+  if[.pykx.loaded;modelArgs:.pykx.topy each modelArgs];
   dataLoader:models.i.dataLoader[tensorXY;pykwargs modelArgs];
   nEpochs:10|`int$(count[data`xtrain]%1000);
   models.torch.torchFit[model;optimizer;criterion;dataLoader;nEpochs]
@@ -66,8 +67,9 @@ models.torch.NN.model:{[data;seed]
 // @return {boolean} The predicted values for a given model
 models.torch.NN.predict:{[data;model] 
   dataX:models.i.numpy[models.i.npArray[data`xtest]][`:float][];
-  torchMax:last models.i.torch[`:max][model[dataX];1]`;
-  (.p.wrap torchMax)[`:detach][][`:numpy][][`:squeeze][]`
+  torchMax:.p.wrap last models.i.torch[`:max][model[dataX];1]`;
+  if[.pykx.loaded;torchMax:torchMax[`:values]];
+  torchMax[`:detach][][`:numpy][][`:squeeze][]`
   }
 
 

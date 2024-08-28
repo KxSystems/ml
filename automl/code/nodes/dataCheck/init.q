@@ -6,6 +6,7 @@
 \d .automl
 
 loadfile`:code/nodes/dataCheck/checkimport.p
+checkimport: .p.get[`checkimport;<]
 loadfile`:code/nodes/dataCheck/utils.q
 loadfile`:code/nodes/dataCheck/funcs.q
 loadfile`:code/nodes/dataCheck/dataCheck.q

@@ -35,8 +35,10 @@ dfc:.ml.tab2df ([]s:`a`b`c;j:1 2 3;c:"ABC")
 (dfxj:.ml.tab2df tx)[`:index][:;`:names;(::;`jcol)]
 (dfxx:.ml.tab2df tx)[`:index][:;`:names;(::;::)]
 tt2:([]date:2005.07.14 2005.07.15;timesp:("N"$"12:10:30.000500000";"N"$"12:13:30.000200007");time:20:30:00.001 19:23:20.201;str:enlist each ("h";"i");ind:1.3 2.5;bool:10b)
-112 112 112 10 -9 -1h~type each first (.ml.tab2df tt2)[`:values]`
-(dfc[`:c.values]`)~enlist each "ABC"
+col_types:$[.pykx.loaded;-12 -16 -19 -10 -9 -1h;112 112 112 10 -9 -1h];
+col_types~type each first (.ml.tab2df tt2)[`:values]`
+ret_value:$[.pykx.loaded;"ABC";enlist each "ABC"]
+ret_value~dfc[`:c.values]`;
 
 .ml.shape[1 2 3*/:til 10] ~ np[`:shape][1 2 3*/:til 10]`
 .ml.shape[enlist 1] ~ np[`:shape][enlist 1]`

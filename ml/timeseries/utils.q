@@ -419,7 +419,7 @@ ts.i.SARMA.predictFunction:{[model;exog;len]
 // @param residualCoeffs {number[]} Coefficients to calculate the residual 
 //   errors
 // @return {number[]} Information required for the prediction of SARMA values
-ts.i.SARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs];
+ts.i.SARMA.singlePredict:{[coeffs;exog;dict;pastPreds;residualCoeffs]
   exog:exog count pastPreds 2;
   dict,:ts.i.SARMA.preproc[coeffs;dict];
   preds:ts.i.SARMA.predictVal[coeffs;pastPreds;exog;dict];

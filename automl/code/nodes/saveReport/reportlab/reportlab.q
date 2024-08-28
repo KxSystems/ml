@@ -17,7 +17,7 @@ saveReport.reportlabGenerate:{[params;filePath]
   bestModel:params`modelName;
   modelMeta:params`modelMetaData;
   config:params`config;
-  pdf:saveReport.i.canvas[`:Canvas]filePath,".pdf";
+  pdf:saveReport.i.canvas[`:Canvas]pydstr filePath,".pdf";
   ptype:$[`class~config`problemType;"classification";"regression"];
   plots:params`savedPlots;
   // Report generation

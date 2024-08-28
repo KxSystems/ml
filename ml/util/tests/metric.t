@@ -12,7 +12,7 @@ r2:.p.import[`sklearn.metrics]`:r2_score
 msle:.p.import[`sklearn.metrics]`:mean_squared_log_error
 mse:.p.import[`sklearn.metrics]`:mean_squared_error
 rocau:.p.import[`sklearn.metrics]`:roc_auc_score
-logloss:.p.import[`sklearn.metrics]`:log_loss
+logloss:.p.import[`sklearn.metrics][`:log_loss;<]
 mae:.p.import[`sklearn.metrics]`:mean_absolute_error
 
 x:1000?1000
@@ -87,11 +87,12 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.classReport[3 3 5 2 5 1f;3 5 2 3 5 1f]~1!flip`class`precision`recall`f1_score`support!((`$string each 1 2 3 5),`$"avg/total";1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 0 0.5 0.5 0.5;1 1 2 2 6i)
 .ml.classReport[3 3 5 0n 5 1;3 5 2 3 5 0n]~1!flip`class`precision`recall`f1_score`support!((`$string each 0n 2 3 5),`$"avg/total";0 0n 0.5 0.5 0.33333333333333;0 0 0.5 0.5 0.25;0 0 0.5 0.5 0.25;1 1 2 2 6i)
 
-{.ml.logLoss[x;y]~logloss[x;y]`}[1000?0b;(1-p),'p:1000?1f]
+{.ml.logLoss[x;y]~logloss[x;y]}[1000?0b;(1-p),'p:1000?1f]
+{.ml.logLoss[x;y]~logloss[x;y]}[1000?0b;(1-p),'p:1000?1i]
 .ml.logLoss[10#0b;(1-p),'p:10?1i]~-0f
 (floor .ml.logLoss[10110b;(2 0n;1 1; 3 1;0n 2; 3 3)])~floor 6
-(floor .ml.logLoss[1000?0b;(1-p),'p:1000#0n])~34
-{.ml.crossEntropy[x;y]~logloss[x;y]`}[(first idesc@)each p;p%:sum each p:1000 5#5000?1f]
+(floor .ml.logLoss[1000?0b;(1-p),'p:1000#0n])~36
+{.ml.crossEntropy[x;y]~logloss[x;y]}[(first idesc@)each p;p%:sum each p:1000 5#5000?1f]
 .ml.mse[x;y] ~ skmetric[`:mean_squared_error][x;y]`
 .ml.mse[xf;yf] ~ skmetric[`:mean_squared_error][xf;yf]`
 .ml.mse[x;x]~0f
@@ -115,15 +116,15 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.mae[xf;yf]~mae[xf;yf]`
 .ml.mae[xb;yb]~mae["i"$xb;"i"$yb]`
 .ml.mae[xb;xb]~0f
-(.ml.mape[x;y])~mean_absolute_percentage_error[y;x]
-.ml.mape[xf;yf]~mean_absolute_percentage_error[yf;xf]
-.ml.mape[xm;ym]~{mean_absolute_percentage_error[x;y]}'[flip ym;flip xm]
+(.ml.mape[x;y])~.p.get[`mean_absolute_percentage_error;<][y;x]
+.ml.mape[xf;yf]~.p.get[`mean_absolute_percentage_error;<][yf;xf]
+.ml.mape[xm;ym]~{.p.get[`mean_absolute_percentage_error;<][x;y]}'[flip ym;flip xm]
 .ml.mape[x;x]~0f
 .ml.mape[1 0n 4 2 0n;1 2 4 3 1]~11.11111111111
 
-.ml.smape[x;y]~smape[x;y]
-.ml.smape[xf;yf]~smape[xf;yf]
-.ml.smape[xm;ym]~{smape[x;y]}'[flip xm;flip ym]
+.ml.smape[x;y]~.p.get[`smape][x;y]`
+.ml.smape[xf;yf]~.p.get[`smape][xf;yf]`
+.ml.smape[xm;ym]~{.p.get[`smape][x;y]`}'[flip xm;flip ym]
 .ml.smape[x;x]~0f
 .ml.smape[1 0n 4 2 0n;1 2 4 3 1]~6.666666666666666667
 .ml.r2Score[xf;yf] ~ r2[yf;xf]`
@@ -131,14 +132,17 @@ plaintabn:plaintab,'([]x4:1 3 0n)
 .ml.r2Score[2 2 2;1 2 3] ~ r2[1 2 3;2 2 2]`
 .ml.r2Score[x;x]~1f
 .ml.r2Score[1 0n 4 2 0n;1 2 4 2 1]~1f
-.ml.tScore[x;500] ~first stats[`:ttest_1samp][x;500]`
-.ml.tScore[xf;500]~first stats[`:ttest_1samp][xf;500]`
-.ml.tScore[xb;0.5]~first stats[`:ttest_1samp][xb;0.5]`
-.ml.tScore[x;500]~first stats[`:ttest_1samp][x;500]`
-.ml.tScoreEqual[x;y]~abs first stats[`:ttest_ind][x;y]`
-.ml.tScoreEqual[xf;yf]~abs first stats[`:ttest_ind][xf;yf]`
-.ml.tScoreEqual[xb;yb]~abs first stats[`:ttest_ind][xb;yb]`
-.ml.tScoreEqual[x;x]~abs first stats[`:ttest_ind][x;x]`
+
+ttest_1samp:{stats[`:ttest_1samp][x;y][`:statistic]`};
+.ml.tScore[x;y] ~ ttest_1samp[x] each y;
+.ml.tScore[xf;yf]~ ttest_1samp[xf] each yf;
+.ml.tScore[xb;yb]~ ttest_1samp[xb] each yb;
+.ml.tScore[x;x]~ ttest_1samp[x] each x;
+
+.ml.tScoreEqual[x;y]~abs stats[`:ttest_ind][x;y][`:statistic]`
+.ml.tScoreEqual[xf;yf]~abs stats[`:ttest_ind][xf;yf][`:statistic]`
+.ml.tScoreEqual[xb;yb]~abs stats[`:ttest_ind][xb;yb][`:statistic]`
+.ml.tScoreEqual[x;x]~abs stats[`:ttest_ind][x;x][`:statistic]`
 .ml.covMatrix[flip value flip plaintab]~np[`:cov][flip value flip  plaintab;`bias pykw 1b]`
 .ml.covMatrix[(10110b;01110b)]~(0.24 0.04;0.04 0.24)
 .ml.covMatrix[(10110b;11111b)]~(0.24 0f;0 0f)

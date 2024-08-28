@@ -1,7 +1,7 @@
 p)import numpy as np
 p)from scipy import stats
 
-p)def< binary_feature_binary_test(x, y):
+p)def binary_feature_binary_test(x, y):
     x0, x1 = np.unique(x)
     y0, y1 = np.unique(y)
 
@@ -17,7 +17,7 @@ p)def< binary_feature_binary_test(x, y):
 
     return p_value
 
-p)def< target_binary_feature_real_test(y, x):
+p)def target_binary_feature_real_test(y, x):
     y0, y1 = np.unique(y)
 
     x_y1 = x[y == y1]
@@ -26,11 +26,11 @@ p)def< target_binary_feature_real_test(y, x):
     KS, p_ks = stats.ks_2samp(x_y1, x_y0,mode='asymp')
     return p_ks
 
-p)def< target_real_feature_real_test(x, y):
+p)def target_real_feature_real_test(x, y):
     tau, p_value = stats.kendalltau(x, y)
     return p_value
 
-p)def< benjamini_hochberg_test(df_pvalues, hypotheses_independent, fdr_level):
+p)def benjamini_hochberg_test(df_pvalues, hypotheses_independent, fdr_level):
     df_pvalues = df_pvalues.sort_values(by="p_value")
     m = len(df_pvalues)
     K = np.arange(1, m + 1)

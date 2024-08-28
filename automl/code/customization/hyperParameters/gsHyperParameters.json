@@ -11,7 +11,7 @@
   "RandomForestRegressor":{
     "Parameters":{
       "n_estimators":[10,20,50,100,250],
-      "criterion":["mse","mae"],
+      "criterion":["squared_error","absolute_error"],
       "min_samples_leaf":[1,2,3,4]
     },
     "meta":{
@@ -20,9 +20,9 @@
   },
   "GradientBoostingRegressor":{
     "Parameters":{
-      "loss":["ls","lad","huber"],
+      "loss":["squared_error","absolute_error","huber"],
       "learning_rate":[0.1,0.25,0.5,0.75,0.9,1.0],
-      "criterion":["friedman_mse","mse","mae"]
+      "criterion":["friedman_mse","squared_error"]
     },
     "meta":{
       "typeConvert":["symbol","float","symbol"]
@@ -40,12 +40,11 @@
   "Lasso":{
     "Parameters":{
       "alpha":[0.1,0.25,0.5,0.75,1.0],
-      "normalize":[0,1],
       "max_iter":[100,200,500,1000],
       "tol":[0.0001,0.0005,0.001,0.005,0.01,0.1]
     },
     "meta":{
-      "typeConvert":["float","boolean","int","float"]
+      "typeConvert":["float","int","float"]
     }
   },
   "MLPRegressor":{
@@ -82,7 +81,7 @@
     "Parameters":{
       "learning_rate":[0.05,0.1,0.25,0.5],
       "n_estimators":[10,50,100,200,500],
-      "criterion":["friedman_mse","mse"]
+      "criterion":["friedman_mse","squared_error"]
     },
     "meta":{
       "typeConvert":["float","int","symbol"]

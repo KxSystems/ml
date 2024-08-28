@@ -1,13 +1,12 @@
 // automl.q - Setup automl namespace
 // Copyright (c) 2021 Kx Systems Inc
 //
-// Define version, path, and loadfile. 
+// Define version, path, and loadfile.
 // Execute algo if run from cmd line.
 
 
-\l p.q
-
 \d .automl
+\l shim/shim.q
 version:@[{AUTOMLVERSION};`;`development]
 path:{string`automl^`$@[{"/"sv -1_"/"vs ssr[;"\\";"/"](-3#get .z.s)0};`;""]}`
 loadfile:{$[.z.q;;-1]"Loading ",x:_[":"=x 0]x:$[10=type x;;string]x;system"l ",path,"/",x;}

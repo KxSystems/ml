@@ -1,6 +1,6 @@
 # Ensure that a user that is attempting to use the framework
 # has the required dependencies for neural network models
-p)def< checkimport(x):
+p)def checkimport(x):
   if(x==0):
     try:
       import keras;return(0)

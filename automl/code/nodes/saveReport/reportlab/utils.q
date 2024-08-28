@@ -51,8 +51,8 @@ saveReport.i.printKDBTable:{[pdf;f;tab]
 // @return {int} The placement height from the bottom of the page
 saveReport.i.text:{[m;h;i;txt;f;s]
   if[(h-i)<100;h:795;m[`:showPage][];];
-  m[`:setFont][f;s];
-  m[`:drawString][30;h-:i;txt];
+  m[`:setFont][pydstr f;s];
+  m[`:drawString][30;h-:i;pydstr txt];
   h
   }
 
@@ -68,8 +68,8 @@ saveReport.i.text:{[m;h;i;txt;f;s]
 // @return {int} The placement height from the bottom of the page
 saveReport.i.title:{[m;h;i;txt;f;s]
   if[(h-i)<100;h:795;m[`:showPage][]];
-  m[`:setFont][f;s];
-  m[`:drawString][150;h-:i;txt];
+  m[`:setFont][pydstr f;s];
+  m[`:drawString][150;h-:i;pydstr txt];
   h
   }
 
@@ -85,7 +85,7 @@ saveReport.i.title:{[m;h;i;txt;f;s]
 // @return {int} The placement height from the bottom of the page
 saveReport.i.image:{[m;fp;h;i;wi;hi]
   if[(h-i)<100;h:795;m[`:showPage][]];
-  m[`:drawImage][fp;40;h-:i;wi;hi];
+  m[`:drawImage][pydstr fp;40;h-:i;wi;hi];
   h
   }
 

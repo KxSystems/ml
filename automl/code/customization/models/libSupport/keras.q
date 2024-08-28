@@ -51,10 +51,10 @@ models.keras.binary.model:{[data;seed]
   models.i.numpySeed[seed];
   if[models.i.tensorflowBackend;models.i.tensorflowSeed[seed]];
   mdl:models.i.kerasSeq[];
-  mdl[`:add]models.i.kerasDense[32;`activation pykw"relu";
+  mdl[`:add]models.i.kerasDense[32;`activation pykw`relu;
     `input_dim pykw count first data`xtrain];
-  mdl[`:add]models.i.kerasDense[1;`activation pykw "sigmoid"];
-  mdl[`:compile][`loss pykw "binary_crossentropy";`optimizer pykw "rmsprop"];
+  mdl[`:add]models.i.kerasDense[1;`activation pykw`sigmoid];
+  mdl[`:compile][`loss pykw`binary_crossentropy;`optimizer pykw`rmsprop];
   mdl
   }
 
@@ -82,10 +82,10 @@ models.keras.reg.model:{[data;seed]
   models.i.numpySeed[seed];
   if[models.i.tensorflowBackend;models.i.tensorflowSeed[seed]];
   mdl:models.i.kerasSeq[];
-  mdl[`:add]models.i.kerasDense[32;`activation pykw "relu";
+  mdl[`:add]models.i.kerasDense[32;`activation pykw`relu;
     `input_dim pykw count first data`xtrain];
-  mdl[`:add]models.i.kerasDense[1 ;`activation pykw "relu"];
-  mdl[`:compile][`loss pykw "mse";`optimizer pykw "rmsprop"];
+  mdl[`:add]models.i.kerasDense[1 ;`activation pykw`relu];
+  mdl[`:compile][`loss pykw`mse;`optimizer pykw`rmsprop];
   mdl
   }
 
@@ -113,12 +113,12 @@ models.keras.multi.model:{[data;seed]
   models.i.numpySeed[seed];
   if[models.i.tensorflowBackend;models.i.tensorflowSeed[seed]];
   mdl:models.i.kerasSeq[];
-  mdl[`:add]models.i.kerasDense[32;`activation pykw "relu";
+  mdl[`:add]models.i.kerasDense[32;`activation pykw`relu;
     `input_dim pykw count first data`xtrain];
   mdl[`:add]models.i.kerasDense[count distinct data[`ytrain]`;
-    `activation pykw "softmax"];
-  mdl[`:compile][`loss pykw "categorical_crossentropy";
-    `optimizer pykw "rmsprop"];
+    `activation pykw`softmax];
+  mdl[`:compile][`loss pykw`categorical_crossentropy;
+    `optimizer pykw`rmsprop];
   mdl
   }
 
@@ -132,10 +132,12 @@ models.keras.multi.model:{[data;seed]
 //   compiled/fitted)
 // @return {int|float|boolean} The predicted values for a given model
 models.keras.multi.predict:{[data;model]
-  model[`:predict_classes][models.i.npArray data`xtest]`
+  predict:model[`:predict][models.i.npArray data`xtest]`;
+  models.i.npArgMax[predict;1]`
   }
 
 // load required python modules
+models.i.npArgMax:.p.import[`numpy        ]`:argmax;
 models.i.npArray:.p.import[`numpy        ]`:array;
 models.i.kerasSeq:.p.import[`keras.models ]`:Sequential;
 models.i.kerasDense:.p.import[`keras.layers ]`:Dense;
@@ -162,6 +164,6 @@ p)def tfWarnings(warn):
 // allow multiprocess
 .ml.loadfile`:util/mproc.q
 if[0>system"s";
-  .ml.mproc.init[abs system"s"]("system[\"l automl/automl.q\"]";
+  .ml.multiProc.init[abs system"s"]("system[\"l automl/automl.q\"]";
   ".automl.loadfile`:init.q")
   ];

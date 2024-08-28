@@ -17,8 +17,8 @@
 //   with the string columns and word2vec model
 featureCreation.nlp.proc:{[features;config]
   stringCols:.ml.i.findCols[features;"C"];
-  spacyLoad:.p.import[`spacy;`:load]"en_core_web_sm";
-  args:(spacyLoad;features stringCols);
+  spacyLoad:.p.import[`spacy;`:load]`en_core_web_sm;
+  args:(spacyLoad pydstr @;features stringCols);
   sentences:$[1<count stringCols;
     {x@''flip y};
     {x each y 0}
@@ -69,7 +69,7 @@ featureCreation.nlp.boolTab:{[features;col]
 //   word2vec/stop word/unipos analysis
 featureCreation.nlp.corpus:{[features;stringCols;fields]
   parseCols:featureCreation.nlp.i.colNaming[fields;stringCols];
-  newParser:.nlp.newParser[`en;fields];
+  newParser:.nlp.newParser[`en_core_web_sm;fields];
   // apply new parser to table data
   $[1<count stringCols;
     featureCreation.nlp.i.nameRaze[parseCols]newParser@'features stringCols;
@@ -88,7 +88,7 @@ featureCreation.nlp.corpus:{[features;stringCols;fields]
 featureCreation.nlp.uniposTagging:{[features;stringCols;fields]
   // retrieve all relevant part of speech types
   pyDir:.p.import[`builtins;`:dir];
-  uniposTypes:pyDir[.p.import[`spacy]`:parts_of_speech]`;
+  uniposTypes:cstring pyDir[.p.import[`spacy]`:parts_of_speech]`;
   uniposTypes:`$uniposTypes where not 0 in/:uniposTypes ss\:"__";
   table:features fields;
   // Encode the percentage of each sentence which is of a specific POS
@@ -118,7 +118,7 @@ featureCreation.nlp.getNamedEntity:{[sentences;stringCols]
     `LANGUAGE`DATE`TIME`PERCENT`MONEY`QUANTITY`ORDINAL`CARDINAL;
   percentageFunc:featureCreation.nlp.i.percentDict[;namedEntity];
   data:$[countCols:1<count stringCols;flip;::]sentences;
-  labelFunc:{`${(.p.wrap x)[`:label_]`}each x[`:ents]`};
+  labelFunc:{csym {(.p.wrap x)[`:label_]`}each x[`:ents]`};
   nerData:$[countCols;
     {x@''count@'''group@''z@''y}[;;labelFunc];
     {x@'count@''group@'z@'y}[;;labelFunc]
@@ -176,17 +176,18 @@ featureCreation.nlp.regexTab:{[features;stringCols;fields]
 featureCreation.nlp.word2vec:{[tokens;config]
   size:300&count raze distinct tokens;
   tokenCount:avg count each tokens;
+  tokens:csym tokens;
   window:$[30<tokenCount;10;10<tokenCount;5;2];
   gensimWord2Vec:.p.import[`gensim.models][`:Word2Vec];
-  args:`size`window`sg`seed`workers!(size;window;config`w2v;config`seed;1);
+  args:`vector_size`window`sg`seed`workers!(size;window;config`w2v;config`seed;1);
   model:$[config`savedWord2Vec;
-   gensimWord2Vec[`:load]utils.ssrWindows config[`modelsSavePath],"/w2v.model";
+   gensimWord2Vec[`:load] pydstr utils.ssrWindows config[`modelsSavePath],"/w2v.model";
    @[gensimWord2Vec .;(tokens;pykwargs args);{
      '"\nGensim returned the following error\n",x,
       "\nPlease review your input NLP data\n"}]
    ];
   if[config`savedWord2Vec;size:model[`:vector_size]`];
-  w2vIndex:where each tokens in model[`:wv.index2word]`;
+  w2vIndex:where each tokens in csym model[`:wv.index_to_key]`;
   sentenceVector:featureCreation.nlp.i.w2vTokens[tokens]'[til count w2vIndex;
     w2vIndex]; 
   avgVector:avg each featureCreation.nlp.i.w2vItem[model]each sentenceVector;

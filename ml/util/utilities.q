@@ -108,9 +108,10 @@ trainTestSplit:{[data;target;size]
 // @param tab {table} A q table
 // @return {<} a Pandas dataframe
 tab2df:{
+  if[.pykx.loaded;:.pykx.eval["lambda x:x"].pykx.topd x];
   keyTab:keys x;
   c:cols x:0!x;
-  c1:i.findCols[x;"bxhijef"]; 
+  c1:i.findCols[x;"bxhijef"];
   df:i.pandasDF[{$[count y;y!x y;()!()]}[x;c1]];
   cls:c except c1;
   // Early exit if only numeric columns existed
@@ -121,10 +122,12 @@ tab2df:{
   timeCols:i.findCols[x;"pmdznuvt"];
   timeTab:?[updTab;();0b;timeCols!timeCols];
   timeTab:@[timeTab;timeCols;{("p"$@[4#+["d"$0];-16+type x]x)-"p"$1970.01m}];
-  df:{x[`:assign][z pykw i.npArray[y z;"datetime64[ns]"]]}/[df;count[timeCols]#enlist timeTab;timeCols];
-  // Convert symbols to strings (both reconcile to same type, char vector conversions are faster)
+  convfn:{x[`:assign][z pykw i.npArray[y z;"datetime64[ns]"]]};
+  df:convfn/[df;count[timeCols]#enlist timeTab;timeCols];
+  // Convert symbols to strings (char vector conversions are faster)
   // otherwise assign the underlying datatype
-  {x[=;z;enlist $[11h=type dat:y z;string dat;dat]]}[df;updTab]each cls except timeCols;
+  convfn:{x[=;z;enlist $[11h=type dat:y z;string dat;dat]]}[df;updTab];
+  convfn each cls except timeCols;
   // Reorder the columns based on initial input
   df:df[`:reindex][`columns pykw c];
   // Index the table if originally keyed
@@ -147,7 +150,8 @@ tab2df:{
 df2tabTimezone:{[tab;local;qObj]
   index:$[enlist[::]~tab[`:index.names]`;0;tab[`:index.nlevels]`];
   tab:$[index;tab[`:reset_index][];tab];
-  numpyCols:`$tab[`:columns.to_numpy][]`;
+  numpyCols:csym tab[`:columns.to_numpy][]`;
+  if[`index in numpyCols;numpyCols:numpyCols except`index;index-:1];
   dataArgs:enlist[`exclude]!enlist`float32`datetime`datetimetz`timedelta;
   dict:tab[`:select_dtypes][pykwargs dataArgs][`:to_dict;`list]`;
   dateTimeData:tab[`:select_dtypes][`include pykw`datetime];
@@ -165,7 +169,9 @@ df2tabTimezone:{[tab;local;qObj]
     dictVals:i.dateTimeConvert[;qObj] each dict dictKeys;
     dict,:dictKeys!dictVals
     ];
-  index!flip numpyCols#dict
+  tbl:flip numpyCols#dict;
+  / convert syms to strings (to match embedpy behaviour)
+  index!@[tbl;exec c from meta tbl where t="s";string]
   }
 
 // @kind function

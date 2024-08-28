@@ -80,7 +80,7 @@ model                         hyperparameters
 AdaBoost Regressor            learning_rate, n_estimators
 Gradient Boosting Regressor   criterion, learning_rate, loss
 KNeighbors Regressor          n_neighbors, weights
-Lasso                         alpha, max_iter, normalize, tol
+Lasso                         alpha, max_iter, tol
 MLP Regressor                 activation, alpha, learning_rate_init, solver
 Random Forest Regressor       criterion, min_samples_leaf, n_estimators
 AdaBoost Classifier           learning_rate, n_estimators

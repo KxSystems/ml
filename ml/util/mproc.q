@@ -43,6 +43,7 @@ multiProc.init:{[n;func]
   if[not p:system"p";'"set port to multiprocess"];
   neg[.z.pd]@\:/:func;
   multiProc.cmds,:func;
-  do[0|n-multiProc.N;system"q ",path,"/util/mprocw.q -pp ",string p];
+  do[0|n-multiProc.N;$[.pykx.loaded;.pykx.safeReimport;{x`}]
+    {[x;y] system"q ",path,"/util/mprocw.q -pp ",string x} p];
   multiProc.N|:n;
   }

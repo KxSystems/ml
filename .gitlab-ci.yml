@@ -1,0 +1,207 @@
+include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+variables:
+  IMAGE_TAG: "installedreqs311" # //! temp append 311 to avoid conflicts
+  IMAGE_NAME: "runner-mlci/automl"  # // use local registry on runner
+  FORCE_COLOR: "1"
+  SNYK_TOKEN: ${SNKY_TOKEN}
+
+default:
+  image: runner-mlci/automl:installedreqs311
+  tags:
+    - mlci
+
+stages:
+  - build
+  - test
+  - security
+  # - deploy
+  - monitor
+
+
+#### build stage ####
+build-docker-dependencies-image:
+  image: docker:stable
+  stage: build
+  services:
+    - docker:dind
+  rules:
+    - changes:
+        - docker/Dockerfile.updatedependencies
+        - requirements.txt
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f docker/Dockerfile.updatedependencies .
+    - echo "${IMAGE_NAME}:${IMAGE_TAG} built"
+    # - docker push ${IMAGE_NAME}:${IMAGE_TAG}
+    # - echo "${IMAGE_NAME}:${IMAGE_TAG} pushed"
+
+
+#### test stage ####
+secret_detection:
+  stage: test
+  variables:
+    SECRET_DETECTION_HISTORIC_SCAN: "true"
+  before_script:
+    - echo lmwh
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
+
+.test:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
+
+.test-init-common:
+  script:
+    - echo $QLIC_K4 | base64 -d > /home/kx/k4.lic
+    - . /opt/conda/etc/profile.d/conda.sh
+    - conda activate /home/kx/.conda/envs/kx
+    - export PYTHONHASHSEED=0 # //~ Carried over from old travis ci, disables python randomisation. Why?
+
+.test-pykx-common:
+  script:
+    - !reference [.test-init-common, script]
+    # create a copy of QHOME that we can modify
+    - cp -r /home/kx/.conda/envs/kx/q ~
+    - rm ~/q/p.{q,k} # remove existing symlinks to embedpy
+    - export QHOME=~/q
+    - export QLIC=/home/kx
+    - python -c "import pykx;pykx.install_into_QHOME()"
+    - cd ..; bash link.sh; cd -
+    - q ../test.q $(find . -name *.t) 2>&1 | tee tests.txt
+    - grep ", total:" tests.txt
+
+.test-embedpy-common:
+  script:
+    - !reference [.test-init-common, script]
+    - export QHOME=/home/kx/.conda/envs/kx/q
+    - export QLIC=/home/kx
+    - cd ..; bash link.sh; cd -
+    - q ../test.q $(find . -name *.t) 2>&1 | tee tests.txt
+    - grep ", total:" tests.txt
+
+.test-automl-common:
+  script:
+    - grep "failed:0, errored:0, skipped:0, total:758" tests.txt
+    - q automl.q -config code/tests/files/cli/testCSV.json -run -test
+    - q automl.q -config code/tests/files/cli/testBinary.json -run -test
+    - q automl.q -config code/tests/files/cli/testBinaryCSV.json -run -test
+
+automl-embedpy-test:
+  extends: .test
+  script:
+    - cd automl
+    - !reference [.test-embedpy-common, script]
+    - !reference [.test-automl-common, script]
+
+automl-pykx-test:
+  extends: .test
+  script:
+    - cd automl
+    - !reference [.test-pykx-common, script]
+    - !reference [.test-automl-common, script]
+
+ml-embedpy-test:
+  extends: .test
+  script:
+    - cd ml
+    - !reference [.test-embedpy-common, script]
+    - grep "failed:0, errored:0, skipped:0, total:1786" tests.txt
+
+ml-pykx-test:
+  extends: .test
+  script:
+    - cd ml
+    - !reference [.test-pykx-common, script]
+    - grep "failed:0, errored:0, skipped:0, total:1786" tests.txt
+
+nlp-embedpy-test:
+  extends: .test
+  script:
+    - cd nlp
+    - !reference [.test-embedpy-common, script]
+    - grep "failed:0, errored:0, skipped:0, total:402" tests.txt
+
+nlp-pykx-test:
+  extends: .test
+  script:
+    - cd nlp
+    - !reference [.test-pykx-common, script]
+    - grep "failed:0, errored:0, skipped:0, total:402" tests.txt
+
+
+#### security stage ####
+#### Default for container scanning and monitoring jobs####
+.snyk-scan-base:
+  services:
+    - docker:dind
+  image:
+    name: dev-registry.kxi-dev.kx.com/devops/kx-snyk-ci-image:0.3.21
+  before_script:
+    - |
+      snyk auth $SNYK_TOKEN
+      snyk config set org=$SNYK_ORG_ID
+
+
+#### Security Stage #### Scan files for dependencies e.g requirements.txt
+snyk-dependency-scan:
+  stage: security
+  image:
+    name: snyk/snyk:python-3.11
+    entrypoint: [""]
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  cache:
+    paths:
+      - .cache/pip
+      - venv/
+  before_script:
+    - python -V  # Print out python version for debugging
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+  script:
+    - snyk test --all-projects || true
+    - snyk test --all-projects --fail-on=all --severity-threshold=high
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+      when: always
+    - when: never
+
+
+snyk-container-scan:  #Scan embedpy-gcc-deb12 base image
+  stage: security
+  extends:
+    - .snyk-scan-base
+  script:
+    # print all results, eventually will fail on severity of high or critical but for now just pass with warning in pipeline
+    # Run only on commits to main or tags
+    - snyk container test ${IMAGE_NAME}:${IMAGE_TAG} --app-vulns --print-deps || true
+    - snyk container test ${IMAGE_NAME}:${IMAGE_TAG} --app-vulns --print-deps --fail-on=all --severity-threshold=high
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+      when: always
+    - when: never
+
+
+#### monitoring stage #### For now just monitor installedreqs311 image - set to manual run, ultimately want to monitor a release image
+snyk-container-monitor:
+  stage: monitor
+  extends:
+    - .snyk-scan-base
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - echo "Monitoring ${IMAGE_NAME}:${IMAGE_TAG}"
+    - IMAGE_TO_MONITOR=${IMAGE_NAME}:${IMAGE_TAG}
+    - snyk container monitor "${IMAGE_TO_MONITOR}" --app-vulns --project-name="${IMAGE_TO_MONITOR}"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+      when: manual
+      allow_failure: true
+    - when: never
+

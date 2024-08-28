@@ -14,7 +14,7 @@
 saveGraph.i.regTargetPlot:{[params;savePath]
   target:raze params[`ttsObject;`ytrain`ytest];
   utils.plt[`:figure][];
-  utils.plt[`:hist][target;`bins pykw 10;`ec pykw"black"];
+  utils.plt[`:hist][target;`bins pykw 10;`ec pykw`black];
   saveGraph.i.targetPlot[utils.plt;savePath]
   }
 
@@ -46,7 +46,7 @@ saveGraph.i.targetPlot:{[pltObj;savePath]
   pltObj[`:xlabel]["Target";`fontsize pykw 12];
   pltObj[`:ylabel]["Count";`fontsize pykw 12];
   filePath:savePath,"Target_Distribution.png";
-  pltObj[`:savefig][filePath;`bbox_inches pykw"tight"];
+  pltObj[`:savefig][pydstr filePath;`bbox_inches pykw`tight];
   pltObj[`:close][];
   }
 
@@ -76,7 +76,7 @@ saveGraph.i.displayConfMatrix:{[confMatrix;classes;modelName;savePath]
   utils.plt[`:xlabel]["Predicted Label";`fontsize pykw 12];
   utils.plt[`:ylabel]["Actual label";`fontsize pykw 12];
   filePath:savePath,sv["_";string(`Confusion_Matrix;modelName)],".png";
-  utils.plt[`:savefig][filePath;`bbox_inches pykw"tight"];
+  utils.plt[`:savefig][pydstr filePath;`bbox_inches pykw`tight];
   utils.plt[`:close][];
   } 
 
@@ -118,7 +118,7 @@ saveGraph.i.plotImpact:{[impact;modelName;savePath]
   ax[`:set_ylabel]["Columns";`fontsize pykw 12];
   ax[`:set_xlabel]["Relative feature impact";`fontsize pykw 12];
   filePath:savePath,sv["_";string(`Impact_Plot;modelName)],".png";
-  utils.plt[`:savefig][filePath;`bbox_inches pykw"tight"];
+  utils.plt[`:savefig][pydstr filePath;`bbox_inches pykw`tight];
   utils.plt[`:close][];
   }
 
@@ -140,20 +140,20 @@ saveGraph.i.plotResiduals:{[residDict;tts;modelName;savePath]
   fig[`:tight_layout][`pad pykw 4.0];
   // Actual vs predicted plotting logic
   actual:ax[@;0];
-  actual[`:scatter][true;preds;`s pykw 20;`marker pykw "."];
+  actual[`:scatter][true;preds;`s pykw 20;`marker pykw`.];
   actual[`:set_title]["Plot of actual vs predicted values";`fontsize pykw 12];
   actual[`:set_xlabel]["Actual values";`fontsize pykw 12];
   actual[`:set_ylabel]["Predicted values";`fontsize pykw 12];
   // Residuals plotting logic
   resid:ax[@;1];
-  resid[`:scatter][true;resids;`color pykw "r";`marker pykw "."];
+  resid[`:scatter][true;resids;`color pykw`r;`marker pykw`.];
   resid[`:set_title]["Plot of residuals";`fontsize pykw 12];
   resid[`:set_xlabel]["Actual values";`fontsize pykw 12];
   resid[`:set_ylabel]["Residuals";`fontsize pykw 12];
   spacing:.ml.linearSpace[min true;max true;count true];
   resid[`:plot][spacing;count[true]#0f;"k--"];
   filePath:savePath,sv["_";string(`Regression_Analysis;modelName)],".png";
-  utils.plt[`:savefig][filePath;`bbox_inches pykw "tight"];
+  utils.plt[`:savefig][pydstr filePath;`bbox_inches pykw`tight];
   utils.plt[`:close][];
   }
 
@@ -181,6 +181,6 @@ saveGraph.i.dataSplit:{[config;fileName]
   utils.plt[`:ylim][0.;0.8];
   utils.plt[`:xlabel][`Percentage;`fontsize pykw 20];
   utils.plt[`:yticks]();
-  utils.plt[`:savefig][fileName;`bbox_inches pykw"tight"];
+  utils.plt[`:savefig][pydstr fileName;`bbox_inches pykw`tight];
   utils.plt[`:close][];
   }

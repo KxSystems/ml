@@ -12,6 +12,6 @@ emails[`subject]~("test email";"The new Duolingo experience is here!";"Our New H
 emails[`payload][0]~([] sender:(();());to:(();());date:(2#("p"$()));subject:(""; "");contentType:("text/plain"; "text/html");payload:(`attachment`content!(0b;"This is a test\n");`attachment`content!(0b;"<div dir=\"ltr\">This is a test</div>\n")))
 text:ssr[email.i.html2text emails[`payload][6][`content];"\\n";"\n"]
 whitespace:regex.compile["\\s+"; 1b]
-regex.replaceAll:{x[`:sub;<][y;z]}
+regex.replaceAll:{cstring x[`:sub;<][pydstr y;pydstr z]}
 regex.replaceAll[whitespace; " "; text] ~" FREE SHIPPING to US Address on Any Order Over $99.99 Switch Series and Accessories Designed for multi-sport athletes who run,"," bike or swim and want GPS tracking on their watch. 60% OFF Echo Series For the athlete using phone apps when participating in a sport."," Wether you golf, run, hike, etc. you can display and control compatible apps and music playlists conveniently from your wrist."," 20% OFF Follow Magellan 2015 MiTAC International Corporation."," All rights reserved 471 El Camino Real, Santa Clara, CA, 95050, USA Click Here to Opt Out. . "
 \d .

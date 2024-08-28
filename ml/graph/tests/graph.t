@@ -2,7 +2,6 @@
 // which will fail to produce a valid/operational graph/pipeline in order to ensure that the
 // catching mechanism for the creation of such workflows is reliable and fully understood
 
-\l p.q
 \l ml.q
 \l graph/utils.q
 \l graph/graph.q

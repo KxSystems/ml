@@ -20,7 +20,7 @@ regex.i.re:.p.import`re
 // @returns {boolean} Indicate whether or not the pattern is present in the
 //   text 
 regex.i.check:{[patterns;text]
-  i.bool[patterns[`:search]text]`
+  i.bool[patterns[`:search] pydstr text]`
   }
 
 // @private
@@ -202,7 +202,7 @@ regex.i.patterns.yearMonthDay:"(",sv[regex.i.patterns.dateSeparate;
 // @return {<} The compiled regex object
 regex.compile:{[patterns;ignoreCase]
   case:$[ignoreCase;regex.i.re`:IGNORECASE;0];
-  regex.i.re[`:compile;patterns;case]
+  regex.i.re[`:compile][pydstr patterns;case]
   }
 
 // @kind function
@@ -213,8 +213,9 @@ regex.compile:{[patterns;ignoreCase]
 // @returns {::|string[]} If the pattern is not present in the text a null
 //   is returned. Otherwise, the pattern along with the index where the 
 //   pattern begins and ends is returned
-regex.matchAll:.p.eval["lambda p,t:[[x.group(),x.start(),x.end()]",
+regex.i.matchAll:.p.eval["lambda p,t:[[x.group(),x.start(),x.end()]",
   "for x in p.finditer(t)]";<]
+regex.matchAll:{cstring regex.i.matchAll[x;pydstr cstring y]}
 
 // @kind function
 // @category nlpRegex

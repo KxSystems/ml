@@ -19,11 +19,11 @@ saveModels.saveModel:{[params;savePath]
   filePath:savePath,"/",modelName;
   joblib:.p.import`joblib;
   $[modelLib in`sklearn`theano;
-    joblib[`:dump][bestModel;filePath];
+    joblib[`:dump][bestModel;pydstr filePath];
       `keras~modelLib;
-    bestModel[`:save][filePath,".h5"];
+    bestModel[`:save][pydstr filePath,".h5"];
       `torch~modelLib;
-    torch[`:save][bestModel;filePath,".pt"];
+    torch[`:save][bestModel;pydstr filePath,".pt"];
       -1"\nSaving of non keras/sklearn/torch models types is not currently ",
         "supported\n"
     ]; 
@@ -41,5 +41,5 @@ saveModels.saveW2V:{[params;savePath]
   extractType:params[`config]`featureExtractionType;
   if[not extractType~`nlp;:(::)];
   w2vModel:params`featModel;
-  w2vModel[`:save][savePath,"w2v.model"];
+  w2vModel[`:save][pydstr savePath,"w2v.model"];
   } 

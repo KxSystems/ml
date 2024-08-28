@@ -13,9 +13,9 @@
 // @return {boolean} 1b if keras can be loaded 0b otherwise 
 check.keras:{
   if[0~checkimport 0;
-    backend:.p.import[`keras.backend][`:backend][]`;
-    if[(backend~"tensorflow")&not checkimport 4;:1b];
-    if[(backend~"theano"    )&not checkimport 5;:1b];
+    backend:csym .p.import[`keras.backend][`:backend][]`;
+    if[(backend~`tensorflow)&not checkimport 4;:1b];
+    if[(backend~`theano    )&not checkimport 5;:1b];
     ];
    :0b
    }

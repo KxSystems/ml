@@ -213,7 +213,7 @@ utils.loadModel:{[config]
       modelPath,".pt";
     '"Unsupported model type provided"
     ];
-  loadFunction modelFile
+  loadFunction pydstr modelFile
   }
 
 // @kind function

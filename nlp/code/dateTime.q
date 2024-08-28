@@ -105,7 +105,7 @@ tm.i.convYearMonthDay:{[text]
   txt:regex.matchAll[;text]each regex.objects`year`month`day;
   matches:ungroup([format:"ymd"]txt);
   updMatches:matches,'flip`txt`s`e!flip matches`txt;
-  matches:value select format,last txt by s from updMatches;
+  matches:value select format,.nlp.cstring last txt by s from updMatches;
   format:tm.i.formatYMD/[matches`format];
   format:tm.i.resolveFormat raze@[format;where 1<count each format;:;" "];  
   2#"D"$"."sv tm.i[`parseYear`parseMonth`parseDay]@'matches[`txt]idesc format

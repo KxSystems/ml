@@ -23,7 +23,7 @@ The framework used to achieve this for user-defined processes is generalizable t
 2. Load the relevant script into each of the open processes. This can be achieved as follows:
 
 ```q
-if[0>system"s";.ml.mproc.init[abs system"s"]enlist"system[\"l myscript.q\"]"]
+if[0>system"s";.ml.multiProc.init[abs system"s"]enlist"system[\"l myscript.q\"]"]
 ```
 
 

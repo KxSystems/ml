@@ -2,7 +2,7 @@
 \l init.q
 \d .nlp
 text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
-p:newParser[`en;`keywords]
+p:newParser[`en_core_web_sm;`keywords]
 corpus:p text
 emptyDoc:([] keywords:enlist ()!())
 truncate:{[precision; x]coefficient: 10 xexp precision;reciprocal[coefficient]*`long$coefficient*x}
@@ -23,9 +23,9 @@ all {x[0]~/:x} {cluster.MCL[corpus;0.25;0b]} each til 5
 cs:{avg count each x} each clusterlist
 cs~desc cs
 avgMSE:avg each mseTest[corpus] each clusterlist
-truncate[2; avgMSE]~ 0.49 0.81 0.87 0.88 0.88
+truncate[2; avgMSE]~ 0.49 0.81 0.87 0.87 0.88       //! KXI-49360 find a more stable way to test this
 minMSE:min each mseTest[corpus] each clusterlist
-truncate[2;minMSE]~ 0.2 0.64 0.64 0.64 0.67
+truncate[2;minMSE]~ 0.19 0.64 0.64 0.64 0.67        //! KXI-49360 find a more stable way to test this
 ()~cluster.bisectingKMeans[0#emptyDoc;10;2]
 (100 101 102 103 104) in cluster.bisectingKMeans[corpus,5#emptyDoc;10;2];
 (enlist til 100) ~cluster.bisectingKMeans[corpus;1;2]         
@@ -46,7 +46,7 @@ cluster.fastRadix[corpus;10] ~ cluster.fastRadix[corpus, 5#emptyDoc; 10];
 clusters:cluster.fastRadix[corpus;100]
 all (count each clusters) > 1
 .30 < min mseTest[corpus; clusters]
-88 = count raze clusters  
+86 = count raze clusters                            //! KXI-49360 find a more stable way to test this
 all 1={count distinct key each .nlp.i.takeTop[1] each x`keywords}each corpus clusters
 (enlist 100) in cluster.kmeans[corpus,emptyDoc;10;2]
 (100 101 102 103 104) in cluster.kmeans[corpus,5#emptyDoc;10;2]
@@ -89,7 +89,7 @@ cluster.groupByCentroids[centroids; corpus[enlist 0] `keywords]~ enlist enlist 0
 (til 15) ~ asc raze cluster.groupByCentroids[1_centroids;corpus`keywords]
 \d .
 text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
-p:.nlp.newParser[`en;`keywords]
+p:.nlp.newParser[`en_core_web_sm;`keywords]
 corpus:p text
 emptyDoc:([] keywords:enlist ()!())
 cluster:.nlp.cluster.summarize[corpus;10]

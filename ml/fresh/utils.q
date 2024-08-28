@@ -3,16 +3,17 @@
 //
 // Unitily functions used in the implimentation of FRESH
 
-\d .ml 
+\d .ml
 
 // Python imports
-sci_ver  :any 1 5<="J"$2#"." vs .p.import[`scipy][`:__version__]`
+sci_ver  :"F"$"." vs cstring .p.import[`scipy][`:__version__]`
+sci_break:((sci_ver[0]=1)&sci_ver[1]>=5)|sci_ver[0]>1
 numpy    :.p.import`numpy
 pyStats  :.p.import`scipy.stats
 signal   :.p.import`scipy.signal
 stattools:.p.import`statsmodels.tsa.stattools
-stats_ver:"F"$"." vs (.p.import`statsmodels)[`:__version__]`
-stats_break:$[((stats_ver[0]=0)&stats_ver[1]>=12)|stats_ver[0]>0;1b;0b]
+stats_ver:"F"$"." vs cstring .p.import[`statsmodels][`:__version__]`
+stats_break:((stats_ver[0]=0)&stats_ver[1]>=12)|stats_ver[0]>0
 
 // @private
 // @kind function 
@@ -49,7 +50,7 @@ fresh.i.abso:numpy`:abs
 // @kind function 
 // @category freshPythonUtility
 // @desc Kolmogorov-Smirnov two-sided test statistic distribution
-fresh.i.ksDistrib:pyStats[$[sci_ver;`:kstwo.sf;`:kstwobign.sf];<]
+fresh.i.ksDistrib:pyStats[$[sci_break;`:kstwo.sf;`:kstwobign.sf];<]
 
 // @private
 // @kind function 
@@ -175,7 +176,7 @@ fresh.i.expandResults:{[results;column]
 // @return {float} Kendall’s tau - Close to 1 shows strong agreement, close to
 //   -1 shows strong disagreement
 fresh.i.kTau:{[target;feature]
-  fresh.i.kendallTau[<;target;feature]1
+  fresh.i.kendallTau[target;feature][`:pvalue]`
   }
 
 // @private
@@ -187,7 +188,7 @@ fresh.i.kTau:{[target;feature]
 // @return {float} Results of Fisher exact test
 fresh.i.fisher:{[target;feature]
   g:group@'target value group feature;
-  fresh.i.fisherExact[<;count@''@\:[g]distinct target]1
+  fresh.i.fisherExact[count@''@\:[g]distinct target][`:pvalue]`
   }
 
 // @private
@@ -203,7 +204,7 @@ fresh.i.ks:{[feature;target]
   n:count each d;
   k:max abs(-). value(1+d bin\:raze d)%n;
   en:prd[n]%sum n;
-  fresh.i.ksDistrib .$[sci_ver;(k;ceiling en);enlist k*sqrt en]
+  fresh.i.ksDistrib .$[sci_break;(k;ceiling en);enlist k*sqrt en]
   }
 
 // @private

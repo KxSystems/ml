@@ -4,7 +4,6 @@
 // General nlp utility functions
 
 \d .nlp
-\l p.q
 
 // @private
 // @kind function
@@ -17,16 +16,16 @@ i.bool:.p.import[`builtins]`:bool
 // @private
 // @kind function
 // @category nlpUtility
-// @desc A fast way to sum a list of dictionaries in 
+// @desc A fast way to sum a list of dictionaries in
 //   certain cases
 // @param iter {long} The number of iterations. Note that within this
 //   library iter is set explicitly to 2 for all present invocations
 // @param dict {dictionary[]} A list of dictionaries
 // @returns {dictionary} The dictionary values summed together
 i.fastSum:{[iter;dict]
-  // Summing a large number of dictionaries is expensive if there are many 
+  // Summing a large number of dictionaries is expensive if there are many
   // distinct keys.
-  // This splits them into groups, which have fewer distinct keys, and then 
+  // This splits them into groups, which have fewer distinct keys, and then
   // adds those groups.
   dictGroup:(ceiling sqrt count dict)cut dict;
   sum$[iter;.z.s iter-1;sum]each dictGroup
@@ -35,7 +34,7 @@ i.fastSum:{[iter;dict]
 // @private
 // @kind function
 // @category nlpUtility
-// @desc Replace empty dicts with (,`)!,0f 
+// @desc Replace empty dicts with (,`)!,0f
 // @param docs {dictionary[]} Documents of text
 // @returns {dictionary[]} Any empty dictionaries are filled
 i.fillEmptyDocs:{[docs]
@@ -50,7 +49,7 @@ i.fillEmptyDocs:{[docs]
 // @category nlpUtility
 // @desc Given a monotonically increasing list of integral numbers,
 //   this finds any runs of consecutive numbers
-// @param array {number[]} Array of values 
+// @param array {number[]} Array of values
 // @returns {long[][]} A list of runs of consecutive indices
 i.findRuns:{[array]
   prevVals:array=1+prev array;
@@ -63,7 +62,7 @@ i.findRuns:{[array]
 // @category nlpUtility
 // @desc Index of the first occurrence of the minimum
 //   value of an array
-// @param array {number[]} Array of values 
+// @param array {number[]} Array of values
 // @return {number} The index of the minimum element of the array
 i.minIndex:{[array]
   array?min array
@@ -74,7 +73,7 @@ i.minIndex:{[array]
 // @category nlpUtility
 // @desc Index of the first occurrence of the maximum
 //   value of the array
-// @param array {number[]} Array of values 
+// @param array {number[]} Array of values
 // @return {number} The index of the maximum element of the array
 i.maxIndex:{[array]
   array?max array
@@ -84,7 +83,7 @@ i.maxIndex:{[array]
 // @kind function
 // @category nlpUtility
 // @desc Calculate the harmonic mean
-// @param array {number[]} Array of values 
+// @param array {number[]} Array of values
 // @returns {float} The harmonic mean of the input
 i.harmonicMean:{[array]
   1%avg 1%array
@@ -94,7 +93,7 @@ i.harmonicMean:{[array]
 // @kind function
 // @category nlpUtility
 // @desc Calculate a vector's magnitude
-// @param array {number[]} Array of values 
+// @param array {number[]} Array of values
 // @returns {float} The magnitude of the vector
 i.magnitude:{[array]
   sqrt sum array*array
@@ -149,7 +148,7 @@ i.jaro:{[str1;str2]
 // @kind function
 // @category nlpUtility
 // @desc Generating symmetric matrix from triangle (ragged list)
-//   This is used to save time when generating a matrix where the upper 
+//   This is used to save time when generating a matrix where the upper
 //   triangular component is the mirror of the lower triangular component
 // @param raggedList {float[][]} A list of lists of floats representing
 //   an upper triangular matrix where the diagonal values are all 0.
@@ -157,7 +156,7 @@ i.jaro:{[str1;str2]
 // @returns {float[][]} An n x n two dimensional array
 //   The input, mirrored across the diagonal, with all diagonal values being 1
 i.matrixFromRaggedList:{[raggedList]
-  // Pad the list with 0fs to make it an array,and set the diagonal values to 
+  // Pad the list with 0fs to make it an array,and set the diagonal values to
   // .5 which become 1 when the matrix is added to its flipped value
   matrix:((til count raggedList)#'0.),'.5,'raggedList;
   matrix+flip matrix
@@ -191,7 +190,7 @@ i.getTermCount:{[parsedTab]
 // @param occurance {dictionary} The total times a token appears in the text
 // @param token {symbol} A single token
 // @param nextToken {symbol} The next token in the list of tokens
-// @returns {dictionary} The probability that the secondary word in the 
+// @returns {dictionary} The probability that the secondary word in the
 //   sequence follows the primary word.
 i.biGram:{[tokens;occurance;token;nextToken]
   returnKeys:enlist(token;nextToken);

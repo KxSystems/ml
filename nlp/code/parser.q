@@ -25,7 +25,7 @@ parser.i.parseText:.p.get[`get_doc_info;<];
 parser.i.cleanUTF8:{[data]
   byteDecode:.p.import[`builtins;`:bytes.decode;<];
   // Convert data to bytes and decode to appropriate string
-  byteDecode["x"$data;`errors pykw`ignore]
+  cstring byteDecode[$[.pykx.loaded;.pykx.topy;"x"$]data;`errors pykw`ignore]
   }
 
 // @private
@@ -82,7 +82,7 @@ parser.i.newSubParser:{[modelName;options;disabled]
   model:.p.import[lang][hsym$[`~checkLang;`load;checkLang]];
   model:model . raze[$[`~checkLang;modelName;()];`disable pykw disabled];
   if[`sbd in options;
-    pipe:$[`~checkLang;model[`:create_pipe;`sentencizer];.p.pyget`x_sbd];
+    pipe:$[`~checkLang;`sentencizer;.p.pyget`x_sbd];
     model[`:add_pipe]pipe;
     ];
   if[`spell in options;
@@ -129,9 +129,9 @@ parser.i.runParser:{[pyParser;fieldNames;options;stopWords;docs]
 // @returns {dictionary} The parsed document
 parser.i.unpack:{[pyParser;options;stopWords;text]
   names:inter[key[parser.i.q2spacy],`sentChars`sentIndices;options],`isPunct;
-  doc:names!pyParser text;
+  doc:names!pyParser pydstr text;
   // Cast any attributes which should be symbols
-  doc:@[doc;names inter`tokens`lemmas`uniPOS`pennPOS;`$];
+  doc:@[doc;names inter`tokens`lemmas`uniPOS`pennPOS;csym];
   // If there are entities, cast them to symbols
   if[`entities in names;doc:.[doc;(`entities;::;0 1);`$]]
   if[`isStop in names;
@@ -157,6 +157,7 @@ parser.i.unpack:{[pyParser;options;stopWords;text]
 // @param doc {dictionary} The parsed document
 // @returns {dictionary} The document with corrected indices
 parser.i.adjustIndices:{[text;doc]
+  text:cstring text;
   if[1~count text;text:enlist text];
   // Any bytes following the first byte in UTF-8 multi-byte characters
   // will be in the range 128-191. These are continuation bytes.
@@ -196,7 +197,7 @@ parser.i.removePunct:{[doc]
 // @param url {string} The URL to be decomposed into its components
 // @returns {string[]} The components which make up the 
 parser.i.parseURLs:{[url]
-  pyLambda:"lambda url: urlparse(url if seReg.match(url) ",
-    "else 'http://' + url)";
-  .p.eval[pyLambda;<]url
+  pyLambda:"lambda url: list(urlparse(url if seReg.match(url) ",
+    "else 'http://' + url))";
+  cstring .p.eval[pyLambda;<]pydstr url
   }

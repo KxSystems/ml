@@ -1,11 +1,11 @@
 \l nlp.q
 \l init.q
 \d .nlp
-charPosParser:newParser[`en; `sentChars`starts`tokens]
+charPosParser:newParser[`en_core_web_sm; `sentChars`starts`tokens]
 doc:first charPosParser enlist text:"Le café noir était pour André Benoît. Mes aïeux été vieux."
 all(doc[`tokens]~`$("le";"café";"noir";"était";"pour";"andré";"benoît";"mes";"aïeux";"été";"vieux");(doc[`starts] cut text)~("Le ";"café ";"noir ";"était ";"pour ";"André ";"Benoît. ";"Mes ";"aïeux ";"été ";"vieux.");(doc[`sentChars;;0] cut text)~("Le café noir était pour André Benoît. ";"Mes aïeux été vieux.");((0,doc[`sentChars;;1]) cut text)~("Le café noir était pour André Benoît.";" Mes aïeux été vieux.";""))
 text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
-p:newParser[`en; `tokens`isStop];
+p:newParser[`en_core_web_sm; `tokens`isStop];
 corpus:p text;
 keywords:TFIDF corpus;
 0n~keywords[0;`please]
@@ -15,7 +15,7 @@ keywords[0; `billion] > keywords[0; `transacting]
 enlist[(`u#`$())!()]~TFIDF([]tokens:enlist `$(); isStop:enlist `boolean$());
 keywords:TFIDF enlist corpus 1;
 98h~type keywords
-p:newParser[`en;`keywords];
+p:newParser[`en_core_web_sm;`keywords];
 corpus:p text;
 1f~compareDocs . corpus[`keywords]0 0
 0f~compareDocs[(enlist`a)!enlist 1;(enlist `b)!enlist 1]
@@ -37,7 +37,7 @@ all(explainSimilarity[(`a`b`c)!(.1 .2 .3); (`$())!(`float$())]~(`$())!(`float$()
 all(explainSimilarity[(enlist `a)!enlist .1;(enlist `a)!enlist .1]~(enlist `a)!enlist 1f;explainSimilarity[(enlist `a)!enlist .1;(enlist `a)!enlist .5]~(enlist `a)!enlist 1f;explainSimilarity[(enlist `a)!enlist .1;(enlist `b)!enlist .5]~(`$())!(`float$()))       
 all(`a`b`c`d~ key explainSimilarity[(`a`b`c`d)!(.1 .1 .1 .1);(`a`b`c`d)!(.1 .1 .1 .1)];(`$())~key explainSimilarity[(`a`b`c`d)!(.1 .1 .1 .1);(`e`f`g`h)!(.1 .1 .1 .1)];(enlist `a)~key explainSimilarity[(`a`b`c`d)!(.1 .1 .1 .1);(`a`e`f`g)!(.1 .1 .1 .1)];`c`b~key explainSimilarity[(`a`c`b`e)!(.1 .1 .1 .1); (`f`b`c`g)!(.1 .1 .1 .1)])
 all(explainSimilarity[(`a`b`c`d)!(.1 .1 .2 .2);(`a`b`c`d)!(.1 .1 .2 .2)][`a`b`c`d]~.1 .1 .4 .4;explainSimilarity[(`a`b`c`d`e`f)!(.1 .1 .2 .2 .3 .4);(`a`b`c`d`g)!(.1 .1 .2 .2 .7)][`a`b`c`d]~.1 .1 .4 .4)
-p:newParser[`en;`tokens`isStop`sentIndices];
+p:newParser[`en_core_web_sm;`tokens`isStop`sentIndices];
 corpus:p text
 extractPhrases[corpus;`antidisestablishmentarianism]~()!()
 all `report in/: key extractPhrases[corpus;`report]
@@ -64,14 +64,14 @@ all((2#2035.02.03)~first(findDates"35 3 Feb")[;0 1];(2#2010.02.03)~first(findDat
 all((2#2001.02.03)~first(findDates"3rd. Feb/2001")[;0 1];(2#2001.02.03)~first(findDates"3-Feb.- 2001")[;0 1])
 all((2#1965.01.02)~first(findDates"65/01/02")[;0 1];(2#1965.01.02)~first(findDates"02/01/65")[;0 1];(2#2011.12.13)~first(findDates"13/12/11")[;0 1];(2#2013.12.11)~first(findDates"11/12/13")[;0 1])
 all(()~findDates"65/13/02";()~findDates"12/13/12")
-posParser:newParser[`en; `uniPOS`pennPOS`tokens]
+posParser:newParser[`en_core_web_sm; `uniPOS`pennPOS`tokens]
 findPOSRuns[`uniPOS; `ADV`VERB;first posParser enlist". ."]~()
 findPOSRuns[`uniPOS; `DET;first posParser enlist "The"]~enlist(`the; enlist 0)
 findPOSRuns[`uniPOS; `VERB;first posParser enlist"The train from nowhere"]~()
 findPOSRuns[`uniPOS; `VERB;first posParser enlist"has been gone dancing"]~enlist(`$"gone dancing";2 3)
 doc:first posParser enlist"Wade Hemsworth famously surveyed the Abitibi Waterways in North Ontario.";
 all(findPOSRuns[`uniPOS;`DET`PROPN;doc];findPOSRuns[`pennPOS;`DT`NNP`NNPS; doc])~\:((`$"wade hemsworth"; 0 1);(`$"the abitibi waterways"; 4 5 6);(`$"north ontario"; 8 9))
-p:newParser[`en;`tokens`isStop`sentIndices];
+p:newParser[`en_core_web_sm;`tokens`isStop`sentIndices];
 corpus:p text;
 ((`$())!())~findRelatedTerms[corpus; `jollof]
 chief:findRelatedTerms[corpus; `chief];
@@ -86,7 +86,7 @@ findTimes["I'm leaving at 09:00:07 on the dot"]~enlist(09:00:07.000;"09:00:07 ";
 findTimes["At 312312:12am 100h555"]~()
 findTimes["At 06:00AM, or 4:30 P.M."]~((06:00:00.000;"06:00AM";3;10);(16:30:00.000;"4:30 P.M";15;23))
 all(findTimes["12:05 a.m., 1:05 a.m., 2:05 a.m., 3:05 a.m., 4:05 a.m., 5:05 a.m., 6:05 a.m., 7:05 a.m., 8:05 a.m., 9:05 a.m., 10:05 a.m., 11:05 a.m."][;0]~ 00:05:00.000 01:05:00.000 02:05:00.000 03:05:00.000 04:05:00.000 05:05:00.000 06:05:00.000 07:05:00.000 08:05:00.000 09:05:00.000 10:05:00.000 11:05:00.000;findTimes["12:05 pm, 1:05 p.m., 2:05 p.m., 3:05 p.m., 4:05 p.m., 5:05 p.m., 6:05 p.m., 7:05 p.m., 8:05 p.m., 9:05 p.m., 10:05 p.m., 11:05 p.m."][;0] ~ 12:05:00.000 13:05:00.000 14:05:00.000 15:05:00.000 16:05:00.000 17:05:00.000 18:05:00.000 19:05:00.000 20:05:00.000 21:05:00.000 22:05:00.000 23:05:00.000)
-sentenceParser:newParser[`en;`text`sentChars]
+sentenceParser:newParser[`en_core_web_sm;`text`sentChars]
 getSentences[first sentenceParser enlist""]~()
 all(getSentences[first sentenceParser enlist "aa."]~enlist "aa.";getSentences[first sentenceParser enlist " ."]~enlist " .")
 getSentences[first sentenceParser enlist"This is my sentence"]~enlist "This is my sentence"
@@ -97,7 +97,7 @@ all(.961~truncate[3] jaroWinkler["martha";"marhta"];.840~truncate[3] jaroWinkler
 all(0f~jaroWinkler["benjamin";enlist"z"];0f~jaroWinkler["benjamin";enlist"a"])
 all(0f~jaroWinkler["";enlist"a"];0f~jaroWinkler["ben";""])
 .75~jaroWinkler["abcd"; enlist "b"]
-p:newParser[`en; `tokens`isStop];
+p:newParser[`en_core_web_sm; `tokens`isStop];
 corpus:p text;       
 (()!())~keywordsContinuous 0#corpus  
 ((`$())!())~keywordsContinuous ([]tokens:enlist`$();isStop:enlist`boolean$())
@@ -135,7 +135,7 @@ loadDir:loadTextFromDir["tests/data/test.mbox"]
 `fileName`path`text~cols loadDir
 loadDir[`fileName]~enlist `test.mbox
 text: first (enlist "*";",";1) 0: `:tests/data/miniJeff.txt
-p:newParser[`en;`tokens`isStop`text]
+p:newParser[`en_core_web_sm;`tokens`isStop`text]
 corpus:p text
 phonecall:corpus n:where corpus[`text] like "*Telephone Call*"
 remaining:corpus til[count corpus]except n
