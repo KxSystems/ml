@@ -1,0 +1,4 @@
+numpy
+beautifulsoup4
+spacy==2.2.1
+langdetect
