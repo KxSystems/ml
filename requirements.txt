@@ -1,7 +1,7 @@
-numpy
-scipy
-scikit-learn
-statsmodels
+reportlab
+joblib
 matplotlib
-sobol-seq
-pandas<2.0
+numpy
+statsmodels
+scikit-learn<=0.23.0
+pandas>=1.0

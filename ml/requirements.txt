@@ -1,0 +1,7 @@
+numpy
+scipy
+scikit-learn
+statsmodels
+matplotlib
+sobol-seq
+pandas<2.0
