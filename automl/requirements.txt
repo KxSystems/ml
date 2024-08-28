@@ -1,0 +1,7 @@
+reportlab
+joblib
+matplotlib
+numpy
+statsmodels
+scikit-learn<=0.23.0
+pandas>=1.0
