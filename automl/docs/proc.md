@@ -40,12 +40,12 @@ Once the relevant models have undergone cross validation using the training data
 
 The file `scoring.json` contained within `automl/code/customization/scoring` specifies the possible scoring metrics and how to order the resulting scores (ascending/descending) to ensure that the best model is being returned. The default metric for classification problems is `.ml.accuracy`, while `.ml.mse` is used for regression. 
 
-If necessary, `scoring.json` can be altered by the user in order to expand the number of metrics available. An extensive list of the metrics provided within the[ ML Toolkit](htts://github.com/KxSystems/ml) and thus AutoML can be found [here](htts://github.com/KxSystems/ml/tree/master/docs/utilities/metric.md), but users can also add their own custom metrics.
+If necessary, `scoring.json` can be altered by the user in order to expand the number of metrics available. An extensive list of the metrics provided within the[ ML Toolkit](htts://github.com/KxSystems/ml) and thus AutoML can be found [here](htts://github.com/KxSystems/ml/tree/master/ml/docs/utilities/metric.md), but users can also add their own custom metrics.
 
 
 ## Optimization
 
-To optimize the best model, hyperparameter searching procedures are implemented. This includes the grid, random and Sobol-random search functionality contained within the [ML Toolkit](htts://github.com/KxSystems/ml/tree/master/docs/xval.md).
+To optimize the best model, hyperparameter searching procedures are implemented. This includes the grid, random and Sobol-random search functionality contained within the [ML Toolkit](htts://github.com/KxSystems/ml/tree/master/ml/docs/xval.md).
 
 ---
 

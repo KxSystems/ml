@@ -21,7 +21,8 @@ Feature selection can improve the accuracy of a machine-learning algorithm by
 -  Reducing variance in the dataset to reduce overfitting
 
 :point_right:
-[Notebook examples](https://github.com/KxSystems/mlnotebooks) of the FRESH algorithm used in different applications
+Find examples in [examples/06 Feature Extraction and Selection.md](../../../examples/06%20Feature%20Extraction%20and%20Selection.md).
+
 
 
 ## Loading

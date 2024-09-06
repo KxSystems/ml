@@ -4,8 +4,6 @@ Clustering is a technique used in both data mining and machine learning to group
 
 The Machine Learning Toolkit contains a number of [clustering algorithms](algos.md), along with a set of [scoring functions](score.md) for determining the best model. The toolkit also provides an implementation of a [k-dimensional tree](kdtree.md), which underlies a number of the clustering algorithms and is also useful outside of clustering. 
 
-Notebooks showing examples of the clustering algorithms mentioned above can be found at [KxSystems/mlnotebooks](https://github.com/kxsystems/mlnotebooks).
-
 :point_right:
 [Code relating to clustering](../../clust/README.md)
 

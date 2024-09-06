@@ -35,10 +35,6 @@ Within the following examples, `.ml.xv.fitScore` is used extensively to fit mode
 
 As of toolkit version 0.1.3, the distribution of cross-validation functions is invoked at console initialization. If a process is started with `$q -s -4 -p 4321` and `xval.q` is loaded into the process, then the cross-validation library will automatically make 4 worker processes available to execute jobs.
 
-> Tip: **Interactive notebook implementations**
-> 
-> Interactive notebook implementations of a large number of the functions outlined here are available within [KxSystems/mlnotebooks](https://github.com/KxSystems/mlnotebooks)
-
 
 ## Grid search
 

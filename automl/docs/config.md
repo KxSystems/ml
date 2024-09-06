@@ -331,7 +331,7 @@ Specific hyperparameters or range over which hyperparameters to be applied are d
 
 #### `meta` -> `randomType`  
 
-Defines the type of randomization to be used within the random search. This can be one of `boolean`, `uniform`, `loguniform` or `symbol`, as [defined](https://github.com/KxSystems/ml/tree/master/docs/xval#random-search-hyperparameter-dictionary) for the Machine Learning Toolkit.
+Defines the type of randomization to be used within the random search. This can be one of `boolean`, `uniform`, `loguniform` or `symbol`, as [defined](https://github.com/KxSystems/ml/tree/master/ml/docs/xval#random-search-hyperparameter-dictionary) for the Machine Learning Toolkit.
 
 #### `meta` -> `typeConvert` 
 

@@ -18,7 +18,7 @@ This extension to the Machine Learning Toolkit consists of:
 -   [Graphing](graph.md): Create, modify and remove nodes or edges to a graph
 -   [Pipelining](pipeline.md): Convert a valid graph into an optimized framework, and execute it to evaluate the logic
 
-Find example notebooks at [KxSystems/mlnotebooks](https://github.com/kxsystems/mlnotebooks).
+Find examples in [../../../examples/](../../../examples/).
 
 
 

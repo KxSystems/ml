@@ -15,8 +15,7 @@ The Machine Learning Toolkit implements commonly-used statistical [forecasting a
 
 Several feature-extraction techniques to generate lagged values and apply moving calculations are also included. Use them to convert a timeseries dataset into a format better suited to application of traditional machine-learning algorithms.
 
-Find example notebooks at
-[KxSystems/mlnotebooks](https://github.com/kxsystems/mlnotebooks).
+Find examples in [examples/06 Feature Extraction and Selection.md](../../../examples/06%20Feature%20Extraction%20and%20Selection.md).
 
 
 ## Loading
