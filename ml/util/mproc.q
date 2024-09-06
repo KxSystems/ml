@@ -10,7 +10,7 @@
 // @desc If the multiProc key is not already loaded in set .`z.pd` and 
 //   N to 0
 // @return {::} `.z.pd` and N are set to 0
-if[not`multiProc in key .ml;.z.pd:`u#0#0i;multiProc.N:0]
+if[not`multiProc in key `.ml;.z.pd:`u#0#0i;multiProc.N:0]
 
 // @kind function
 // @category multiProcess
