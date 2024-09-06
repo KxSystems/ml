@@ -2,11 +2,11 @@
 
 The Machine Learning Toolkit is a comprehensive suite designed to empower kdb+/q users with advanced machine learning capabilities. It offers a robust and flexible framework for addressing a wide range of tasks, including time series analysis, natural language processing, and automated machine learning. By integrating seamlessly with kdb+/q, the toolkit facilitates efficient data handling and processing, leveraging both traditional machine learning techniques and modern NLP models.
 
-The repository is structured as four modules: ml and nlp can each be used independently for their respective feature sets, as further described below; automl builds upon ml and nlp to deliver automated machine learning capabilities; and a utility shim which is used by the toolkit to load PyKX or EmbedPy, which ensure seamless interoperability between Python and kdb+/q in either environment.
+The repository is structured as four modules: ml and nlp can each be used independently for their respective feature sets, [as further described below](#components); automl builds upon ml and nlp to deliver automated machine learning capabilities; and a utility shim which is used by the toolkit to load PyKX or EmbedPy, which ensure seamless interoperability between Python and kdb+/q in either environment.
 
 ## Getting started
 
-To get up and running quickly, start by pulling the Docker image, which comes pre-installed with all dependencies specified in requirements_pinned.txt. This allows you to dive straight into testing and exploring the toolkit's capabilities without the need for additional setup.
+To get up and running quickly, start by pulling the Docker image, which comes pre-installed with all dependencies specified in requirements_pinned.txt. This allows you to dive straight into trying out our [examples](examples/) and exploring the toolkit's capabilities without the need for additional setup.
 
 ```bash
 git clone https://github.com/KxSystems/ml.git ml
