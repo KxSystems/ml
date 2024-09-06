@@ -122,7 +122,7 @@ Normal feature extraction can be applied to non-timeseries problems that have a 
 
 ### NLP
 
-The NLP (Natural Language Processing) feature extraction within AutoML makes use of the KX [NLP library](htts://github.com/KxSystems/nlp) in addition to the Python `gensim` library for data preprocessing.
+The NLP (Natural Language Processing) feature extraction within AutoML makes use of the KX NLP library in addition to the Python `gensim` library for data preprocessing.
 
 The following steps are applied independently to all columns containing text data:
 

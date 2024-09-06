@@ -601,7 +601,7 @@ params:`hyperparameterSearchType`randomSearchFunction`randomSearchArgument!
 
 > **Custom random/Sobol-random search function**
 >
-> To add a custom random/Sobol-random search function, follow the [guidelines for function definition](https://github.com/KxSystems/ml/tree/master/xval).
+> To add a custom random/Sobol-random search function, follow the [guidelines for function definition](https://github.com/KxSystems/ml/tree/master/ml/xval).
 >
 > Contact ai@kx.com with questions on this: it is more complicated than other customizations.
 

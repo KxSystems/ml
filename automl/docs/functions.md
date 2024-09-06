@@ -32,7 +32,7 @@ You can also extend them.
 :point_right:
 [Advanced section](advanced.md)
 
-The examples following outline the most basic applications of AutoML: non-timeseries-specific machine-learning examples, and timeseries examples which use the [FRESH algorithm](htts://github.com/KxSystems/ml/tree/master/docs/fresh.md) and [NLP Library](htts://github.com/KxSystems/nlp).
+The examples following outline the most basic applications of AutoML: non-timeseries-specific machine-learning examples, and timeseries examples which use the [FRESH algorithm](htts://github.com/KxSystems/ml/tree/master/ml/docs/fresh.md) and NLP Library.
 
 
 ### Model prediction

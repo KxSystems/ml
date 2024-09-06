@@ -289,7 +289,7 @@ The key of the dictionary `ClassTorch` is used for display and model saving.
 ---
 
 Model implementations:
-[Keras](https://github.com/KxSystems/automl/tree/master/code/customization/models/libSupport/keras.q),
-[Torch](https://github.com/KxSystems/automl/tree/master/code/tests/files/torch),
-[Theano](https://github.com/KxSystems/automl/tree/master/code/tests/files/theano)
+[Keras](https://github.com/KxSystems/ml/tree/master/automl/code/customization/models/libSupport/keras.q),
+[Torch](https://github.com/KxSystems/ml/tree/master/automl/code/tests/files/torch),
+[Theano](https://github.com/KxSystems/ml/tree/master/automl/code/tests/files/theano)
 
