@@ -28,11 +28,11 @@ build-docker-dependencies-image:
     - docker:dind
   rules:
     - changes:
-        - docker/Dockerfile.updatedependencies
+        - docker/Dockerfile
         - requirements.txt
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f docker/Dockerfile.updatedependencies .
+    - docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f docker/Dockerfile .
     - echo "${IMAGE_NAME}:${IMAGE_TAG} built"
     # - docker push ${IMAGE_NAME}:${IMAGE_TAG}
     # - echo "${IMAGE_NAME}:${IMAGE_TAG} pushed"
@@ -71,7 +71,7 @@ secret_detection:
     - export QHOME=~/q
     - export QLIC=/home/kx
     - python -c "import pykx;pykx.install_into_QHOME()"
-    - cd ..; bash link.sh; cd -
+    - cd ..; bash scripts/link.sh; cd -
     - q ../test.q $(find . -name *.t) 2>&1 | tee tests.txt
     - grep ", total:" tests.txt
 
@@ -80,7 +80,7 @@ secret_detection:
     - !reference [.test-init-common, script]
     - export QHOME=/home/kx/.conda/envs/kx/q
     - export QLIC=/home/kx
-    - cd ..; bash link.sh; cd -
+    - cd ..; bash scripts/link.sh; cd -
     - q ../test.q $(find . -name *.t) 2>&1 | tee tests.txt
     - grep ", total:" tests.txt
 

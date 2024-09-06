@@ -1,0 +1,49 @@
+
+The following is a breakdown of information for each of the relevant columns in the dataset
+
+       | count unique mean std min max type
+-------| ----------------------------------
+comment| 900   900    ::   ::  ::  ::  text
+
+
+Data preprocessing complete, starting feature creation
+
+Total number of significant features being passed to the models = 36
+
+Starting initial model selection - allow ample time for large datasets
+
+Scores for all models using .ml.accuracy
+
+RandomForestClassifier    | 0.7761469
+AdaBoostClassifier        | 0.7568966
+KNeighborsClassifier      | 0.7518291
+MLPClassifier             | 0.75003
+GradientBoostingClassifier| 0.749985
+LinearSVC                 | 0.74997
+SVC                       | 0.7308696
+LogisticRegression        | 0.7308396
+BinaryKeras               | 0.6926387
+GaussianNB                | 0.6753823
+
+
+Best scoring model = RandomForestClassifier
+
+Continuing to hyperparameter search and final model fitting on testing set
+
+Best model fitting now complete - final score on testing set = 0.75
+
+Confusion matrix for testing set:
+
+      | true_0 true_1
+------| -------------
+pred_0| 67     20
+pred_1| 25     68
+
+
+Saving down graphs to /builds/mygroup/ml/automl/outputs/dateTimeModels/2024.09.06/run_19.26.35.159/images/
+
+Saving down procedure report to /builds/mygroup/ml/automl/outputs/dateTimeModels/2024.09.06/run_19.26.35.159/report/
+
+Saving down model parameters to /builds/mygroup/ml/automl/outputs/dateTimeModels/2024.09.06/run_19.26.35.159/config/
+
+Saving down model to /builds/mygroup/ml/automl/outputs/dateTimeModels/2024.09.06/run_19.26.35.159/models/
