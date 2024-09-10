@@ -2,7 +2,7 @@
 
 FROM registry.gitlab.com/kxdev/kxinsights/data-science/ml-tools/automl:embedpy-gcc-deb12
 
-COPY requirements.txt /opt/kx/automl/
+COPY requirements_pinned.txt /opt/kx/automl/
 
 USER kx
 
@@ -12,7 +12,7 @@ RUN . /opt/conda/etc/profile.d/conda.sh \
     && conda install -y python=3.11 \
     && conda install -yc conda-forge openblas \
     && printf "[blas]\nldflags = -L/home/kx/.conda/envs/kx/lib -lopenblas\n" > ~/.theanorc \
-    && pip install -r /opt/kx/automl/requirements.txt \
+    && pip install -r /opt/kx/automl/requirements_pinned.txt \
     && pip list \
     && python -m spacy download en_core_web_sm
 
