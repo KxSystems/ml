@@ -2,9 +2,9 @@
 
 The Machine Learning Toolkit is a comprehensive suite designed to empower kdb+/q users with advanced machine learning capabilities. It offers a robust and flexible framework for addressing a wide range of tasks, including time series analysis, natural language processing, and automated machine learning. By integrating seamlessly with kdb+/q, the toolkit facilitates efficient data handling and processing, leveraging both traditional machine learning techniques and modern NLP models.
 
-The repository is structured as four modules: ml and nlp can each be used independently for their respective feature sets, [as further described below](#components); automl builds upon ml and nlp to deliver automated machine learning capabilities; and a utility shim which is used by the toolkit to load PyKX or EmbedPy, which ensure seamless interoperability between Python and kdb+/q in either environment.
+The repository is structured as three modules: ml and nlp can each be used independently for their respective feature sets [as further described below](#components); automl builds upon ml and nlp to deliver automated machine learning capabilities.
 
-## Getting started
+<!-- ## Getting started
 
 To get up and running quickly, start by pulling the Docker image, which comes pre-installed with all dependencies specified in requirements_pinned.txt. This allows you to dive straight into trying out our [examples](examples/) and exploring the toolkit's capabilities without the need for additional setup.
 
@@ -37,7 +37,7 @@ q).nlp.findTimes"I went to work at 9:00am and had a coffee at 10:20"  # See exam
 09:00:00.000 "9:00am" 18 24
 10:20:00.000 "10:20"  45 50
 q)
-```
+``` -->
 
 ### Requirements
 
@@ -55,7 +55,7 @@ or via conda:
 conda install --file requirements.txt
 ```
 
-Alternatively, use requirements_pinned.txt for a fully resolved, pinned & known working set of dependencies or module specific requirements.txt (eg ml/requirements.txt) when only utilizing a subset of the toolkit.
+Alternatively, use `requirements_pinned.txt` for a fully resolved, pinned & known working set of dependencies or module specific requirements.txt (eg ml/requirements.txt) when only utilizing a subset of the toolkit.
 
 While the nlp framework may be used with other models, automl the nlp tests use en_core_web_sm. You can download this after installing the python requirements like so:
 ```bash
@@ -67,15 +67,18 @@ python -m spacy download en_core_web_sm
 
 ### Installation
 
-Run `scripts/link.sh` from the repo root to link the module folders into `$QHOME`. Alternatively, manually copy or link your desired subset.
+To install, simply copy or link the desired components to your `$QHOME` directory, for example: `cp -r {ml,nlp,automl} $QHOME/`.
 
-The following will load **all** functionality into the `.automl`, `.ml` & `.nlp` namespaces.
+To load all functionality into the `.automl`, `.ml`, and `.nlp` namespaces, run the following from q:
 ```q
 \l automl/automl.q
 .automl.loadfile`:init.q
 ```
 
-* Replace all instances of automl above with ml or nlp to load only those specific modules. All of which rely on the shim.
+* To load only specific modules, replace automl with ml or nlp in the commands above.
+
+Once installed, you can explore the toolkit's capabilities by trying out our [examples](examples/).
+
 
 <!-- ### Examples   //! currently outdated
 
@@ -100,6 +103,7 @@ This library contains functions that cover the following areas:
 - A graphing and pipeline library for the creation of modularized executable workflow based on a structure described by a mathematical directed graph.
 - Utility functions relating to areas including statistical analysis, data preprocessing and array manipulation.
 - A multi-processing framework to parallelize work across many cores or nodes.
+- Functions for seamless integration with PyKX or EmbedPy, which ensure seamless interoperability between Python and kdb+/q in either environment.
 
 These sections are explained in greater depth within the [FRESH](ml/docs/fresh.md), [cross validation](ml/docs/xval.md), [clustering](ml/docs/clustering/algos.md), [timeseries](ml/docs/timeseries/README.md), [optimization](ml/docs/optimize.md), [graph/pipeline](ml/docs/graph/README.md) and [utilities](ml/docs/utilities/metric.md) documentation.
 
@@ -123,10 +127,7 @@ The automated machine learning library described here is built on top of ml & nl
 
 Each of these steps is outlined in depth within the [documentation](automl/docs).
 
-
-### shim
-A utility module that loads either PyKX or embedpy and provides helper functions to write cross compatible code.
-
+<!--
 ## Building the docker images
 
 ### preflight
@@ -141,13 +142,13 @@ To build the project locally:
 ```bash //! improve
 docker build -t registry.gitlab.com/kxdev/kxinsights/data-science/ml-tools/automl:embedpy-gcc-deb12 -f docker/Dockerfile .
 docker build -t myimage:mytag -f docker/Dockerfile .
-```
+``` -->
 
 <!-- **N.B.** if you wish to use an alternative source for [embedPy](https://github.com/KxSystems/embedPy) then you can append `--build-arg embedpy_img=embedpy` to your argument list. -->
 
 <!-- Other build arguments are supported and you should browse the `Dockerfile` to see what they are. -->
 
-Once built, you should have a local image which you can run with as shown in the "Getting started" section above.
+<!-- Once built, you should have a local image which you can run with as shown in the "Getting started" section above. -->
 
 <!-- ### Deploy //! outdated
 

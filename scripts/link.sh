@@ -13,7 +13,7 @@ if [ ! -d "$QHOME" ]; then
 fi
 
 # Directories to link
-dirs=("shim" "ml" "nlp" "automl")
+dirs=("ml" "nlp" "automl")
 
 # Check if each directory exists in the current working directory
 for dir in "${dirs[@]}"; do
