@@ -2,7 +2,7 @@
 
 Thanks for choosing to contribute to this project.
 
-If you haven't already, please view the [README](README.md) for an introduction to the aims and intended use of this project. 
+If you haven't already, please view the [README](README.md) for an introduction to the aims and intended use of this project.
 
 ## Contributing as a user (non-development)
 
@@ -32,15 +32,15 @@ It can also be worth considering if your changes may also require changes to doc
 
 ### Submitting Changes
 
-When committing changes, please provide a descriptive commit comment of why the change was made (e.g. 'fixed bug' is not a suitable comment as it doesn't describe which bug).  
+When committing changes, please provide a descriptive commit comment of why the change was made (e.g. 'fixed bug' is not a suitable comment as it doesn't describe which bug).
 
 You can link to a relevant issue in a commit comment by referencing the issue number prefixed with a '#'.
 
-After pushing to your fork, submit a pull request against the project's main branch. 
+After pushing to your fork, submit a pull request against the project's main branch.
 
 In order to have your pull request approved in a timely manner, please provide comments on the pull request that details what was changed & for which reasons. The complexity or size of the change indicate the size of the descriptions required, in order for the reviewer to get up to speed as quick as possible.
 
 ### Additional Resources
 
-[Machine Learning Documentation](https://code.kx.com/ml/)
+[Machine Learning Documentation](https://code.kx.com/q/ml/)
 

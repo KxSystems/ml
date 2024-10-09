@@ -1,0 +1,5 @@
+pykx
+numpy<1.24      # required for theano compat (1.24 removes deprecated numpy.bool)
+beautifulsoup4
+spacy
+langdetect

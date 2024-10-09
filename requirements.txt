@@ -1,7 +1,20 @@
-numpy
-scipy
+pykx
+tensorflow
+keras
+torch
+theano
+pandas
+gensim
 scikit-learn
+beautifulsoup4
 statsmodels
+spacy
+langdetect
+scipy<1.13      # required for gensim compat (1.13 removes deprecated triu from scipy.linalg)
+numpy<1.24      # required for theano compat (1.24 removes deprecated numpy.bool)
+
+reportlab
+joblib
 matplotlib
+# protobuf
 sobol-seq
-pandas<2.0
