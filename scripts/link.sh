@@ -28,3 +28,4 @@ for dir in "${dirs[@]}"; do
   ln -s "$PWD/$dir" "$QHOME/$dir"
   echo "Linked $PWD/$dir to $QHOME/$dir"
 done
+

@@ -22,6 +22,9 @@ csym:coerse 0b;
 // Ensure plain python string (avoid b' & numpy arrays)
 pydstr:$[.pykx.loaded;{.pykx.eval["lambda x:x.decode()"].pykx.topy x};::]
 
+// Return python library version
+pygetver:$[.pykx.loaded;{string .pykx.eval["lambda x:str(x)";<].p.import[`$x][`:__version__]};{.p.import[`$x][`:__version__]`}]
+
 version:@[{TOOLKITVERSION};`;`development]
 path:{string`ml^`$@[{"/"sv -1_"/"vs ssr[;"\\";"/"](-3#get .z.s)0};`;""]}`
 loadfile:{$[.z.q;;-1]"Loading ",x:_[":"=x 0]x:$[10=type x;;string]x;system"l ",path,"/",x;}
@@ -39,3 +42,10 @@ i.ignoreWarning:0b
 // @category utilities
 // @fileoverview Change ignoreWarnings
 updateIgnoreWarning:{[]i.ignoreWarning::not i.ignoreWarning}
+
+@[value;".log.initns[]";{::}]
+logging.info :{@[{log.info x};x;{[x;y] -1 x;}[x]]}
+logging.warn :{@[{log.warn x};x;{[x;y] -1 x;}[x]]}
+logging.error:{@[{log.error x};x;{::}];'x}
+logging.fatal:{@[{log.fatal x};x;{[x;y] -2 x;}[x]];exit 2}
+

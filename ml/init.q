@@ -14,3 +14,6 @@ loadfile`:xval/init.q
 loadfile`:graph/init.q
 loadfile`:optimize/init.q
 loadfile`:timeseries/init.q
+loadfile`:mlops/init.q
+loadfile`:registry/init.q
+
