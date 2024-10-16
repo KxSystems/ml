@@ -1,0 +1,8 @@
+arrange:
+  - index.md
+  - api
+  - examples
+  - qdoc
+
+# vim: ft=yaml
+
