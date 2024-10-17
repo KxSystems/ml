@@ -110,6 +110,3 @@ $ q ../test.q registry/tests/registry.t
 ```
 
 This should present a summary of results of the unit tests.
-
-# Status
-This repository is still in active development and is provided here as a beta version, all code is subject to change.
