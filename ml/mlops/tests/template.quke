@@ -1,0 +1,5 @@
+feature Hello
+    should Say hello
+      expect Correct message
+         "Hello world" ~ "Hello world"
+

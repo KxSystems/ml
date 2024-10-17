@@ -2,6 +2,11 @@
 
 FROM registry.gitlab.com/kxdev/kxinsights/data-science/ml-tools/automl:embedpy-gcc-deb12
 
+# Java and jq packages required for registry tests
+RUN apt-get update && apt-get install -y openjdk-17-jdk && rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
+
 COPY requirements_pinned.txt /opt/kx/automl/
 
 USER kx
