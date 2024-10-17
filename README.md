@@ -106,7 +106,7 @@ This library contains functions that cover the following areas:
 - Functions for seamless integration with PyKX or EmbedPy, which ensure seamless interoperability between Python and kdb+/q in either environment.
 - A location for the storage and versioning of ML models on-prem along with a common model retrieval API allowing models regardless of underlying requirements to be retrieved and used on kdb+ data. This allowss for enhanced team collaboration opportunities and management oversight by centralising team work to a common storage location.
 
-These sections are explained in greater depth within the [FRESH](ml/docs/fresh.md), [cross validation](ml/docs/xval.md), [clustering](ml/docs/clustering/algos.md), [timeseries](ml/docs/timeseries/README.md), [optimization](ml/docs/optimize.md), [graph/pipeline](ml/docs/graph/README.md) and [utilities](ml/docs/utilities/metric.md) and and [registry](ml/docs/registry/README.md) documentation.
+These sections are explained in greater depth within the [FRESH](ml/docs/fresh.md), [cross validation](ml/docs/xval.md), [clustering](ml/docs/clustering/algos.md), [timeseries](ml/docs/timeseries/README.md), [optimization](ml/docs/optimize.md), [graph/pipeline](ml/docs/graph/README.md) and [utilities](ml/docs/utilities/metric.md) and [registry](ml/docs/registry/README.md) documentation.
 
 
 ### nlp
