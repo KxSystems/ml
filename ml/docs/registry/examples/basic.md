@@ -151,7 +151,6 @@ As such, the `.ml.registry.set.model` functionality also allows users to take th
 Model Type | File Type         | Qualifying Conditions
 -----------|-------------------|----------------------
 q          | q-binary          | Retrieved model must be a q projection, function or dictionary with a predict key
-Graph      | q-binary          | Retrieved graph must be a dictionary with keys `vertices` and `edges` keys
 Python     | pickled file      | The file must be loadable using `joblib.load`
 Sklearn    | pickled file      | The file must be loadable using `joblib.load` and contain a `predict` method i.e. is a `fit` scikit-learn model
 Keras      | HDF5 file         | The file must be loadable using `keras.models.load_model` and contain a `predict` method i.e. is a `fit` Keras model

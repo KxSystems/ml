@@ -111,7 +111,7 @@ _Add a new model to the ML Registry. If the registry doesn't exist it will be cr
 | `experimentName` | `string | ::` |The name of the experiment associated with the model or generic null if none. This may contain details of a subexperiment Eg. EXP1/SUBEXP1.|
 | `model` |` embedpy | dictionary | function | projection | symbol | string` | The model to be saved to the registry. |
 | `modelName` | `string` |The name to be associated with the model. |
-| `modelType` | `string` |The type of model that is being saved, namely `"q"`, `"graph"`, `"sklearn"`, `"keras"`, `"python"`, `"torch"`. |
+| `modelType` | `string` |The type of model that is being saved, namely `"q"`, `"sklearn"`, `"keras"`, `"python"`, `"torch"`. |
 | `config` | `dictionary` |Any additional configuration needed for setting the model. |
 
 **Returns:**
