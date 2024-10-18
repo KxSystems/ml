@@ -6,3 +6,4 @@ statsmodels
 matplotlib
 sobol-seq
 pandas
+joblib

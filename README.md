@@ -104,8 +104,9 @@ This library contains functions that cover the following areas:
 - Utility functions relating to areas including statistical analysis, data preprocessing and array manipulation.
 - A multi-processing framework to parallelize work across many cores or nodes.
 - Functions for seamless integration with PyKX or EmbedPy, which ensure seamless interoperability between Python and kdb+/q in either environment.
+- A location for the storage and versioning of ML models on-prem along with a common model retrieval API allowing models regardless of underlying requirements to be retrieved and used on kdb+ data. This allows for enhanced team collaboration opportunities and management oversight by centralising team work to a common storage location.
 
-These sections are explained in greater depth within the [FRESH](ml/docs/fresh.md), [cross validation](ml/docs/xval.md), [clustering](ml/docs/clustering/algos.md), [timeseries](ml/docs/timeseries/README.md), [optimization](ml/docs/optimize.md), [graph/pipeline](ml/docs/graph/README.md) and [utilities](ml/docs/utilities/metric.md) documentation.
+These sections are explained in greater depth within the [FRESH](ml/docs/fresh.md), [cross validation](ml/docs/xval.md), [clustering](ml/docs/clustering/algos.md), [timeseries](ml/docs/timeseries/README.md), [optimization](ml/docs/optimize.md), [graph/pipeline](ml/docs/graph/README.md), [utilities](ml/docs/utilities/metric.md) and [registry](ml/docs/registry/README.md) documentation.
 
 
 ### nlp
@@ -171,3 +172,4 @@ The Machine Learning Toolkit is provided here under an Apache 2.0 license.
 If you find issues with the interface or have feature requests, please [raise an issue](https://github.com/KxSystems/ml/issues).
 
 To contribute to this project, please follow the [contributing guide](CONTRIBUTING.md).
+

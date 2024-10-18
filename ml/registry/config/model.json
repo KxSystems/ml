@@ -1,0 +1,55 @@
+{
+  "registry":{
+    "description": "",
+    "modelInformation": {
+      "modelName": "",
+      "version": "",
+      "registrationTime": [ "" ],
+      "uniqueID": [ "" ],
+      "requirements": false
+    },
+    "experimentInformation": {
+      "experimentName": ""
+    }
+  },
+  "model": {
+    "type": "",
+    "axis": ""
+  },
+  "monitoring": {
+    "nulls": {
+      "monitor": true,
+      "values": {}
+    },
+    "infinity": {
+      "monitor": true,
+      "values": {
+        "negInfReplace": {},
+        "posInfReplace": {}
+      }
+    },
+    "schema": {
+      "monitor": false,
+      "values": {}
+    },
+    "latency": {
+      "monitor": false,
+      "values": {
+        "avg": inf,
+        "std": inf
+      }
+    },
+    "psi": {
+      "monitor": false,
+      "values": {}
+    },
+    "csi": {
+      "monitor": false,
+      "values": {}
+    },
+    "supervised": {
+      "monitor": false,
+      "values": []
+    }
+  }
+}

@@ -45,4 +45,3 @@ if[all`config`run in commandLineArguments;
   testRun:`test in commandLineArguments;
   runCommandLine[testRun];
   exit 0]
-
